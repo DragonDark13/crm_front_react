@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel, Tabs, Tab
+    TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel, Tabs, Tab, FormGroup, FormControlLabel, Checkbox
 } from '@mui/material';
 
 // Стили для модального вікна
@@ -170,6 +170,7 @@ function App() {
         quantity: '',
         total_price: '',
         price_per_item: '',
+        category_ids: []
     });
     const [editProduct, setEditProduct] = useState<object[IProduct]>(null); // Для зберігання товару, який редагується
     const [openEdit, setOpenEdit] = useState(false); // Відповідає за стан модального вікна для редагування
@@ -178,7 +179,7 @@ function App() {
     const [order, setOrder] = useState('asc'); // Порядок сортування (asc/desc)
     const [orderBy, setOrderBy] = useState('name'); // Колонка для сортування
 
-    const [productHistory, setProductHistory] = useState({stock: [], purchase: [], sales: []});
+
     const [openHistory, setOpenHistory] = useState(false); // Стан для модального вікна історії
     const [openPurchase, setOpenPurchase] = useState(false); // Стан для модального вікна історії
 
@@ -200,6 +201,9 @@ function App() {
         total_price: 0,
         sale_date: new Date().toISOString().split('T')[0] // Сьогоднішня дата
     });
+
+    const [categories, setCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     const handleOpenSale = (product) => {
         setEditProduct(product)
@@ -268,7 +272,7 @@ function App() {
     };
 
     const handleAdd = () => {
-        axios.post('http://localhost:5000/api/products', newProduct)
+        axios.post('http://localhost:5000/api/product', newProduct)
             .then(() => {
                 fetchProducts();
                 handleCloseAdd(); // Закрити модальне вікно після додавання
@@ -338,15 +342,49 @@ function App() {
     };
 
     const handleSale = () => {
-    axios.post(`http://localhost:5000/api/product/${editProduct.id}/sale`, saleData)
-        .then(() => {
-            handleCloseSale();
-            // Тут можна також оновити список продуктів або історію, якщо потрібно
-        })
-        .catch(error => {
-            console.error('There was an error saving the sale!', error);
+        axios.post(`http://localhost:5000/api/product/${editProduct.id}/sale`, saleData)
+            .then(() => {
+                handleCloseSale();
+                // Тут можна також оновити список продуктів або історію, якщо потрібно
+            })
+            .catch(error => {
+                console.error('There was an error saving the sale!', error);
+            });
+    };
+
+    useEffect(() => {
+        // Отримання списку всіх категорій
+        axios.get('http://localhost:5000/api/categories')
+            .then(response => {
+                setCategories(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching categories', error);
+            });
+    }, []);
+
+    const handleCategoryChange = (categoryId) => {
+
+        setSelectedCategories((prevState) => {
+            if (prevState.includes(categoryId)) {
+                return prevState.filter(id => id !== categoryId); // Якщо категорія вибрана — видаляємо її
+            } else {
+                return [...prevState, categoryId]; // Якщо не вибрана — додаємо
+            }
         });
-};
+
+
+        setNewProduct((prevProduct) => {
+            const updatedCategories = prevProduct.category_ids.includes(categoryId)
+                ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
+                : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
+
+            return {
+                ...prevProduct,
+                category_ids: updatedCategories // Оновлення категорій
+            };
+        });
+    };
 
     return (
         <div>
@@ -476,6 +514,22 @@ function App() {
                         value={newProduct.price_per_item}
                         onChange={(e) => setNewProduct({...newProduct, price_per_item: e.target.value})}
                     />
+
+                    <FormGroup>
+                        {categories.map(category => (
+                            <FormControlLabel
+                                key={category.id}
+                                control={
+                                    <Checkbox
+                                        checked={selectedCategories.includes(category.id)}
+                                        onChange={() => handleCategoryChange(category.id)}
+                                    />
+                                }
+                                label={category.name}
+                            />
+                        ))}
+                    </FormGroup>
+
                     <Button variant="contained" color="primary" onClick={handleAdd}>
                         Add Product
                     </Button>
