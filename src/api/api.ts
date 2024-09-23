@@ -1,10 +1,10 @@
-import axios, { CreateAxiosDefaults } from 'axios';
+import axios, {CreateAxiosDefaults} from 'axios';
 
 
 // Створення екземпляра axios з правильним типом конфігурації
 const api = axios.create();
 
-api.defaults.baseURL='http://localhost:5000/api'
+api.defaults.baseURL = 'http://localhost:5000/api'
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 
@@ -14,9 +14,18 @@ export const fetchProducts = () => {
         .then(response => response.data)
         .catch(error => {
             console.error('Error fetching products:', error);
-            throw error; // Можна передавати помилку для обробки в компонентах
+             return [];
         });
 };
+
+export const  fetchGetAllCategories = ()=>{
+    return api.get('/categories')
+       .then(response => response.data)
+       .catch(error => {
+            console.error('Error fetching categories:', error);
+            return [];
+        });
+}
 
 // Функція для видалення продукту
 export const deleteProduct = (productId) => {
@@ -62,3 +71,5 @@ export const addSale = (productId, saleData) => {
             throw error;
         });
 };
+
+

@@ -1,12 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel, Tabs, Tab, FormGroup, FormControlLabel, Checkbox
+    TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel,   FormGroup, FormControlLabel, Checkbox
 } from '@mui/material';
 import {modalStyle} from "./styled/styled";
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
-import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "./api/api";
+import {
+    addProduct,
+    addPurchase,
+    addSale,
+    deleteProduct,
+    fetchGetAllCategories,
+    fetchProducts,
+    updateProduct
+} from "./api/api";
+import {d} from "vite/dist/node/types.d-aGj9QkWt";
 
 
 interface IProduct {
@@ -239,22 +247,29 @@ function App() {
     const handleClosePurchase = () => setOpenPurchase(false)
 
     useEffect(() => {
-        fetchProducts();
+        fetchProductsFunc();
     }, []);
 
-    const fetchProducts = () => {
-        axios.get('http://localhost:5000/api/products')
-            .then(response => {
-                setProducts(response.data);
+    const fetchProductsFunc = () => {
+        fetchProducts()
+            .then(data => {
+                // Перевіряємо, чи data є масивом і встановлюємо його в setProducts
+                if (Array.isArray(data)) {
+                    setProducts(data);
+                } else {
+                    console.error('Fetched data is not an array:', data);
+                    setProducts([]); // Встановлюємо порожній масив у разі невідповідності
+                }
             })
             .catch(error => {
                 console.error('There was an error fetching the products!', error);
+                setProducts([]); // Встановлюємо порожній масив у разі помилки
             });
     };
 
     const handleDelete = (productId) => {
         deleteProduct(productId)
-            .then(() => fetchProducts()) // Після видалення оновлюємо список продуктів
+            .then(() => fetchProductsFunc()) // Після видалення оновлюємо список продуктів
             .catch(error => {
                 console.error('There was an error deleting the product!', error);
             });
@@ -263,7 +278,7 @@ function App() {
     const handleAdd = () => {
         addProduct(newProduct)
             .then(() => {
-                fetchProducts();
+                fetchProductsFunc();
                 handleCloseAdd(); // Закрити модальне вікно після додавання
                 setNewProduct({
                     name: '',
@@ -280,7 +295,7 @@ function App() {
 
     const handleEditSave = () => {
         updateProduct(editProduct.id, editProduct).then(() => {
-            fetchProducts();
+            fetchProductsFunc();
             handleCloseEdit(); // Закрити модальне вікно після збереження
         })
             .catch(error => {
@@ -320,7 +335,7 @@ function App() {
         };
 
         addPurchase(editProduct.id, purchaseData).then(() => {
-            fetchProducts(); // Оновити список товарів
+            fetchProductsFunc(); // Оновити список товарів
             handleClosePurchase(); // Закрити модальне вікно
         })
             .catch(error => {
@@ -329,21 +344,28 @@ function App() {
     };
 
     const handleSale = () => {
-        addSale(editProduct.id,saleData).then(() => {
-                handleCloseSale();
-                // Тут можна також оновити список продуктів або історію, якщо потрібно
-            })
+        addSale(editProduct.id, saleData).then(() => {
+            handleCloseSale();
+            // Тут можна також оновити список продуктів або історію, якщо потрібно
+        })
             .catch(error => {
                 console.error('There was an error saving the sale!', error);
             });
     };
 
     useEffect(() => {
-        // Отримання списку всіх категорій
-        axios.get('http://localhost:5000/api/categories')
-            .then(response => {
-                setCategories(response.data);
-            })
+        // Отримання списку всіх
+
+        fetchGetAllCategories().then(data => {
+
+            if (Array.isArray(data)) {
+                setCategories(data);
+            } else {
+                console.error('Fetched data is not an array:', data);
+                setCategories([])
+            }
+
+        })
             .catch(error => {
                 console.error('Error fetching categories', error);
             });
