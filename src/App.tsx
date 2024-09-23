@@ -28,8 +28,7 @@ import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProd
 import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
 
 
-export interface IProduct {
-    id: number;
+export interface IBaseProduct {
     name: string;
     supplier: string;
     quantity: number;
@@ -37,25 +36,49 @@ export interface IProduct {
     price_per_item: number;
 }
 
+export interface IProduct extends IBaseProduct {
+    id: number;
+}
+
+export interface INewProduct extends IBaseProduct {
+    category_ids: number[]
+}
+
 export interface ICategory {
     id: number
     name: string;
 }
 
+export interface IPurchaseData {
+    price_per_item: number,
+    total_price: number,
+    supplier: string,
+    purchase_date: string,
+}
+
+export interface ISaleData {
+    customer: string,
+    quantity: number,
+    price_per_item: number,
+    total_price: number,
+    sale_date: string
+    productId: number
+}
+
 
 function App() {
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState<IProduct[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true); // Стан для прелоадера
     const [error, setError] = useState<string | null>(null); // Стан для помилок
-    const [newProduct, setNewProduct] = useState<object[IProduct]>({
+    const [newProduct, setNewProduct] = useState<INewProduct>({
         name: '',
         supplier: '',
-        quantity: '',
-        total_price: '',
-        price_per_item: '',
+        quantity: 0,
+        total_price: 0,
+        price_per_item: 0,
         category_ids: []
     });
-    const [editProduct, setEditProduct] = useState<object[IProduct]>(null); // Для зберігання товару, який редагується
+    const [editProduct, setEditProduct] = useState<IProduct | null>(null); // Для зберігання товару, який редагується
     const [openEdit, setOpenEdit] = useState(false); // Відповідає за стан модального вікна для редагування
     const [openAdd, setOpenAdd] = useState(false); // Відповідає за стан модального вікна для додавання
 
@@ -66,7 +89,7 @@ function App() {
     const [openHistory, setOpenHistory] = useState(false); // Стан для модального вікна історії
     const [openPurchase, setOpenPurchase] = useState(false); // Стан для модального вікна історії
 
-    const [productId, setProductId] = useState<number>(null)
+    const [productId, setProductId] = useState<number | null>(null)
 
     const [purchaseDetails, setPurchaseDetails] = useState({
         price_per_item: 0,
@@ -77,21 +100,19 @@ function App() {
 
     const [openSale, setOpenSale] = useState(false);
 
-    const [saleData, setSaleData] = useState({
-        customer: '',
-        quantity: 0,
-        price_per_item: 0,
-        total_price: 0,
-        sale_date: new Date().toISOString().split('T')[0] // Сьогоднішня дата
-    });
+    const [saleData, setSaleData] = useState<ISaleData | null>(null);
 
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
 
-    const handleOpenSale = (product) => {
+    const handleOpenSale = (product: IProduct) => {
         setEditProduct(product)
         setSaleData({
-            ...saleData,
+            customer: '',
+            quantity: 0,
+            price_per_item: 0,
+            total_price: 0,
+            sale_date: new Date().toISOString().split('T')[0],
             productId: product.id, // Зберігаємо ID продукту для відправки на сервер
         });
         setOpenSale(true);
@@ -100,17 +121,11 @@ function App() {
     const handleCloseSale = () => {
         setEditProduct(null)
         setOpenSale(false);
-        setSaleData({
-            customer: '',
-            quantity: 0,
-            price_per_item: 0,
-            total_price: 0,
-            sale_date: new Date().toISOString().split('T')[0],
-        });
+        setSaleData(null);
     };
 
     // Функція для відкриття модального вікна покупки
-    const handlePurchase = (product) => {
+    const handlePurchase = (product: IProduct) => {
         setEditProduct(product)
         setPurchaseDetails({
             ...purchaseDetails,
@@ -121,7 +136,7 @@ function App() {
     };
 
     // Функції для відкриття/закриття модальних вікон
-    const handleOpenEdit = (product) => {
+    const handleOpenEdit = (product: IProduct) => {
         setEditProduct(product);
         setOpenEdit(true);
     };
@@ -154,7 +169,7 @@ function App() {
             });
     };
 
-    const handleDelete = (productId) => {
+    const handleDelete = (productId: number) => {
         deleteProduct(productId)
             .then(() => fetchProductsFunc()) // Після видалення оновлюємо список продуктів
             .catch(error => {
@@ -170,9 +185,10 @@ function App() {
                 setNewProduct({
                     name: '',
                     supplier: '',
-                    quantity: '',
-                    total_price: '',
-                    price_per_item: '',
+                    quantity: 0,
+                    total_price: 0,
+                    price_per_item: 0,
+                    category_ids: [],
                 });
             })
             .catch(error => {
@@ -181,6 +197,7 @@ function App() {
     };
 
     const handleEditSave = () => {
+        if (!editProduct) return; // Перевірка, чи �� продукт для редагування
         updateProduct(editProduct.id, editProduct).then(() => {
             fetchProductsFunc();
             handleCloseEdit(); // Закрити модальне вікно після збереження
@@ -197,7 +214,7 @@ function App() {
         setOrderBy(property);
     };
 
-    const sortProducts = (products, comparator) => {
+    const sortProducts = (products: IProduct[], comparator) => {
         const stabilizedProducts = products.map((el, index) => [el, index]);
         stabilizedProducts.sort((a, b) => {
             const order = comparator(a[0], b[0]);
@@ -214,12 +231,14 @@ function App() {
     };
 
     const handleSubmitPurchase = () => {
-        const purchaseData = {
+        const purchaseData: IPurchaseData = {
             price_per_item: purchaseDetails.price_per_item,
             total_price: purchaseDetails.total_price,
             supplier: purchaseDetails.supplier,
             purchase_date: purchaseDetails.purchase_date,
         };
+
+        if (!editProduct) return null
 
         addPurchase(editProduct.id, purchaseData).then(() => {
             fetchProductsFunc(); // Оновити список товарів
@@ -231,13 +250,16 @@ function App() {
     };
 
     const handleSale = () => {
-        addSale(editProduct.id, saleData).then(() => {
-            handleCloseSale();
-            // Тут можна також оновити список продуктів або історію, якщо потрібно
-        })
-            .catch(error => {
-                console.error('There was an error saving the sale!', error);
-            });
+        if (saleData && editProduct) {
+            addSale(editProduct.id, saleData).then(() => {
+                handleCloseSale();
+                // Тут можна також оновити список продуктів або історію, якщо потрібно
+            })
+                .catch(error => {
+                    console.error('There was an error saving the sale!', error);
+                });
+        }
+
     };
 
     useEffect(() => {
@@ -347,8 +369,9 @@ function App() {
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
-                            <TableBody>{sortProducts(products, getComparator(order, orderBy)).map((product) => (
-                                <TableRow key={product.id}>
+                            <TableBody>
+                                {products.length >0 && sortProducts(products, getComparator(order, orderBy)).map((product: IProduct, index) => (
+                                <TableRow key={`${product.id}${index}`}>
                                     <TableCell>{product.id}</TableCell>
                                     <TableCell>{product.name}</TableCell>
                                     <TableCell>{product.supplier}</TableCell>
@@ -405,116 +428,12 @@ function App() {
                     selectedCategories={selectedCategories}/>
             }
 
-            {openEdit && <EditProductModal open={openEdit} handleClose={handleCloseEdit} editProduct={editProduct}
-                                           setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
+            {(openEdit && editProduct) &&
+            <EditProductModal open={openEdit} handleClose={handleCloseEdit} editProduct={editProduct}
+                              setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
 
-            {/*<Modal*/}
-            {/*    open={openAdd}*/}
-            {/*    onClose={handleCloseAdd}*/}
-            {/*    aria-labelledby="modal-title"*/}
-            {/*    aria-describedby="modal-description"*/}
-            {/*>*/}
-            {/*    <Box sx={modalStyle}>*/}
-            {/*        <h2 id="modal-title">Add New Product</h2>*/}
-            {/*        <TextField*/}
-            {/*            label="Name"*/}
-            {/*            value={newProduct.name}*/}
-            {/*            onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Supplier"*/}
-            {/*            value={newProduct.supplier}*/}
-            {/*            onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Quantity"*/}
-            {/*            type="number"*/}
-            {/*            value={newProduct.quantity}*/}
-            {/*            onChange={(e) => setNewProduct({...newProduct, quantity: Number(e.target.value)})}*/}
-            {/*        />*/}
 
-            {/*        <TextField*/}
-            {/*            label="Total Price"*/}
-            {/*            type="number"*/}
-            {/*            value={newProduct.total_price}*/}
-            {/*            onChange={(e) => setNewProduct({...newProduct, total_price: e.target.value})}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Price per Item"*/}
-            {/*            type="number"*/}
-            {/*            value={newProduct.price_per_item}*/}
-            {/*            onChange={(e) => setNewProduct({...newProduct, price_per_item: e.target.value})}*/}
-            {/*        />*/}
-
-            {/*        <FormGroup>*/}
-            {/*            {categories.map(category => (*/}
-            {/*                <FormControlLabel*/}
-            {/*                    key={category.id}*/}
-            {/*                    control={*/}
-            {/*                        <Checkbox*/}
-            {/*                            checked={selectedCategories.includes(category.id)}*/}
-            {/*                            onChange={() => handleCategoryChange(category.id)}*/}
-            {/*                        />*/}
-            {/*                    }*/}
-            {/*                    label={category.name}*/}
-            {/*                />*/}
-            {/*            ))}*/}
-            {/*        </FormGroup>*/}
-
-            {/*        <Button variant="contained" color="primary" onClick={handleAdd}>*/}
-            {/*            Add Product*/}
-            {/*        </Button>*/}
-            {/*    </Box>*/}
-            {/*</Modal>*/}
-
-            {/* Модальне вікно для редагування товару */}
-            {/*<Modal*/}
-            {/*    open={openEdit}*/}
-            {/*    onClose={handleCloseEdit}*/}
-            {/*    aria-labelledby="modal-title"*/}
-            {/*    aria-describedby="modal-description"*/}
-            {/*>*/}
-            {/*    <Box sx={modalStyle}>*/}
-            {/*        <h2 id="modal-title">Edit Product</h2>*/}
-            {/*        {editProduct && (*/}
-            {/*            <div>*/}
-            {/*                <TextField*/}
-            {/*                    label="Name"*/}
-            {/*                    value={editProduct.name}*/}
-            {/*                    onChange={(e) => setEditProduct({...editProduct, name: e.target.value})}*/}
-            {/*                />*/}
-            {/*                <TextField*/}
-            {/*                    label="Supplier"*/}
-            {/*                    value={editProduct.supplier}*/}
-            {/*                    onChange={(e) => setEditProduct({...editProduct, supplier: e.target.value})}*/}
-            {/*                />*/}
-            {/*                <TextField*/}
-            {/*                    label="Quantity"*/}
-            {/*                    type="number"*/}
-            {/*                    value={editProduct.quantity}*/}
-            {/*                    onChange={(e) => setEditProduct({...editProduct, quantity: Number(e.target.value)})}*/}
-            {/*                />*/}
-            {/*                <TextField*/}
-            {/*                    label="Total Price"*/}
-            {/*                    type="number"*/}
-            {/*                    value={editProduct.total_price}*/}
-            {/*                    onChange={(e) => setEditProduct({...editProduct, total_price: e.target.value})}*/}
-            {/*                />*/}
-            {/*                <TextField*/}
-            {/*                    label="Price per Item"*/}
-            {/*                    type="number"*/}
-            {/*                    value={editProduct.price_per_item}*/}
-            {/*                    onChange={(e) => setEditProduct({...editProduct, price_per_item: e.target.value})}*/}
-            {/*                />*/}
-            {/*                <Button variant="contained" color="primary" onClick={handleEditSave}>*/}
-            {/*                    Save Changes*/}
-            {/*                </Button>*/}
-            {/*            </div>*/}
-            {/*        )}*/}
-            {/*    </Box>*/}
-            {/*</Modal>*/}
-
-            {openHistory && (
+            {(openHistory && productId) && (
                 <ProductHistoryModal
                     openHistory={openHistory}
                     onClose={() => setOpenHistory(false)}
@@ -529,117 +448,16 @@ function App() {
                                                    handleSubmitPurchase={handleSubmitPurchase}/>}
 
 
-            {/*<Modal*/}
-            {/*    open={openPurchase}*/}
-            {/*    onClose={() => setOpenPurchase(false)}*/}
-            {/*    aria-labelledby="modal-title"*/}
-            {/*    aria-describedby="modal-description"*/}
-            {/*>*/}
-            {/*    <Box sx={modalStyle}>*/}
-            {/*        <h2 id="modal-title">Purchase Product</h2>*/}
-            {/*        <TextField*/}
-            {/*            label="Price per Item"*/}
-            {/*            type="number"*/}
-            {/*            value={purchaseDetails.price_per_item}*/}
-            {/*            onChange={(e) => setPurchaseDetails({*/}
-            {/*                ...purchaseDetails,*/}
-            {/*                price_per_item: Number(e.target.value)*/}
-            {/*            })}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Total Price"*/}
-            {/*            type="number"*/}
-            {/*            value={purchaseDetails.total_price}*/}
-            {/*            onChange={(e) => setPurchaseDetails({...purchaseDetails, total_price: Number(e.target.value)})}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Supplier"*/}
-            {/*            value={purchaseDetails.supplier}*/}
-            {/*            onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier: e.target.value})}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Purchase Date"*/}
-            {/*            type="date"*/}
-            {/*            value={purchaseDetails.purchase_date}*/}
-            {/*            onChange={(e) => setPurchaseDetails({...purchaseDetails, purchase_date: e.target.value})}*/}
-            {/*        />*/}
-            {/*        <Button variant="contained" color="primary" onClick={handleSubmitPurchase}>*/}
-            {/*            Confirm Purchase*/}
-            {/*        </Button>*/}
-            {/*    </Box>*/}
-            {/*</Modal>*/}
-
             {
-                openSale &&
+                (openSale && saleData) &&
                 <SaleProductModal
-
                     open={openSale}
                     handleClose={handleCloseSale}
                     saleData={saleData}
                     setSaleData={setSaleData}
                     handleSale={handleSale}
-                    products={products}
                 />
             }
-
-
-            {/*<Modal*/}
-            {/*    open={openSale}*/}
-            {/*openSale    onClose={handleCloseSale}*/}
-            {/*    aria-labelledby="modal-title"*/}
-            {/*    aria-describedby="modal-description"*/}
-            {/*>*/}
-            {/*    <Box sx={modalStyle}>*/}
-            {/*        <h2 id="modal-title">Продаж товару</h2>*/}
-            {/*        <TextField*/}
-            {/*            label="Покупець"*/}
-            {/*            value={saleData.customer}*/}
-            {/*            onChange={(e) => setSaleData({...saleData, customer: e.target.value})}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Кількість"*/}
-            {/*            type="number"*/}
-            {/*            value={saleData.quantity}*/}
-            {/*            onChange={(e) => {*/}
-            {/*                const quantity = Number(e.target.value);*/}
-            {/*                setSaleData({*/}
-            {/*                    ...saleData,*/}
-            {/*                    quantity,*/}
-            {/*                    total_price: (quantity * saleData.price_per_item) // Автоматично розраховуємо загальну суму*/}
-            {/*                });*/}
-            {/*            }}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Ціна за шт"*/}
-            {/*            type="number"*/}
-            {/*            value={saleData.price_per_item}*/}
-            {/*            onChange={(e) => {*/}
-            {/*                const price = Number(e.target.value);*/}
-            {/*                setSaleData({*/}
-            {/*                    ...saleData,*/}
-            {/*                    price_per_item: price,*/}
-            {/*                    total_price: (price * saleData.quantity) // Автоматично розраховуємо загальну суму*/}
-            {/*                });*/}
-            {/*            }}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Загальна сума"*/}
-            {/*            value={saleData.total_price}*/}
-            {/*            InputProps={{*/}
-            {/*                readOnly: true,*/}
-            {/*            }}*/}
-            {/*        />*/}
-            {/*        <TextField*/}
-            {/*            label="Дата продажу"*/}
-            {/*            type="date"*/}
-            {/*            value={saleData.sale_date}*/}
-            {/*            onChange={(e) => setSaleData({...saleData, sale_date: e.target.value})}*/}
-            {/*        />*/}
-            {/*        <Button variant="contained" color="primary" onClick={handleSale}>*/}
-            {/*            Зберегти продаж*/}
-            {/*        </Button>*/}
-            {/*    </Box>*/}
-            {/*</Modal>*/}
 
 
         </React.Fragment>

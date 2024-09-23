@@ -69,14 +69,14 @@ const TabPanel: React.FC<TabPanelProps> = ({value, index, children}) => {
 };
 const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryModal) => {
     const [productHistory, setProductHistory] = useState<ProductHistory>({stock: [], purchase: [], sales: []});
-    const [tabIndex, setTabIndex] = useState(0);
+    const [tabIndex, setTabIndex] = useState<number>(0);
     useEffect(() => {
         if (openHistory) {
             fetchProductHistory(productId);
         }
     }, [openHistory, productId]);
 
-    const fetchProductHistory = (productId) => {
+    const fetchProductHistory = (productId:number) => {
         axios.get(`http://localhost:5000/api/product/${productId}/history`)
             .then(response => {
                 setProductHistory({
@@ -90,7 +90,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
             });
     };
 
-    const handleTabChange = (event, newValue) => {
+    const handleTabChange = (event, newValue:number) => {
         setTabIndex(newValue);
     };
 

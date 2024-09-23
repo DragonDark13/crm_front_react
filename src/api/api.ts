@@ -1,4 +1,5 @@
-import axios, {CreateAxiosDefaults} from 'axios';
+import axios from 'axios';
+import {INewProduct, IProduct, IPurchaseData, ISaleData} from "../App";
 
 
 // Створення екземпляра axios з правильним типом конфігурації
@@ -9,39 +10,38 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 // Інтерцептор для фейкових даних
 // Інтерцептор для обробки запитів
-api.interceptors.request.use((config) => {
-  // Перевіряємо URL запиту
-  if (config.url === '/products') {
-    // "Фейкові" дані, які будемо повертати
-    const fakeResponse = {
-      data: [
-        { id: 1, name: 'Product 1', supplier: 'Supplier 1', quantity: 100 },
-        { id: 2, name: 'Product 2', supplier: 'Supplier 2', quantity: 50 }
-      ]
-    };
-
-    // Перехоплюємо запит і відправляємо фейкову відповідь
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Емуляція асинхронної відповіді з фейковими даними
-        config.adapter = () => Promise.resolve({
-          data: fakeResponse.data,
-          status: 200,
-          statusText: 'OK',
-          headers: {},
-          config: config
-        });
-        resolve(config);
-      }, 500); // Затримка у 500 мс для імітації реального запиту
-    });
-  }
-
-  // Повертаємо конфігурацію для всіх інших запитів
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
-
+// api.interceptors.request.use((config) => {
+//     // Перевіряємо URL запиту
+//     if (config.url === '/products') {
+//         // "Фейкові" дані, які будемо повертати
+//         const fakeResponse = {
+//             data: [
+//                 {id: 1, name: 'Product 1', supplier: 'Supplier 1', quantity: 100},
+//                 {id: 2, name: 'Product 2', supplier: 'Supplier 2', quantity: 50}
+//             ]
+//         };
+//
+//         // Перехоплюємо запит і відправляємо фейкову відповідь
+//         return new Promise((resolve) => {
+//             setTimeout(() => {
+//                 // Емуляція асинхронної відповіді з фейковими даними
+//                 config.adapter = () => Promise.resolve({
+//                     data: fakeResponse.data,
+//                     status: 200,
+//                     statusText: 'OK',
+//                     headers: {},
+//                     config: config
+//                 });
+//                 resolve(config);
+//             }, 500); // Затримка у 500 мс для імітації реального запиту
+//         });
+//     }
+//
+//     // Повертаємо конфігурацію для всіх інших запитів
+//     return config;
+// }, (error) => {
+//     return Promise.reject(error);
+// });
 
 
 // Функція для отримання списку продуктів
@@ -50,21 +50,21 @@ export const fetchProducts = () => {
         .then(response => response.data)
         .catch(error => {
             console.error('Error fetching products:', error);
-             return [];
+            return [];
         });
 };
 
-export const  fetchGetAllCategories = ()=>{
+export const fetchGetAllCategories = () => {
     return api.get('/categories')
-       .then(response => response.data)
-       .catch(error => {
+        .then(response => response.data)
+        .catch(error => {
             console.error('Error fetching categories:', error);
             return [];
         });
 }
 
 // Функція для видалення продукту
-export const deleteProduct = (productId) => {
+export const deleteProduct = (productId: number) => {
     return api.delete(`/product/${productId}`)
         .catch(error => {
             console.error('Error deleting product:', error);
@@ -73,7 +73,7 @@ export const deleteProduct = (productId) => {
 };
 
 // Функція для додавання продукту
-export const addProduct = (newProduct) => {
+export const addProduct = (newProduct: INewProduct) => {
     return api.post('/product', newProduct)
         .catch(error => {
             console.error('Error adding product:', error);
@@ -82,7 +82,7 @@ export const addProduct = (newProduct) => {
 };
 
 // Функція для оновлення продукту
-export const updateProduct = (productId, editProduct) => {
+export const updateProduct = (productId: number, editProduct: IProduct) => {
     return api.put(`/product/${productId}`, editProduct)
         .catch(error => {
             console.error('Error updating product:', error);
@@ -91,7 +91,7 @@ export const updateProduct = (productId, editProduct) => {
 };
 
 // Функція для додавання покупки
-export const addPurchase = (productId, purchaseData) => {
+export const addPurchase = (productId: number, purchaseData: IPurchaseData) => {
     return api.post(`/product/${productId}/purchase`, purchaseData)
         .catch(error => {
             console.error('Error adding purchase:', error);
@@ -100,7 +100,7 @@ export const addPurchase = (productId, purchaseData) => {
 };
 
 // Функція для реєстрації продажу
-export const addSale = (productId, saleData) => {
+export const addSale = (productId: number, saleData: ISaleData) => {
     return api.post(`/product/${productId}/sale`, saleData)
         .catch(error => {
             console.error('Error adding sale:', error);

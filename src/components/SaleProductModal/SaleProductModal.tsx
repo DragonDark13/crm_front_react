@@ -1,14 +1,14 @@
-import React from 'react';
 import {TextField, Button, DialogContent, DialogActions} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
+import {ISaleData} from "../../App";
 
-interface ISaleData {
-    customer: string;
-    quantity: number;
-    price_per_item: number;
-    total_price: number;
-    sale_date: string
-}
+// interface ISaleData {
+//     customer: string;
+//     quantity: number;
+//     price_per_item: number;
+//     total_price: number;
+//     sale_date: string
+// }
 
 interface ISaleProductModal {
     open: boolean;

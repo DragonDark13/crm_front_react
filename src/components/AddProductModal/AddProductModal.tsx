@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     TextField,
     Button,
@@ -7,14 +6,14 @@ import {
     Checkbox,
     DialogContent, DialogActions
 } from '@mui/material';
-import {ICategory, IProduct} from "../../App";
+import {ICategory, INewProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IAddProductModal {
     open: boolean,
     handleClose: () => void,
-    newProduct: IProduct,
-    setNewProduct: (product: IProduct) => void,
+    newProduct: INewProduct,
+    setNewProduct: (product: INewProduct) => void,
     categories: ICategory[],
     selectedCategories: number[],
     handleCategoryChange: (categoryID: number) => void,
