@@ -124,21 +124,6 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
             title="Product History"
             maxWidth="xl"
         >
-            <DialogTitle>Product History
-
-                <IconButton
-                    aria-label="close"
-                    onClick={onClose}
-                    sx={(theme) => ({
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: theme.palette.grey[500],
-                    })}
-                >
-                    <CloseIcon/>
-                </IconButton>
-            </DialogTitle>
             <DialogContent>
                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
                     <Tab label="History of Changes"/>

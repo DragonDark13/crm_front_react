@@ -24,6 +24,7 @@ import {
 } from "./api/api";
 import AddProductModal from "./components/AddProductModal/AddProductModal";
 import EditProductModal from "./components/EditProductModal/EditProductModal";
+import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProductModal";
 
 
 export interface IProduct {
@@ -297,7 +298,7 @@ function App() {
             ) : (
                 <React.Fragment>
                     <h1>Product List</h1>
-                                        <Button variant="contained" color="primary" onClick={handleOpenAdd}>
+                    <Button variant="contained" color="primary" onClick={handleOpenAdd}>
                         Add New Product
                     </Button>
                     <TableContainer component={Paper}>
@@ -520,46 +521,52 @@ function App() {
                 />
             )}
 
+            {openPurchase && <PurchaseProductModal open={openPurchase}
+                                                   handleClose={() => setOpenPurchase(false)}
+                                                   purchaseDetails={purchaseDetails}
+                                                   setPurchaseDetails={setPurchaseDetails}
+                                                   handleSubmitPurchase={handlePurchase}/>}
 
-            <Modal
-                open={openPurchase}
-                onClose={() => setOpenPurchase(false)}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-            >
-                <Box sx={modalStyle}>
-                    <h2 id="modal-title">Purchase Product</h2>
-                    <TextField
-                        label="Price per Item"
-                        type="number"
-                        value={purchaseDetails.price_per_item}
-                        onChange={(e) => setPurchaseDetails({
-                            ...purchaseDetails,
-                            price_per_item: Number(e.target.value)
-                        })}
-                    />
-                    <TextField
-                        label="Total Price"
-                        type="number"
-                        value={purchaseDetails.total_price}
-                        onChange={(e) => setPurchaseDetails({...purchaseDetails, total_price: Number(e.target.value)})}
-                    />
-                    <TextField
-                        label="Supplier"
-                        value={purchaseDetails.supplier}
-                        onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier: e.target.value})}
-                    />
-                    <TextField
-                        label="Purchase Date"
-                        type="date"
-                        value={purchaseDetails.purchase_date}
-                        onChange={(e) => setPurchaseDetails({...purchaseDetails, purchase_date: e.target.value})}
-                    />
-                    <Button variant="contained" color="primary" onClick={handleSubmitPurchase}>
-                        Confirm Purchase
-                    </Button>
-                </Box>
-            </Modal>
+
+            {/*<Modal*/}
+            {/*    open={openPurchase}*/}
+            {/*    onClose={() => setOpenPurchase(false)}*/}
+            {/*    aria-labelledby="modal-title"*/}
+            {/*    aria-describedby="modal-description"*/}
+            {/*>*/}
+            {/*    <Box sx={modalStyle}>*/}
+            {/*        <h2 id="modal-title">Purchase Product</h2>*/}
+            {/*        <TextField*/}
+            {/*            label="Price per Item"*/}
+            {/*            type="number"*/}
+            {/*            value={purchaseDetails.price_per_item}*/}
+            {/*            onChange={(e) => setPurchaseDetails({*/}
+            {/*                ...purchaseDetails,*/}
+            {/*                price_per_item: Number(e.target.value)*/}
+            {/*            })}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Total Price"*/}
+            {/*            type="number"*/}
+            {/*            value={purchaseDetails.total_price}*/}
+            {/*            onChange={(e) => setPurchaseDetails({...purchaseDetails, total_price: Number(e.target.value)})}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Supplier"*/}
+            {/*            value={purchaseDetails.supplier}*/}
+            {/*            onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier: e.target.value})}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Purchase Date"*/}
+            {/*            type="date"*/}
+            {/*            value={purchaseDetails.purchase_date}*/}
+            {/*            onChange={(e) => setPurchaseDetails({...purchaseDetails, purchase_date: e.target.value})}*/}
+            {/*        />*/}
+            {/*        <Button variant="contained" color="primary" onClick={handleSubmitPurchase}>*/}
+            {/*            Confirm Purchase*/}
+            {/*        </Button>*/}
+            {/*    </Box>*/}
+            {/*</Modal>*/}
 
 
             <Modal
