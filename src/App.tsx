@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel,   FormGroup, FormControlLabel, Checkbox
+    TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel, FormGroup, FormControlLabel, Checkbox
 } from '@mui/material';
 import {modalStyle} from "./styled/styled";
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
+import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
+
+import './App.css'
 import {
     addProduct,
     addPurchase,
@@ -14,7 +17,6 @@ import {
     fetchProducts,
     updateProduct
 } from "./api/api";
-import {d} from "vite/dist/node/types.d-aGj9QkWt";
 
 
 interface IProduct {
@@ -26,143 +28,11 @@ interface IProduct {
     price_per_item: number;
 }
 
-// const TabPanel = (props) => {
-//     const {children, value, index, ...other} = props;
-//
-//     return (
-//         <div
-//             role="tabpanel"
-//             hidden={value !== index}
-//             id={`tabpanel-${index}`}
-//             aria-labelledby={`tab-${index}`}
-//             {...other}
-//         >
-//             {value === index && (
-//                 <Box sx={{p: 3}}>
-//                     {children}
-//                 </Box>
-//             )}
-//         </div>
-//     );
-// };
-
-
-// const ProductHistoryModal = ({productId, openHistory, onClose}) => {
-//     const [productHistory, setProductHistory] = useState({stock: [], purchase: [], sales: []});
-//     const [tabIndex, setTabIndex] = useState(0);
-//     useEffect(() => {
-//         if (openHistory) {
-//             fetchProductHistory(productId);
-//         }
-//     }, [openHistory, productId]);
-//
-//     const fetchProductHistory = (productId) => {
-//         axios.get(`http://localhost:5000/api/product/${productId}/history`)
-//             .then(response => {
-//                 setProductHistory({
-//                     stock: response.data.stock_history,
-//                     purchase: response.data.purchase_history,
-//                     sales: response.data.sale_history,
-//                 });
-//             })
-//             .catch(error => {
-//                 console.error('There was an error fetching the product history!', error);
-//             });
-//     };
-//
-//     const handleTabChange = (event, newValue) => {
-//         setTabIndex(newValue);
-//     };
-//
-//     return (
-//         <Modal
-//             open={openHistory}
-//             onClose={onClose}
-//             aria-labelledby="modal-title"
-//             aria-describedby="modal-description"
-//         >
-//             <Box sx={modalStyle}>
-//                 <h2 id="modal-title">Product History</h2>
-//                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
-//                     <Tab label="History of Changes"/>
-//                     <Tab label="Purchase History"/>
-//                     <Tab label="Sales History"/>
-//                 </Tabs>
-//                 <TabPanel value={tabIndex} index={0}>
-//                     <TableContainer component={Paper}>
-//                         <Table>
-//                             <TableHead>
-//                                 <TableRow>
-//                                     <TableCell>Date</TableCell>
-//                                     <TableCell>Change Type</TableCell>
-//                                     <TableCell>Change Amount</TableCell>
-//                                 </TableRow>
-//                             </TableHead>
-//                             <TableBody>
-//                                 {(productHistory.stock && productHistory.stock.length > 0) && productHistory.stock.map((record) => (
-//                                     <TableRow key={record.id}>
-//                                         <TableCell>{new Date(record.date).toLocaleString()}</TableCell>
-//                                         <TableCell>{record.change_type}</TableCell>
-//                                         <TableCell>{record.change_amount}</TableCell>
-//                                     </TableRow>
-//                                 ))}
-//                             </TableBody>
-//                         </Table>
-//                     </TableContainer>
-//                 </TabPanel>
-//                 <TabPanel value={tabIndex} index={1}>
-//                     <TableContainer component={Paper}>
-//                         <Table>
-//                             <TableHead>
-//                                 <TableRow>
-//                                     <TableCell>Date</TableCell>
-//                                     <TableCell>Price per Item</TableCell>
-//                                     <TableCell>Total Price</TableCell>
-//                                     <TableCell>Supplier</TableCell>
-//                                 </TableRow>
-//                             </TableHead>
-//                             <TableBody>
-//                                 {(productHistory.purchase && productHistory.purchase.length > 0) && productHistory.purchase.map((record) => (
-//                                     <TableRow key={record.id}>
-//                                         <TableCell>{new Date(record.purchase_date).toLocaleString()}</TableCell>
-//                                         <TableCell>{record.price_per_item}</TableCell>
-//                                         <TableCell>{record.total_price}</TableCell>
-//                                         <TableCell>{record.supplier}</TableCell>
-//                                     </TableRow>
-//                                 ))}
-//                             </TableBody>
-//                         </Table>
-//                     </TableContainer>
-//                 </TabPanel>
-//                 <TabPanel value={tabIndex} index={2}>
-//                     <TableContainer component={Paper}>
-//                         <Table>
-//                             <TableHead>
-//                                 <TableRow>
-//                                     <TableCell>Date</TableCell>
-//                                     <TableCell>Price</TableCell>
-//                                     <TableCell>Quantity Sold</TableCell>
-//                                 </TableRow>
-//                             </TableHead>
-//                             <TableBody>
-//                                 {(productHistory.sales && productHistory.sales.length > 0) && productHistory.sales.map((record) => (
-//                                     <TableRow key={record.id}>
-//                                         <TableCell>{new Date(record.sale_date).toLocaleString()}</TableCell>
-//                                         <TableCell>{record.price}</TableCell>
-//                                         <TableCell>{record.quantity_sold}</TableCell>
-//                                     </TableRow>
-//                                 ))}
-//                             </TableBody>
-//                         </Table>
-//                     </TableContainer>
-//                 </TabPanel>
-//             </Box>
-//         </Modal>
-//     );
-// };
 
 function App() {
     const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true); // Стан для прелоадера
+    const [error, setError] = useState<string | null>(null); // Стан для помилок
     const [newProduct, setNewProduct] = useState<object[IProduct]>({
         name: '',
         supplier: '',
@@ -253,7 +123,6 @@ function App() {
     const fetchProductsFunc = () => {
         fetchProducts()
             .then(data => {
-                // Перевіряємо, чи data є масивом і встановлюємо його в setProducts
                 if (Array.isArray(data)) {
                     setProducts(data);
                 } else {
@@ -263,7 +132,11 @@ function App() {
             })
             .catch(error => {
                 console.error('There was an error fetching the products!', error);
+                setError('There was an error fetching the products!');
                 setProducts([]); // Встановлюємо порожній масив у разі помилки
+            })
+            .finally(() => {
+                setIsLoading(false); // Завершуємо завантаження
             });
     };
 
@@ -395,94 +268,113 @@ function App() {
     };
 
     return (
-        <div>
-            <h1>Product List</h1>
+        <React.Fragment>
 
-            {/* Таблиця продуктів */}
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={orderBy === 'name'}
-                                    direction={orderBy === 'name' ? order : 'asc'}
-                                    onClick={() => handleSort('name')}
-                                >
-                                    Name
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Supplier</TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={orderBy === 'quantity'}
-                                    direction={orderBy === 'quantity' ? order : 'asc'}
-                                    onClick={() => handleSort('quantity')}
-                                >
-                                    Quantity
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={orderBy === 'total_price'}
-                                    direction={orderBy === 'total_price' ? order : 'asc'}
-                                    onClick={() => handleSort('total_price')}
-                                >
-                                    Total Price
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={orderBy === 'price_per_item'}
-                                    direction={orderBy === 'price_per_item' ? order : 'asc'}
-                                    onClick={() => handleSort('price_per_item')}
-                                >
-                                    Price per Item
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Actions</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>{sortProducts(products, getComparator(order, orderBy)).map((product) => (
-                        <TableRow key={product.id}>
-                            <TableCell>{product.id}</TableCell>
-                            <TableCell>{product.name}</TableCell>
-                            <TableCell>{product.supplier}</TableCell>
-                            <TableCell>{product.quantity}</TableCell>
-                            <TableCell>{product.total_price}</TableCell>
-                            <TableCell>{product.price_per_item}</TableCell>
-                            <TableCell>
-                                <Button variant="contained" color="primary" onClick={() => handleOpenEdit(product)}>
-                                    Edit
-                                </Button>
-                                <Button variant="contained" color="secondary"
-                                        onClick={() => handleDelete(product.id)}>
-                                    Delete
-                                </Button>
-                                <Button variant="contained" color="primary" onClick={() => handlePurchase(product)}>
-                                    Purchase
-                                </Button>
-                                <Button variant="contained" color="primary" onClick={() => handleOpenSale(product)}>
-                                    Продаж
-                                </Button>
-                                <Button variant="contained" onClick={() => {
-                                    setProductId(product.id); // Встановлюємо productId
-                                    setOpenHistory(true); // Відкриваємо модальне вікно
-                                }}>
-                                    Історія
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
 
-            {/* Кнопка для відкриття модального вікна для додавання */}
-            <Button variant="contained" color="primary" onClick={handleOpenAdd}>
-                Add New Product
-            </Button>
+            {isLoading ? (
+                <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                        <CircularProgress/> {/* Прелоадер */}
+                        <Typography variant="h6" sx={{mt: 2}}>
+                            Loading...
+                        </Typography>
+                    </Box>
+                </Box>
+            ) : error ? (
+                <div>{error}</div> // Відображення помилки
+            ) : (
+                <React.Fragment>
+                    <h1>Product List</h1>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>
+                                        <TableSortLabel
+                                            active={orderBy === 'name'}
+                                            direction={orderBy === 'name' ? order : 'asc'}
+                                            onClick={() => handleSort('name')}
+                                        >
+                                            Name
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell>Supplier</TableCell>
+                                    <TableCell>
+                                        <TableSortLabel
+                                            active={orderBy === 'quantity'}
+                                            direction={orderBy === 'quantity' ? order : 'asc'}
+                                            onClick={() => handleSort('quantity')}
+                                        >
+                                            Quantity
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell>
+                                        <TableSortLabel
+                                            active={orderBy === 'total_price'}
+                                            direction={orderBy === 'total_price' ? order : 'asc'}
+                                            onClick={() => handleSort('total_price')}
+                                        >
+                                            Total Price
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell>
+                                        <TableSortLabel
+                                            active={orderBy === 'price_per_item'}
+                                            direction={orderBy === 'price_per_item' ? order : 'asc'}
+                                            onClick={() => handleSort('price_per_item')}
+                                        >
+                                            Price per Item
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>{sortProducts(products, getComparator(order, orderBy)).map((product) => (
+                                <TableRow key={product.id}>
+                                    <TableCell>{product.id}</TableCell>
+                                    <TableCell>{product.name}</TableCell>
+                                    <TableCell>{product.supplier}</TableCell>
+                                    <TableCell>{product.quantity}</TableCell>
+                                    <TableCell>{product.total_price}</TableCell>
+                                    <TableCell>{product.price_per_item}</TableCell>
+                                    <TableCell>
+                                        <Button variant="contained" color="primary"
+                                                onClick={() => handleOpenEdit(product)}>
+                                            Edit
+                                        </Button>
+                                        <Button variant="contained" color="secondary"
+                                                onClick={() => handleDelete(product.id)}>
+                                            Delete
+                                        </Button>
+                                        <Button variant="contained" color="primary"
+                                                onClick={() => handlePurchase(product)}>
+                                            Purchase
+                                        </Button>
+                                        <Button variant="contained" color="primary"
+                                                onClick={() => handleOpenSale(product)}>
+                                            Продаж
+                                        </Button>
+                                        <Button variant="contained" onClick={() => {
+                                            setProductId(product.id); // Встановлюємо productId
+                                            setOpenHistory(true); // Відкриваємо модальне вікно
+                                        }}>
+                                            Історія
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    {/* Кнопка для відкриття модального вікна для додавання */}
+                    <Button variant="contained" color="primary" onClick={handleOpenAdd}>
+                        Add New Product
+                    </Button>
+
+                </React.Fragment>
+            )}
+
 
             {/* Модальне вікно для додавання нового товару */}
             <Modal
@@ -730,7 +622,7 @@ function App() {
             </Modal>
 
 
-        </div>
+        </React.Fragment>
     );
 }
 
