@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-    Modal,
-    Box,
     TextField,
     Button,
     FormGroup,
@@ -11,9 +9,9 @@ import {
     DialogTitle,
     IconButton, DialogContent
 } from '@mui/material';
-import {ICategory, IProduct} from "../../App";
 import Transition from "../../styled/Transition";
 import CloseIcon from "@mui/icons-material/Close";
+import {ICategory, IProduct} from "../../App";
 
 interface IAddProductModal {
     open: boolean,

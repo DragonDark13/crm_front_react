@@ -26,13 +26,18 @@ import AddProductModal from "./components/AddProductModal/AddProductModal";
 import EditProductModal from "./components/EditProductModal/EditProductModal";
 
 
-interface IProduct {
+export interface IProduct {
     id: number;
     name: string;
     supplier: string;
     quantity: number;
     total_price: number;
     price_per_item: number;
+}
+
+export interface ICategory {
+    id: number
+    name: string;
 }
 
 
