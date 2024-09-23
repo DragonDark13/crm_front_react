@@ -1,20 +1,37 @@
 import React from 'react';
-import { Modal, Box, TextField, Button } from '@mui/material';
+import {Modal, Box, TextField, Button, DialogContent, DialogActions} from '@mui/material';
+import CustomDialog from "../CustomDialog/CustomDialog";
 
-const SaleProductModal = ({ open, handleClose, saleData, setSaleData, handleSale }) => {
+interface ISaleData {
+    customer: string;
+    quantity: number;
+    price_per_item: number;
+    total_price: number;
+    sale_date: string
+}
+
+interface ISaleProductModal {
+    open: boolean;
+    handleClose: () => void;
+    saleData: ISaleData;
+    setSaleData: (data: ISaleData) => void;
+    handleSale: () => void;
+}
+
+const SaleProductModal = ({open, handleClose, saleData, setSaleData, handleSale}: ISaleProductModal) => {
     return (
-        <Modal
+        <CustomDialog
             open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
+            handleClose={handleClose}
+            title="Sale Product"
+            maxWidth="xl"
         >
-            <Box sx={{ padding: 2, bgcolor: 'white', borderRadius: 2 }}>
-                <h2 id="modal-title">Sale Product</h2>
+            <DialogContent>
+
                 <TextField
                     label="Customer"
                     value={saleData.customer}
-                    onChange={(e) => setSaleData({ ...saleData, customer: e.target.value })}
+                    onChange={(e) => setSaleData({...saleData, customer: e.target.value})}
                     fullWidth
                     margin="normal"
                 />
@@ -61,15 +78,23 @@ const SaleProductModal = ({ open, handleClose, saleData, setSaleData, handleSale
                     label="Sale Date"
                     type="date"
                     value={saleData.sale_date}
-                    onChange={(e) => setSaleData({ ...saleData, sale_date: e.target.value })}
+                    onChange={(e) => setSaleData({...saleData, sale_date: e.target.value})}
                     fullWidth
                     margin="normal"
                 />
-                <Button variant="contained" color="primary" onClick={handleSale} sx={{ mt: 2 }}>
+
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                    Cancel
+                </Button>
+                <Button variant="contained" color="primary" onClick={handleSale} sx={{mt: 2}}>
                     Save Sale
                 </Button>
-            </Box>
-        </Modal>
+            </DialogActions>
+
+
+        </CustomDialog>
     );
 };
 

@@ -25,6 +25,7 @@ import {
 import AddProductModal from "./components/AddProductModal/AddProductModal";
 import EditProductModal from "./components/EditProductModal/EditProductModal";
 import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProductModal";
+import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
 
 
 export interface IProduct {
@@ -568,64 +569,77 @@ function App() {
             {/*    </Box>*/}
             {/*</Modal>*/}
 
+            {
+                openSale &&
+                <SaleProductModal
 
-            <Modal
-                open={openSale}
-                onClose={handleCloseSale}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-            >
-                <Box sx={modalStyle}>
-                    <h2 id="modal-title">Продаж товару</h2>
-                    <TextField
-                        label="Покупець"
-                        value={saleData.customer}
-                        onChange={(e) => setSaleData({...saleData, customer: e.target.value})}
-                    />
-                    <TextField
-                        label="Кількість"
-                        type="number"
-                        value={saleData.quantity}
-                        onChange={(e) => {
-                            const quantity = Number(e.target.value);
-                            setSaleData({
-                                ...saleData,
-                                quantity,
-                                total_price: (quantity * saleData.price_per_item) // Автоматично розраховуємо загальну суму
-                            });
-                        }}
-                    />
-                    <TextField
-                        label="Ціна за шт"
-                        type="number"
-                        value={saleData.price_per_item}
-                        onChange={(e) => {
-                            const price = Number(e.target.value);
-                            setSaleData({
-                                ...saleData,
-                                price_per_item: price,
-                                total_price: (price * saleData.quantity) // Автоматично розраховуємо загальну суму
-                            });
-                        }}
-                    />
-                    <TextField
-                        label="Загальна сума"
-                        value={saleData.total_price}
-                        InputProps={{
-                            readOnly: true,
-                        }}
-                    />
-                    <TextField
-                        label="Дата продажу"
-                        type="date"
-                        value={saleData.sale_date}
-                        onChange={(e) => setSaleData({...saleData, sale_date: e.target.value})}
-                    />
-                    <Button variant="contained" color="primary" onClick={handleSale}>
-                        Зберегти продаж
-                    </Button>
-                </Box>
-            </Modal>
+                    open={openSale}
+                    handleClose={handleCloseSale}
+                    saleData={saleData}
+                    setSaleData={setSaleData}
+                    handleSale={handleSale}
+                    products={products}
+                />
+            }
+
+
+            {/*<Modal*/}
+            {/*    open={openSale}*/}
+            {/*openSale    onClose={handleCloseSale}*/}
+            {/*    aria-labelledby="modal-title"*/}
+            {/*    aria-describedby="modal-description"*/}
+            {/*>*/}
+            {/*    <Box sx={modalStyle}>*/}
+            {/*        <h2 id="modal-title">Продаж товару</h2>*/}
+            {/*        <TextField*/}
+            {/*            label="Покупець"*/}
+            {/*            value={saleData.customer}*/}
+            {/*            onChange={(e) => setSaleData({...saleData, customer: e.target.value})}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Кількість"*/}
+            {/*            type="number"*/}
+            {/*            value={saleData.quantity}*/}
+            {/*            onChange={(e) => {*/}
+            {/*                const quantity = Number(e.target.value);*/}
+            {/*                setSaleData({*/}
+            {/*                    ...saleData,*/}
+            {/*                    quantity,*/}
+            {/*                    total_price: (quantity * saleData.price_per_item) // Автоматично розраховуємо загальну суму*/}
+            {/*                });*/}
+            {/*            }}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Ціна за шт"*/}
+            {/*            type="number"*/}
+            {/*            value={saleData.price_per_item}*/}
+            {/*            onChange={(e) => {*/}
+            {/*                const price = Number(e.target.value);*/}
+            {/*                setSaleData({*/}
+            {/*                    ...saleData,*/}
+            {/*                    price_per_item: price,*/}
+            {/*                    total_price: (price * saleData.quantity) // Автоматично розраховуємо загальну суму*/}
+            {/*                });*/}
+            {/*            }}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Загальна сума"*/}
+            {/*            value={saleData.total_price}*/}
+            {/*            InputProps={{*/}
+            {/*                readOnly: true,*/}
+            {/*            }}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Дата продажу"*/}
+            {/*            type="date"*/}
+            {/*            value={saleData.sale_date}*/}
+            {/*            onChange={(e) => setSaleData({...saleData, sale_date: e.target.value})}*/}
+            {/*        />*/}
+            {/*        <Button variant="contained" color="primary" onClick={handleSale}>*/}
+            {/*            Зберегти продаж*/}
+            {/*        </Button>*/}
+            {/*    </Box>*/}
+            {/*</Modal>*/}
 
 
         </React.Fragment>
