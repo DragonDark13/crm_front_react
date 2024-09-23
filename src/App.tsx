@@ -7,6 +7,11 @@ import {modalStyle} from "./styled/styled";
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
 import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
 
+//TODO Create dialog components
+//TODO add type interfae
+//TODO add handle error
+
+
 import './App.css'
 import {
     addProduct,
@@ -17,15 +22,21 @@ import {
     fetchProducts,
     updateProduct
 } from "./api/api";
+import AddProductModal from "./components/AddProductModal/AddProductModal";
 
 
-interface IProduct {
+export interface IProduct {
     id: number;
     name: string;
     supplier: string;
     quantity: number;
     total_price: number;
     price_per_item: number;
+}
+
+export interface ICategory {
+    name: string;
+    id: number;
 }
 
 
@@ -377,64 +388,77 @@ function App() {
 
 
             {/* Модальне вікно для додавання нового товару */}
-            <Modal
-                open={openAdd}
-                onClose={handleCloseAdd}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-            >
-                <Box sx={modalStyle}>
-                    <h2 id="modal-title">Add New Product</h2>
-                    <TextField
-                        label="Name"
-                        value={newProduct.name}
-                        onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                    />
-                    <TextField
-                        label="Supplier"
-                        value={newProduct.supplier}
-                        onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
-                    />
-                    <TextField
-                        label="Quantity"
-                        type="number"
-                        value={newProduct.quantity}
-                        onChange={(e) => setNewProduct({...newProduct, quantity: Number(e.target.value)})}
-                    />
 
-                    <TextField
-                        label="Total Price"
-                        type="number"
-                        value={newProduct.total_price}
-                        onChange={(e) => setNewProduct({...newProduct, total_price: e.target.value})}
-                    />
-                    <TextField
-                        label="Price per Item"
-                        type="number"
-                        value={newProduct.price_per_item}
-                        onChange={(e) => setNewProduct({...newProduct, price_per_item: e.target.value})}
-                    />
+            {
+                openAdd && <AddProductModal
+                    setNewProduct={setNewProduct}
+                    newProduct={newProduct}
+                    open={openAdd}
+                    categories={categories}
+                    handleAdd={handleAdd}
+                    handleCategoryChange={handleCategoryChange}
+                    handleClose={handleCloseAdd}
+                    selectedCategories={selectedCategories}/>
+            }
 
-                    <FormGroup>
-                        {categories.map(category => (
-                            <FormControlLabel
-                                key={category.id}
-                                control={
-                                    <Checkbox
-                                        checked={selectedCategories.includes(category.id)}
-                                        onChange={() => handleCategoryChange(category.id)}
-                                    />
-                                }
-                                label={category.name}
-                            />
-                        ))}
-                    </FormGroup>
+            {/*<Modal*/}
+            {/*    open={openAdd}*/}
+            {/*    onClose={handleCloseAdd}*/}
+            {/*    aria-labelledby="modal-title"*/}
+            {/*    aria-describedby="modal-description"*/}
+            {/*>*/}
+            {/*    <Box sx={modalStyle}>*/}
+            {/*        <h2 id="modal-title">Add New Product</h2>*/}
+            {/*        <TextField*/}
+            {/*            label="Name"*/}
+            {/*            value={newProduct.name}*/}
+            {/*            onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Supplier"*/}
+            {/*            value={newProduct.supplier}*/}
+            {/*            onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Quantity"*/}
+            {/*            type="number"*/}
+            {/*            value={newProduct.quantity}*/}
+            {/*            onChange={(e) => setNewProduct({...newProduct, quantity: Number(e.target.value)})}*/}
+            {/*        />*/}
 
-                    <Button variant="contained" color="primary" onClick={handleAdd}>
-                        Add Product
-                    </Button>
-                </Box>
-            </Modal>
+            {/*        <TextField*/}
+            {/*            label="Total Price"*/}
+            {/*            type="number"*/}
+            {/*            value={newProduct.total_price}*/}
+            {/*            onChange={(e) => setNewProduct({...newProduct, total_price: e.target.value})}*/}
+            {/*        />*/}
+            {/*        <TextField*/}
+            {/*            label="Price per Item"*/}
+            {/*            type="number"*/}
+            {/*            value={newProduct.price_per_item}*/}
+            {/*            onChange={(e) => setNewProduct({...newProduct, price_per_item: e.target.value})}*/}
+            {/*        />*/}
+
+            {/*        <FormGroup>*/}
+            {/*            {categories.map(category => (*/}
+            {/*                <FormControlLabel*/}
+            {/*                    key={category.id}*/}
+            {/*                    control={*/}
+            {/*                        <Checkbox*/}
+            {/*                            checked={selectedCategories.includes(category.id)}*/}
+            {/*                            onChange={() => handleCategoryChange(category.id)}*/}
+            {/*                        />*/}
+            {/*                    }*/}
+            {/*                    label={category.name}*/}
+            {/*                />*/}
+            {/*            ))}*/}
+            {/*        </FormGroup>*/}
+
+            {/*        <Button variant="contained" color="primary" onClick={handleAdd}>*/}
+            {/*            Add Product*/}
+            {/*        </Button>*/}
+            {/*    </Box>*/}
+            {/*</Modal>*/}
 
             {/* Модальне вікно для редагування товару */}
             <Modal
@@ -491,36 +515,6 @@ function App() {
                 />
             )}
 
-            {/*<Modal*/}
-            {/*    open={openHistory}*/}
-            {/*    onClose={() => setOpenHistory(false)}*/}
-            {/*    aria-labelledby="modal-title"*/}
-            {/*    aria-describedby="modal-description"*/}
-            {/*>*/}
-            {/*    <Box sx={modalStyle}>*/}
-            {/*        <h2 id="modal-title">Product History</h2>*/}
-            {/*        <TableContainer component={Paper}>*/}
-            {/*            <Table>*/}
-            {/*                <TableHead>*/}
-            {/*                    <TableRow>*/}
-            {/*                        <TableCell>Date</TableCell>*/}
-            {/*                        <TableCell>Change Type</TableCell>*/}
-            {/*                        <TableCell>Change Amount</TableCell>*/}
-            {/*                    </TableRow>*/}
-            {/*                </TableHead>*/}
-            {/*                <TableBody>*/}
-            {/*                    {productHistory.map((record) => (*/}
-            {/*                        <TableRow key={record.id}>*/}
-            {/*                            <TableCell>{new Date(record.timestamp).toLocaleString()}</TableCell>*/}
-            {/*                            <TableCell>{record.change_type}</TableCell>*/}
-            {/*                            <TableCell>{record.change_amount}</TableCell>*/}
-            {/*                        </TableRow>*/}
-            {/*                    ))}*/}
-            {/*                </TableBody>*/}
-            {/*            </Table>*/}
-            {/*        </TableContainer>*/}
-            {/*    </Box>*/}
-            {/*</Modal>*/}
 
             <Modal
                 open={openPurchase}
