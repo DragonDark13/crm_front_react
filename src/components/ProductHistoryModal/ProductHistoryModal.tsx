@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import CloseIcon from '@mui/icons-material/Close';
 
 //TODO add scss style
 
 import {
-    Box, Dialog, DialogTitle, DialogContent,
-    Modal,
-    Paper, Slide,
+    DialogContent,
+
+    Paper,
     Tab,
     Table,
     TableBody,
@@ -15,32 +14,10 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Tabs, IconButton
+    Tabs
 } from "@mui/material";
-import {modalStyle} from "../../styled/styled";
-import {TransitionProps} from "@mui/material/transitions";
-import Transition from "../../utils/Transition";
-import CustomDialog from "../CustomDialog/CustomDialog";
 
-// const TabPanel = (props) => {
-//     const {children, value, index, ...other} = props;
-//
-//     return (
-//         <div
-//             role="tabpanel"
-//             hidden={value !== index}
-//             id={`tabpanel-${index}`}
-//             aria-labelledby={`tab-${index}`}
-//             {...other}
-//         >
-//             {value === index && (
-//                 <Box sx={{p: 3}}>
-//                     {children}
-//                 </Box>
-//             )}
-//         </div>
-//     );
-// };
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 
 //TODO Type interfaces

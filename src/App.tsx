@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel, FormGroup, FormControlLabel, Checkbox
+    TableRow, Paper, Button, Box, TableSortLabel,
 } from '@mui/material';
-import {modalStyle} from "./styled/styled";
+
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
 import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
 
 //TODO Create dialog components
-//TODO add type interfae
+//TODO add type interface
 //TODO add handle error
 
 
@@ -526,7 +526,7 @@ function App() {
                                                    handleClose={() => setOpenPurchase(false)}
                                                    purchaseDetails={purchaseDetails}
                                                    setPurchaseDetails={setPurchaseDetails}
-                                                   handleSubmitPurchase={handlePurchase}/>}
+                                                   handleSubmitPurchase={handleSubmitPurchase}/>}
 
 
             {/*<Modal*/}

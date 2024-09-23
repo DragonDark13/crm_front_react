@@ -5,12 +5,8 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Dialog,
-    DialogTitle,
-    IconButton, DialogContent, DialogActions
+    DialogContent, DialogActions
 } from '@mui/material';
-import Transition from "../../utils/Transition";
-import CloseIcon from "@mui/icons-material/Close";
 import {ICategory, IProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 

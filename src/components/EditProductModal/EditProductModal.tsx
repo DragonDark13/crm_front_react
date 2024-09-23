@@ -1,7 +1,5 @@
 import React from 'react';
-import {Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, DialogActions} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import Transition from "../../utils/Transition";
+import { DialogContent, TextField, Button, DialogActions} from '@mui/material';
 import {IProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 
