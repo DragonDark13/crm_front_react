@@ -23,20 +23,16 @@ import {
     updateProduct
 } from "./api/api";
 import AddProductModal from "./components/AddProductModal/AddProductModal";
+import EditProductModal from "./components/EditProductModal/EditProductModal";
 
 
-export interface IProduct {
+interface IProduct {
     id: number;
     name: string;
     supplier: string;
     quantity: number;
     total_price: number;
     price_per_item: number;
-}
-
-export interface ICategory {
-    name: string;
-    id: number;
 }
 
 
@@ -401,6 +397,9 @@ function App() {
                     selectedCategories={selectedCategories}/>
             }
 
+            {openEdit && <EditProductModal open={openEdit} handleClose={handleCloseEdit} editProduct={editProduct}
+                                           setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
+
             {/*<Modal*/}
             {/*    open={openAdd}*/}
             {/*    onClose={handleCloseAdd}*/}
@@ -461,51 +460,51 @@ function App() {
             {/*</Modal>*/}
 
             {/* Модальне вікно для редагування товару */}
-            <Modal
-                open={openEdit}
-                onClose={handleCloseEdit}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-            >
-                <Box sx={modalStyle}>
-                    <h2 id="modal-title">Edit Product</h2>
-                    {editProduct && (
-                        <div>
-                            <TextField
-                                label="Name"
-                                value={editProduct.name}
-                                onChange={(e) => setEditProduct({...editProduct, name: e.target.value})}
-                            />
-                            <TextField
-                                label="Supplier"
-                                value={editProduct.supplier}
-                                onChange={(e) => setEditProduct({...editProduct, supplier: e.target.value})}
-                            />
-                            <TextField
-                                label="Quantity"
-                                type="number"
-                                value={editProduct.quantity}
-                                onChange={(e) => setEditProduct({...editProduct, quantity: Number(e.target.value)})}
-                            />
-                            <TextField
-                                label="Total Price"
-                                type="number"
-                                value={editProduct.total_price}
-                                onChange={(e) => setEditProduct({...editProduct, total_price: e.target.value})}
-                            />
-                            <TextField
-                                label="Price per Item"
-                                type="number"
-                                value={editProduct.price_per_item}
-                                onChange={(e) => setEditProduct({...editProduct, price_per_item: e.target.value})}
-                            />
-                            <Button variant="contained" color="primary" onClick={handleEditSave}>
-                                Save Changes
-                            </Button>
-                        </div>
-                    )}
-                </Box>
-            </Modal>
+            {/*<Modal*/}
+            {/*    open={openEdit}*/}
+            {/*    onClose={handleCloseEdit}*/}
+            {/*    aria-labelledby="modal-title"*/}
+            {/*    aria-describedby="modal-description"*/}
+            {/*>*/}
+            {/*    <Box sx={modalStyle}>*/}
+            {/*        <h2 id="modal-title">Edit Product</h2>*/}
+            {/*        {editProduct && (*/}
+            {/*            <div>*/}
+            {/*                <TextField*/}
+            {/*                    label="Name"*/}
+            {/*                    value={editProduct.name}*/}
+            {/*                    onChange={(e) => setEditProduct({...editProduct, name: e.target.value})}*/}
+            {/*                />*/}
+            {/*                <TextField*/}
+            {/*                    label="Supplier"*/}
+            {/*                    value={editProduct.supplier}*/}
+            {/*                    onChange={(e) => setEditProduct({...editProduct, supplier: e.target.value})}*/}
+            {/*                />*/}
+            {/*                <TextField*/}
+            {/*                    label="Quantity"*/}
+            {/*                    type="number"*/}
+            {/*                    value={editProduct.quantity}*/}
+            {/*                    onChange={(e) => setEditProduct({...editProduct, quantity: Number(e.target.value)})}*/}
+            {/*                />*/}
+            {/*                <TextField*/}
+            {/*                    label="Total Price"*/}
+            {/*                    type="number"*/}
+            {/*                    value={editProduct.total_price}*/}
+            {/*                    onChange={(e) => setEditProduct({...editProduct, total_price: e.target.value})}*/}
+            {/*                />*/}
+            {/*                <TextField*/}
+            {/*                    label="Price per Item"*/}
+            {/*                    type="number"*/}
+            {/*                    value={editProduct.price_per_item}*/}
+            {/*                    onChange={(e) => setEditProduct({...editProduct, price_per_item: e.target.value})}*/}
+            {/*                />*/}
+            {/*                <Button variant="contained" color="primary" onClick={handleEditSave}>*/}
+            {/*                    Save Changes*/}
+            {/*                </Button>*/}
+            {/*            </div>*/}
+            {/*        )}*/}
+            {/*    </Box>*/}
+            {/*</Modal>*/}
 
             {openHistory && (
                 <ProductHistoryModal

@@ -44,6 +44,8 @@ const AddProductModal = ({
             onClose={handleClose}
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
+             maxWidth={"xl"}
+            fullWidth
         >
             <DialogTitle>Add New Product
 
