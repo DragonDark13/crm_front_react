@@ -1,8 +1,9 @@
 import React from 'react';
-import {Dialog, DialogTitle, DialogContent, TextField, Button, IconButton} from '@mui/material';
+import {Dialog, DialogTitle, DialogContent, TextField, Button, IconButton, DialogActions} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Transition from "../../styled/Transition";
+import Transition from "../../utils/Transition";
 import {IProduct} from "../../App";
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IEditProductModalProps {
     open: boolean;
@@ -20,27 +21,12 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 handleEditSave,
                                                             }) => {
     return (
-        <Dialog
-            TransitionComponent={Transition}
-            keepMounted
+        <CustomDialog
             open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-            maxWidth={"xl"}
-            fullWidth
-
+            handleClose={handleClose}
+            title="Edit Product"
+            maxWidth="xl"
         >
-            <DialogTitle id="modal-title">
-                Edit Product
-                <IconButton
-                    aria-label="close"
-                    onClick={handleClose}
-                    sx={{position: 'absolute', right: 8, top: 8, color: (theme) => theme.palette.grey[500]}}
-                >
-                    <CloseIcon/>
-                </IconButton>
-            </DialogTitle>
             <DialogContent>
                 {editProduct && (
                     <div>
@@ -82,13 +68,16 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             fullWidth
                             margin="normal"
                         />
-                        <Button variant="contained" color="primary" onClick={handleEditSave} sx={{mt: 2}}>
-                            Save Changes
-                        </Button>
+
                     </div>
                 )}
             </DialogContent>
-        </Dialog>
+            <DialogActions>
+                <Button variant="contained" color="primary" onClick={handleEditSave} sx={{mt: 2}}>
+                    Save Changes
+                </Button>
+            </DialogActions>
+        </CustomDialog>
     );
 };
 

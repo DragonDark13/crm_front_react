@@ -7,11 +7,12 @@ import {
     Checkbox,
     Dialog,
     DialogTitle,
-    IconButton, DialogContent
+    IconButton, DialogContent, DialogActions
 } from '@mui/material';
-import Transition from "../../styled/Transition";
+import Transition from "../../utils/Transition";
 import CloseIcon from "@mui/icons-material/Close";
 import {ICategory, IProduct} from "../../App";
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IAddProductModal {
     open: boolean,
@@ -35,31 +36,12 @@ const AddProductModal = ({
                              handleAdd
                          }: IAddProductModal) => {
     return (
-        <Dialog
-            TransitionComponent={Transition}
-            keepMounted
+        <CustomDialog
             open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-             maxWidth={"xl"}
-            fullWidth
+            handleClose={handleClose}
+            title="Add New Product"
+            maxWidth="xl"
         >
-            <DialogTitle>Add New Product
-
-                <IconButton
-                    aria-label="close"
-                    onClick={handleClose}
-                    sx={(theme) => ({
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: theme.palette.grey[500],
-                    })}
-                >
-                    <CloseIcon/>
-                </IconButton>
-            </DialogTitle>
             <DialogContent>
                 <TextField
                     label="Name"
@@ -113,11 +95,14 @@ const AddProductModal = ({
                         />
                     ))}
                 </FormGroup>
+
+            </DialogContent>
+            <DialogActions>
                 <Button variant="contained" color="primary" onClick={handleAdd} sx={{mt: 2}}>
                     Add Product
                 </Button>
-            </DialogContent>
-        </Dialog>
+            </DialogActions>
+        </CustomDialog>
     );
 };
 

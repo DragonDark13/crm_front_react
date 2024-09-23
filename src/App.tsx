@@ -297,6 +297,9 @@ function App() {
             ) : (
                 <React.Fragment>
                     <h1>Product List</h1>
+                                        <Button variant="contained" color="primary" onClick={handleOpenAdd}>
+                        Add New Product
+                    </Button>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
@@ -380,9 +383,7 @@ function App() {
                         </Table>
                     </TableContainer>
                     {/* Кнопка для відкриття модального вікна для додавання */}
-                    <Button variant="contained" color="primary" onClick={handleOpenAdd}>
-                        Add New Product
-                    </Button>
+
 
                 </React.Fragment>
             )}

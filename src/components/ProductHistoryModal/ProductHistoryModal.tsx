@@ -19,7 +19,8 @@ import {
 } from "@mui/material";
 import {modalStyle} from "../../styled/styled";
 import {TransitionProps} from "@mui/material/transitions";
-import Transition from "../../styled/Transition";
+import Transition from "../../utils/Transition";
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 // const TabPanel = (props) => {
 //     const {children, value, index, ...other} = props;
@@ -40,7 +41,6 @@ import Transition from "../../styled/Transition";
 //         </div>
 //     );
 // };
-
 
 
 //TODO Type interfaces
@@ -83,7 +83,7 @@ interface TabPanelProps {
     children: React.ReactNode;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ value, index, children }) => {
+const TabPanel: React.FC<TabPanelProps> = ({value, index, children}) => {
     return (
         <div role="tabpanel" hidden={value !== index}>
             {value === index && <div>{children}</div>}
@@ -91,7 +91,7 @@ const TabPanel: React.FC<TabPanelProps> = ({ value, index, children }) => {
     );
 };
 const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryModal) => {
-    const [productHistory, setProductHistory] = useState<ProductHistory>({ stock: [], purchase: [], sales: [] });
+    const [productHistory, setProductHistory] = useState<ProductHistory>({stock: [], purchase: [], sales: []});
     const [tabIndex, setTabIndex] = useState(0);
     useEffect(() => {
         if (openHistory) {
@@ -118,15 +118,11 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
     };
 
     return (
-        <Dialog
-            TransitionComponent={Transition}
-            keepMounted
+        <CustomDialog
             open={openHistory}
-            onClose={onClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-            maxWidth={"xl"}
-            fullWidth
+            handleClose={onClose}
+            title="Product History"
+            maxWidth="xl"
         >
             <DialogTitle>Product History
 
@@ -185,7 +181,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                             <TableBody>
                                 {(productHistory.purchase && productHistory.purchase.length > 0) && productHistory.purchase.map((record) => (
                                     <TableRow key={record.id}>
-                                        <TableCell>{new Date(record.purchase_date).toLocaleString()}</TableCell>
+                                        <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.price_per_item}</TableCell>
                                         <TableCell>{record.total_price}</TableCell>
                                         <TableCell>{record.supplier}</TableCell>
@@ -208,7 +204,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                             <TableBody>
                                 {(productHistory.sales && productHistory.sales.length > 0) && productHistory.sales.map((record) => (
                                     <TableRow key={record.id}>
-                                        <TableCell>{new Date(record.sale_date).toLocaleString()}</TableCell>
+                                        <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.price}</TableCell>
                                         <TableCell>{record.quantity_sold}</TableCell>
                                     </TableRow>
@@ -218,7 +214,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                     </TableContainer>
                 </TabPanel>
             </DialogContent>
-        </Dialog>
+        </CustomDialog>
     );
 };
 export default ProductHistoryModal
