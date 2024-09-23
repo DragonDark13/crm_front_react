@@ -4,19 +4,10 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead,
     TableRow, Paper, Button, TextField, Modal, Box, TableSortLabel, Tabs, Tab, FormGroup, FormControlLabel, Checkbox
 } from '@mui/material';
+import {modalStyle} from "./styled/styled";
+import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
+import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "./api/api";
 
-// Стили для модального вікна
-const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
 
 interface IProduct {
     id: number;
@@ -27,140 +18,140 @@ interface IProduct {
     price_per_item: number;
 }
 
-const TabPanel = (props) => {
-    const {children, value, index, ...other} = props;
+// const TabPanel = (props) => {
+//     const {children, value, index, ...other} = props;
+//
+//     return (
+//         <div
+//             role="tabpanel"
+//             hidden={value !== index}
+//             id={`tabpanel-${index}`}
+//             aria-labelledby={`tab-${index}`}
+//             {...other}
+//         >
+//             {value === index && (
+//                 <Box sx={{p: 3}}>
+//                     {children}
+//                 </Box>
+//             )}
+//         </div>
+//     );
+// };
 
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`tabpanel-${index}`}
-            aria-labelledby={`tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{p: 3}}>
-                    {children}
-                </Box>
-            )}
-        </div>
-    );
-};
 
-
-const ProductHistoryModal = ({productId, openHistory, onClose}) => {
-    const [productHistory, setProductHistory] = useState({stock: [], purchase: [], sales: []});
-    const [tabIndex, setTabIndex] = useState(0);
-    useEffect(() => {
-        if (openHistory) {
-            fetchProductHistory(productId);
-        }
-    }, [openHistory, productId]);
-
-    const fetchProductHistory = (productId) => {
-        axios.get(`http://localhost:5000/api/product/${productId}/history`)
-            .then(response => {
-                setProductHistory({
-                    stock: response.data.stock_history,
-                    purchase: response.data.purchase_history,
-                    sales: response.data.sale_history,
-                });
-            })
-            .catch(error => {
-                console.error('There was an error fetching the product history!', error);
-            });
-    };
-
-    const handleTabChange = (event, newValue) => {
-        setTabIndex(newValue);
-    };
-
-    return (
-        <Modal
-            open={openHistory}
-            onClose={onClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-        >
-            <Box sx={modalStyle}>
-                <h2 id="modal-title">Product History</h2>
-                <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
-                    <Tab label="History of Changes"/>
-                    <Tab label="Purchase History"/>
-                    <Tab label="Sales History"/>
-                </Tabs>
-                <TabPanel value={tabIndex} index={0}>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell>Change Type</TableCell>
-                                    <TableCell>Change Amount</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {(productHistory.stock && productHistory.stock.length > 0) && productHistory.stock.map((record) => (
-                                    <TableRow key={record.id}>
-                                        <TableCell>{new Date(record.date).toLocaleString()}</TableCell>
-                                        <TableCell>{record.change_type}</TableCell>
-                                        <TableCell>{record.change_amount}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </TabPanel>
-                <TabPanel value={tabIndex} index={1}>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell>Price per Item</TableCell>
-                                    <TableCell>Total Price</TableCell>
-                                    <TableCell>Supplier</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {(productHistory.purchase && productHistory.purchase.length > 0) && productHistory.purchase.map((record) => (
-                                    <TableRow key={record.id}>
-                                        <TableCell>{new Date(record.purchase_date).toLocaleString()}</TableCell>
-                                        <TableCell>{record.price_per_item}</TableCell>
-                                        <TableCell>{record.total_price}</TableCell>
-                                        <TableCell>{record.supplier}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </TabPanel>
-                <TabPanel value={tabIndex} index={2}>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell>Price</TableCell>
-                                    <TableCell>Quantity Sold</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {(productHistory.sales && productHistory.sales.length > 0) && productHistory.sales.map((record) => (
-                                    <TableRow key={record.id}>
-                                        <TableCell>{new Date(record.sale_date).toLocaleString()}</TableCell>
-                                        <TableCell>{record.price}</TableCell>
-                                        <TableCell>{record.quantity_sold}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </TabPanel>
-            </Box>
-        </Modal>
-    );
-};
+// const ProductHistoryModal = ({productId, openHistory, onClose}) => {
+//     const [productHistory, setProductHistory] = useState({stock: [], purchase: [], sales: []});
+//     const [tabIndex, setTabIndex] = useState(0);
+//     useEffect(() => {
+//         if (openHistory) {
+//             fetchProductHistory(productId);
+//         }
+//     }, [openHistory, productId]);
+//
+//     const fetchProductHistory = (productId) => {
+//         axios.get(`http://localhost:5000/api/product/${productId}/history`)
+//             .then(response => {
+//                 setProductHistory({
+//                     stock: response.data.stock_history,
+//                     purchase: response.data.purchase_history,
+//                     sales: response.data.sale_history,
+//                 });
+//             })
+//             .catch(error => {
+//                 console.error('There was an error fetching the product history!', error);
+//             });
+//     };
+//
+//     const handleTabChange = (event, newValue) => {
+//         setTabIndex(newValue);
+//     };
+//
+//     return (
+//         <Modal
+//             open={openHistory}
+//             onClose={onClose}
+//             aria-labelledby="modal-title"
+//             aria-describedby="modal-description"
+//         >
+//             <Box sx={modalStyle}>
+//                 <h2 id="modal-title">Product History</h2>
+//                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
+//                     <Tab label="History of Changes"/>
+//                     <Tab label="Purchase History"/>
+//                     <Tab label="Sales History"/>
+//                 </Tabs>
+//                 <TabPanel value={tabIndex} index={0}>
+//                     <TableContainer component={Paper}>
+//                         <Table>
+//                             <TableHead>
+//                                 <TableRow>
+//                                     <TableCell>Date</TableCell>
+//                                     <TableCell>Change Type</TableCell>
+//                                     <TableCell>Change Amount</TableCell>
+//                                 </TableRow>
+//                             </TableHead>
+//                             <TableBody>
+//                                 {(productHistory.stock && productHistory.stock.length > 0) && productHistory.stock.map((record) => (
+//                                     <TableRow key={record.id}>
+//                                         <TableCell>{new Date(record.date).toLocaleString()}</TableCell>
+//                                         <TableCell>{record.change_type}</TableCell>
+//                                         <TableCell>{record.change_amount}</TableCell>
+//                                     </TableRow>
+//                                 ))}
+//                             </TableBody>
+//                         </Table>
+//                     </TableContainer>
+//                 </TabPanel>
+//                 <TabPanel value={tabIndex} index={1}>
+//                     <TableContainer component={Paper}>
+//                         <Table>
+//                             <TableHead>
+//                                 <TableRow>
+//                                     <TableCell>Date</TableCell>
+//                                     <TableCell>Price per Item</TableCell>
+//                                     <TableCell>Total Price</TableCell>
+//                                     <TableCell>Supplier</TableCell>
+//                                 </TableRow>
+//                             </TableHead>
+//                             <TableBody>
+//                                 {(productHistory.purchase && productHistory.purchase.length > 0) && productHistory.purchase.map((record) => (
+//                                     <TableRow key={record.id}>
+//                                         <TableCell>{new Date(record.purchase_date).toLocaleString()}</TableCell>
+//                                         <TableCell>{record.price_per_item}</TableCell>
+//                                         <TableCell>{record.total_price}</TableCell>
+//                                         <TableCell>{record.supplier}</TableCell>
+//                                     </TableRow>
+//                                 ))}
+//                             </TableBody>
+//                         </Table>
+//                     </TableContainer>
+//                 </TabPanel>
+//                 <TabPanel value={tabIndex} index={2}>
+//                     <TableContainer component={Paper}>
+//                         <Table>
+//                             <TableHead>
+//                                 <TableRow>
+//                                     <TableCell>Date</TableCell>
+//                                     <TableCell>Price</TableCell>
+//                                     <TableCell>Quantity Sold</TableCell>
+//                                 </TableRow>
+//                             </TableHead>
+//                             <TableBody>
+//                                 {(productHistory.sales && productHistory.sales.length > 0) && productHistory.sales.map((record) => (
+//                                     <TableRow key={record.id}>
+//                                         <TableCell>{new Date(record.sale_date).toLocaleString()}</TableCell>
+//                                         <TableCell>{record.price}</TableCell>
+//                                         <TableCell>{record.quantity_sold}</TableCell>
+//                                     </TableRow>
+//                                 ))}
+//                             </TableBody>
+//                         </Table>
+//                     </TableContainer>
+//                 </TabPanel>
+//             </Box>
+//         </Modal>
+//     );
+// };
 
 function App() {
     const [products, setProducts] = useState([]);
@@ -262,17 +253,15 @@ function App() {
     };
 
     const handleDelete = (productId) => {
-        axios.delete(`http://localhost:5000/api/product/${productId}`)
-            .then(() => {
-                fetchProducts();
-            })
+        deleteProduct(productId)
+            .then(() => fetchProducts()) // Після видалення оновлюємо список продуктів
             .catch(error => {
                 console.error('There was an error deleting the product!', error);
             });
     };
 
     const handleAdd = () => {
-        axios.post('http://localhost:5000/api/product', newProduct)
+        addProduct(newProduct)
             .then(() => {
                 fetchProducts();
                 handleCloseAdd(); // Закрити модальне вікно після додавання
@@ -290,11 +279,10 @@ function App() {
     };
 
     const handleEditSave = () => {
-        axios.put(`http://localhost:5000/api/product/${editProduct.id}`, editProduct)
-            .then(() => {
-                fetchProducts();
-                handleCloseEdit(); // Закрити модальне вікно після збереження
-            })
+        updateProduct(editProduct.id, editProduct).then(() => {
+            fetchProducts();
+            handleCloseEdit(); // Закрити модальне вікно після збереження
+        })
             .catch(error => {
                 console.error('There was an error updating the product!', error);
             });
@@ -331,19 +319,17 @@ function App() {
             purchase_date: purchaseDetails.purchase_date,
         };
 
-        axios.post(`http://localhost:5000/api/product/${editProduct.id}/purchase`, purchaseData)
-            .then(() => {
-                fetchProducts(); // Оновити список товарів
-                handleClosePurchase(); // Закрити модальне вікно
-            })
+        addPurchase(editProduct.id, purchaseData).then(() => {
+            fetchProducts(); // Оновити список товарів
+            handleClosePurchase(); // Закрити модальне вікно
+        })
             .catch(error => {
                 console.error('There was an error processing the purchase!', error);
             });
     };
 
     const handleSale = () => {
-        axios.post(`http://localhost:5000/api/product/${editProduct.id}/sale`, saleData)
-            .then(() => {
+        addSale(editProduct.id,saleData).then(() => {
                 handleCloseSale();
                 // Тут можна також оновити список продуктів або історію, якщо потрібно
             })
