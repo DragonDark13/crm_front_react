@@ -1,5 +1,5 @@
 import React from 'react';
-import {Modal, Box, TextField, Button, DialogContent, DialogActions} from '@mui/material';
+import {TextField, Button, DialogContent, DialogActions} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface ISaleData {
