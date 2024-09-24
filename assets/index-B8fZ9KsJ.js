@@ -25096,14 +25096,44 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
 const api = axios.create();
 api.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.headers.common["Content-Type"] = "application/json";
+const fakeResponse = {
+  data: [
+    {
+      "id": 1,
+      "name": "Палочка Воландеморта",
+      "price_per_item": 507,
+      "quantity": 1,
+      "supplier": "skladoptom.com.ua",
+      "total_price": 507
+    },
+    {
+      "id": 2,
+      "name": "Палочка Грюма",
+      "price_per_item": 507,
+      "quantity": 1,
+      "supplier": "skladoptom.com.ua",
+      "total_price": 507
+    },
+    {
+      "id": 3,
+      "name": "Брелок с гербом Пуффендуя",
+      "price_per_item": 65,
+      "quantity": 1,
+      "supplier": "skladoptom.com.ua",
+      "total_price": 65
+    },
+    {
+      "id": 4,
+      "name": "test",
+      "price_per_item": 6,
+      "quantity": 6,
+      "supplier": "еуіе",
+      "total_price": 5
+    }
+  ]
+};
 api.interceptors.request.use((config2) => {
   if (config2.url === "/products") {
-    const fakeResponse = {
-      data: [
-        { id: 1, name: "Product 1", supplier: "Supplier 1", quantity: 100 },
-        { id: 2, name: "Product 2", supplier: "Supplier 2", quantity: 50 }
-      ]
-    };
     return new Promise((resolve) => {
       setTimeout(() => {
         config2.adapter = () => Promise.resolve({
