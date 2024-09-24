@@ -11,6 +11,7 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 const fakeResponse = {
     data: [
         {
+            "category_ids": [],
             "id": 1,
             "name": "Палочка Воландеморта",
             "price_per_item": 507,
@@ -19,6 +20,7 @@ const fakeResponse = {
             "total_price": 507
         },
         {
+            "category_ids": [],
             "id": 2,
             "name": "Палочка Грюма",
             "price_per_item": 507,
@@ -27,6 +29,7 @@ const fakeResponse = {
             "total_price": 507
         },
         {
+            "category_ids": [],
             "id": 3,
             "name": "Брелок с гербом Пуффендуя",
             "price_per_item": 65,
@@ -35,6 +38,10 @@ const fakeResponse = {
             "total_price": 65
         },
         {
+            "category_ids": [
+                1,
+                2
+            ],
             "id": 4,
             "name": "test",
             "price_per_item": 6,
@@ -45,33 +52,67 @@ const fakeResponse = {
     ]
 };
 
-//
-// api.interceptors.request.use((config) => {
-//     // Перевіряємо URL запиту
-//     if (config.url === '/products') {
-//         // "Фейкові" дані, які будемо повертати
-//
-//         // Перехоплюємо запит і відправляємо фейкову відповідь
-//         return new Promise((resolve) => {
-//             setTimeout(() => {
-//                 // Емуляція асинхронної відповіді з фейковими даними
-//                 config.adapter = () => Promise.resolve({
-//                     data: fakeResponse.data,
-//                     status: 200,
-//                     statusText: 'OK',
-//                     headers: {},
-//                     config: config
-//                 });
-//                 resolve(config);
-//             }, 500); // Затримка у 500 мс для імітації реального запиту
-//         });
-//     }
-//
-//     // Повертаємо конфігурацію для всіх інших запитів
-//     return config;
-// }, (error) => {
-//     return Promise.reject(error);
-// });
+const fakeCategory = {
+    data: [
+        {
+            "id": 1,
+            "name": "Сувеніри"
+        },
+        {
+            "id": 2,
+            "name": "Гаррі Поттер"
+        },
+        {
+            "id": 3,
+            "name": "Володар Перснів"
+        }
+    ]
+}
+
+
+api.interceptors.request.use((config) => {
+    // Перевіряємо URL запиту
+    if (config.url === '/products') {
+        // "Фейкові" дані, які будемо повертати
+
+        // Перехоплюємо запит і відправляємо фейкову відповідь
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // Емуляція асинхронної відповіді з фейковими даними
+                config.adapter = () => Promise.resolve({
+                    data: fakeResponse.data,
+                    status: 200,
+                    statusText: 'OK',
+                    headers: {},
+                    config: config
+                });
+                resolve(config);
+            }, 500); // Затримка у 500 мс для імітації реального запиту
+        });
+    }
+
+    // Перевіряємо URL запиту для категорій
+    if (config.url === '/categories') {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                config.adapter = () => Promise.resolve({
+                    data: fakeCategory.data,
+                    status: 200,
+                    statusText: 'OK',
+                    headers: {},
+                    config: config
+                });
+                resolve(config);
+            }, 500); // Затримка у 500 мс для імітації реального запиту
+        });
+    }
+
+
+    // Повертаємо конфігурацію для всіх інших запитів
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
 
 
 // Функція для отримання списку продуктів

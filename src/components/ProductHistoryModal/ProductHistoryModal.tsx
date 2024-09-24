@@ -99,8 +99,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
         <CustomDialog
             open={openHistory}
             handleClose={onClose}
-            title="Product History"
-            maxWidth="xl"
+            title={"Product History"}
+            maxWidth={"sm"}
         >
             <DialogContent>
                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">

@@ -26,6 +26,7 @@ import AddProductModal from "./components/AddProductModal/AddProductModal";
 import EditProductModal from "./components/EditProductModal/EditProductModal";
 import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProductModal";
 import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
+import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNewCategoryModal";
 
 
 export interface IBaseProduct {
@@ -38,6 +39,7 @@ export interface IBaseProduct {
 
 export interface IProduct extends IBaseProduct {
     id: number;
+    category_ids: number[]
 }
 
 export interface INewProduct extends IBaseProduct {
@@ -90,6 +92,7 @@ function App() {
     const [openPurchase, setOpenPurchase] = useState(false); // Стан для модального вікна історії
 
     const [productId, setProductId] = useState<number | null>(null)
+    const [openCategoryCreateModal, setOpenCategoryCreateModal] = useState<boolean>(false);
 
     const [purchaseDetails, setPurchaseDetails] = useState({
         price_per_item: 0,
@@ -140,11 +143,21 @@ function App() {
     const handleOpenEdit = (product: IProduct) => {
         setEditProduct(product);
         setOpenEdit(true);
+        setSelectedCategories(product.category_ids);
     };
-    const handleCloseEdit = () => setOpenEdit(false);
+    const handleCloseEdit = () => {
+        setEditProduct(null);
+        setOpenEdit(false)
+        setSelectedCategories([]);
+    };
+
     const handleOpenAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
     const handleClosePurchase = () => setOpenPurchase(false)
+
+    const handleCloseCategoryModal = () => {
+        setOpenCategoryCreateModal(false)
+    }
 
     useEffect(() => {
         fetchProductsFunc();
@@ -230,6 +243,7 @@ function App() {
             ? (a: IProduct, b: IProduct) => (b[orderBy] < a[orderBy] ? -1 : 1)
             : (a: IProduct, b: IProduct) => (a[orderBy] < b[orderBy] ? -1 : 1);
     };
+
     const handleSubmitPurchase = () => {
         const purchaseData: IPurchaseData = {
             price_per_item: purchaseDetails.price_per_item,
@@ -280,9 +294,9 @@ function App() {
             });
     }, []);
 
-    const handleCategoryChange = (categoryId:number) => {
+    const handleCategoryChange = (categoryId: number) => {
 
-        setSelectedCategories((prevState:number[]) => {
+        setSelectedCategories((prevState: number[]) => {
             if (prevState.includes(categoryId)) {
                 return prevState.filter(id => id !== categoryId); // Якщо категорія вибрана — видаляємо її
             } else {
@@ -302,6 +316,10 @@ function App() {
             };
         });
     };
+
+    const handleOpenCategoryCreateModal = () => {
+        setOpenCategoryCreateModal(true)
+    }
 
     return (
         <React.Fragment>
@@ -323,6 +341,9 @@ function App() {
                     <h1>Product List</h1>
                     <Button variant="contained" color="primary" onClick={handleOpenAdd}>
                         Add New Product
+                    </Button>
+                    <Button color="primary"  onClick={handleOpenCategoryCreateModal} variant={"outlined"}>
+                        Add New Category
                     </Button>
                     <TableContainer component={Paper}>
                         <Table>
@@ -429,7 +450,9 @@ function App() {
             }
 
             {(openEdit && editProduct) &&
-            <EditProductModal open={openEdit} handleClose={handleCloseEdit} editProduct={editProduct}
+            <EditProductModal selectedCategories={selectedCategories} categories={categories}
+                              handleCategoryChange={handleCategoryChange} open={openEdit} handleClose={handleCloseEdit}
+                              editProduct={editProduct}
                               setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
 
 
@@ -456,6 +479,14 @@ function App() {
                     saleData={saleData}
                     setSaleData={setSaleData}
                     handleSale={handleSale}
+                />
+            }
+
+            {
+                openCategoryCreateModal &&
+                <CreateNewCategoryModal
+                    openCategoryCreateModal={openCategoryCreateModal}
+                    handleCloseCategoryModal={handleCloseCategoryModal}
                 />
             }
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { DialogContent, TextField, Button, DialogActions} from '@mui/material';
-import {IProduct} from "../../App";
+import {DialogContent, TextField, Button, DialogActions, FormGroup, FormControlLabel, Checkbox} from '@mui/material';
+import {ICategory, IProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IEditProductModalProps {
@@ -9,6 +9,9 @@ interface IEditProductModalProps {
     editProduct: IProduct;
     setEditProduct: (product: IProduct) => void;
     handleEditSave: () => void;
+    categories: ICategory[],
+    selectedCategories: number[],
+    handleCategoryChange: (categoryID: number) => void,
 }
 
 const EditProductModal: React.FC<IEditProductModalProps> = ({
@@ -17,6 +20,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 editProduct,
                                                                 setEditProduct,
                                                                 handleEditSave,
+                                                                categories,
+                                                                selectedCategories,
+                                                                handleCategoryChange,
                                                             }) => {
     return (
         <CustomDialog
@@ -66,6 +72,20 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             fullWidth
                             margin="normal"
                         />
+                        <FormGroup>
+                            {categories.map(category => (
+                                <FormControlLabel
+                                    key={category.id}
+                                    control={
+                                        <Checkbox
+                                            checked={selectedCategories.includes(category.id)}
+                                            onChange={() => handleCategoryChange(category.id)}
+                                        />
+                                    }
+                                    label={category.name}
+                                />
+                            ))}
+                        </FormGroup>
 
                     </div>
                 )}
