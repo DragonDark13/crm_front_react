@@ -28,6 +28,7 @@ import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProd
 import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
 import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNewCategoryModal";
 import CategoryFilter from "./components/CategoryFilter/CategoryFilter";
+import ProductTable from "./components/ProductTable/ProductTable";
 
 
 export interface IBaseProduct {
@@ -379,90 +380,20 @@ function App() {
                                     handleCategoryFilterChange={handleCategoryFilterChange}
                     />
 
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>
-                                        <TableSortLabel
-                                            active={orderBy === 'name'}
-                                            direction={orderBy === 'name' ? order : 'asc'}
-                                            onClick={() => handleSort('name')}
-                                        >
-                                            Name
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell>Supplier</TableCell>
-                                    <TableCell>
-                                        <TableSortLabel
-                                            active={orderBy === 'quantity'}
-                                            direction={orderBy === 'quantity' ? order : 'asc'}
-                                            onClick={() => handleSort('quantity')}
-                                        >
-                                            Quantity
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TableSortLabel
-                                            active={orderBy === 'total_price'}
-                                            direction={orderBy === 'total_price' ? order : 'asc'}
-                                            onClick={() => handleSort('total_price')}
-                                        >
-                                            Total Price
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell>
-                                        <TableSortLabel
-                                            active={orderBy === 'price_per_item'}
-                                            direction={orderBy === 'price_per_item' ? order : 'asc'}
-                                            onClick={() => handleSort('price_per_item')}
-                                        >
-                                            Price per Item
-                                        </TableSortLabel>
-                                    </TableCell>
-                                    <TableCell>Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {filteredProducts.length > 0 && sortProducts(filteredProducts, getComparator(order, orderBy)).map((product: IProduct, index) => (
-                                    <TableRow key={`${product.id}${index}`}>
-                                        <TableCell>{product.id}</TableCell>
-                                        <TableCell>{product.name}</TableCell>
-                                        <TableCell>{product.supplier}</TableCell>
-                                        <TableCell>{product.quantity}</TableCell>
-                                        <TableCell>{product.total_price}</TableCell>
-                                        <TableCell>{product.price_per_item}</TableCell>
-                                        <TableCell>
-                                            <Button variant="contained" color="primary"
-                                                    onClick={() => handleOpenEdit(product)}>
-                                                Edit
-                                            </Button>
-                                            <Button variant="contained" color="secondary"
-                                                    onClick={() => handleDelete(product.id)}>
-                                                Delete
-                                            </Button>
-                                            <Button variant="contained" color="primary"
-                                                    onClick={() => handlePurchase(product)}>
-                                                Purchase
-                                            </Button>
-                                            <Button variant="contained" color="primary"
-                                                    onClick={() => handleOpenSale(product)}>
-                                                Продаж
-                                            </Button>
-                                            <Button variant="contained" onClick={() => {
-                                                setProductId(product.id); // Встановлюємо productId
-                                                setOpenHistory(true); // Відкриваємо модальне вікно
-                                            }}>
-                                                Історія
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    {/* Кнопка для відкриття модального вікна для додавання */}
+                    <ProductTable
+                        filteredProducts={filteredProducts}
+                        order={order}
+                        orderBy={orderBy}
+                        handleSort={handleSort}
+                        sortProducts={sortProducts}
+                        getComparator={getComparator}
+                        handleOpenEdit={(product) => setOpenEdit(true) && setEditProduct(product)}
+                        handleDelete={(productId) => console.log('Delete product with id:', productId)}
+                        handlePurchase={(product) => console.log('Purchase product:', product)}
+                        handleOpenSale={(product) => console.log('Open sale for product:', product)}
+                        setProductId={setProductId}
+                        setOpenHistory={setOpenHistory}
+                    /> {/* Кнопка для відкриття модального вікна для додавання */}
 
 
                 </React.Fragment>
