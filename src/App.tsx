@@ -82,8 +82,8 @@ function App() {
     const [openEdit, setOpenEdit] = useState(false); // Відповідає за стан модального вікна для редагування
     const [openAdd, setOpenAdd] = useState(false); // Відповідає за стан модального вікна для додавання
 
-    const [order, setOrder] = useState('asc'); // Порядок сортування (asc/desc)
-    const [orderBy, setOrderBy] = useState('name'); // Колонка для сортування
+    const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
+    const [orderBy, setOrderBy] = useState<keyof IProduct>('name'); // Колонка для сортування
 
 
     const [openHistory, setOpenHistory] = useState(false); // Стан для модального вікна історії
@@ -102,8 +102,9 @@ function App() {
 
     const [saleData, setSaleData] = useState<ISaleData | null>(null);
 
-    const [categories, setCategories] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+
 
     const handleOpenSale = (product: IProduct) => {
         setEditProduct(product)
@@ -208,28 +209,27 @@ function App() {
     };
 
 
-    const handleSort = (property) => {
+    const handleSort = (property: keyof IProduct) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
 
-    const sortProducts = (products: IProduct[], comparator) => {
-        const stabilizedProducts = products.map((el, index) => [el, index]);
+    const sortProducts = (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => {
+        const stabilizedProducts = products.map((el, index) => [el, index] as [IProduct, number]);
         stabilizedProducts.sort((a, b) => {
             const order = comparator(a[0], b[0]);
             if (order !== 0) return order;
-            return a[1] - b[1];
+            return a[1] - b[1];  // This is fine because `index` is a number
         });
         return stabilizedProducts.map((el) => el[0]);
     };
 
-    const getComparator = (order, orderBy) => {
+    const getComparator = (order: 'asc' | 'desc', orderBy: keyof IProduct) => {
         return order === 'desc'
-            ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
-            : (a, b) => (a[orderBy] < b[orderBy] ? -1 : 1);
+            ? (a: IProduct, b: IProduct) => (b[orderBy] < a[orderBy] ? -1 : 1)
+            : (a: IProduct, b: IProduct) => (a[orderBy] < b[orderBy] ? -1 : 1);
     };
-
     const handleSubmitPurchase = () => {
         const purchaseData: IPurchaseData = {
             price_per_item: purchaseDetails.price_per_item,
@@ -268,7 +268,7 @@ function App() {
         fetchGetAllCategories().then(data => {
 
             if (Array.isArray(data)) {
-                setCategories(data);
+                setCategories(data as ICategory[]);
             } else {
                 console.error('Fetched data is not an array:', data);
                 setCategories([])
@@ -280,9 +280,9 @@ function App() {
             });
     }, []);
 
-    const handleCategoryChange = (categoryId) => {
+    const handleCategoryChange = (categoryId:number) => {
 
-        setSelectedCategories((prevState) => {
+        setSelectedCategories((prevState:number[]) => {
             if (prevState.includes(categoryId)) {
                 return prevState.filter(id => id !== categoryId); // Якщо категорія вибрана — видаляємо її
             } else {
@@ -370,40 +370,40 @@ function App() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {products.length >0 && sortProducts(products, getComparator(order, orderBy)).map((product: IProduct, index) => (
-                                <TableRow key={`${product.id}${index}`}>
-                                    <TableCell>{product.id}</TableCell>
-                                    <TableCell>{product.name}</TableCell>
-                                    <TableCell>{product.supplier}</TableCell>
-                                    <TableCell>{product.quantity}</TableCell>
-                                    <TableCell>{product.total_price}</TableCell>
-                                    <TableCell>{product.price_per_item}</TableCell>
-                                    <TableCell>
-                                        <Button variant="contained" color="primary"
-                                                onClick={() => handleOpenEdit(product)}>
-                                            Edit
-                                        </Button>
-                                        <Button variant="contained" color="secondary"
-                                                onClick={() => handleDelete(product.id)}>
-                                            Delete
-                                        </Button>
-                                        <Button variant="contained" color="primary"
-                                                onClick={() => handlePurchase(product)}>
-                                            Purchase
-                                        </Button>
-                                        <Button variant="contained" color="primary"
-                                                onClick={() => handleOpenSale(product)}>
-                                            Продаж
-                                        </Button>
-                                        <Button variant="contained" onClick={() => {
-                                            setProductId(product.id); // Встановлюємо productId
-                                            setOpenHistory(true); // Відкриваємо модальне вікно
-                                        }}>
-                                            Історія
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                                {products.length > 0 && sortProducts(products, getComparator(order, orderBy)).map((product: IProduct, index) => (
+                                    <TableRow key={`${product.id}${index}`}>
+                                        <TableCell>{product.id}</TableCell>
+                                        <TableCell>{product.name}</TableCell>
+                                        <TableCell>{product.supplier}</TableCell>
+                                        <TableCell>{product.quantity}</TableCell>
+                                        <TableCell>{product.total_price}</TableCell>
+                                        <TableCell>{product.price_per_item}</TableCell>
+                                        <TableCell>
+                                            <Button variant="contained" color="primary"
+                                                    onClick={() => handleOpenEdit(product)}>
+                                                Edit
+                                            </Button>
+                                            <Button variant="contained" color="secondary"
+                                                    onClick={() => handleDelete(product.id)}>
+                                                Delete
+                                            </Button>
+                                            <Button variant="contained" color="primary"
+                                                    onClick={() => handlePurchase(product)}>
+                                                Purchase
+                                            </Button>
+                                            <Button variant="contained" color="primary"
+                                                    onClick={() => handleOpenSale(product)}>
+                                                Продаж
+                                            </Button>
+                                            <Button variant="contained" onClick={() => {
+                                                setProductId(product.id); // Встановлюємо productId
+                                                setOpenHistory(true); // Відкриваємо модальне вікно
+                                            }}>
+                                                Історія
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>

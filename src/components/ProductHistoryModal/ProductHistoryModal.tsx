@@ -90,7 +90,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
             });
     };
 
-    const handleTabChange = (event, newValue:number) => {
+    const handleTabChange = (event:React.SyntheticEvent, newValue:number) => {
+        console.log(event);
         setTabIndex(newValue);
     };
 
