@@ -27,6 +27,7 @@ import EditProductModal from "./components/EditProductModal/EditProductModal";
 import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProductModal";
 import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
 import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNewCategoryModal";
+import CategoryFilter from "./components/CategoryFilter/CategoryFilter";
 
 
 export interface IBaseProduct {
@@ -70,6 +71,8 @@ export interface ISaleData {
 
 function App() {
     const [products, setProducts] = useState<IProduct[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+
     const [isLoading, setIsLoading] = useState<boolean>(true); // Стан для прелоадера
     const [error, setError] = useState<string | null>(null); // Стан для помилок
     const [newProduct, setNewProduct] = useState<INewProduct>({
@@ -107,6 +110,7 @@ function App() {
 
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+    const [selectedFilterCategories, setSelectedFilterCategories] = useState<number[]>([]);
 
 
     const handleOpenSale = (product: IProduct) => {
@@ -168,14 +172,19 @@ function App() {
             .then(data => {
                 if (Array.isArray(data)) {
                     setProducts(data);
+                    setFilteredProducts(data);
+
                 } else {
                     console.error('Fetched data is not an array:', data);
                     setProducts([]); // Встановлюємо порожній масив у разі невідповідності
+                    setFilteredProducts([]);
                 }
             })
             .catch(error => {
                 console.error('There was an error fetching the products!', error);
                 setError('There was an error fetching the products!');
+                setFilteredProducts([]);
+
                 setProducts([]); // Встановлюємо порожній масив у разі помилки
             })
             .finally(() => {
@@ -321,6 +330,26 @@ function App() {
         setOpenCategoryCreateModal(true)
     }
 
+    const handleCategoryFilterChange = (categoryID: number) => {
+        // Додаємо або видаляємо категорію з вибраних
+        const updatedCategories = selectedFilterCategories.includes(categoryID)
+            ? selectedFilterCategories.filter(id => id !== categoryID)
+            : [...selectedFilterCategories, categoryID];
+
+        setSelectedFilterCategories(updatedCategories);
+
+        // Фільтрація продуктів
+        if (updatedCategories.length > 0) {
+            const filtered = products.filter(product =>
+                product.category_ids.some(categoryId => updatedCategories.includes(categoryId))
+            );
+            setFilteredProducts(filtered);
+        } else {
+            // Якщо жодна категорія не вибрана, показуємо всі продукти
+            setFilteredProducts(products);
+        }
+    };
+
     return (
         <React.Fragment>
 
@@ -342,9 +371,14 @@ function App() {
                     <Button variant="contained" color="primary" onClick={handleOpenAdd}>
                         Add New Product
                     </Button>
-                    <Button color="primary"  onClick={handleOpenCategoryCreateModal} variant={"outlined"}>
+                    <Button color="primary" onClick={handleOpenCategoryCreateModal} variant={"outlined"}>
                         Add New Category
                     </Button>
+
+                    <CategoryFilter categories={categories} selectedCategories={selectedCategories}
+                                    handleCategoryFilterChange={handleCategoryFilterChange}
+                    />
+
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
@@ -391,7 +425,7 @@ function App() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {products.length > 0 && sortProducts(products, getComparator(order, orderBy)).map((product: IProduct, index) => (
+                                {filteredProducts.length > 0 && sortProducts(filteredProducts, getComparator(order, orderBy)).map((product: IProduct, index) => (
                                     <TableRow key={`${product.id}${index}`}>
                                         <TableCell>{product.id}</TableCell>
                                         <TableCell>{product.name}</TableCell>
