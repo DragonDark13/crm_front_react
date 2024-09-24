@@ -25601,8 +25601,29 @@ const CreateNewCategoryModal = ({ openCategoryCreateModal, handleCloseCategoryMo
     }
   );
 };
+const CategoryFilter = ({
+  selectedCategories,
+  handleCategoryFilterChange,
+  categories
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    FormControlLabel,
+    {
+      control: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Checkbox,
+        {
+          checked: selectedCategories.includes(category.id),
+          onChange: () => handleCategoryFilterChange(category.id)
+        }
+      ),
+      label: category.name
+    },
+    category.id
+  )) });
+};
 function App() {
   const [products, setProducts] = reactExports.useState([]);
+  const [filteredProducts, setFilteredProducts] = reactExports.useState([]);
   const [isLoading, setIsLoading] = reactExports.useState(true);
   const [error, setError] = reactExports.useState(null);
   const [newProduct, setNewProduct] = reactExports.useState({
@@ -25633,6 +25654,7 @@ function App() {
   const [saleData, setSaleData] = reactExports.useState(null);
   const [categories, setCategories] = reactExports.useState([]);
   const [selectedCategories, setSelectedCategories] = reactExports.useState([]);
+  const [selectedFilterCategories, setSelectedFilterCategories] = reactExports.useState([]);
   const handleOpenSale = (product) => {
     setEditProduct(product);
     setSaleData({
@@ -25683,13 +25705,16 @@ function App() {
     fetchProducts().then((data) => {
       if (Array.isArray(data)) {
         setProducts(data);
+        setFilteredProducts(data);
       } else {
         console.error("Fetched data is not an array:", data);
         setProducts([]);
+        setFilteredProducts([]);
       }
     }).catch((error2) => {
       console.error("There was an error fetching the products!", error2);
       setError("There was an error fetching the products!");
+      setFilteredProducts([]);
       setProducts([]);
     }).finally(() => {
       setIsLoading(false);
@@ -25798,6 +25823,18 @@ function App() {
   const handleOpenCategoryCreateModal = () => {
     setOpenCategoryCreateModal(true);
   };
+  const handleCategoryFilterChange = (categoryID) => {
+    const updatedCategories = selectedFilterCategories.includes(categoryID) ? selectedFilterCategories.filter((id2) => id2 !== categoryID) : [...selectedFilterCategories, categoryID];
+    setSelectedFilterCategories(updatedCategories);
+    if (updatedCategories.length > 0) {
+      const filtered = products.filter(
+        (product) => product.category_ids.some((categoryId) => updatedCategories.includes(categoryId))
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(products);
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", flexDirection: "column", alignItems: "center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress, {}),
@@ -25807,6 +25844,14 @@ function App() {
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Product List" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenAdd, children: "Add New Product" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { color: "primary", onClick: handleOpenCategoryCreateModal, variant: "outlined", children: "Add New Category" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        CategoryFilter,
+        {
+          categories,
+          selectedCategories,
+          handleCategoryFilterChange
+        }
+      ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
@@ -25849,7 +25894,7 @@ function App() {
           ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Actions" })
         ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: products.length > 0 && sortProducts(products, getComparator(order, orderBy)).map((product, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredProducts.length > 0 && sortProducts(filteredProducts, getComparator(order, orderBy)).map((product, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.supplier }),
