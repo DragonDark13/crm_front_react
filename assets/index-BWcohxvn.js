@@ -24977,6 +24977,7 @@ const CustomDialog = ({
   fullWidth = true,
   ...rest
 }) => {
+  console.log("maxWidth:::", maxWidth2);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     Dialog,
     {
@@ -25044,7 +25045,7 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
       open: openHistory,
       handleClose: onClose,
       title: "Product History",
-      maxWidth: "xl",
+      maxWidth: "sm",
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { value: tabIndex, onChange: handleTabChange, indicatorColor: "primary", textColor: "primary", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "History of Changes" }),
@@ -25099,6 +25100,7 @@ axios.defaults.headers.common["Content-Type"] = "application/json";
 const fakeResponse = {
   data: [
     {
+      "category_ids": [],
       "id": 1,
       "name": "Палочка Воландеморта",
       "price_per_item": 507,
@@ -25107,6 +25109,7 @@ const fakeResponse = {
       "total_price": 507
     },
     {
+      "category_ids": [],
       "id": 2,
       "name": "Палочка Грюма",
       "price_per_item": 507,
@@ -25115,6 +25118,7 @@ const fakeResponse = {
       "total_price": 507
     },
     {
+      "category_ids": [],
       "id": 3,
       "name": "Брелок с гербом Пуффендуя",
       "price_per_item": 65,
@@ -25123,6 +25127,10 @@ const fakeResponse = {
       "total_price": 65
     },
     {
+      "category_ids": [
+        1,
+        2
+      ],
       "id": 4,
       "name": "test",
       "price_per_item": 6,
@@ -25132,12 +25140,42 @@ const fakeResponse = {
     }
   ]
 };
+const fakeCategory = {
+  data: [
+    {
+      "id": 1,
+      "name": "Сувеніри"
+    },
+    {
+      "id": 2,
+      "name": "Гаррі Поттер"
+    },
+    {
+      "id": 3,
+      "name": "Володар Перснів"
+    }
+  ]
+};
 api.interceptors.request.use((config2) => {
   if (config2.url === "/products") {
     return new Promise((resolve) => {
       setTimeout(() => {
         config2.adapter = () => Promise.resolve({
           data: fakeResponse.data,
+          status: 200,
+          statusText: "OK",
+          headers: {},
+          config: config2
+        });
+        resolve(config2);
+      }, 500);
+    });
+  }
+  if (config2.url === "/categories") {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        config2.adapter = () => Promise.resolve({
+          data: fakeCategory.data,
           status: 200,
           statusText: "OK",
           headers: {},
@@ -25290,7 +25328,10 @@ const EditProductModal = ({
   handleClose,
   editProduct,
   setEditProduct,
-  handleEditSave
+  handleEditSave,
+  categories,
+  selectedCategories,
+  handleCategoryChange
 }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
@@ -25353,7 +25394,21 @@ const EditProductModal = ({
               fullWidth: true,
               margin: "normal"
             }
-          )
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+            FormControlLabel,
+            {
+              control: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Checkbox,
+                {
+                  checked: selectedCategories.includes(category.id),
+                  onChange: () => handleCategoryChange(category.id)
+                }
+              ),
+              label: category.name
+            },
+            category.id
+          )) })
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActions, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleEditSave, sx: { mt: 2 }, children: "Save Changes" }) })
       ]
@@ -25513,6 +25568,39 @@ const SaleProductModal = ({ open, handleClose, saleData, setSaleData, handleSale
     }
   );
 };
+const CreateNewCategoryModal = ({ openCategoryCreateModal, handleCloseCategoryModal }) => {
+  const [categoryName, setCategoryName] = reactExports.useState("");
+  const createCategory = () => {
+    axios.post("http://localhost:5000/api/categories", { name: categoryName }).then((response) => {
+      console.log(response.data);
+    }).catch((error) => {
+      console.error("Error creating category", error);
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    CustomDialog,
+    {
+      open: openCategoryCreateModal,
+      handleClose: handleCloseCategoryModal,
+      title: "Add New Category",
+      maxWidth: "xs",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TextField,
+          {
+            label: "Назва категорії",
+            value: categoryName,
+            onChange: (e2) => setCategoryName(e2.target.value)
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseCategoryModal, color: "primary", children: "Cancel" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: createCategory, children: "Створити категорію" })
+        ] })
+      ]
+    }
+  );
+};
 function App() {
   const [products, setProducts] = reactExports.useState([]);
   const [isLoading, setIsLoading] = reactExports.useState(true);
@@ -25533,6 +25621,7 @@ function App() {
   const [openHistory, setOpenHistory] = reactExports.useState(false);
   const [openPurchase, setOpenPurchase] = reactExports.useState(false);
   const [productId, setProductId] = reactExports.useState(null);
+  const [openCategoryCreateModal, setOpenCategoryCreateModal] = reactExports.useState(false);
   const [purchaseDetails, setPurchaseDetails] = reactExports.useState({
     price_per_item: 0,
     total_price: 0,
@@ -25574,11 +25663,19 @@ function App() {
   const handleOpenEdit = (product) => {
     setEditProduct(product);
     setOpenEdit(true);
+    setSelectedCategories(product.category_ids);
   };
-  const handleCloseEdit = () => setOpenEdit(false);
+  const handleCloseEdit = () => {
+    setEditProduct(null);
+    setOpenEdit(false);
+    setSelectedCategories([]);
+  };
   const handleOpenAdd = () => setOpenAdd(true);
   const handleCloseAdd = () => setOpenAdd(false);
   const handleClosePurchase = () => setOpenPurchase(false);
+  const handleCloseCategoryModal = () => {
+    setOpenCategoryCreateModal(false);
+  };
   reactExports.useEffect(() => {
     fetchProductsFunc();
   }, []);
@@ -25698,6 +25795,9 @@ function App() {
       };
     });
   };
+  const handleOpenCategoryCreateModal = () => {
+    setOpenCategoryCreateModal(true);
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", flexDirection: "column", alignItems: "center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress, {}),
@@ -25706,6 +25806,7 @@ function App() {
     ] }) }) : error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: error }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Product List" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenAdd, children: "Add New Product" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { color: "primary", onClick: handleOpenCategoryCreateModal, variant: "outlined", children: "Add New Category" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
@@ -25816,6 +25917,9 @@ function App() {
     openEdit && editProduct && /* @__PURE__ */ jsxRuntimeExports.jsx(
       EditProductModal,
       {
+        selectedCategories,
+        categories,
+        handleCategoryChange,
         open: openEdit,
         handleClose: handleCloseEdit,
         editProduct,
@@ -25849,6 +25953,13 @@ function App() {
         saleData,
         setSaleData,
         handleSale
+      }
+    ),
+    openCategoryCreateModal && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      CreateNewCategoryModal,
+      {
+        openCategoryCreateModal,
+        handleCloseCategoryModal
       }
     )
   ] });
