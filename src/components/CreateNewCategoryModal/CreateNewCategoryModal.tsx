@@ -1,16 +1,16 @@
-import React, {useState} from 'react';
 import {Button, DialogActions, DialogContent, TextField} from "@mui/material";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import axios from "axios";
+import {useState} from "react";
 
 interface ICreateNewCategoryModal {
     openCategoryCreateModal: boolean;
     handleCloseCategoryModal: () => void;
 }
 
-const CreateNewCategoryModal = ({openCategoryCreateModal,handleCloseCategoryModal}:ICreateNewCategoryModal) => {
+const CreateNewCategoryModal = ({openCategoryCreateModal, handleCloseCategoryModal}: ICreateNewCategoryModal) => {
 
-    const [categoryName, setCategoryName] = useState('');
+    const [categoryName, setCategoryName] = useState<string>('');
 
     const createCategory = () => {
         axios.post('http://localhost:5000/api/categories', {name: categoryName})
