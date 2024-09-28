@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, Button, Box, TableSortLabel,
+    Button, Box
 } from '@mui/material';
 
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
@@ -376,7 +375,7 @@ function App() {
                         Add New Category
                     </Button>
 
-                    <CategoryFilter categories={categories} selectedCategories={selectedCategories}
+                    <CategoryFilter categories={categories} selectedFilterCategories={selectedFilterCategories}
                                     handleCategoryFilterChange={handleCategoryFilterChange}
                     />
 
@@ -388,9 +387,18 @@ function App() {
                         sortProducts={sortProducts}
                         getComparator={getComparator}
                         handleOpenEdit={(product) => setOpenEdit(true) && setEditProduct(product)}
-                        handleDelete={(productId) => console.log('Delete product with id:', productId)}
-                        handlePurchase={(product) => console.log('Purchase product:', product)}
-                        handleOpenSale={(product) => console.log('Open sale for product:', product)}
+                        handleDelete={(productId) => {
+                            console.log('Delete product with id:', productId)
+                            handleDelete(productId)
+                        }}
+                        handlePurchase={(product) => {
+                            console.log('Purchase product:', product)
+                            handlePurchase(product)
+                        }}
+                        handleOpenSale={(product) => {
+                            console.log('Open sale for product:', product)
+                            handleOpenSale(product)
+                        }}
                         setProductId={setProductId}
                         setOpenHistory={setOpenHistory}
                     /> {/* Кнопка для відкриття модального вікна для додавання */}

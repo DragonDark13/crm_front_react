@@ -3,13 +3,13 @@ import {Checkbox, FormControlLabel, FormGroup} from '@mui/material';
 import {ICategory} from "../../App"; // імпорт функції для отримання категорій
 
 interface ICategoryFilterProps {
-    selectedCategories: number[];
+    selectedFilterCategories: number[];
     handleCategoryFilterChange: (categoryID: number) => void;
     categories: ICategory[];
 }
 
 const CategoryFilter: React.FC<ICategoryFilterProps> = ({
-                                                            selectedCategories,
+                                                            selectedFilterCategories,
                                                             handleCategoryFilterChange,
                                                             categories
                                                         }) => {
@@ -22,7 +22,7 @@ const CategoryFilter: React.FC<ICategoryFilterProps> = ({
                     key={category.id}
                     control={
                         <Checkbox
-                            checked={selectedCategories.includes(category.id)}
+                            checked={selectedFilterCategories.includes(category.id)}
                             onChange={() => handleCategoryFilterChange(category.id)}
                         />
                     }
