@@ -83,6 +83,7 @@ const AddProductModal = ({
                             margin="normal"
                             error={!!errors.name}
                             helperText={errors.name}
+                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -94,6 +95,7 @@ const AddProductModal = ({
                             margin="normal"
                             error={!!errors.supplier}
                             helperText={errors.supplier}
+                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
                         />
                     </Grid>
                 </Grid>
@@ -106,7 +108,7 @@ const AddProductModal = ({
                             onChange={(e) => setNewProduct({...newProduct, quantity: Number(e.target.value)})}
                             fullWidth
                             margin="normal"
-                            inputProps={{min: 0, max: 1000}} // Максимальне значення, яке ви можете змінити
+                            inputProps={{min: 0, max: 1000}}  // Обмеження значення від 0 до 1000
                             error={!!errors.quantity}
                             helperText={errors.quantity}
                         />
@@ -119,7 +121,7 @@ const AddProductModal = ({
                             onChange={(e) => setNewProduct({...newProduct, price_per_item: Number(e.target.value)})}
                             fullWidth
                             margin="normal"
-                            inputProps={{min: 0, max: 10000}} // Максимальне значення, яке ви можете змінити
+                            inputProps={{min: 0, max: 10000}}  // Обмеження значення від 0 до 10000
                             error={!!errors.price_per_item}
                             helperText={errors.price_per_item}
                         />
@@ -131,7 +133,7 @@ const AddProductModal = ({
                             value={newProduct.total_price}
                             fullWidth
                             margin="normal"
-                            disabled // Поле заблоковане для редагування
+                            disabled  // Поле заблоковане для редагування
                         />
                     </Grid>
                 </Grid>

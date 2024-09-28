@@ -40,12 +40,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         price_per_item: ''
     });
 
-    // useEffect(() => {
-    //     // Автоматично оновлювати total_price при зміні quantity або price_per_item
-    //     const totalPrice = editProduct.quantity * editProduct.price_per_item;
-    //     setEditProduct((prevProduct:IProduct) => ({ ...prevProduct, total_price: totalPrice }));
-    // }, [editProduct.quantity, editProduct.price_per_item, setEditProduct]);
-
     useEffect(() => {
         const totalPrice = editProduct.quantity * editProduct.price_per_item;
         setEditProduct({...editProduct, total_price: totalPrice});
@@ -58,20 +52,32 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         if (!editProduct.name.trim()) {
             tempErrors.name = 'Name is required';
             isValid = false;
+        } else if (editProduct.name.length > 100) {
+            tempErrors.name = 'Name cannot exceed 100 characters';
+            isValid = false;
         }
 
         if (!editProduct.supplier.trim()) {
             tempErrors.supplier = 'Supplier is required';
+            isValid = false;
+        } else if (editProduct.supplier.length > 100) {
+            tempErrors.supplier = 'Supplier cannot exceed 100 characters';
             isValid = false;
         }
 
         if (editProduct.quantity < 0) {
             tempErrors.quantity = 'Quantity cannot be less than 0';
             isValid = false;
+        } else if (editProduct.quantity > 100000) {
+            tempErrors.quantity = 'Quantity cannot exceed 100,000';
+            isValid = false;
         }
 
         if (editProduct.price_per_item < 0) {
             tempErrors.price_per_item = 'Price per item cannot be less than 0';
+            isValid = false;
+        } else if (editProduct.price_per_item > 100000) {
+            tempErrors.price_per_item = 'Price per item cannot exceed 100,000';
             isValid = false;
         }
 
@@ -103,6 +109,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             margin="normal"
                             error={!!errors.name}
                             helperText={errors.name}
+                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -114,6 +121,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             margin="normal"
                             error={!!errors.supplier}
                             helperText={errors.supplier}
+                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
                         />
                     </Grid>
                 </Grid>
@@ -128,6 +136,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             margin="normal"
                             error={!!errors.quantity}
                             helperText={errors.quantity}
+                            inputProps={{ min: 0, max: 100000 }}  // Обмеження значення від 0 до 100000
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
@@ -140,6 +149,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             margin="normal"
                             error={!!errors.price_per_item}
                             helperText={errors.price_per_item}
+                            inputProps={{ min: 0, max: 100000 }}  // Обмеження значення від 0 до 100000
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>

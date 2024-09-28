@@ -53,6 +53,7 @@ export interface ICategory {
 }
 
 export interface IPurchaseData {
+    quantity: number
     price_per_item: number,
     total_price: number,
     supplier: string,
@@ -97,7 +98,8 @@ function App() {
     const [productId, setProductId] = useState<number | null>(null)
     const [openCategoryCreateModal, setOpenCategoryCreateModal] = useState<boolean>(false);
 
-    const [purchaseDetails, setPurchaseDetails] = useState({
+    const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
+        quantity: 0,
         price_per_item: 0,
         total_price: 0,
         supplier: '',
@@ -138,7 +140,7 @@ function App() {
         setPurchaseDetails({
             ...purchaseDetails,
             supplier: product.supplier,
-            total_price: product.price_per_item * product.quantity,
+            price_per_item: product.price_per_item,
         });
         setOpenPurchase(true);
     };
@@ -167,7 +169,17 @@ function App() {
         })
         setOpenAdd(false);
     }
-    const handleClosePurchase = () => setOpenPurchase(false)
+    const handleClosePurchase = () => {
+        setPurchaseDetails({
+            quantity: 0,
+            price_per_item: 0,
+            total_price: 0,
+            supplier: '',
+            purchase_date: new Date().toISOString().slice(0, 10),
+        })
+
+        setOpenPurchase(false)
+    }
 
     const handleCloseCategoryModal = () => {
         setOpenCategoryCreateModal(false)
@@ -265,6 +277,7 @@ function App() {
 
     const handleSubmitPurchase = () => {
         const purchaseData: IPurchaseData = {
+            quantity: purchaseDetails.quantity,
             price_per_item: purchaseDetails.price_per_item,
             total_price: purchaseDetails.total_price,
             supplier: purchaseDetails.supplier,
@@ -434,7 +447,8 @@ function App() {
 
             {(openEdit && editProduct) &&
             <EditProductModal selectedCategories={selectedCategories} categories={categories}
-                              handleCategoryChange={handleCategoryChange} open={openEdit} handleCloseEdit={handleCloseEdit}
+                              handleCategoryChange={handleCategoryChange} open={openEdit}
+                              handleCloseEdit={handleCloseEdit}
                               editProduct={editProduct}
                               setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
 
@@ -448,7 +462,7 @@ function App() {
             )}
 
             {openPurchase && <PurchaseProductModal open={openPurchase}
-                                                   handleClose={() => setOpenPurchase(false)}
+                                                   handleClosePurchase={handleClosePurchase}
                                                    purchaseDetails={purchaseDetails}
                                                    setPurchaseDetails={setPurchaseDetails}
                                                    handleSubmitPurchase={handleSubmitPurchase}/>}
