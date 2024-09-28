@@ -1,7 +1,7 @@
 import {TextField, Button, DialogContent, DialogActions, Grid} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {ISaleData} from "../../App";
-import React, {useState} from "react";
+import  {useState} from "react";
 
 interface ISaleProductModal {
     openSale: boolean;

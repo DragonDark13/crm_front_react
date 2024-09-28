@@ -1,6 +1,6 @@
 import {TextField, Button, DialogActions, DialogContent, Grid} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import React, {useState, useEffect} from "react";
+import  {useState, useEffect} from "react";
 import {IPurchaseData} from "../../App";
 
 interface IPurchaseProductModal {

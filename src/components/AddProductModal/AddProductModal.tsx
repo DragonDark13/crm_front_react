@@ -1,4 +1,3 @@
-import React, {useEffect, useState} from 'react';
 import {
     TextField,
     Button,
@@ -11,6 +10,7 @@ import {
 } from '@mui/material';
 import {ICategory, INewProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
+import {useEffect, useState} from "react";
 
 interface IAddProductModal {
     open: boolean,
