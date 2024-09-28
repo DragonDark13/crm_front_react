@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Box
+    Button, Box, DialogContent, DialogTitle, Dialog, DialogContentText, DialogActions
 } from '@mui/material';
 
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
@@ -99,6 +99,9 @@ function App() {
 
     const [productId, setProductId] = useState<number | null>(null)
     const [openCategoryCreateModal, setOpenCategoryCreateModal] = useState<boolean>(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = useState<number | null>(null);
+
 
     const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
         quantity: 0,
@@ -227,7 +230,10 @@ function App() {
 
     const handleDelete = (productId: number) => {
         deleteProduct(productId)
-            .then(() => fetchProductsFunc()) // Після видалення оновлюємо список продуктів
+            .then(() => {
+                handleCloseDeleteModal()
+                fetchProductsFunc()
+            }) // Після видалення оновлюємо список продуктів
             .catch(error => {
                 console.error('There was an error deleting the product!', error);
             });
@@ -378,6 +384,16 @@ function App() {
         }
     };
 
+    const handleDeleteModalOpen = (productId: number) => {
+        setSelectedDeleteModalProductId(productId)
+        setOpenDeleteModal(true)
+    }
+
+    const handleCloseDeleteModal = () => {
+        setOpenDeleteModal(false);
+        setSelectedDeleteModalProductId(null);
+    };
+
     return (
         <React.Fragment>
 
@@ -415,10 +431,7 @@ function App() {
                         sortProducts={sortProducts}
                         getComparator={getComparator}
                         handleOpenEdit={handleOpenEdit}
-                        handleDelete={(productId) => {
-                            console.log('Delete product with id:', productId)
-                            handleDelete(productId)
-                        }}
+                        handleDelete={handleDeleteModalOpen}
                         handlePurchase={(product) => {
                             console.log('Purchase product:', product)
                             handlePurchase(product)
@@ -491,6 +504,23 @@ function App() {
                     handleCloseCategoryModal={handleCloseCategoryModal}
                 />
             }
+
+            <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this product?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDeleteModal} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={() => handleDelete(selectedDeleteModalProductId!)} color="secondary">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
 
         </React.Fragment>
