@@ -24,9 +24,10 @@ import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface ProductHistoryRecord {
     id: number;
-    date?: string; // for stock history
+    timestamp?: string; // for stock history
     change_type?: string;
     change_amount?: number;
+    quantity_purchase?: number;
     purchase_date?: string; // for purchase history
     price_per_item?: number;
     total_price?: number;
@@ -76,7 +77,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
         }
     }, [openHistory, productId]);
 
-    const fetchProductHistory = (productId:number) => {
+    const fetchProductHistory = (productId: number) => {
         axios.get(`http://localhost:5000/api/product/${productId}/history`)
             .then(response => {
                 setProductHistory({
@@ -90,17 +91,20 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
             });
     };
 
-    const handleTabChange = (event:React.SyntheticEvent, newValue:number) => {
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         console.log(event);
         setTabIndex(newValue);
     };
+
+    // TODO НАзву товару до заголовку
+    // TODO Перекласти
 
     return (
         <CustomDialog
             open={openHistory}
             handleClose={onClose}
             title={"Product History"}
-            maxWidth={"sm"}
+            maxWidth={"xl"}
         >
             <DialogContent>
                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
@@ -121,7 +125,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                             <TableBody>
                                 {(productHistory.stock && productHistory.stock.length > 0) && productHistory.stock.map((record) => (
                                     <TableRow key={record.id}>
-                                        <TableCell>{new Date(record.date!).toLocaleString()}</TableCell>
+                                        <TableCell>{new Date(record.timestamp!).toLocaleString()}</TableCell>
                                         <TableCell>{record.change_type}</TableCell>
                                         <TableCell>{record.change_amount}</TableCell>
                                     </TableRow>
@@ -137,6 +141,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 <TableRow>
                                     <TableCell>Date</TableCell>
                                     <TableCell>Price per Item</TableCell>
+                                    <TableCell>quantity_purchase</TableCell>
                                     <TableCell>Total Price</TableCell>
                                     <TableCell>Supplier</TableCell>
                                 </TableRow>
@@ -146,6 +151,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.price_per_item}</TableCell>
+                                        <TableCell>{record.quantity_purchase}</TableCell>
                                         <TableCell>{record.total_price}</TableCell>
                                         <TableCell>{record.supplier}</TableCell>
                                     </TableRow>
@@ -161,15 +167,19 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 <TableRow>
                                     <TableCell>Date</TableCell>
                                     <TableCell>Price</TableCell>
+                                    <TableCell>total_price</TableCell>
                                     <TableCell>Quantity Sold</TableCell>
+                                    <TableCell>customer</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {(productHistory.sales && productHistory.sales.length > 0) && productHistory.sales.map((record) => (
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
-                                        <TableCell>{record.price}</TableCell>
+                                        <TableCell>{record.price_per_item}</TableCell>
+                                        <TableCell>{record.total_price}</TableCell>
                                         <TableCell>{record.quantity_sold}</TableCell>
+                                        <TableCell>{record.customer}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

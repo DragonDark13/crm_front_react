@@ -45,6 +45,7 @@ export interface IProduct extends IBaseProduct {
 
 export interface INewProduct extends IBaseProduct {
     category_ids: number[]
+    created_date: string,
 }
 
 export interface ICategory {
@@ -82,7 +83,8 @@ function App() {
         quantity: 0,
         total_price: 0,
         price_per_item: 0,
-        category_ids: []
+        category_ids: [],
+        created_date: '', // ��ормат YYYY-MM-DD
     });
     const [editProduct, setEditProduct] = useState<IProduct | null>(null); // Для зберігання товару, який редагується
     const [openEdit, setOpenEdit] = useState(false); // Відповідає за стан модального вікна для редагування
@@ -157,7 +159,15 @@ function App() {
         setSelectedCategories([]);
     };
 
-    const handleOpenAdd = () => setOpenAdd(true);
+    const handleOpenAdd = () => {
+        setOpenAdd(true)
+        setNewProduct((newProduct) => {
+            return {
+                ...newProduct,
+                created_date: new Date().toISOString().slice(0, 10),
+            }
+        })
+    };
     const handleCloseAdd = () => {
         setNewProduct({
             name: '',
@@ -165,7 +175,8 @@ function App() {
             quantity: 0,
             total_price: 0,
             price_per_item: 0,
-            category_ids: []
+            category_ids: [],
+            created_date: '',
         })
         setOpenAdd(false);
     }
@@ -227,14 +238,6 @@ function App() {
             .then(() => {
                 fetchProductsFunc();
                 handleCloseAdd(); // Закрити модальне вікно після додавання
-                setNewProduct({
-                    name: '',
-                    supplier: '',
-                    quantity: 0,
-                    total_price: 0,
-                    price_per_item: 0,
-                    category_ids: [],
-                });
             })
             .catch(error => {
                 console.error('There was an error adding the product!', error);

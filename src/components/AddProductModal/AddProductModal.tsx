@@ -11,6 +11,8 @@ import {
 import {ICategory, INewProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
+//TODO додай постачальників таблиці
+// Повідомлення про успіх
 
 interface IAddProductModal {
     open: boolean,

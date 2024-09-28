@@ -1,6 +1,7 @@
 import React from 'react';
 import {Checkbox, FormControlLabel, FormGroup} from '@mui/material';
 import {ICategory} from "../../App"; // імпорт функції для отримання категорій
+//TODO Зробити фільтр сбоку
 
 interface ICategoryFilterProps {
     selectedFilterCategories: number[];
