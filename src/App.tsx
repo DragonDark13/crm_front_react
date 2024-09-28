@@ -119,9 +119,9 @@ function App() {
         setEditProduct(product)
         setSaleData({
             customer: '',
-            quantity: 0,
-            price_per_item: 0,
-            total_price: 0,
+            quantity: 1,
+            price_per_item: product.price_per_item,
+            total_price: product.price_per_item,
             sale_date: new Date().toISOString().split('T')[0],
             productId: product.id, // Зберігаємо ID продукту для відправки на сервер
         });
@@ -287,8 +287,9 @@ function App() {
         if (!editProduct) return null
 
         addPurchase(editProduct.id, purchaseData).then(() => {
-            fetchProductsFunc(); // Оновити список товарів
+
             handleClosePurchase(); // Закрити модальне вікно
+            fetchProductsFunc(); // Оновити список товарів
         })
             .catch(error => {
                 console.error('There was an error processing the purchase!', error);
@@ -299,6 +300,7 @@ function App() {
         if (saleData && editProduct) {
             addSale(editProduct.id, saleData).then(() => {
                 handleCloseSale();
+                fetchProductsFunc();
                 // Тут можна також оновити список продуктів або історію, якщо потрібно
             })
                 .catch(error => {
@@ -471,8 +473,8 @@ function App() {
             {
                 (openSale && saleData) &&
                 <SaleProductModal
-                    open={openSale}
-                    handleClose={handleCloseSale}
+                    openSale={openSale}
+                    handleCloseSale={handleCloseSale}
                     saleData={saleData}
                     setSaleData={setSaleData}
                     handleSale={handleSale}
