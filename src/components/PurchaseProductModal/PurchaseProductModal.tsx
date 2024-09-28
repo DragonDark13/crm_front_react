@@ -1,5 +1,6 @@
 import {  TextField, Button, DialogActions, DialogContent} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
+import React from "react";
 
 interface IPurchaseProductModal {
     open: boolean;
@@ -68,6 +69,8 @@ const PurchaseProductModal = ({
 
             </DialogContent>
             <DialogActions>
+                                <Button variant={"outlined"} onClick={"handleClose"}>Закрити</Button>
+
                 <Button variant="contained" color="primary" onClick={handleSubmitPurchase} sx={{mt: 2}}>
                     Confirm Purchase
                 </Button>

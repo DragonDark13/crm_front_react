@@ -21,7 +21,6 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({
                                                         fullWidth = true,
                                                         ...rest
                                                     }) => {
-    console.log("maxWidth:::", maxWidth);
     return (
         <Dialog
             TransitionComponent={Transition}

@@ -156,7 +156,17 @@ function App() {
     };
 
     const handleOpenAdd = () => setOpenAdd(true);
-    const handleCloseAdd = () => setOpenAdd(false);
+    const handleCloseAdd = () => {
+        setNewProduct({
+            name: '',
+            supplier: '',
+            quantity: 0,
+            total_price: 0,
+            price_per_item: 0,
+            category_ids: []
+        })
+        setOpenAdd(false);
+    }
     const handleClosePurchase = () => setOpenPurchase(false)
 
     const handleCloseCategoryModal = () => {
@@ -386,7 +396,7 @@ function App() {
                         handleSort={handleSort}
                         sortProducts={sortProducts}
                         getComparator={getComparator}
-                        handleOpenEdit={(product) => setOpenEdit(true) && setEditProduct(product)}
+                        handleOpenEdit={handleOpenEdit}
                         handleDelete={(productId) => {
                             console.log('Delete product with id:', productId)
                             handleDelete(productId)
@@ -418,7 +428,7 @@ function App() {
                     categories={categories}
                     handleAdd={handleAdd}
                     handleCategoryChange={handleCategoryChange}
-                    handleClose={handleCloseAdd}
+                    handleCloseAdd={handleCloseAdd}
                     selectedCategories={selectedCategories}/>
             }
 

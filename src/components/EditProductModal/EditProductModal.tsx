@@ -32,8 +32,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             maxWidth="xl"
         >
             <DialogContent>
-                {editProduct && (
-                    <div>
                         <TextField
                             label="Name"
                             value={editProduct.name}
@@ -87,10 +85,10 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             ))}
                         </FormGroup>
 
-                    </div>
-                )}
             </DialogContent>
             <DialogActions>
+                                <Button variant={"outlined"} onClick={"handleClose"}>Закрити</Button>
+
                 <Button variant="contained" color="primary" onClick={handleEditSave} sx={{mt: 2}}>
                     Save Changes
                 </Button>

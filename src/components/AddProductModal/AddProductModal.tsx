@@ -1,17 +1,20 @@
+import React, {useEffect, useState} from 'react';
 import {
     TextField,
     Button,
     FormGroup,
     FormControlLabel,
     Checkbox,
-    DialogContent, DialogActions
+    DialogContent,
+    DialogActions,
+    Grid
 } from '@mui/material';
 import {ICategory, INewProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IAddProductModal {
     open: boolean,
-    handleClose: () => void,
+    handleCloseAdd: () => void,
     newProduct: INewProduct,
     setNewProduct: (product: INewProduct) => void,
     categories: ICategory[],
@@ -22,7 +25,7 @@ interface IAddProductModal {
 
 const AddProductModal = ({
                              open,
-                             handleClose,
+                             handleCloseAdd,
                              newProduct,
                              setNewProduct,
                              categories,
@@ -30,52 +33,108 @@ const AddProductModal = ({
                              handleCategoryChange,
                              handleAdd
                          }: IAddProductModal) => {
+    const [errors, setErrors] = useState({
+        name: '',
+        supplier: '',
+        quantity: '',
+        price_per_item: ''
+    });
+
+    const validateFields = () => {
+        const newErrors = {
+            name: newProduct.name.trim() === '' ? 'Name is required' : '',
+            supplier: newProduct.supplier.trim() === '' ? 'Supplier is required' : '',
+            quantity: newProduct.quantity < 0 ? 'Quantity must be greater than or equal to 0' : '',
+            price_per_item: newProduct.price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
+        };
+        setErrors(newErrors);
+
+        // Return true if there are no errors
+        return Object.values(newErrors).every(error => error === '');
+    };
+
+    const handleAddClick = () => {
+        if (validateFields()) {
+            handleAdd();
+        }
+    };
+
+    // Автоматичне оновлення total_price як добутку quantity і price_per_item
+    useEffect(() => {
+        const totalPrice = newProduct.quantity * newProduct.price_per_item;
+        setNewProduct({...newProduct, total_price: totalPrice});
+    }, [newProduct.quantity, newProduct.price_per_item]);
+
     return (
         <CustomDialog
             open={open}
-            handleClose={handleClose}
-            title="Add New Product"
-            maxWidth="xl"
+            handleClose={handleCloseAdd}
+            title="Додайте новий товар"
+            maxWidth="md"
         >
             <DialogContent>
-                <TextField
-                    label="Name"
-                    value={newProduct.name}
-                    onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Supplier"
-                    value={newProduct.supplier}
-                    onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Quantity"
-                    type="number"
-                    value={newProduct.quantity}
-                    onChange={(e) => setNewProduct({...newProduct, quantity: Number(e.target.value)})}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Total Price"
-                    type="number"
-                    value={newProduct.total_price}
-                    onChange={(e) => setNewProduct({...newProduct, total_price: Number(e.target.value)})}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Price per Item"
-                    type="number"
-                    value={newProduct.price_per_item}
-                    onChange={(e) => setNewProduct({...newProduct, price_per_item: Number(e.target.value)})}
-                    fullWidth
-                    margin="normal"
-                />
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Назва товару"
+                            value={newProduct.name}
+                            onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                            fullWidth
+                            margin="normal"
+                            error={!!errors.name}
+                            helperText={errors.name}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            label="Постачальник"
+                            value={newProduct.supplier}
+                            onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
+                            fullWidth
+                            margin="normal"
+                            error={!!errors.supplier}
+                            helperText={errors.supplier}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            label="Quantity"
+                            type="number"
+                            value={newProduct.quantity}
+                            onChange={(e) => setNewProduct({...newProduct, quantity: Number(e.target.value)})}
+                            fullWidth
+                            margin="normal"
+                            inputProps={{min: 0, max: 1000}} // Максимальне значення, яке ви можете змінити
+                            error={!!errors.quantity}
+                            helperText={errors.quantity}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            label="Price per Item"
+                            type="number"
+                            value={newProduct.price_per_item}
+                            onChange={(e) => setNewProduct({...newProduct, price_per_item: Number(e.target.value)})}
+                            fullWidth
+                            margin="normal"
+                            inputProps={{min: 0, max: 10000}} // Максимальне значення, яке ви можете змінити
+                            error={!!errors.price_per_item}
+                            helperText={errors.price_per_item}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            label="Total Price"
+                            type="number"
+                            value={newProduct.total_price}
+                            fullWidth
+                            margin="normal"
+                            disabled // Поле заблоковане для редагування
+                        />
+                    </Grid>
+                </Grid>
                 <FormGroup>
                     {categories.map(category => (
                         <FormControlLabel
@@ -90,10 +149,10 @@ const AddProductModal = ({
                         />
                     ))}
                 </FormGroup>
-
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" color="primary" onClick={handleAdd} sx={{mt: 2}}>
+                <Button variant={"outlined"} onClick={handleCloseAdd}>Закрити</Button>
+                <Button variant="contained" color="primary" onClick={handleAddClick} sx={{mt: 2}}>
                     Add Product
                 </Button>
             </DialogActions>
