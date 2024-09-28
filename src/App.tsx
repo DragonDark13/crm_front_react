@@ -394,6 +394,16 @@ function App() {
         setSelectedDeleteModalProductId(null);
     };
 
+    const handleOpenHistoryModal = (product_id: number) => {
+        setProductId(product_id); // Встановлюємо productId
+        setOpenHistory(true); // Відкриваємо модальне вікно
+    }
+
+    const handleCloseHistoryModal = () => {
+        setOpenHistory(false);
+        setProductId(null); // Встановлюємо productId
+    }
+
     return (
         <React.Fragment>
 
@@ -440,8 +450,7 @@ function App() {
                             console.log('Open sale for product:', product)
                             handleOpenSale(product)
                         }}
-                        setProductId={setProductId}
-                        setOpenHistory={setOpenHistory}
+                        handleOpenHistoryModal={handleOpenHistoryModal}
                     /> {/* Кнопка для відкриття модального вікна для додавання */}
 
 
@@ -474,7 +483,7 @@ function App() {
             {(openHistory && productId) && (
                 <ProductHistoryModal
                     openHistory={openHistory}
-                    onClose={() => setOpenHistory(false)}
+                    onClose={handleCloseHistoryModal}
                     productId={productId} // Передаємо productId
                 />
             )}

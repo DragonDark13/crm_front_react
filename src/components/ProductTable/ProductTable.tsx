@@ -6,6 +6,12 @@ import {
     TableRow, Paper, Button, TableSortLabel,
 } from '@mui/material';
 import {IProduct} from "../../App";
+import {IconButton, Tooltip} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import SellIcon from '@mui/icons-material/Sell';
+import HistoryIcon from '@mui/icons-material/History';
 
 interface IProductTableProps {
     filteredProducts: IProduct[];
@@ -16,26 +22,25 @@ interface IProductTableProps {
     getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
     handleOpenEdit: (product: IProduct) => void;
     handleDelete: (productId: number) => void;
+    handleOpenHistoryModal: (productId: number) => void;
     handlePurchase: (product: IProduct) => void;
     handleOpenSale: (product: IProduct) => void;
-    setProductId: (id: number | null) => void;
-    setOpenHistory: (open: boolean) => void;
 }
 
 const ProductTable: React.FC<IProductTableProps> = ({
-    filteredProducts,
-    order,
-    orderBy,
-    handleSort,
-    sortProducts,
-    getComparator,
-    handleOpenEdit,
-    handleDelete,
-    handlePurchase,
-    handleOpenSale,
-    setProductId,
-    setOpenHistory
-}) => {
+                                                        filteredProducts,
+                                                        order,
+                                                        orderBy,
+                                                        handleSort,
+                                                        sortProducts,
+                                                        getComparator,
+                                                        handleOpenEdit,
+                                                        handleDelete,
+                                                        handlePurchase,
+                                                        handleOpenSale,
+                                                        handleOpenHistoryModal
+
+                                                    }) => {
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -91,29 +96,33 @@ const ProductTable: React.FC<IProductTableProps> = ({
                             <TableCell>{product.quantity}</TableCell>
                             <TableCell>{product.total_price}</TableCell>
                             <TableCell>{product.price_per_item}</TableCell>
-                            <TableCell>
-                                <Button variant="contained" color="primary"
-                                        onClick={() => handleOpenEdit(product)}>
-                                    Edit
-                                </Button>
-                                <Button variant="contained" color="secondary"
-                                        onClick={() => handleDelete(product.id)}>
-                                    Delete
-                                </Button>
-                                <Button variant="contained" color="primary"
-                                        onClick={() => handlePurchase(product)}>
-                                    Purchase
-                                </Button>
-                                <Button variant="contained" color="primary"
-                                        onClick={() => handleOpenSale(product)}>
-                                    Sale
-                                </Button>
-                                <Button variant="contained" onClick={() => {
-                                    setProductId(product.id); // Встановлюємо productId
-                                    setOpenHistory(true); // Відкриваємо модальне вікно
-                                }}>
-                                    History
-                                </Button>
+                            <TableCell> <Tooltip title="Редагувати">
+                                <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
+                                    <EditIcon/>
+                                </IconButton>
+                            </Tooltip>
+                                <Tooltip title="Видалити">
+                                    <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Купівля">
+                                    <IconButton color="primary" onClick={() => handlePurchase(product)}>
+                                        <ShoppingCartIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Продаж">
+                                    <IconButton color="primary" onClick={() => handleOpenSale(product)}>
+                                        <SellIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Історія">
+                                    <IconButton onClick={() => {
+                                        handleOpenHistoryModal(product.id);
+                                    }}>
+                                        <HistoryIcon/>
+                                    </IconButton>
+                                </Tooltip>
                             </TableCell>
                         </TableRow>
                     ))}
