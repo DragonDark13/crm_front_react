@@ -434,7 +434,7 @@ function App() {
 
             {(openEdit && editProduct) &&
             <EditProductModal selectedCategories={selectedCategories} categories={categories}
-                              handleCategoryChange={handleCategoryChange} open={openEdit} handleClose={handleCloseEdit}
+                              handleCategoryChange={handleCategoryChange} open={openEdit} handleCloseEdit={handleCloseEdit}
                               editProduct={editProduct}
                               setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
 
