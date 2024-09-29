@@ -1,8 +1,6 @@
 import {Button, DialogActions, DialogContent, TextField} from "@mui/material";
 import CustomDialog from "../CustomDialog/CustomDialog";
-import axios from "axios";
 import {useState} from "react";
-import {addNewCategory} from "../../api/api";
 
 interface ICreateNewCategoryModal {
     openCategoryCreateModal: boolean;

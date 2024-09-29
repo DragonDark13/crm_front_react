@@ -320,10 +320,9 @@ function App() {
 
     const getComparator = (order: 'asc' | 'desc', orderBy: keyof IProduct) => {
         return order === 'desc'
-            ? (a: IProduct, b: IProduct) => (b[orderBy] < a[orderBy] ? -1 : 1)
-            : (a: IProduct, b: IProduct) => (a[orderBy] < b[orderBy] ? -1 : 1);
+            ? (a: IProduct, b: IProduct) => (b[orderBy] != null && a[orderBy] != null ? (b[orderBy] < a[orderBy] ? -1 : 1) : 0)
+            : (a: IProduct, b: IProduct) => (a[orderBy] != null && b[orderBy] != null ? (a[orderBy] < b[orderBy] ? -1 : 1) : 0);
     };
-
     const handleSubmitPurchase = () => {
         const purchaseData: IPurchaseData = {
             quantity: purchaseDetails.quantity,

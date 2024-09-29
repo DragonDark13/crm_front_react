@@ -14,40 +14,274 @@ const fakeResponse = {
             "category_ids": [],
             "id": 1,
             "name": "Палочка Воландеморта",
-            "price_per_item": 507,
+            "price_per_item": "507.6",
             "quantity": 1,
-            "supplier": "skladoptom.com.ua",
-            "total_price": 507
+            "supplier": {
+                "contact_info": null,
+                "id": 1,
+                "name": "skladoptom.com.ua"
+            },
+            "total_price": "507.6"
         },
         {
             "category_ids": [],
             "id": 2,
             "name": "Палочка Грюма",
-            "price_per_item": 507,
+            "price_per_item": "507.6",
             "quantity": 1,
-            "supplier": "skladoptom.com.ua",
-            "total_price": 507
+            "supplier": {
+                "contact_info": null,
+                "id": 1,
+                "name": "skladoptom.com.ua"
+            },
+            "total_price": "507.6"
         },
         {
             "category_ids": [],
             "id": 3,
             "name": "Брелок с гербом Пуффендуя",
-            "price_per_item": 65,
+            "price_per_item": "65.49",
             "quantity": 1,
-            "supplier": "skladoptom.com.ua",
-            "total_price": 65
+            "supplier": {
+                "contact_info": null,
+                "id": 1,
+                "name": "skladoptom.com.ua"
+            },
+            "total_price": "65.49"
         },
         {
-            "category_ids": [
-                1,
-                2
-            ],
+            "category_ids": [],
             "id": 4,
-            "name": "test",
-            "price_per_item": 6,
-            "quantity": 6,
-            "supplier": "еуіе",
-            "total_price": 5
+            "name": "Брелок с гербом Когтевран",
+            "price_per_item": "86",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "86"
+        },
+        {
+            "category_ids": [],
+            "id": 5,
+            "name": "Брелок Дары Смерти",
+            "price_per_item": "81",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "81"
+        },
+        {
+            "category_ids": [],
+            "id": 6,
+            "name": "Брелок Грифиндор круглый",
+            "price_per_item": "60",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "60"
+        },
+        {
+            "category_ids": [],
+            "id": 7,
+            "name": "Брелок Слизерин круглый",
+            "price_per_item": "60",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "60"
+        },
+        {
+            "category_ids": [],
+            "id": 8,
+            "name": "Брелок Когтевран круглый",
+            "price_per_item": "60",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "60"
+        },
+        {
+            "category_ids": [],
+            "id": 9,
+            "name": "Брелок Пуфендуй круглый",
+            "price_per_item": "60",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "60"
+        },
+        {
+            "category_ids": [],
+            "id": 10,
+            "name": "Брелок Хогвартс круглый",
+            "price_per_item": "0",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "0"
+        },
+        {
+            "category_ids": [],
+            "id": 11,
+            "name": "Светильник Сова",
+            "price_per_item": "390",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 2,
+                "name": "misteria.prom.ua"
+            },
+            "total_price": "390"
+        },
+        {
+            "category_ids": [],
+            "id": 12,
+            "name": "Сервиз чайный Хогвартс",
+            "price_per_item": "3800",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 3,
+                "name": "Настя @tykkinykki"
+            },
+            "total_price": "3800"
+        },
+        {
+            "category_ids": [],
+            "id": 13,
+            "name": "Шарф Гриффиндор",
+            "price_per_item": "900",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 4,
+                "name": "Татьяна Явтуховская"
+            },
+            "total_price": "900"
+        },
+        {
+            "category_ids": [],
+            "id": 14,
+            "name": "Чашка с молнией",
+            "price_per_item": "165",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 5,
+                "name": "starsandsky.com.ua"
+            },
+            "total_price": "165"
+        },
+        {
+            "category_ids": [],
+            "id": 15,
+            "name": "Чашка с гербом Хогвартса",
+            "price_per_item": "165",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 5,
+                "name": "starsandsky.com.ua"
+            },
+            "total_price": "165"
+        },
+        {
+            "category_ids": [],
+            "id": 16,
+            "name": "Чашка с оленем",
+            "price_per_item": "165",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 5,
+                "name": "starsandsky.com.ua"
+            },
+            "total_price": "165"
+        },
+        {
+            "category_ids": [],
+            "id": 17,
+            "name": "Чашка с совой",
+            "price_per_item": "135",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 5,
+                "name": "starsandsky.com.ua"
+            },
+            "total_price": "135"
+        },
+        {
+            "category_ids": [],
+            "id": 18,
+            "name": "Чашка с башней",
+            "price_per_item": "135",
+            "quantity": 1,
+            "supplier": {
+                "contact_info": null,
+                "id": 5,
+                "name": "starsandsky.com.ua"
+            },
+            "total_price": "135"
+        },
+        {
+            "category_ids": [],
+            "id": 19,
+            "name": "Мешочки тканевые 23х17",
+            "price_per_item": "23",
+            "quantity": 4,
+            "supplier": {
+                "contact_info": null,
+                "id": 6,
+                "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
+            },
+            "total_price": "92"
+        },
+        {
+            "category_ids": [],
+            "id": 20,
+            "name": "Мешочки тканевые 13х10",
+            "price_per_item": "10",
+            "quantity": 10,
+            "supplier": {
+                "contact_info": null,
+                "id": 6,
+                "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
+            },
+            "total_price": "100"
+        },
+        {
+            "category_ids": [],
+            "id": 21,
+            "name": "Мешочки тканевые 10х8",
+            "price_per_item": "8",
+            "quantity": 15,
+            "supplier": {
+                "contact_info": null,
+                "id": 6,
+                "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
+            },
+            "total_price": "120"
         }
     ]
 };
@@ -69,50 +303,100 @@ const fakeCategory = {
     ]
 }
 
-//
-// api.interceptors.request.use((config) => {
-//     // Перевіряємо URL запиту
-//     if (config.url === '/products') {
-//         // "Фейкові" дані, які будемо повертати
-//
-//         // Перехоплюємо запит і відправляємо фейкову відповідь
-//         return new Promise((resolve) => {
-//             setTimeout(() => {
-//                 // Емуляція асинхронної відповіді з фейковими даними
-//                 config.adapter = () => Promise.resolve({
-//                     data: fakeResponse.data,
-//                     status: 200,
-//                     statusText: 'OK',
-//                     headers: {},
-//                     config: config
-//                 });
-//                 resolve(config);
-//             }, 500); // Затримка у 500 мс для імітації реального запиту
-//         });
-//     }
-//
-//     // Перевіряємо URL запиту для категорій
-//     if (config.url === '/categories') {
-//         return new Promise((resolve) => {
-//             setTimeout(() => {
-//                 config.adapter = () => Promise.resolve({
-//                     data: fakeCategory.data,
-//                     status: 200,
-//                     statusText: 'OK',
-//                     headers: {},
-//                     config: config
-//                 });
-//                 resolve(config);
-//             }, 500); // Затримка у 500 мс для імітації реального запиту
-//         });
-//     }
-//
-//
-//     // Повертаємо конфігурацію для всіх інших запитів
-//     return config;
-// }, (error) => {
-//     return Promise.reject(error);
-// });
+
+const fakeResponseSuppliers = {
+    data: [
+        {
+            "contact_info": null,
+            "id": 1,
+            "name": "skladoptom.com.ua"
+        },
+        {
+            "contact_info": null,
+            "id": 2,
+            "name": "misteria.prom.ua"
+        },
+        {
+            "contact_info": null,
+            "id": 3,
+            "name": "Настя @tykkinykki"
+        },
+        {
+            "contact_info": null,
+            "id": 4,
+            "name": "Татьяна Явтуховская"
+        },
+        {
+            "contact_info": null,
+            "id": 5,
+            "name": "starsandsky.com.ua"
+        },
+        {
+            "contact_info": null,
+            "id": 6,
+            "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
+        }
+    ]
+}
+
+api.interceptors.request.use((config) => {
+    // Перевіряємо URL запиту
+    if (config.url === '/products') {
+        // "Фейкові" дані, які будемо повертати
+
+        // Перехоплюємо запит і відправляємо фейкову відповідь
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                // Емуляція асинхронної відповіді з фейковими даними
+                config.adapter = () => Promise.resolve({
+                    data: fakeResponse.data,
+                    status: 200,
+                    statusText: 'OK',
+                    headers: {},
+                    config: config
+                });
+                resolve(config);
+            }, 500); // Затримка у 500 мс для імітації реального запиту
+        });
+    }
+
+    // Перевіряємо URL запиту для категорій
+    if (config.url === '/categories') {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                config.adapter = () => Promise.resolve({
+                    data: fakeCategory.data,
+                    status: 200,
+                    statusText: 'OK',
+                    headers: {},
+                    config: config
+                });
+                resolve(config);
+            }, 500); // Затримка у 500 мс для імітації реального запиту
+        });
+    }
+
+    if (config.url === '/supplier') {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                config.adapter = () => Promise.resolve({
+                    data: fakeResponseSuppliers.data,
+                    status: 200,
+                    statusText: 'OK',
+                    headers: {},
+                    config: config
+                });
+                resolve(config);
+            }, 500); // Затримка у 500 мс для імітації реального запиту
+        });
+    }
+
+
+    // Повертаємо конфігурацію для всіх інших запитів
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
 
 
 // Функція для отримання списку продуктів
@@ -134,7 +418,7 @@ export const fetchGetAllCategories = () => {
         });
 }
 
-export const addSupplier = (newSupplier) => {
+export const addSupplier = (newSupplier: { name: string, contact_info: string | null }) => {
     return api.post('/supplier', newSupplier)
         .catch(error => {
             console.error('Error adding supplier:', error);
