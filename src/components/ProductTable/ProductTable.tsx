@@ -98,29 +98,29 @@ const ProductTable: React.FC<IProductTableProps> = ({
                             <TableCell>{product.price_per_item}</TableCell>
                             <TableCell> <Tooltip title="Редагувати">
                                 <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
-                                    <EditIcon/>
+                                    <EditIcon fontSize={"small"}/>
                                 </IconButton>
                             </Tooltip>
                                 <Tooltip title="Видалити">
                                     <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
-                                        <DeleteIcon/>
+                                        <DeleteIcon fontSize={"small"}/>
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Купівля">
                                     <IconButton color="primary" onClick={() => handlePurchase(product)}>
-                                        <ShoppingCartIcon/>
+                                        <ShoppingCartIcon fontSize={"small"}/>
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Продаж">
                                     <IconButton color="primary" onClick={() => handleOpenSale(product)}>
-                                        <SellIcon/>
+                                        <SellIcon fontSize={"small"}/>
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Історія">
-                                    <IconButton onClick={() => {
+                                    <IconButton  onClick={() => {
                                         handleOpenHistoryModal(product.id);
                                     }}>
-                                        <HistoryIcon/>
+                                        <HistoryIcon fontSize={"small"}/>
                                     </IconButton>
                                 </Tooltip>
                             </TableCell>

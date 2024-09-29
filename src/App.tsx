@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Box, DialogContent, DialogTitle, Dialog, DialogContentText, DialogActions, Drawer
+    Button, Box, DialogContent, DialogTitle, Dialog, DialogContentText, DialogActions, Drawer, Grid, Container
 } from '@mui/material';
 
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
@@ -528,61 +528,96 @@ function App() {
                 <div>{error}</div> // Відображення помилки
             ) : (
                 <React.Fragment>
-                    <h1>Product List</h1>
-                    <Button onClick={toggleDrawer(true)}>Фільтр</Button>
-                    <Button variant="contained" color="primary" onClick={handleOpenAdd}>
-                        Add New Product
-                    </Button>
-                    <Button color="primary" onClick={handleOpenCategoryCreateModal} variant={"outlined"}>
-                        Add New Category
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={handleOpenModal}>
-                        Add Supplier
-                    </Button>
-                    <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
-                        <h2>Фільтри</h2>
-                        <div >
-                            <div>
-                                <h3>Категорії</h3>
-                                <CategoryFilter
-                                    selectedFilterCategories={selectedFilterCategories}
-                                    handleCategoryFilterChange={handleCategoryFilterChange}
-                                    categories={categories}
-                                />
-                            </div>
-                            <div>
-                                <h3>Постачальники</h3>
-                                <SupplierFilter
-                                    selectedFilterSuppliers={selectedFilterSuppliers}
-                                    handleSupplierFilterChange={handleSupplierFilterChange}
-                                    suppliers={suppliers}
-                                />
-                            </div>
-                        </div>
-                    </Drawer>
+                    <Container maxWidth={"xl"}>
+                        <h1>Product List</h1>
+                        <Grid container justifyContent={"space-between"}>
+                            <Grid item>
+                                <Button variant={"contained"} onClick={toggleDrawer(true)}>Фільтр</Button>
+                            </Grid>
+                            <Grid item>
+                                <Grid container gap={1}>
+                                    <Grid>
+                                        <Button variant={"outlined"} color={"primary"} onClick={handleOpenAdd}>
+                                            Додати Товар
+                                        </Button>
+                                    </Grid>
+                                    <Grid>
+                                        <Button variant={"outlined"} color={"primary"}
+                                                onClick={handleOpenCategoryCreateModal}
+                                        >
+                                            Додати Категорію
+                                        </Button>
+                                    </Grid>
+                                    <Grid>
 
-                    <ProductTable
-                        filteredProducts={filteredProducts}
-                        order={order}
-                        orderBy={orderBy}
-                        handleSort={handleSort}
-                        sortProducts={sortProducts}
-                        getComparator={getComparator}
-                        handleOpenEdit={handleOpenEdit}
-                        handleDelete={handleDeleteModalOpen}
-                        handlePurchase={(product) => {
-                            console.log('Purchase product:', product)
-                            handlePurchase(product)
-                        }}
-                        handleOpenSale={(product) => {
-                            console.log('Open sale for product:', product)
-                            handleOpenSale(product)
-                        }}
-                        handleOpenHistoryModal={handleOpenHistoryModal}
-                    /> {/* Кнопка для відкриття модального вікна для додавання */}
+                                        <Button variant={"outlined"} color={"primary"} onClick={handleOpenModal}>
+                                            Додати Постачальника
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
+                            <Button variant={"outlined"} onClick={toggleDrawer(false)}>
+                                Закрити
+                            </Button>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <h2>Фільтри</h2>
+                                    <div>
+                                        <div>
+                                            <h3>Категорії</h3>
+                                            <CategoryFilter
+                                                selectedFilterCategories={selectedFilterCategories}
+                                                handleCategoryFilterChange={handleCategoryFilterChange}
+                                                categories={categories}
+                                            />
+                                        </div>
+                                        <div>
+                                            <h3>Постачальники</h3>
+                                            <SupplierFilter
+                                                selectedFilterSuppliers={selectedFilterSuppliers}
+                                                handleSupplierFilterChange={handleSupplierFilterChange}
+                                                suppliers={suppliers}
+                                            />
+                                        </div>
+                                        <Button variant={"contained"} onClick={() => {
+                                            setSelectedFilterCategories([]);
+                                            setSelectedFilterSuppliers([]);
+                                            applyFilters([], []);
+                                        }}>
+                                            Очистити
+                                        </Button>
+                                    </div>
+
+                                </Grid>
+
+                            </Grid>
+
+                        </Drawer>
+
+                        <ProductTable
+                            filteredProducts={filteredProducts}
+                            order={order}
+                            orderBy={orderBy}
+                            handleSort={handleSort}
+                            sortProducts={sortProducts}
+                            getComparator={getComparator}
+                            handleOpenEdit={handleOpenEdit}
+                            handleDelete={handleDeleteModalOpen}
+                            handlePurchase={(product) => {
+                                console.log('Purchase product:', product)
+                                handlePurchase(product)
+                            }}
+                            handleOpenSale={(product) => {
+                                console.log('Open sale for product:', product)
+                                handleOpenSale(product)
+                            }}
+                            handleOpenHistoryModal={handleOpenHistoryModal}
+                        /> {/* Кнопка для відкриття модального вікна для додавання */}
 
 
-                </React.Fragment>
+                    </Container></React.Fragment>
             )}
 
 
