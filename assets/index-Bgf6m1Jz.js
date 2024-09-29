@@ -8663,7 +8663,7 @@ tags.forEach(function(tagName) {
 function isEmpty$2(obj) {
   return obj === void 0 || obj === null || Object.keys(obj).length === 0;
 }
-function GlobalStyles$2(props) {
+function GlobalStyles$3(props) {
   const {
     styles: styles2,
     defaultTheme: defaultTheme2 = {}
@@ -9870,14 +9870,14 @@ const systemDefaultTheme$1 = createTheme$1();
 function useTheme$1(defaultTheme2 = systemDefaultTheme$1) {
   return useTheme$2(defaultTheme2);
 }
-function GlobalStyles$1({
+function GlobalStyles$2({
   styles: styles2,
   themeId,
   defaultTheme: defaultTheme2 = {}
 }) {
   const upperTheme = useTheme$1(defaultTheme2);
   const globalStyles = typeof styles2 === "function" ? styles2(themeId ? upperTheme[themeId] || upperTheme : upperTheme) : styles2;
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(GlobalStyles$2, {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(GlobalStyles$3, {
     styles: globalStyles
   });
 }
@@ -12276,8 +12276,8 @@ const styled = createStyled2({
   defaultTheme: defaultTheme$1,
   rootShouldForwardProp
 });
-function GlobalStyles(props) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(GlobalStyles$1, {
+function GlobalStyles$1(props) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(GlobalStyles$2, {
     ...props,
     defaultTheme: defaultTheme$1,
     themeId: THEME_ID
@@ -12287,7 +12287,7 @@ function globalCss(styles2) {
   return function GlobalStylesWrapper(props) {
     return (
       // Pigment CSS `globalCss` support callback with theme inside an object but `GlobalStyles` support theme as a callback value.
-      /* @__PURE__ */ jsxRuntimeExports.jsx(GlobalStyles, {
+      /* @__PURE__ */ jsxRuntimeExports.jsx(GlobalStyles$1, {
         styles: typeof styles2 === "function" ? (theme) => styles2({
           theme,
           ...props
@@ -12323,7 +12323,7 @@ function getSvgIconUtilityClass(slot) {
   return generateUtilityClass("MuiSvgIcon", slot);
 }
 generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
-const useUtilityClasses$K = (ownerState) => {
+const useUtilityClasses$L = (ownerState) => {
   const {
     color: color2,
     fontSize,
@@ -12468,7 +12468,7 @@ const SvgIcon = /* @__PURE__ */ reactExports.forwardRef(function SvgIcon2(inProp
   if (!inheritViewBox) {
     more.viewBox = viewBox;
   }
-  const classes = useUtilityClasses$K(ownerState);
+  const classes = useUtilityClasses$L(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SvgIconRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -12972,7 +12972,7 @@ function getPaperUtilityClass(slot) {
   return generateUtilityClass("MuiPaper", slot);
 }
 generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
-const useUtilityClasses$J = (ownerState) => {
+const useUtilityClasses$K = (ownerState) => {
   const {
     square,
     elevation,
@@ -13045,7 +13045,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     square,
     variant
   };
-  const classes = useUtilityClasses$J(ownerState);
+  const classes = useUtilityClasses$K(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(PaperRoot, {
     as: component,
     ownerState,
@@ -13511,7 +13511,7 @@ function getButtonBaseUtilityClass(slot) {
   return generateUtilityClass("MuiButtonBase", slot);
 }
 const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]);
-const useUtilityClasses$I = (ownerState) => {
+const useUtilityClasses$J = (ownerState) => {
   const {
     disabled,
     focusVisible,
@@ -13740,7 +13740,7 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
     tabIndex,
     focusVisible
   };
-  const classes = useUtilityClasses$I(ownerState);
+  const classes = useUtilityClasses$J(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonBaseRoot, {
     as: ComponentProp,
     className: clsx(classes.root, className),
@@ -13791,7 +13791,7 @@ function getIconButtonUtilityClass(slot) {
   return generateUtilityClass("MuiIconButton", slot);
 }
 const iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge"]);
-const useUtilityClasses$H = (ownerState) => {
+const useUtilityClasses$I = (ownerState) => {
   const {
     classes,
     disabled,
@@ -13947,7 +13947,7 @@ const IconButton = /* @__PURE__ */ reactExports.forwardRef(function IconButton2(
     disableRipple,
     size
   };
-  const classes = useUtilityClasses$H(ownerState);
+  const classes = useUtilityClasses$I(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(IconButtonRoot, {
     className: clsx(classes.root, className),
     centerRipple: true,
@@ -13976,7 +13976,7 @@ const v6Colors = {
   textDisabled: true
 };
 const extendSxProp = internal_createExtendSxProp();
-const useUtilityClasses$G = (ownerState) => {
+const useUtilityClasses$H = (ownerState) => {
   const {
     align,
     gutterBottom,
@@ -14119,7 +14119,7 @@ const Typography = /* @__PURE__ */ reactExports.forwardRef(function Typography2(
     variantMapping
   };
   const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
-  const classes = useUtilityClasses$G(ownerState);
+  const classes = useUtilityClasses$H(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TypographyRoot, {
     as: Component,
     ref,
@@ -14684,10 +14684,10 @@ function getWindowScrollBarX(element) {
 }
 function getViewportRect(element, strategy) {
   var win = getWindow(element);
-  var html = getDocumentElement(element);
+  var html2 = getDocumentElement(element);
   var visualViewport = win.visualViewport;
-  var width2 = html.clientWidth;
-  var height2 = html.clientHeight;
+  var width2 = html2.clientWidth;
+  var height2 = html2.clientHeight;
   var x2 = 0;
   var y2 = 0;
   if (visualViewport) {
@@ -14708,15 +14708,15 @@ function getViewportRect(element, strategy) {
 }
 function getDocumentRect(element) {
   var _element$ownerDocumen;
-  var html = getDocumentElement(element);
+  var html2 = getDocumentElement(element);
   var winScroll = getWindowScroll(element);
-  var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
-  var width2 = max(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
-  var height2 = max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+  var body2 = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+  var width2 = max(html2.scrollWidth, html2.clientWidth, body2 ? body2.scrollWidth : 0, body2 ? body2.clientWidth : 0);
+  var height2 = max(html2.scrollHeight, html2.clientHeight, body2 ? body2.scrollHeight : 0, body2 ? body2.clientHeight : 0);
   var x2 = -winScroll.scrollLeft + getWindowScrollBarX(element);
   var y2 = -winScroll.scrollTop;
-  if (getComputedStyle(body || html).direction === "rtl") {
-    x2 += max(html.clientWidth, body ? body.clientWidth : 0) - width2;
+  if (getComputedStyle(body2 || html2).direction === "rtl") {
+    x2 += max(html2.clientWidth, body2 ? body2.clientWidth : 0) - width2;
   }
   return {
     width: width2,
@@ -15549,7 +15549,7 @@ function resolveAnchorEl$1(anchorEl) {
 function isHTMLElement(element) {
   return element.nodeType !== void 0;
 }
-const useUtilityClasses$F = (ownerState) => {
+const useUtilityClasses$G = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -15650,7 +15650,7 @@ const PopperTooltip = /* @__PURE__ */ reactExports.forwardRef(function PopperToo
   if (TransitionProps !== null) {
     childProps.TransitionProps = TransitionProps;
   }
-  const classes = useUtilityClasses$F(props);
+  const classes = useUtilityClasses$G(props);
   const Root = slots.root ?? "div";
   const rootProps = useSlotProps({
     elementType: Root,
@@ -15797,7 +15797,7 @@ const Popper = /* @__PURE__ */ reactExports.forwardRef(function Popper22(inProps
 function getStyleValue(value) {
   return parseInt(value, 10) || 0;
 }
-const styles$3 = {
+const styles$4 = {
   shadow: {
     // Visibility needed to hide the extra text area on iPads
     visibility: "hidden",
@@ -15930,7 +15930,7 @@ const TextareaAutosize = /* @__PURE__ */ reactExports.forwardRef(function Textar
       ref: shadowRef,
       tabIndex: -1,
       style: {
-        ...styles$3.shadow,
+        ...styles$4.shadow,
         ...style2,
         paddingTop: 0,
         paddingBottom: 0
@@ -15986,7 +15986,7 @@ const inputOverridesResolver = (props, styles2) => {
   } = props;
   return [styles2.input, ownerState.size === "small" && styles2.inputSizeSmall, ownerState.multiline && styles2.inputMultiline, ownerState.type === "search" && styles2.inputTypeSearch, ownerState.startAdornment && styles2.inputAdornedStart, ownerState.endAdornment && styles2.inputAdornedEnd, ownerState.hiddenLabel && styles2.inputHiddenLabel];
 };
-const useUtilityClasses$E = (ownerState) => {
+const useUtilityClasses$F = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -16372,7 +16372,7 @@ const InputBase = /* @__PURE__ */ reactExports.forwardRef(function InputBase2(in
     startAdornment,
     type
   };
-  const classes = useUtilityClasses$E(ownerState);
+  const classes = useUtilityClasses$F(ownerState);
   const Root = slots.root || components.Root || InputBaseRoot;
   const rootProps = slotProps.root || componentsProps.root || {};
   const Input3 = slots.input || components.Input || InputBaseInput;
@@ -16460,7 +16460,7 @@ const filledInputClasses = {
 const ArrowDropDownIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M7 10l5 5 5-5z"
 }), "ArrowDropDown");
-const styles$2 = {
+const styles$3 = {
   entering: {
     opacity: 1
   },
@@ -16560,7 +16560,7 @@ const Fade = /* @__PURE__ */ reactExports.forwardRef(function Fade2(props, ref) 
         style: {
           opacity: 0,
           visibility: state === "exited" && !inProp ? "hidden" : void 0,
-          ...styles$2[state],
+          ...styles$3[state],
           ...style2,
           ...children.props.style
         },
@@ -16581,7 +16581,7 @@ const removeOwnerState = (props) => {
   } = props;
   return rest;
 };
-const useUtilityClasses$D = (ownerState) => {
+const useUtilityClasses$E = (ownerState) => {
   const {
     classes,
     invisible
@@ -16644,7 +16644,7 @@ const Backdrop = /* @__PURE__ */ reactExports.forwardRef(function Backdrop2(inPr
     component,
     invisible
   };
-  const classes = useUtilityClasses$D(ownerState);
+  const classes = useUtilityClasses$E(ownerState);
   const backwardCompatibleSlots = {
     transition: TransitionComponentProp,
     root: components.Root,
@@ -16698,7 +16698,7 @@ function getButtonUtilityClass(slot) {
 const buttonClasses = generateUtilityClasses("MuiButton", ["root", "text", "textInherit", "textPrimary", "textSecondary", "textSuccess", "textError", "textInfo", "textWarning", "outlined", "outlinedInherit", "outlinedPrimary", "outlinedSecondary", "outlinedSuccess", "outlinedError", "outlinedInfo", "outlinedWarning", "contained", "containedInherit", "containedPrimary", "containedSecondary", "containedSuccess", "containedError", "containedInfo", "containedWarning", "disableElevation", "focusVisible", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorSuccess", "colorError", "colorInfo", "colorWarning", "textSizeSmall", "textSizeMedium", "textSizeLarge", "outlinedSizeSmall", "outlinedSizeMedium", "outlinedSizeLarge", "containedSizeSmall", "containedSizeMedium", "containedSizeLarge", "sizeMedium", "sizeSmall", "sizeLarge", "fullWidth", "startIcon", "endIcon", "icon", "iconSizeSmall", "iconSizeMedium", "iconSizeLarge"]);
 const ButtonGroupContext = /* @__PURE__ */ reactExports.createContext({});
 const ButtonGroupButtonContext = /* @__PURE__ */ reactExports.createContext(void 0);
-const useUtilityClasses$C = (ownerState) => {
+const useUtilityClasses$D = (ownerState) => {
   const {
     color: color2,
     disableElevation,
@@ -17030,7 +17030,7 @@ const Button = /* @__PURE__ */ reactExports.forwardRef(function Button2(inProps,
     type,
     variant
   };
-  const classes = useUtilityClasses$C(ownerState);
+  const classes = useUtilityClasses$D(ownerState);
   const startIcon = startIconProp && /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonStartIcon, {
     className: classes.startIcon,
     ownerState,
@@ -17060,7 +17060,7 @@ function getSwitchBaseUtilityClass(slot) {
   return generateUtilityClass("PrivateSwitchBase", slot);
 }
 generateUtilityClasses("PrivateSwitchBase", ["root", "checked", "disabled", "input", "edgeStart", "edgeEnd"]);
-const useUtilityClasses$B = (ownerState) => {
+const useUtilityClasses$C = (ownerState) => {
   const {
     classes,
     checked,
@@ -17196,7 +17196,7 @@ const SwitchBase = /* @__PURE__ */ reactExports.forwardRef(function SwitchBase2(
     disableFocusRipple,
     edge
   };
-  const classes = useUtilityClasses$B(ownerState);
+  const classes = useUtilityClasses$C(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SwitchBaseRoot, {
     component: "span",
     className: clsx(classes.root, className),
@@ -17245,7 +17245,7 @@ function getCheckboxUtilityClass(slot) {
   return generateUtilityClass("MuiCheckbox", slot);
 }
 const checkboxClasses = generateUtilityClasses("MuiCheckbox", ["root", "checked", "disabled", "indeterminate", "colorPrimary", "colorSecondary", "sizeSmall", "sizeMedium"]);
-const useUtilityClasses$A = (ownerState) => {
+const useUtilityClasses$B = (ownerState) => {
   const {
     classes,
     indeterminate,
@@ -17352,7 +17352,7 @@ const Checkbox = /* @__PURE__ */ reactExports.forwardRef(function Checkbox2(inPr
     indeterminate,
     size
   };
-  const classes = useUtilityClasses$A(ownerState);
+  const classes = useUtilityClasses$B(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CheckboxRoot, {
     type: "checkbox",
     inputProps: {
@@ -17408,7 +17408,7 @@ const rotateAnimation = typeof circularRotateKeyframe !== "string" ? css`
 const dashAnimation = typeof circularDashKeyframe !== "string" ? css`
         animation: ${circularDashKeyframe} 1.4s ease-in-out infinite;
       ` : null;
-const useUtilityClasses$z = (ownerState) => {
+const useUtilityClasses$A = (ownerState) => {
   const {
     classes,
     variant,
@@ -17531,7 +17531,7 @@ const CircularProgress = /* @__PURE__ */ reactExports.forwardRef(function Circul
     value,
     variant
   };
-  const classes = useUtilityClasses$z(ownerState);
+  const classes = useUtilityClasses$A(ownerState);
   const circleStyle = {};
   const rootStyle = {};
   const rootProps = {};
@@ -17572,6 +17572,133 @@ const CircularProgress = /* @__PURE__ */ reactExports.forwardRef(function Circul
     })
   });
 });
+const isDynamicSupport = typeof globalCss({}) === "function";
+const html = (theme, enableColorScheme) => ({
+  WebkitFontSmoothing: "antialiased",
+  // Antialiasing.
+  MozOsxFontSmoothing: "grayscale",
+  // Antialiasing.
+  // Change from `box-sizing: content-box` so that `width`
+  // is not affected by `padding` or `border`.
+  boxSizing: "border-box",
+  // Fix font resize problem in iOS
+  WebkitTextSizeAdjust: "100%",
+  // When used under CssVarsProvider, colorScheme should not be applied dynamically because it will generate the stylesheet twice for server-rendered applications.
+  ...enableColorScheme && !theme.vars && {
+    colorScheme: theme.palette.mode
+  }
+});
+const body = (theme) => ({
+  color: (theme.vars || theme).palette.text.primary,
+  ...theme.typography.body1,
+  backgroundColor: (theme.vars || theme).palette.background.default,
+  "@media print": {
+    // Save printer ink.
+    backgroundColor: (theme.vars || theme).palette.common.white
+  }
+});
+const styles$2 = (theme, enableColorScheme = false) => {
+  var _a, _b;
+  const colorSchemeStyles = {};
+  if (enableColorScheme && theme.colorSchemes && typeof theme.getColorSchemeSelector === "function") {
+    Object.entries(theme.colorSchemes).forEach(([key, scheme]) => {
+      var _a2, _b2;
+      const selector = theme.getColorSchemeSelector(key);
+      if (selector.startsWith("@")) {
+        colorSchemeStyles[selector] = {
+          ":root": {
+            colorScheme: (_a2 = scheme.palette) == null ? void 0 : _a2.mode
+          }
+        };
+      } else {
+        colorSchemeStyles[selector.replace(/\s*&/, "")] = {
+          colorScheme: (_b2 = scheme.palette) == null ? void 0 : _b2.mode
+        };
+      }
+    });
+  }
+  let defaultStyles = {
+    html: html(theme, enableColorScheme),
+    "*, *::before, *::after": {
+      boxSizing: "inherit"
+    },
+    "strong, b": {
+      fontWeight: theme.typography.fontWeightBold
+    },
+    body: {
+      margin: 0,
+      // Remove the margin in all browsers.
+      ...body(theme),
+      // Add support for document.body.requestFullScreen().
+      // Other elements, if background transparent, are not supported.
+      "&::backdrop": {
+        backgroundColor: (theme.vars || theme).palette.background.default
+      }
+    },
+    ...colorSchemeStyles
+  };
+  const themeOverrides = (_b = (_a = theme.components) == null ? void 0 : _a.MuiCssBaseline) == null ? void 0 : _b.styleOverrides;
+  if (themeOverrides) {
+    defaultStyles = [defaultStyles, themeOverrides];
+  }
+  return defaultStyles;
+};
+const SELECTOR = "mui-ecs";
+const staticStyles = (theme) => {
+  const result = styles$2(theme, false);
+  const baseStyles = Array.isArray(result) ? result[0] : result;
+  if (!theme.vars && baseStyles) {
+    baseStyles.html[`:root:has(${SELECTOR})`] = {
+      colorScheme: theme.palette.mode
+    };
+  }
+  if (theme.colorSchemes) {
+    Object.entries(theme.colorSchemes).forEach(([key, scheme]) => {
+      var _a, _b;
+      const selector = theme.getColorSchemeSelector(key);
+      if (selector.startsWith("@")) {
+        baseStyles[selector] = {
+          [`:root:not(:has(.${SELECTOR}))`]: {
+            colorScheme: (_a = scheme.palette) == null ? void 0 : _a.mode
+          }
+        };
+      } else {
+        baseStyles[selector.replace(/\s*&/, "")] = {
+          [`&:not(:has(.${SELECTOR}))`]: {
+            colorScheme: (_b = scheme.palette) == null ? void 0 : _b.mode
+          }
+        };
+      }
+    });
+  }
+  return result;
+};
+const GlobalStyles = globalCss(isDynamicSupport ? ({
+  theme,
+  enableColorScheme
+}) => styles$2(theme, enableColorScheme) : ({
+  theme
+}) => staticStyles(theme));
+function CssBaseline(inProps) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiCssBaseline"
+  });
+  const {
+    children,
+    enableColorScheme = false
+  } = props;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
+    children: [isDynamicSupport && /* @__PURE__ */ jsxRuntimeExports.jsx(GlobalStyles, {
+      enableColorScheme
+    }), !isDynamicSupport && !enableColorScheme && /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
+      className: SELECTOR,
+      style: {
+        display: "none"
+      }
+    }), children]
+  });
+}
 function isOverflowing(container) {
   const doc = ownerDocument(container);
   if (doc.body === container) {
@@ -18125,7 +18252,7 @@ function getModalUtilityClass(slot) {
   return generateUtilityClass("MuiModal", slot);
 }
 generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
-const useUtilityClasses$y = (ownerState) => {
+const useUtilityClasses$z = (ownerState) => {
   const {
     open,
     exited,
@@ -18236,7 +18363,7 @@ const Modal = /* @__PURE__ */ reactExports.forwardRef(function Modal2(inProps, r
     ...propsWithDefaults,
     exited
   };
-  const classes = useUtilityClasses$y(ownerState);
+  const classes = useUtilityClasses$z(ownerState);
   const childProps = {};
   if (children.props.tabIndex === void 0) {
     childProps.tabIndex = "-1";
@@ -18329,7 +18456,7 @@ const DialogBackdrop = styled(Backdrop, {
   // Improve scrollable dialog support.
   zIndex: -1
 });
-const useUtilityClasses$x = (ownerState) => {
+const useUtilityClasses$y = (ownerState) => {
   const {
     classes,
     scroll,
@@ -18531,7 +18658,7 @@ const Dialog = /* @__PURE__ */ reactExports.forwardRef(function Dialog2(inProps,
     maxWidth: maxWidth2,
     scroll
   };
-  const classes = useUtilityClasses$x(ownerState);
+  const classes = useUtilityClasses$y(ownerState);
   const backdropClick = reactExports.useRef();
   const handleMouseDown = (event) => {
     backdropClick.current = event.target === event.currentTarget;
@@ -18609,7 +18736,7 @@ function getDialogActionsUtilityClass(slot) {
   return generateUtilityClass("MuiDialogActions", slot);
 }
 generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
-const useUtilityClasses$w = (ownerState) => {
+const useUtilityClasses$x = (ownerState) => {
   const {
     classes,
     disableSpacing
@@ -18659,7 +18786,7 @@ const DialogActions = /* @__PURE__ */ reactExports.forwardRef(function DialogAct
     ...props,
     disableSpacing
   };
-  const classes = useUtilityClasses$w(ownerState);
+  const classes = useUtilityClasses$x(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActionsRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -18675,7 +18802,7 @@ function getDialogTitleUtilityClass(slot) {
   return generateUtilityClass("MuiDialogTitle", slot);
 }
 const dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]);
-const useUtilityClasses$v = (ownerState) => {
+const useUtilityClasses$w = (ownerState) => {
   const {
     classes,
     dividers
@@ -18736,7 +18863,7 @@ const DialogContent = /* @__PURE__ */ reactExports.forwardRef(function DialogCon
     ...props,
     dividers
   };
-  const classes = useUtilityClasses$v(ownerState);
+  const classes = useUtilityClasses$w(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -18748,7 +18875,7 @@ function getDialogContentTextUtilityClass(slot) {
   return generateUtilityClass("MuiDialogContentText", slot);
 }
 generateUtilityClasses("MuiDialogContentText", ["root"]);
-const useUtilityClasses$u = (ownerState) => {
+const useUtilityClasses$v = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -18778,7 +18905,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     className,
     ...ownerState
   } = props;
-  const classes = useUtilityClasses$u(ownerState);
+  const classes = useUtilityClasses$v(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentTextRoot, {
     component: "p",
     variant: "body1",
@@ -18790,7 +18917,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     classes
   });
 });
-const useUtilityClasses$t = (ownerState) => {
+const useUtilityClasses$u = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -18818,7 +18945,7 @@ const DialogTitle = /* @__PURE__ */ reactExports.forwardRef(function DialogTitle
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$t(ownerState);
+  const classes = useUtilityClasses$u(ownerState);
   const {
     titleId = idProp
   } = reactExports.useContext(DialogContext);
@@ -19032,6 +19159,256 @@ const Slide = /* @__PURE__ */ reactExports.forwardRef(function Slide2(props, ref
         ...childProps
       });
     }
+  });
+});
+function getDrawerUtilityClass(slot) {
+  return generateUtilityClass("MuiDrawer", slot);
+}
+generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "paperAnchorLeft", "paperAnchorRight", "paperAnchorTop", "paperAnchorBottom", "paperAnchorDockedLeft", "paperAnchorDockedRight", "paperAnchorDockedTop", "paperAnchorDockedBottom", "modal"]);
+const overridesResolver$1 = (props, styles2) => {
+  const {
+    ownerState
+  } = props;
+  return [styles2.root, (ownerState.variant === "permanent" || ownerState.variant === "persistent") && styles2.docked, styles2.modal];
+};
+const useUtilityClasses$t = (ownerState) => {
+  const {
+    classes,
+    anchor,
+    variant
+  } = ownerState;
+  const slots = {
+    root: ["root"],
+    docked: [(variant === "permanent" || variant === "persistent") && "docked"],
+    modal: ["modal"],
+    paper: ["paper", `paperAnchor${capitalize(anchor)}`, variant !== "temporary" && `paperAnchorDocked${capitalize(anchor)}`]
+  };
+  return composeClasses(slots, getDrawerUtilityClass, classes);
+};
+const DrawerRoot = styled(Modal, {
+  name: "MuiDrawer",
+  slot: "Root",
+  overridesResolver: overridesResolver$1
+})(memoTheme(({
+  theme
+}) => ({
+  zIndex: (theme.vars || theme).zIndex.drawer
+})));
+const DrawerDockedRoot = styled("div", {
+  shouldForwardProp: rootShouldForwardProp,
+  name: "MuiDrawer",
+  slot: "Docked",
+  skipVariantsResolver: false,
+  overridesResolver: overridesResolver$1
+})({
+  flex: "0 0 auto"
+});
+const DrawerPaper = styled(Paper, {
+  name: "MuiDrawer",
+  slot: "Paper",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.paper, styles2[`paperAnchor${capitalize(ownerState.anchor)}`], ownerState.variant !== "temporary" && styles2[`paperAnchorDocked${capitalize(ownerState.anchor)}`]];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  overflowY: "auto",
+  display: "flex",
+  flexDirection: "column",
+  height: "100%",
+  flex: "1 0 auto",
+  zIndex: (theme.vars || theme).zIndex.drawer,
+  // Add iOS momentum scrolling for iOS < 13.0
+  WebkitOverflowScrolling: "touch",
+  // temporary style
+  position: "fixed",
+  top: 0,
+  // We disable the focus ring for mouse, touch and keyboard users.
+  // At some point, it would be better to keep it for keyboard users.
+  // :focus-ring CSS pseudo-class will help.
+  outline: 0,
+  variants: [{
+    props: {
+      anchor: "left"
+    },
+    style: {
+      left: 0
+    }
+  }, {
+    props: {
+      anchor: "top"
+    },
+    style: {
+      top: 0,
+      left: 0,
+      right: 0,
+      height: "auto",
+      maxHeight: "100%"
+    }
+  }, {
+    props: {
+      anchor: "right"
+    },
+    style: {
+      right: 0
+    }
+  }, {
+    props: {
+      anchor: "bottom"
+    },
+    style: {
+      top: "auto",
+      left: 0,
+      bottom: 0,
+      right: 0,
+      height: "auto",
+      maxHeight: "100%"
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchor === "left" && ownerState.variant !== "temporary",
+    style: {
+      borderRight: `1px solid ${(theme.vars || theme).palette.divider}`
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchor === "top" && ownerState.variant !== "temporary",
+    style: {
+      borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchor === "right" && ownerState.variant !== "temporary",
+    style: {
+      borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchor === "bottom" && ownerState.variant !== "temporary",
+    style: {
+      borderTop: `1px solid ${(theme.vars || theme).palette.divider}`
+    }
+  }]
+})));
+const oppositeDirection = {
+  left: "right",
+  right: "left",
+  top: "down",
+  bottom: "up"
+};
+function isHorizontal(anchor) {
+  return ["left", "right"].includes(anchor);
+}
+function getAnchor({
+  direction
+}, anchor) {
+  return direction === "rtl" && isHorizontal(anchor) ? oppositeDirection[anchor] : anchor;
+}
+const Drawer = /* @__PURE__ */ reactExports.forwardRef(function Drawer2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiDrawer"
+  });
+  const theme = useTheme();
+  const isRtl = useRtl();
+  const defaultTransitionDuration = {
+    enter: theme.transitions.duration.enteringScreen,
+    exit: theme.transitions.duration.leavingScreen
+  };
+  const {
+    anchor: anchorProp = "left",
+    BackdropProps,
+    children,
+    className,
+    elevation = 16,
+    hideBackdrop = false,
+    ModalProps: {
+      BackdropProps: BackdropPropsProp,
+      ...ModalProps
+    } = {},
+    onClose,
+    open = false,
+    PaperProps = {},
+    SlideProps,
+    // eslint-disable-next-line react/prop-types
+    TransitionComponent = Slide,
+    transitionDuration = defaultTransitionDuration,
+    variant = "temporary",
+    ...other
+  } = props;
+  const mounted = reactExports.useRef(false);
+  reactExports.useEffect(() => {
+    mounted.current = true;
+  }, []);
+  const anchorInvariant = getAnchor({
+    direction: isRtl ? "rtl" : "ltr"
+  }, anchorProp);
+  const anchor = anchorProp;
+  const ownerState = {
+    ...props,
+    anchor,
+    elevation,
+    open,
+    variant,
+    ...other
+  };
+  const classes = useUtilityClasses$t(ownerState);
+  const drawer = /* @__PURE__ */ jsxRuntimeExports.jsx(DrawerPaper, {
+    elevation: variant === "temporary" ? elevation : 0,
+    square: true,
+    ...PaperProps,
+    className: clsx(classes.paper, PaperProps.className),
+    ownerState,
+    children
+  });
+  if (variant === "permanent") {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(DrawerDockedRoot, {
+      className: clsx(classes.root, classes.docked, className),
+      ownerState,
+      ref,
+      ...other,
+      children: drawer
+    });
+  }
+  const slidingDrawer = /* @__PURE__ */ jsxRuntimeExports.jsx(TransitionComponent, {
+    in: open,
+    direction: oppositeDirection[anchorInvariant],
+    timeout: transitionDuration,
+    appear: mounted.current,
+    ...SlideProps,
+    children: drawer
+  });
+  if (variant === "persistent") {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(DrawerDockedRoot, {
+      className: clsx(classes.root, classes.docked, className),
+      ownerState,
+      ref,
+      ...other,
+      children: slidingDrawer
+    });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(DrawerRoot, {
+    BackdropProps: {
+      ...BackdropProps,
+      ...BackdropPropsProp,
+      transitionDuration
+    },
+    className: clsx(classes.root, classes.modal, className),
+    open,
+    ownerState,
+    onClose,
+    hideBackdrop,
+    ref,
+    ...other,
+    ...ModalProps,
+    children: slidingDrawer
   });
 });
 const useUtilityClasses$s = (ownerState) => {
@@ -27231,33 +27608,33 @@ isFetchSupported && ((res) => {
     });
   });
 })(new Response());
-const getBodyLength = async (body) => {
-  if (body == null) {
+const getBodyLength = async (body2) => {
+  if (body2 == null) {
     return 0;
   }
-  if (utils$1.isBlob(body)) {
-    return body.size;
+  if (utils$1.isBlob(body2)) {
+    return body2.size;
   }
-  if (utils$1.isSpecCompliantForm(body)) {
+  if (utils$1.isSpecCompliantForm(body2)) {
     const _request = new Request(platform.origin, {
       method: "POST",
-      body
+      body: body2
     });
     return (await _request.arrayBuffer()).byteLength;
   }
-  if (utils$1.isArrayBufferView(body) || utils$1.isArrayBuffer(body)) {
-    return body.byteLength;
+  if (utils$1.isArrayBufferView(body2) || utils$1.isArrayBuffer(body2)) {
+    return body2.byteLength;
   }
-  if (utils$1.isURLSearchParams(body)) {
-    body = body + "";
+  if (utils$1.isURLSearchParams(body2)) {
+    body2 = body2 + "";
   }
-  if (utils$1.isString(body)) {
-    return (await encodeText(body)).byteLength;
+  if (utils$1.isString(body2)) {
+    return (await encodeText(body2)).byteLength;
   }
 };
-const resolveBodyLength = async (headers, body) => {
+const resolveBodyLength = async (headers, body2) => {
   const length2 = utils$1.toFiniteNumber(headers.getContentLength());
-  return length2 == null ? getBodyLength(body) : length2;
+  return length2 == null ? getBodyLength(body2) : length2;
 };
 const fetchAdapter = isFetchSupported && (async (config2) => {
   let {
@@ -29237,6 +29614,7 @@ function App() {
   const [selectedFilterCategories, setSelectedFilterCategories] = reactExports.useState([]);
   const [selectedFilterSuppliers, setSelectedFilterSuppliers] = reactExports.useState([]);
   const [isModalAddSupplierOpen, setModalOpenAddSupplierOpen] = reactExports.useState(false);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
   const handleOpenModal = () => {
     setModalOpenAddSupplierOpen(true);
   };
@@ -29522,6 +29900,9 @@ function App() {
     setOpenHistory(false);
     setProductId(null);
   };
+  const toggleDrawer = (newOpen) => () => {
+    setOpenDrawer(newOpen);
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", flexDirection: "column", alignItems: "center", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress, {}),
@@ -29529,32 +29910,35 @@ function App() {
       /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", sx: { mt: 2 }, children: "Loading..." })
     ] }) }) : error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: error }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Product List" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: toggleDrawer(true), children: "Фільтр" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenAdd, children: "Add New Product" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { color: "primary", onClick: handleOpenCategoryCreateModal, variant: "outlined", children: "Add New Category" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenModal, children: "Add Supplier" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: "20px" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Drawer, { open: openDrawer, onClose: toggleDrawer(false), children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Категорії" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            CategoryFilter,
-            {
-              selectedFilterCategories,
-              handleCategoryFilterChange,
-              categories
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Постачальники" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            SupplierFilter,
-            {
-              selectedFilterSuppliers,
-              handleSupplierFilterChange,
-              suppliers
-            }
-          )
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Категорії" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              CategoryFilter,
+              {
+                selectedFilterCategories,
+                handleCategoryFilterChange,
+                categories
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Постачальники" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              SupplierFilter,
+              {
+                selectedFilterSuppliers,
+                handleSupplierFilterChange,
+                suppliers
+              }
+            )
+          ] })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -29665,5 +30049,8 @@ function App() {
   ] });
 }
 client.createRoot(document.getElementById("root")).render(
-  /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
+  /* @__PURE__ */ jsxRuntimeExports.jsxs(React.StrictMode, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CssBaseline, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(App, {})
+  ] })
 );
