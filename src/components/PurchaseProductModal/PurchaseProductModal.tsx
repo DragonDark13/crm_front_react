@@ -10,7 +10,7 @@ import {
     MenuItem
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import React, {useState, useEffect} from "react";
+import  {useState, useEffect} from "react";
 import {IPurchaseData, ISupplier} from "../../App";
 
 interface IPurchaseProductModal {
@@ -81,7 +81,7 @@ const PurchaseProductModal = ({
                             <Select
                                 value={purchaseDetails.supplier_id ? purchaseDetails.supplier_id : ''}  // Змінено для використання
                                 // id постачальника
-                                onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier_id: e.target.value})}
+                                onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier_id: Number(e.target.value)})}
                             >
                                 {suppliers.map(supplier => (
                                     <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>

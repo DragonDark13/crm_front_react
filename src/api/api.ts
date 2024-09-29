@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../App";
+import {IEditProduct, INewProduct, IPurchaseData, ISaleData} from "../App";
 
 
 // Створення екземпляра axios з правильним типом конфігурації

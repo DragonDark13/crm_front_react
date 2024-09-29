@@ -3,7 +3,7 @@
 import React from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, Button, TableSortLabel,
+    TableRow, Paper,  TableSortLabel,
 } from '@mui/material';
 import {IProduct} from "../../App";
 import {IconButton, Tooltip} from '@mui/material';

@@ -9,7 +9,7 @@ import {
     Checkbox,
     Grid, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
-import {ICategory, IEditProduct, IProduct, ISupplier} from "../../App";
+import {ICategory, IEditProduct, ISupplier} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IEditProductModalProps {
@@ -118,7 +118,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             <Select
                                 value={editProduct.supplier_id ? editProduct.supplier_id : ''}  // Змінено для використання
                                 // id постачальника
-                                onChange={(e) => setEditProduct({...editProduct, supplier_id: e.target.value})}
+                                onChange={(e) => setEditProduct({...editProduct, supplier_id: Number(e.target.value)})}
                             >
                                 {suppliers.map(supplier => (
                                     <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>

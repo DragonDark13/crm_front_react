@@ -96,7 +96,7 @@ const AddProductModal = ({
                             <InputLabel>Постачальник</InputLabel>
                             <Select
                                 value={newProduct.supplier_id}  // Змінено для використання id постачальника
-                                onChange={(e) => setNewProduct({...newProduct, supplier_id: e.target.value})}
+                                onChange={(e) => setNewProduct({...newProduct, supplier_id: Number(e.target.value)})}
                             >
                                 {suppliers.map(supplier => (
                                     <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>

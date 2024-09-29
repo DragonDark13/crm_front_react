@@ -43,15 +43,17 @@ export interface IProduct extends IBaseProduct {
     supplier: ISupplier | null
 }
 
-export interface INewProduct extends IBaseProduct {
-    category_ids: number[]
+export interface ISupplierID {
     supplier_id: number | null;
 }
 
-export interface IEditProduct extends IBaseProduct {
+export interface INewProduct extends IBaseProduct, ISupplierID {
+    category_ids: number[]
+}
+
+export interface IEditProduct extends IBaseProduct, ISupplierID {
     id: number;
     category_ids: number[]
-    supplier_id: number | null;
 }
 
 export interface ICategory {
@@ -59,11 +61,10 @@ export interface ICategory {
     name: string;
 }
 
-export interface IPurchaseData {
+export interface IPurchaseData extends ISupplierID {
     quantity: number
     price_per_item: number,
     total_price: number,
-    supplier_id: number | null,
     purchase_date: string,
 }
 

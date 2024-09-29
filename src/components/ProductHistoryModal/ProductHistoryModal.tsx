@@ -35,6 +35,7 @@ interface ProductHistoryRecord {
     sale_date?: string; // for sales history
     price?: number;
     quantity_sold?: number;
+    customer?: string;
 }
 
 interface ProductHistory {
