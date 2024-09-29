@@ -13,6 +13,7 @@ import {CircularProgress, Typography} from '@mui/material'; // Імпорт ко
 
 import './App.css'
 import {
+    addNewCategory,
     addProduct,
     addPurchase,
     addSale,
@@ -28,6 +29,8 @@ import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
 import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNewCategoryModal";
 import CategoryFilter from "./components/CategoryFilter/CategoryFilter";
 import ProductTable from "./components/ProductTable/ProductTable";
+import AddSupplierModal from "./components/AddSupplierModal/AddSupplierModal";
+import SupplierFilter from "./components/SupplierFilter/SupplierFilter";
 
 
 export interface IBaseProduct {
@@ -130,6 +133,17 @@ function App() {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
     const [selectedFilterCategories, setSelectedFilterCategories] = useState<number[]>([]);
+    const [selectedFilterSuppliers, setSelectedFilterSuppliers] = useState<number[]>([]);
+
+    const [isModalAddSupplierOpen, setModalOpenAddSupplierOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setModalOpenAddSupplierOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalOpenAddSupplierOpen(false);
+    };
 
 
     const handleOpenSale = (product: IProduct) => {
@@ -345,6 +359,21 @@ function App() {
 
     };
 
+    const fetchSuppliersFunc = () => {
+        fetchGetAllSuppliers()
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setSuppliers(data);  // Припустимо, що ви маєте state для постачальників
+                } else {
+                    console.error('Fetched data is not an array:', data);
+                    setSuppliers([]);  // Очищення при помилці
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching suppliers', error);
+            });
+    };
+
     useEffect(() => {
         // Отримання списку всіх
 
@@ -362,19 +391,29 @@ function App() {
                 console.error('Error fetching categories', error);
             });
 
-        fetchGetAllSuppliers()
-            .then(data => {
+        fetchSuppliersFunc();
+    }, []);
+
+    const createNewCategory = (categoryName: string) => {
+        addNewCategory(categoryName).then(() => {
+            fetchGetAllCategories().then(data => {
+
                 if (Array.isArray(data)) {
-                    setSuppliers(data);  // Припустимо, що ви маєте state для постачальників
+                    setCategories(data as ICategory[]);
                 } else {
                     console.error('Fetched data is not an array:', data);
-                    setSuppliers([]);  // Очищення при помилці
+                    setCategories([])
                 }
+
             })
+
+            handleCloseCategoryModal(); // Закрити модальне вікно після додавання
+        })
             .catch(error => {
-                console.error('Error fetching suppliers', error);
+                console.error('There was an error adding the product!', error);
             });
-    }, []);
+    };
+
 
     const handleCategoryChange = (categoryId: number) => {
 
@@ -403,24 +442,48 @@ function App() {
         setOpenCategoryCreateModal(true)
     }
 
+    // Функція для фільтрації по категоріях
     const handleCategoryFilterChange = (categoryID: number) => {
-        // Додаємо або видаляємо категорію з вибраних
         const updatedCategories = selectedFilterCategories.includes(categoryID)
             ? selectedFilterCategories.filter(id => id !== categoryID)
             : [...selectedFilterCategories, categoryID];
 
         setSelectedFilterCategories(updatedCategories);
+        applyFilters(updatedCategories, selectedFilterSuppliers);
+    };
 
-        // Фільтрація продуктів
+    // Функція для фільтрації по постачальниках
+    const handleSupplierFilterChange = (supplierID: number) => {
+        console.log("supplierID", supplierID);
+        const updatedSuppliers = selectedFilterSuppliers.includes(supplierID)
+            ? selectedFilterSuppliers.filter(id => id !== supplierID)
+            : [...selectedFilterSuppliers, supplierID];
+
+        setSelectedFilterSuppliers(updatedSuppliers);
+        applyFilters(selectedFilterCategories, updatedSuppliers);
+    };
+
+    // Функція застосування обох фільтрів
+    const applyFilters = (updatedCategories: number[], updatedSuppliers: number[]) => {
+        let filtered = products;
+
+        // Фільтрація по категоріях
         if (updatedCategories.length > 0) {
-            const filtered = products.filter(product =>
+            filtered = filtered.filter(product =>
                 product.category_ids.some(categoryId => updatedCategories.includes(categoryId))
             );
-            setFilteredProducts(filtered);
-        } else {
-            // Якщо жодна категорія не вибрана, показуємо всі продукти
-            setFilteredProducts(products);
         }
+
+        // Фільтрація по постачальниках
+        if (updatedSuppliers.length > 0) {
+            filtered = filtered.filter(product => {
+                    if (product.supplier === null) return false
+                    return updatedSuppliers.includes(product.supplier.id)
+                }
+            );
+        }
+
+        setFilteredProducts(filtered);
     };
 
     const handleDeleteModalOpen = (productId: number) => {
@@ -467,10 +530,29 @@ function App() {
                     <Button color="primary" onClick={handleOpenCategoryCreateModal} variant={"outlined"}>
                         Add New Category
                     </Button>
+                    <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                        Add Supplier
+                    </Button>
 
-                    <CategoryFilter categories={categories} selectedFilterCategories={selectedFilterCategories}
-                                    handleCategoryFilterChange={handleCategoryFilterChange}
-                    />
+                    <h2>Фільтри</h2>
+                    <div style={{display: 'flex', gap: '20px'}}>
+                        <div>
+                            <h3>Категорії</h3>
+                            <CategoryFilter
+                                selectedFilterCategories={selectedFilterCategories}
+                                handleCategoryFilterChange={handleCategoryFilterChange}
+                                categories={categories}
+                            />
+                        </div>
+                        <div>
+                            <h3>Постачальники</h3>
+                            <SupplierFilter
+                                selectedFilterSuppliers={selectedFilterSuppliers}
+                                handleSupplierFilterChange={handleSupplierFilterChange}
+                                suppliers={suppliers}
+                            />
+                        </div>
+                    </div>
 
                     <ProductTable
                         filteredProducts={filteredProducts}
@@ -551,6 +633,7 @@ function App() {
             {
                 openCategoryCreateModal &&
                 <CreateNewCategoryModal
+                    createNewCategory={createNewCategory}
                     openCategoryCreateModal={openCategoryCreateModal}
                     handleCloseCategoryModal={handleCloseCategoryModal}
                 />
@@ -572,6 +655,12 @@ function App() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <AddSupplierModal
+                fetchSuppliersFunc={fetchSuppliersFunc}
+                open={isModalAddSupplierOpen}
+                handleClose={handleCloseModal}
+            />
 
 
         </React.Fragment>

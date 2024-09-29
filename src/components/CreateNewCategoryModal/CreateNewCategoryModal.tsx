@@ -2,25 +2,21 @@ import {Button, DialogActions, DialogContent, TextField} from "@mui/material";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import axios from "axios";
 import {useState} from "react";
+import {addNewCategory} from "../../api/api";
 
 interface ICreateNewCategoryModal {
     openCategoryCreateModal: boolean;
     handleCloseCategoryModal: () => void;
+    createNewCategory: (categoryName: string) => void;
 }
 
-const CreateNewCategoryModal = ({openCategoryCreateModal, handleCloseCategoryModal}: ICreateNewCategoryModal) => {
+const CreateNewCategoryModal = ({
+                                    openCategoryCreateModal,
+                                    handleCloseCategoryModal,
+                                    createNewCategory
+                                }: ICreateNewCategoryModal) => {
 
     const [categoryName, setCategoryName] = useState<string>('');
-
-    const createCategory = () => {
-        axios.post('http://localhost:5000/api/categories', {name: categoryName})
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error('Error creating category', error);
-            });
-    };
 
 
     return (
@@ -41,7 +37,7 @@ const CreateNewCategoryModal = ({openCategoryCreateModal, handleCloseCategoryMod
                 <Button onClick={handleCloseCategoryModal} color="primary">
                     Cancel
                 </Button>
-                <Button variant="contained" color="primary" onClick={createCategory}>
+                <Button variant="contained" color="primary" onClick={() => createNewCategory(categoryName)}>
                     Створити категорію
                 </Button>
             </DialogActions>

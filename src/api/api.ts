@@ -134,6 +134,14 @@ export const fetchGetAllCategories = () => {
         });
 }
 
+export const addSupplier = (newSupplier) => {
+    return api.post('/supplier', newSupplier)
+        .catch(error => {
+            console.error('Error adding supplier:', error);
+            throw error;
+        });
+};
+
 // Функція для видалення продукту
 export const deleteProduct = (productId: number) => {
     return api.delete(`/product/${productId}`)
@@ -151,6 +159,13 @@ export const addProduct = (newProduct: INewProduct) => {
             throw error;
         });
 };
+
+export const addNewCategory = (name: string) => {
+    return api.post('/categories', name).catch(error => {
+        console.error('Error adding category:', error);
+        throw error;
+    });
+}
 
 // Функція для оновлення продукту
 export const updateProduct = (productId: number, editProduct: IEditProduct) => {
