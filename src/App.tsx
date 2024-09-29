@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Box, DialogContent, DialogTitle, Dialog, DialogContentText, DialogActions
+    Button, Box, DialogContent, DialogTitle, Dialog, DialogContentText, DialogActions, Drawer
 } from '@mui/material';
 
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
@@ -136,6 +136,8 @@ function App() {
     const [selectedFilterSuppliers, setSelectedFilterSuppliers] = useState<number[]>([]);
 
     const [isModalAddSupplierOpen, setModalOpenAddSupplierOpen] = useState(false);
+
+    const [openDrawer, setOpenDrawer] = React.useState(false);
 
     const handleOpenModal = () => {
         setModalOpenAddSupplierOpen(true);
@@ -505,6 +507,10 @@ function App() {
         setProductId(null); // Встановлюємо productId
     }
 
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpenDrawer(newOpen);
+    };
+
     return (
         <React.Fragment>
 
@@ -523,6 +529,7 @@ function App() {
             ) : (
                 <React.Fragment>
                     <h1>Product List</h1>
+                    <Button onClick={toggleDrawer(true)}>Фільтр</Button>
                     <Button variant="contained" color="primary" onClick={handleOpenAdd}>
                         Add New Product
                     </Button>
@@ -532,26 +539,27 @@ function App() {
                     <Button variant="contained" color="primary" onClick={handleOpenModal}>
                         Add Supplier
                     </Button>
-
-                    <h2>Фільтри</h2>
-                    <div style={{display: 'flex', gap: '20px'}}>
-                        <div>
-                            <h3>Категорії</h3>
-                            <CategoryFilter
-                                selectedFilterCategories={selectedFilterCategories}
-                                handleCategoryFilterChange={handleCategoryFilterChange}
-                                categories={categories}
-                            />
+                    <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
+                        <h2>Фільтри</h2>
+                        <div >
+                            <div>
+                                <h3>Категорії</h3>
+                                <CategoryFilter
+                                    selectedFilterCategories={selectedFilterCategories}
+                                    handleCategoryFilterChange={handleCategoryFilterChange}
+                                    categories={categories}
+                                />
+                            </div>
+                            <div>
+                                <h3>Постачальники</h3>
+                                <SupplierFilter
+                                    selectedFilterSuppliers={selectedFilterSuppliers}
+                                    handleSupplierFilterChange={handleSupplierFilterChange}
+                                    suppliers={suppliers}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <h3>Постачальники</h3>
-                            <SupplierFilter
-                                selectedFilterSuppliers={selectedFilterSuppliers}
-                                handleSupplierFilterChange={handleSupplierFilterChange}
-                                suppliers={suppliers}
-                            />
-                        </div>
-                    </div>
+                    </Drawer>
 
                     <ProductTable
                         filteredProducts={filteredProducts}
