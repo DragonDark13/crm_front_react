@@ -8680,7 +8680,7 @@ function GlobalStyles$3(props) {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-function styled$1(tag, options) {
+function styled$2(tag, options) {
   const stylesFactory = newStyled(tag, options);
   return stylesFactory;
 }
@@ -9967,7 +9967,7 @@ function createBox(options = {}) {
     defaultClassName = "MuiBox-root",
     generateClassName
   } = options;
-  const BoxRoot = styled$1("div", {
+  const BoxRoot = styled$2("div", {
     shouldForwardProp: (prop) => prop !== "theme" && prop !== "sx" && prop !== "as"
   })(styleFunctionSx);
   const Box2 = /* @__PURE__ */ reactExports.forwardRef(function Box3(inProps, ref) {
@@ -10225,7 +10225,7 @@ function createStyled2(input = {}) {
     } else if (isStringTag(tag)) {
       shouldForwardPropOption = void 0;
     }
-    const defaultStyledResolver = styled$1(tag, {
+    const defaultStyledResolver = styled$2(tag, {
       shouldForwardProp: shouldForwardPropOption,
       label,
       ...options
@@ -10307,6 +10307,7 @@ function lowercaseFirstLetter(string) {
   }
   return string.charAt(0).toLowerCase() + string.slice(1);
 }
+const styled$1 = createStyled2();
 function resolveProps(defaultProps2, props) {
   const output = {
     ...props
@@ -11190,6 +11191,126 @@ function createGetColorSchemeSelector(selector) {
     }
     return "&";
   };
+}
+const defaultTheme$2 = createTheme$1();
+const defaultCreateStyledComponent = styled$1("div", {
+  name: "MuiContainer",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.root, styles2[`maxWidth${capitalize(String(ownerState.maxWidth))}`], ownerState.fixed && styles2.fixed, ownerState.disableGutters && styles2.disableGutters];
+  }
+});
+const useThemePropsDefault = (inProps) => useThemeProps$1({
+  props: inProps,
+  name: "MuiContainer",
+  defaultTheme: defaultTheme$2
+});
+const useUtilityClasses$M = (ownerState, componentName) => {
+  const getContainerUtilityClass = (slot) => {
+    return generateUtilityClass(componentName, slot);
+  };
+  const {
+    classes,
+    fixed,
+    disableGutters,
+    maxWidth: maxWidth2
+  } = ownerState;
+  const slots = {
+    root: ["root", maxWidth2 && `maxWidth${capitalize(String(maxWidth2))}`, fixed && "fixed", disableGutters && "disableGutters"]
+  };
+  return composeClasses(slots, getContainerUtilityClass, classes);
+};
+function createContainer(options = {}) {
+  const {
+    // This will allow adding custom styled fn (for example for custom sx style function)
+    createStyledComponent = defaultCreateStyledComponent,
+    useThemeProps: useThemeProps2 = useThemePropsDefault,
+    componentName = "MuiContainer"
+  } = options;
+  const ContainerRoot = createStyledComponent(({
+    theme,
+    ownerState
+  }) => ({
+    width: "100%",
+    marginLeft: "auto",
+    boxSizing: "border-box",
+    marginRight: "auto",
+    ...!ownerState.disableGutters && {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      // @ts-ignore module augmentation fails if custom breakpoints are used
+      [theme.breakpoints.up("sm")]: {
+        paddingLeft: theme.spacing(3),
+        paddingRight: theme.spacing(3)
+      }
+    }
+  }), ({
+    theme,
+    ownerState
+  }) => ownerState.fixed && Object.keys(theme.breakpoints.values).reduce((acc, breakpointValueKey) => {
+    const breakpoint = breakpointValueKey;
+    const value = theme.breakpoints.values[breakpoint];
+    if (value !== 0) {
+      acc[theme.breakpoints.up(breakpoint)] = {
+        maxWidth: `${value}${theme.breakpoints.unit}`
+      };
+    }
+    return acc;
+  }, {}), ({
+    theme,
+    ownerState
+  }) => ({
+    // @ts-ignore module augmentation fails if custom breakpoints are used
+    ...ownerState.maxWidth === "xs" && {
+      // @ts-ignore module augmentation fails if custom breakpoints are used
+      [theme.breakpoints.up("xs")]: {
+        // @ts-ignore module augmentation fails if custom breakpoints are used
+        maxWidth: Math.max(theme.breakpoints.values.xs, 444)
+      }
+    },
+    ...ownerState.maxWidth && // @ts-ignore module augmentation fails if custom breakpoints are used
+    ownerState.maxWidth !== "xs" && {
+      // @ts-ignore module augmentation fails if custom breakpoints are used
+      [theme.breakpoints.up(ownerState.maxWidth)]: {
+        // @ts-ignore module augmentation fails if custom breakpoints are used
+        maxWidth: `${theme.breakpoints.values[ownerState.maxWidth]}${theme.breakpoints.unit}`
+      }
+    }
+  }));
+  const Container2 = /* @__PURE__ */ reactExports.forwardRef(function Container22(inProps, ref) {
+    const props = useThemeProps2(inProps);
+    const {
+      className,
+      component = "div",
+      disableGutters = false,
+      fixed = false,
+      maxWidth: maxWidth2 = "lg",
+      classes: classesProp,
+      ...other
+    } = props;
+    const ownerState = {
+      ...props,
+      component,
+      disableGutters,
+      fixed,
+      maxWidth: maxWidth2
+    };
+    const classes = useUtilityClasses$M(ownerState, componentName);
+    return (
+      // @ts-ignore theme is injected by the styled util
+      /* @__PURE__ */ jsxRuntimeExports.jsx(ContainerRoot, {
+        as: component,
+        ownerState,
+        className: clsx(classes.root, className),
+        ref,
+        ...other
+      })
+    );
+  });
+  return Container2;
 }
 const light = {
   // The colors used to style the text.
@@ -17571,6 +17692,22 @@ const CircularProgress = /* @__PURE__ */ reactExports.forwardRef(function Circul
       })
     })
   });
+});
+const Container = createContainer({
+  createStyledComponent: styled("div", {
+    name: "MuiContainer",
+    slot: "Root",
+    overridesResolver: (props, styles2) => {
+      const {
+        ownerState
+      } = props;
+      return [styles2.root, styles2[`maxWidth${capitalize(String(ownerState.maxWidth))}`], ownerState.fixed && styles2.fixed, ownerState.disableGutters && styles2.disableGutters];
+    }
+  }),
+  useThemeProps: (inProps) => useThemeProps({
+    props: inProps,
+    name: "MuiContainer"
+  })
 });
 const isDynamicSupport = typeof globalCss({}) === "function";
 const html = (theme, enableColorScheme) => ({
@@ -29495,13 +29632,13 @@ const ProductTable = ({
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.price_per_item }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
           " ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, {}) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "secondary", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, {}) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, {}) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, {}) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "secondary", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { onClick: () => {
             handleOpenHistoryModal(product.id);
-          }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, {}) }) })
+          }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
         ] })
       ] }, `${product.id}${index}`);
     }) })
@@ -29908,38 +30045,58 @@ function App() {
       /* @__PURE__ */ jsxRuntimeExports.jsx(CircularProgress, {}),
       " ",
       /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", sx: { mt: 2 }, children: "Loading..." })
-    ] }) }) : error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: error }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    ] }) }) : error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: error }) : /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Container, { maxWidth: "xl", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Product List" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: toggleDrawer(true), children: "Фільтр" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenAdd, children: "Add New Product" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { color: "primary", onClick: handleOpenCategoryCreateModal, variant: "outlined", children: "Add New Category" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenModal, children: "Add Supplier" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, justifyContent: "space-between", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: toggleDrawer(true), children: "Фільтр" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, gap: 1, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", color: "primary", onClick: handleOpenAdd, children: "Додати Товар" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "outlined",
+              color: "primary",
+              onClick: handleOpenCategoryCreateModal,
+              children: "Додати Категорію"
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", color: "primary", onClick: handleOpenModal, children: "Додати Постачальника" }) })
+        ] }) })
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Drawer, { open: openDrawer, onClose: toggleDrawer(false), children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: toggleDrawer(false), children: "Закрити" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Категорії" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              CategoryFilter,
-              {
-                selectedFilterCategories,
-                handleCategoryFilterChange,
-                categories
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Постачальники" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              SupplierFilter,
-              {
-                selectedFilterSuppliers,
-                handleSupplierFilterChange,
-                suppliers
-              }
-            )
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Категорії" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                CategoryFilter,
+                {
+                  selectedFilterCategories,
+                  handleCategoryFilterChange,
+                  categories
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Постачальники" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                SupplierFilter,
+                {
+                  selectedFilterSuppliers,
+                  handleSupplierFilterChange,
+                  suppliers
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: () => {
+              setSelectedFilterCategories([]);
+              setSelectedFilterSuppliers([]);
+              applyFilters([], []);
+            }, children: "Очистити" })
           ] })
-        ] })
+        ] }) })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         ProductTable,
@@ -29964,7 +30121,7 @@ function App() {
         }
       ),
       " "
-    ] }),
+    ] }) }),
     openAdd && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddProductModal,
       {
