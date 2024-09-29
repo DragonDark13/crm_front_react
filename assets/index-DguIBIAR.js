@@ -7163,10 +7163,10 @@ function _extends() {
     return n2;
   }, _extends.apply(null, arguments);
 }
-function memoize$1(fn) {
+function memoize$1(fn2) {
   var cache = /* @__PURE__ */ Object.create(null);
   return function(arg2) {
-    if (cache[arg2] === void 0) cache[arg2] = fn(arg2);
+    if (cache[arg2] === void 0) cache[arg2] = fn2(arg2);
     return cache[arg2];
   };
 }
@@ -7270,7 +7270,7 @@ var LAYER = "@layer";
 var abs = Math.abs;
 var from = String.fromCharCode;
 var assign = Object.assign;
-function hash(value, length2) {
+function hash$2(value, length2) {
   return charat(value, 0) ^ 45 ? (((length2 << 2 ^ charat(value, 0)) << 2 ^ charat(value, 1)) << 2 ^ charat(value, 2)) << 2 ^ charat(value, 3) : 0;
 }
 function trim$1(value) {
@@ -7288,8 +7288,8 @@ function indexof(value, search) {
 function charat(value, index) {
   return value.charCodeAt(index) | 0;
 }
-function substr(value, begin, end) {
-  return value.slice(begin, end);
+function substr(value, begin, end2) {
+  return value.slice(begin, end2);
 }
 function strlen(value) {
   return value.length;
@@ -7336,8 +7336,8 @@ function peek() {
 function caret() {
   return position;
 }
-function slice(begin, end) {
-  return substr(characters, begin, end);
+function slice(begin, end2) {
+  return substr(characters, begin, end2);
 }
 function token(type) {
   switch (type) {
@@ -7432,7 +7432,7 @@ function compile(value) {
 }
 function parse(value, root, parent, rule, rules, rulesets, pseudo, points, declarations) {
   var index = 0;
-  var offset = 0;
+  var offset2 = 0;
   var length2 = pseudo;
   var atrule = 0;
   var property = 0;
@@ -7444,7 +7444,7 @@ function parse(value, root, parent, rule, rules, rulesets, pseudo, points, decla
   var type = "";
   var props = rules;
   var children = rulesets;
-  var reference = rule;
+  var reference2 = rule;
   var characters2 = type;
   while (scanning)
     switch (previous = character2, character2 = next()) {
@@ -7487,7 +7487,7 @@ function parse(value, root, parent, rule, rules, rulesets, pseudo, points, decla
           case 0:
           case 125:
             scanning = 0;
-          case 59 + offset:
+          case 59 + offset2:
             if (ampersand == -1) characters2 = replace(characters2, /\f/g, "");
             if (property > 0 && strlen(characters2) - length2)
               append(property > 32 ? declaration(characters2 + ";", rule, parent, length2 - 1) : declaration(replace(characters2, " ", "") + ";", rule, parent, length2 - 2), declarations);
@@ -7495,23 +7495,23 @@ function parse(value, root, parent, rule, rules, rulesets, pseudo, points, decla
           case 59:
             characters2 += ";";
           default:
-            append(reference = ruleset(characters2, root, parent, index, offset, rules, points, type, props = [], children = [], length2), rulesets);
+            append(reference2 = ruleset(characters2, root, parent, index, offset2, rules, points, type, props = [], children = [], length2), rulesets);
             if (character2 === 123)
-              if (offset === 0)
-                parse(characters2, root, reference, reference, props, rulesets, length2, points, children);
+              if (offset2 === 0)
+                parse(characters2, root, reference2, reference2, props, rulesets, length2, points, children);
               else
                 switch (atrule === 99 && charat(characters2, 3) === 110 ? 100 : atrule) {
                   case 100:
                   case 108:
                   case 109:
                   case 115:
-                    parse(value, reference, reference, rule && append(ruleset(value, reference, reference, 0, 0, rules, points, type, rules, props = [], length2), children), rules, children, length2, points, rule ? props : children);
+                    parse(value, reference2, reference2, rule && append(ruleset(value, reference2, reference2, 0, 0, rules, points, type, rules, props = [], length2), children), rules, children, length2, points, rule ? props : children);
                     break;
                   default:
-                    parse(characters2, reference, reference, reference, [""], children, 0, points, children);
+                    parse(characters2, reference2, reference2, reference2, [""], children, 0, points, children);
                 }
         }
-        index = offset = property = 0, variable = ampersand = 1, type = characters2 = "", length2 = pseudo;
+        index = offset2 = property = 0, variable = ampersand = 1, type = characters2 = "", length2 = pseudo;
         break;
       case 58:
         length2 = 1 + strlen(characters2), property = previous;
@@ -7524,7 +7524,7 @@ function parse(value, root, parent, rule, rules, rulesets, pseudo, points, decla
         }
         switch (characters2 += from(character2), character2 * variable) {
           case 38:
-            ampersand = offset > 0 ? 1 : (characters2 += "\f", -1);
+            ampersand = offset2 > 0 ? 1 : (characters2 += "\f", -1);
             break;
           case 44:
             points[index++] = (strlen(characters2) - 1) * ampersand, ampersand = 1;
@@ -7532,7 +7532,7 @@ function parse(value, root, parent, rule, rules, rulesets, pseudo, points, decla
           case 64:
             if (peek() === 45)
               characters2 += delimit(next());
-            atrule = peek(), offset = length2 = strlen(type = characters2 += identifier(caret())), character2++;
+            atrule = peek(), offset2 = length2 = strlen(type = characters2 += identifier(caret())), character2++;
             break;
           case 45:
             if (previous === 45 && strlen(characters2) == 2)
@@ -7541,15 +7541,15 @@ function parse(value, root, parent, rule, rules, rulesets, pseudo, points, decla
     }
   return rulesets;
 }
-function ruleset(value, root, parent, index, offset, rules, points, type, props, children, length2) {
-  var post = offset - 1;
-  var rule = offset === 0 ? rules : [""];
+function ruleset(value, root, parent, index, offset2, rules, points, type, props, children, length2) {
+  var post = offset2 - 1;
+  var rule = offset2 === 0 ? rules : [""];
   var size = sizeof(rule);
   for (var i = 0, j = 0, k2 = 0; i < index; ++i)
     for (var x2 = 0, y2 = substr(value, post + 1, post = abs(j = points[i])), z2 = value; x2 < size; ++x2)
       if (z2 = trim$1(j > 0 ? rule[x2] + " " + y2 : replace(y2, /&\f/g, rule[x2])))
         props[k2++] = z2;
-  return node(value, root, parent, offset === 0 ? RULESET : type, props, children, length2);
+  return node(value, root, parent, offset2 === 0 ? RULESET : type, props, children, length2);
 }
 function comment(value, root, parent) {
   return node(value, root, parent, COMMENT, from(char()), substr(value, 2, -2), 0);
@@ -7685,7 +7685,7 @@ var removeLabel = function removeLabel2(element) {
   }
 };
 function prefix(value, length2) {
-  switch (hash(value, length2)) {
+  switch (hash$2(value, length2)) {
     case 5103:
       return WEBKIT + "print-" + value + value;
     case 5737:
@@ -8769,9 +8769,9 @@ function createBreakpoints(breakpoints) {
     const value = typeof values2[key] === "number" ? values2[key] : key;
     return `@media (max-width:${value - step / 100}${unit})`;
   }
-  function between(start, end) {
-    const endIndex = keys.indexOf(end);
-    return `@media (min-width:${typeof values2[start] === "number" ? values2[start] : start}${unit}) and (max-width:${(endIndex !== -1 && typeof values2[keys[endIndex]] === "number" ? values2[keys[endIndex]] : end) - step / 100}${unit})`;
+  function between(start2, end2) {
+    const endIndex = keys.indexOf(end2);
+    return `@media (min-width:${typeof values2[start2] === "number" ? values2[start2] : start2}${unit}) and (max-width:${(endIndex !== -1 && typeof values2[keys[endIndex]] === "number" ? values2[keys[endIndex]] : end2) - step / 100}${unit})`;
   }
   function only(key) {
     if (keys.indexOf(key) + 1 < keys.length) {
@@ -9039,7 +9039,7 @@ function style$1(options) {
     themeKey,
     transform
   } = options;
-  const fn = (props) => {
+  const fn2 = (props) => {
     if (props[prop] == null) {
       return null;
     }
@@ -9060,15 +9060,15 @@ function style$1(options) {
     };
     return handleBreakpoints(props, propValue, styleFromPropValue);
   };
-  fn.propTypes = {};
-  fn.filterProps = [prop];
-  return fn;
+  fn2.propTypes = {};
+  fn2.filterProps = [prop];
+  return fn2;
 }
-function memoize(fn) {
+function memoize(fn2) {
   const cache = {};
   return (arg2) => {
     if (cache[arg2] === void 0) {
-      cache[arg2] = fn(arg2);
+      cache[arg2] = fn2(arg2);
     }
     return cache[arg2];
   };
@@ -9202,7 +9202,7 @@ function compose(...styles2) {
     });
     return acc;
   }, {});
-  const fn = (props) => {
+  const fn2 = (props) => {
     return Object.keys(props).reduce((acc, prop) => {
       if (handlers[prop]) {
         return merge$1(acc, handlers[prop](props));
@@ -9210,9 +9210,9 @@ function compose(...styles2) {
       return acc;
     }, {});
   };
-  fn.propTypes = {};
-  fn.filterProps = styles2.reduce((acc, style2) => acc.concat(style2.filterProps), []);
-  return fn;
+  fn2.propTypes = {};
+  fn2.filterProps = styles2.reduce((acc, style2) => acc.concat(style2.filterProps), []);
+  return fn2;
 }
 function borderTransform(value) {
   if (typeof value !== "number") {
@@ -9796,7 +9796,7 @@ function unstable_createStyleFunctionSx() {
 }
 const styleFunctionSx = unstable_createStyleFunctionSx();
 styleFunctionSx.filterProps = ["sx"];
-function applyStyles(key, styles2) {
+function applyStyles$2(key, styles2) {
   var _a;
   const theme = this;
   if (theme.vars) {
@@ -9845,7 +9845,7 @@ function createTheme$1(options = {}, ...args) {
     }
   }, other);
   muiTheme = cssContainerQueries(muiTheme);
-  muiTheme.applyStyles = applyStyles;
+  muiTheme.applyStyles = applyStyles$2;
   muiTheme = args.reduce((acc, argument) => deepmerge(acc, argument), muiTheme);
   muiTheme.unstable_sxConfig = {
     ...defaultSxConfig,
@@ -10207,7 +10207,7 @@ function createStyled2(input = {}) {
       skipSx: inputSkipSx,
       // TODO v6: remove `lowercaseFirstLetter()` in the next major release
       // For more details: https://github.com/mui/material-ui/pull/37908
-      overridesResolver = defaultOverridesResolver(lowercaseFirstLetter(componentSlot)),
+      overridesResolver: overridesResolver2 = defaultOverridesResolver(lowercaseFirstLetter(componentSlot)),
       ...options
     } = inputOptions;
     const skipVariantsResolver = inputSkipVariantsResolver !== void 0 ? inputSkipVariantsResolver : (
@@ -10239,7 +10239,7 @@ function createStyled2(input = {}) {
     const muiStyledResolver = (style2, ...expressions) => {
       let transformedStyle = transformStyleArg(style2);
       const expressionsWithDefaultTheme = expressions ? expressions.map(transformStyleArg) : [];
-      if (componentName && overridesResolver) {
+      if (componentName && overridesResolver2) {
         expressionsWithDefaultTheme.push((props) => {
           const theme = resolveTheme(themeId, props.theme, defaultTheme2);
           if (!theme.components || !theme.components[componentName] || !theme.components[componentName].styleOverrides) {
@@ -10251,7 +10251,7 @@ function createStyled2(input = {}) {
           for (const slotKey in styleOverrides) {
             resolvedStyleOverrides[slotKey] = processStyle(styleOverrides[slotKey], propsWithTheme);
           }
-          return overridesResolver(props, resolvedStyleOverrides);
+          return overridesResolver2(props, resolvedStyleOverrides);
         });
       }
       if (componentName && !skipVariantsResolver) {
@@ -10372,11 +10372,11 @@ function useThemeProps$1({
   });
 }
 const useEnhancedEffect = typeof window !== "undefined" ? reactExports.useLayoutEffect : reactExports.useEffect;
-function clamp(val, min = Number.MIN_SAFE_INTEGER, max = Number.MAX_SAFE_INTEGER) {
-  return Math.max(min, Math.min(val, max));
+function clamp(val, min2 = Number.MIN_SAFE_INTEGER, max2 = Number.MAX_SAFE_INTEGER) {
+  return Math.max(min2, Math.min(val, max2));
 }
-function clampWrapper(value, min = 0, max = 1) {
-  return clamp(value, min, max);
+function clampWrapper(value, min2 = 0, max2 = 1) {
+  return clamp(value, min2, max2);
 }
 function hexToRgb(color2) {
   color2 = color2.slice(1);
@@ -10578,7 +10578,7 @@ function createChainedFunction(...funcs) {
   }, () => {
   });
 }
-function debounce(func, wait = 166) {
+function debounce$1(func, wait = 166) {
   let timeout;
   function debounced(...args) {
     const later = () => {
@@ -10656,10 +10656,10 @@ function useControlled({
   }, []);
   return [value, setValueIfUncontrolled];
 }
-function useEventCallback(fn) {
-  const ref = reactExports.useRef(fn);
+function useEventCallback(fn2) {
+  const ref = reactExports.useRef(fn2);
   useEnhancedEffect(() => {
-    ref.current = fn;
+    ref.current = fn2;
   });
   return reactExports.useRef((...args) => (
     // @ts-expect-error hide `this`
@@ -10687,8 +10687,8 @@ function useLazyRef(init, initArg) {
   return ref;
 }
 const EMPTY = [];
-function useOnMount(fn) {
-  reactExports.useEffect(fn, EMPTY);
+function useOnMount(fn2) {
+  reactExports.useEffect(fn2, EMPTY);
 }
 class Timeout {
   constructor() {
@@ -10709,11 +10709,11 @@ class Timeout {
   /**
    * Executes `fn` after `delay`, clearing any previously scheduled call.
    */
-  start(delay, fn) {
+  start(delay, fn2) {
     this.clear();
     this.currentId = setTimeout(() => {
       this.currentId = null;
-      fn();
+      fn2();
     }, delay);
   }
 }
@@ -10738,12 +10738,12 @@ function composeClasses(slots, getUtilityClass, classes = void 0) {
   for (const slotName in slots) {
     const slot = slots[slotName];
     let buffer = "";
-    let start = true;
+    let start2 = true;
     for (let i = 0; i < slot.length; i += 1) {
       const value = slot[i];
       if (value) {
-        buffer += (start === true ? "" : " ") + getUtilityClass(value);
-        start = false;
+        buffer += (start2 === true ? "" : " ") + getUtilityClass(value);
+        start2 = false;
         if (classes && classes[value]) {
           buffer += " " + classes[value];
         }
@@ -11486,7 +11486,7 @@ function createMixins(breakpoints, mixins) {
     ...mixins
   };
 }
-function round(value) {
+function round$2(value) {
   return Math.round(value * 1e5) / 1e5;
 }
 const caseAllCaps = {
@@ -11522,7 +11522,7 @@ function createTypography(palette, typography) {
     // The letter spacing was designed for the Roboto font-family. Using the same letter-spacing
     // across font-families can cause issues with the kerning.
     ...fontFamily === defaultFontFamily ? {
-      letterSpacing: `${round(letterSpacing / size)}em`
+      letterSpacing: `${round$2(letterSpacing / size)}em`
     } : {},
     ...casing,
     ...allVariants
@@ -11858,9 +11858,9 @@ function getSpacingVal(spacingInput) {
   }
   return "8px";
 }
-const silent = (fn) => {
+const silent = (fn2) => {
   try {
-    return fn();
+    return fn2();
   } catch (error) {
   }
   return void 0;
@@ -12323,7 +12323,7 @@ function getSvgIconUtilityClass(slot) {
   return generateUtilityClass("MuiSvgIcon", slot);
 }
 generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
-const useUtilityClasses$G = (ownerState) => {
+const useUtilityClasses$K = (ownerState) => {
   const {
     color: color2,
     fontSize,
@@ -12468,7 +12468,7 @@ const SvgIcon = /* @__PURE__ */ reactExports.forwardRef(function SvgIcon2(inProp
   if (!inheritViewBox) {
     more.viewBox = viewBox;
   }
-  const classes = useUtilityClasses$G(ownerState);
+  const classes = useUtilityClasses$K(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SvgIconRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -12972,7 +12972,7 @@ function getPaperUtilityClass(slot) {
   return generateUtilityClass("MuiPaper", slot);
 }
 generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
-const useUtilityClasses$F = (ownerState) => {
+const useUtilityClasses$J = (ownerState) => {
   const {
     square,
     elevation,
@@ -13045,7 +13045,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     square,
     variant
   };
-  const classes = useUtilityClasses$F(ownerState);
+  const classes = useUtilityClasses$J(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(PaperRoot, {
     as: component,
     ownerState,
@@ -13393,7 +13393,7 @@ const TouchRipple = /* @__PURE__ */ reactExports.forwardRef(function TouchRipple
     nextKey.current += 1;
     rippleCallback.current = cb2;
   }, [classes]);
-  const start = reactExports.useCallback((event = {}, options = {}, cb2 = () => {
+  const start2 = reactExports.useCallback((event = {}, options = {}, cb2 = () => {
   }) => {
     const {
       pulsate: pulsate2 = false,
@@ -13468,10 +13468,10 @@ const TouchRipple = /* @__PURE__ */ reactExports.forwardRef(function TouchRipple
     }
   }, [centerProp, startCommit, startTimer]);
   const pulsate = reactExports.useCallback(() => {
-    start({}, {
+    start2({}, {
       pulsate: true
     });
-  }, [start]);
+  }, [start2]);
   const stop = reactExports.useCallback((event, cb2) => {
     startTimer.clear();
     if ((event == null ? void 0 : event.type) === "touchend" && startTimerCommit.current) {
@@ -13493,9 +13493,9 @@ const TouchRipple = /* @__PURE__ */ reactExports.forwardRef(function TouchRipple
   }, [startTimer]);
   reactExports.useImperativeHandle(ref, () => ({
     pulsate,
-    start,
+    start: start2,
     stop
-  }), [pulsate, start, stop]);
+  }), [pulsate, start2, stop]);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TouchRippleRoot, {
     className: clsx(touchRippleClasses.root, classes.root, className),
     ref: container,
@@ -13511,7 +13511,7 @@ function getButtonBaseUtilityClass(slot) {
   return generateUtilityClass("MuiButtonBase", slot);
 }
 const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]);
-const useUtilityClasses$E = (ownerState) => {
+const useUtilityClasses$I = (ownerState) => {
   const {
     disabled,
     focusVisible,
@@ -13740,7 +13740,7 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
     tabIndex,
     focusVisible
   };
-  const classes = useUtilityClasses$E(ownerState);
+  const classes = useUtilityClasses$I(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonBaseRoot, {
     as: ComponentProp,
     className: clsx(classes.root, className),
@@ -13791,7 +13791,7 @@ function getIconButtonUtilityClass(slot) {
   return generateUtilityClass("MuiIconButton", slot);
 }
 const iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge"]);
-const useUtilityClasses$D = (ownerState) => {
+const useUtilityClasses$H = (ownerState) => {
   const {
     classes,
     disabled,
@@ -13947,7 +13947,7 @@ const IconButton = /* @__PURE__ */ reactExports.forwardRef(function IconButton2(
     disableRipple,
     size
   };
-  const classes = useUtilityClasses$D(ownerState);
+  const classes = useUtilityClasses$H(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(IconButtonRoot, {
     className: clsx(classes.root, className),
     centerRipple: true,
@@ -13976,7 +13976,7 @@ const v6Colors = {
   textDisabled: true
 };
 const extendSxProp = internal_createExtendSxProp();
-const useUtilityClasses$C = (ownerState) => {
+const useUtilityClasses$G = (ownerState) => {
   const {
     align,
     gutterBottom,
@@ -14119,7 +14119,7 @@ const Typography = /* @__PURE__ */ reactExports.forwardRef(function Typography2(
     variantMapping
   };
   const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
-  const classes = useUtilityClasses$C(ownerState);
+  const classes = useUtilityClasses$G(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TypographyRoot, {
     as: Component,
     ref,
@@ -14133,6 +14133,1354 @@ const Typography = /* @__PURE__ */ reactExports.forwardRef(function Typography2(
       ...other.style
     }
   });
+});
+var top = "top";
+var bottom = "bottom";
+var right = "right";
+var left = "left";
+var auto = "auto";
+var basePlacements = [top, bottom, right, left];
+var start = "start";
+var end = "end";
+var clippingParents = "clippingParents";
+var viewport = "viewport";
+var popper = "popper";
+var reference = "reference";
+var variationPlacements = /* @__PURE__ */ basePlacements.reduce(function(acc, placement) {
+  return acc.concat([placement + "-" + start, placement + "-" + end]);
+}, []);
+var placements = /* @__PURE__ */ [].concat(basePlacements, [auto]).reduce(function(acc, placement) {
+  return acc.concat([placement, placement + "-" + start, placement + "-" + end]);
+}, []);
+var beforeRead = "beforeRead";
+var read = "read";
+var afterRead = "afterRead";
+var beforeMain = "beforeMain";
+var main = "main";
+var afterMain = "afterMain";
+var beforeWrite = "beforeWrite";
+var write = "write";
+var afterWrite = "afterWrite";
+var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
+function getNodeName(element) {
+  return element ? (element.nodeName || "").toLowerCase() : null;
+}
+function getWindow(node2) {
+  if (node2 == null) {
+    return window;
+  }
+  if (node2.toString() !== "[object Window]") {
+    var ownerDocument2 = node2.ownerDocument;
+    return ownerDocument2 ? ownerDocument2.defaultView || window : window;
+  }
+  return node2;
+}
+function isElement(node2) {
+  var OwnElement = getWindow(node2).Element;
+  return node2 instanceof OwnElement || node2 instanceof Element;
+}
+function isHTMLElement$1(node2) {
+  var OwnElement = getWindow(node2).HTMLElement;
+  return node2 instanceof OwnElement || node2 instanceof HTMLElement;
+}
+function isShadowRoot(node2) {
+  if (typeof ShadowRoot === "undefined") {
+    return false;
+  }
+  var OwnElement = getWindow(node2).ShadowRoot;
+  return node2 instanceof OwnElement || node2 instanceof ShadowRoot;
+}
+function applyStyles(_ref) {
+  var state = _ref.state;
+  Object.keys(state.elements).forEach(function(name) {
+    var style2 = state.styles[name] || {};
+    var attributes = state.attributes[name] || {};
+    var element = state.elements[name];
+    if (!isHTMLElement$1(element) || !getNodeName(element)) {
+      return;
+    }
+    Object.assign(element.style, style2);
+    Object.keys(attributes).forEach(function(name2) {
+      var value = attributes[name2];
+      if (value === false) {
+        element.removeAttribute(name2);
+      } else {
+        element.setAttribute(name2, value === true ? "" : value);
+      }
+    });
+  });
+}
+function effect$2(_ref2) {
+  var state = _ref2.state;
+  var initialStyles = {
+    popper: {
+      position: state.options.strategy,
+      left: "0",
+      top: "0",
+      margin: "0"
+    },
+    arrow: {
+      position: "absolute"
+    },
+    reference: {}
+  };
+  Object.assign(state.elements.popper.style, initialStyles.popper);
+  state.styles = initialStyles;
+  if (state.elements.arrow) {
+    Object.assign(state.elements.arrow.style, initialStyles.arrow);
+  }
+  return function() {
+    Object.keys(state.elements).forEach(function(name) {
+      var element = state.elements[name];
+      var attributes = state.attributes[name] || {};
+      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]);
+      var style2 = styleProperties.reduce(function(style3, property) {
+        style3[property] = "";
+        return style3;
+      }, {});
+      if (!isHTMLElement$1(element) || !getNodeName(element)) {
+        return;
+      }
+      Object.assign(element.style, style2);
+      Object.keys(attributes).forEach(function(attribute) {
+        element.removeAttribute(attribute);
+      });
+    });
+  };
+}
+const applyStyles$1 = {
+  name: "applyStyles",
+  enabled: true,
+  phase: "write",
+  fn: applyStyles,
+  effect: effect$2,
+  requires: ["computeStyles"]
+};
+function getBasePlacement(placement) {
+  return placement.split("-")[0];
+}
+var max = Math.max;
+var min = Math.min;
+var round$1 = Math.round;
+function getUAString() {
+  var uaData = navigator.userAgentData;
+  if (uaData != null && uaData.brands && Array.isArray(uaData.brands)) {
+    return uaData.brands.map(function(item) {
+      return item.brand + "/" + item.version;
+    }).join(" ");
+  }
+  return navigator.userAgent;
+}
+function isLayoutViewport() {
+  return !/^((?!chrome|android).)*safari/i.test(getUAString());
+}
+function getBoundingClientRect(element, includeScale, isFixedStrategy) {
+  if (includeScale === void 0) {
+    includeScale = false;
+  }
+  if (isFixedStrategy === void 0) {
+    isFixedStrategy = false;
+  }
+  var clientRect = element.getBoundingClientRect();
+  var scaleX = 1;
+  var scaleY = 1;
+  if (includeScale && isHTMLElement$1(element)) {
+    scaleX = element.offsetWidth > 0 ? round$1(clientRect.width) / element.offsetWidth || 1 : 1;
+    scaleY = element.offsetHeight > 0 ? round$1(clientRect.height) / element.offsetHeight || 1 : 1;
+  }
+  var _ref = isElement(element) ? getWindow(element) : window, visualViewport = _ref.visualViewport;
+  var addVisualOffsets = !isLayoutViewport() && isFixedStrategy;
+  var x2 = (clientRect.left + (addVisualOffsets && visualViewport ? visualViewport.offsetLeft : 0)) / scaleX;
+  var y2 = (clientRect.top + (addVisualOffsets && visualViewport ? visualViewport.offsetTop : 0)) / scaleY;
+  var width2 = clientRect.width / scaleX;
+  var height2 = clientRect.height / scaleY;
+  return {
+    width: width2,
+    height: height2,
+    top: y2,
+    right: x2 + width2,
+    bottom: y2 + height2,
+    left: x2,
+    x: x2,
+    y: y2
+  };
+}
+function getLayoutRect(element) {
+  var clientRect = getBoundingClientRect(element);
+  var width2 = element.offsetWidth;
+  var height2 = element.offsetHeight;
+  if (Math.abs(clientRect.width - width2) <= 1) {
+    width2 = clientRect.width;
+  }
+  if (Math.abs(clientRect.height - height2) <= 1) {
+    height2 = clientRect.height;
+  }
+  return {
+    x: element.offsetLeft,
+    y: element.offsetTop,
+    width: width2,
+    height: height2
+  };
+}
+function contains(parent, child) {
+  var rootNode = child.getRootNode && child.getRootNode();
+  if (parent.contains(child)) {
+    return true;
+  } else if (rootNode && isShadowRoot(rootNode)) {
+    var next2 = child;
+    do {
+      if (next2 && parent.isSameNode(next2)) {
+        return true;
+      }
+      next2 = next2.parentNode || next2.host;
+    } while (next2);
+  }
+  return false;
+}
+function getComputedStyle(element) {
+  return getWindow(element).getComputedStyle(element);
+}
+function isTableElement(element) {
+  return ["table", "td", "th"].indexOf(getNodeName(element)) >= 0;
+}
+function getDocumentElement(element) {
+  return ((isElement(element) ? element.ownerDocument : (
+    // $FlowFixMe[prop-missing]
+    element.document
+  )) || window.document).documentElement;
+}
+function getParentNode(element) {
+  if (getNodeName(element) === "html") {
+    return element;
+  }
+  return (
+    // this is a quicker (but less type safe) way to save quite some bytes from the bundle
+    // $FlowFixMe[incompatible-return]
+    // $FlowFixMe[prop-missing]
+    element.assignedSlot || // step into the shadow DOM of the parent of a slotted node
+    element.parentNode || // DOM Element detected
+    (isShadowRoot(element) ? element.host : null) || // ShadowRoot detected
+    // $FlowFixMe[incompatible-call]: HTMLElement is a Node
+    getDocumentElement(element)
+  );
+}
+function getTrueOffsetParent(element) {
+  if (!isHTMLElement$1(element) || // https://github.com/popperjs/popper-core/issues/837
+  getComputedStyle(element).position === "fixed") {
+    return null;
+  }
+  return element.offsetParent;
+}
+function getContainingBlock(element) {
+  var isFirefox = /firefox/i.test(getUAString());
+  var isIE = /Trident/i.test(getUAString());
+  if (isIE && isHTMLElement$1(element)) {
+    var elementCss = getComputedStyle(element);
+    if (elementCss.position === "fixed") {
+      return null;
+    }
+  }
+  var currentNode = getParentNode(element);
+  if (isShadowRoot(currentNode)) {
+    currentNode = currentNode.host;
+  }
+  while (isHTMLElement$1(currentNode) && ["html", "body"].indexOf(getNodeName(currentNode)) < 0) {
+    var css2 = getComputedStyle(currentNode);
+    if (css2.transform !== "none" || css2.perspective !== "none" || css2.contain === "paint" || ["transform", "perspective"].indexOf(css2.willChange) !== -1 || isFirefox && css2.willChange === "filter" || isFirefox && css2.filter && css2.filter !== "none") {
+      return currentNode;
+    } else {
+      currentNode = currentNode.parentNode;
+    }
+  }
+  return null;
+}
+function getOffsetParent(element) {
+  var window2 = getWindow(element);
+  var offsetParent = getTrueOffsetParent(element);
+  while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === "static") {
+    offsetParent = getTrueOffsetParent(offsetParent);
+  }
+  if (offsetParent && (getNodeName(offsetParent) === "html" || getNodeName(offsetParent) === "body" && getComputedStyle(offsetParent).position === "static")) {
+    return window2;
+  }
+  return offsetParent || getContainingBlock(element) || window2;
+}
+function getMainAxisFromPlacement(placement) {
+  return ["top", "bottom"].indexOf(placement) >= 0 ? "x" : "y";
+}
+function within(min$1, value, max$1) {
+  return max(min$1, min(value, max$1));
+}
+function withinMaxClamp(min2, value, max2) {
+  var v2 = within(min2, value, max2);
+  return v2 > max2 ? max2 : v2;
+}
+function getFreshSideObject() {
+  return {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  };
+}
+function mergePaddingObject(paddingObject) {
+  return Object.assign({}, getFreshSideObject(), paddingObject);
+}
+function expandToHashMap(value, keys) {
+  return keys.reduce(function(hashMap, key) {
+    hashMap[key] = value;
+    return hashMap;
+  }, {});
+}
+var toPaddingObject = function toPaddingObject2(padding2, state) {
+  padding2 = typeof padding2 === "function" ? padding2(Object.assign({}, state.rects, {
+    placement: state.placement
+  })) : padding2;
+  return mergePaddingObject(typeof padding2 !== "number" ? padding2 : expandToHashMap(padding2, basePlacements));
+};
+function arrow(_ref) {
+  var _state$modifiersData$;
+  var state = _ref.state, name = _ref.name, options = _ref.options;
+  var arrowElement = state.elements.arrow;
+  var popperOffsets2 = state.modifiersData.popperOffsets;
+  var basePlacement = getBasePlacement(state.placement);
+  var axis = getMainAxisFromPlacement(basePlacement);
+  var isVertical = [left, right].indexOf(basePlacement) >= 0;
+  var len = isVertical ? "height" : "width";
+  if (!arrowElement || !popperOffsets2) {
+    return;
+  }
+  var paddingObject = toPaddingObject(options.padding, state);
+  var arrowRect = getLayoutRect(arrowElement);
+  var minProp = axis === "y" ? top : left;
+  var maxProp = axis === "y" ? bottom : right;
+  var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets2[axis] - state.rects.popper[len];
+  var startDiff = popperOffsets2[axis] - state.rects.reference[axis];
+  var arrowOffsetParent = getOffsetParent(arrowElement);
+  var clientSize = arrowOffsetParent ? axis === "y" ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
+  var centerToReference = endDiff / 2 - startDiff / 2;
+  var min2 = paddingObject[minProp];
+  var max2 = clientSize - arrowRect[len] - paddingObject[maxProp];
+  var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
+  var offset2 = within(min2, center, max2);
+  var axisProp = axis;
+  state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset2, _state$modifiersData$.centerOffset = offset2 - center, _state$modifiersData$);
+}
+function effect$1(_ref2) {
+  var state = _ref2.state, options = _ref2.options;
+  var _options$element = options.element, arrowElement = _options$element === void 0 ? "[data-popper-arrow]" : _options$element;
+  if (arrowElement == null) {
+    return;
+  }
+  if (typeof arrowElement === "string") {
+    arrowElement = state.elements.popper.querySelector(arrowElement);
+    if (!arrowElement) {
+      return;
+    }
+  }
+  if (!contains(state.elements.popper, arrowElement)) {
+    return;
+  }
+  state.elements.arrow = arrowElement;
+}
+const arrow$1 = {
+  name: "arrow",
+  enabled: true,
+  phase: "main",
+  fn: arrow,
+  effect: effect$1,
+  requires: ["popperOffsets"],
+  requiresIfExists: ["preventOverflow"]
+};
+function getVariation(placement) {
+  return placement.split("-")[1];
+}
+var unsetSides = {
+  top: "auto",
+  right: "auto",
+  bottom: "auto",
+  left: "auto"
+};
+function roundOffsetsByDPR(_ref, win) {
+  var x2 = _ref.x, y2 = _ref.y;
+  var dpr = win.devicePixelRatio || 1;
+  return {
+    x: round$1(x2 * dpr) / dpr || 0,
+    y: round$1(y2 * dpr) / dpr || 0
+  };
+}
+function mapToStyles(_ref2) {
+  var _Object$assign2;
+  var popper2 = _ref2.popper, popperRect = _ref2.popperRect, placement = _ref2.placement, variation = _ref2.variation, offsets = _ref2.offsets, position2 = _ref2.position, gpuAcceleration = _ref2.gpuAcceleration, adaptive = _ref2.adaptive, roundOffsets = _ref2.roundOffsets, isFixed = _ref2.isFixed;
+  var _offsets$x = offsets.x, x2 = _offsets$x === void 0 ? 0 : _offsets$x, _offsets$y = offsets.y, y2 = _offsets$y === void 0 ? 0 : _offsets$y;
+  var _ref3 = typeof roundOffsets === "function" ? roundOffsets({
+    x: x2,
+    y: y2
+  }) : {
+    x: x2,
+    y: y2
+  };
+  x2 = _ref3.x;
+  y2 = _ref3.y;
+  var hasX = offsets.hasOwnProperty("x");
+  var hasY = offsets.hasOwnProperty("y");
+  var sideX = left;
+  var sideY = top;
+  var win = window;
+  if (adaptive) {
+    var offsetParent = getOffsetParent(popper2);
+    var heightProp = "clientHeight";
+    var widthProp = "clientWidth";
+    if (offsetParent === getWindow(popper2)) {
+      offsetParent = getDocumentElement(popper2);
+      if (getComputedStyle(offsetParent).position !== "static" && position2 === "absolute") {
+        heightProp = "scrollHeight";
+        widthProp = "scrollWidth";
+      }
+    }
+    offsetParent = offsetParent;
+    if (placement === top || (placement === left || placement === right) && variation === end) {
+      sideY = bottom;
+      var offsetY = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.height : (
+        // $FlowFixMe[prop-missing]
+        offsetParent[heightProp]
+      );
+      y2 -= offsetY - popperRect.height;
+      y2 *= gpuAcceleration ? 1 : -1;
+    }
+    if (placement === left || (placement === top || placement === bottom) && variation === end) {
+      sideX = right;
+      var offsetX = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.width : (
+        // $FlowFixMe[prop-missing]
+        offsetParent[widthProp]
+      );
+      x2 -= offsetX - popperRect.width;
+      x2 *= gpuAcceleration ? 1 : -1;
+    }
+  }
+  var commonStyles = Object.assign({
+    position: position2
+  }, adaptive && unsetSides);
+  var _ref4 = roundOffsets === true ? roundOffsetsByDPR({
+    x: x2,
+    y: y2
+  }, getWindow(popper2)) : {
+    x: x2,
+    y: y2
+  };
+  x2 = _ref4.x;
+  y2 = _ref4.y;
+  if (gpuAcceleration) {
+    var _Object$assign;
+    return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? "0" : "", _Object$assign[sideX] = hasX ? "0" : "", _Object$assign.transform = (win.devicePixelRatio || 1) <= 1 ? "translate(" + x2 + "px, " + y2 + "px)" : "translate3d(" + x2 + "px, " + y2 + "px, 0)", _Object$assign));
+  }
+  return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y2 + "px" : "", _Object$assign2[sideX] = hasX ? x2 + "px" : "", _Object$assign2.transform = "", _Object$assign2));
+}
+function computeStyles(_ref5) {
+  var state = _ref5.state, options = _ref5.options;
+  var _options$gpuAccelerat = options.gpuAcceleration, gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat, _options$adaptive = options.adaptive, adaptive = _options$adaptive === void 0 ? true : _options$adaptive, _options$roundOffsets = options.roundOffsets, roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
+  var commonStyles = {
+    placement: getBasePlacement(state.placement),
+    variation: getVariation(state.placement),
+    popper: state.elements.popper,
+    popperRect: state.rects.popper,
+    gpuAcceleration,
+    isFixed: state.options.strategy === "fixed"
+  };
+  if (state.modifiersData.popperOffsets != null) {
+    state.styles.popper = Object.assign({}, state.styles.popper, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state.modifiersData.popperOffsets,
+      position: state.options.strategy,
+      adaptive,
+      roundOffsets
+    })));
+  }
+  if (state.modifiersData.arrow != null) {
+    state.styles.arrow = Object.assign({}, state.styles.arrow, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state.modifiersData.arrow,
+      position: "absolute",
+      adaptive: false,
+      roundOffsets
+    })));
+  }
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+    "data-popper-placement": state.placement
+  });
+}
+const computeStyles$1 = {
+  name: "computeStyles",
+  enabled: true,
+  phase: "beforeWrite",
+  fn: computeStyles,
+  data: {}
+};
+var passive = {
+  passive: true
+};
+function effect(_ref) {
+  var state = _ref.state, instance = _ref.instance, options = _ref.options;
+  var _options$scroll = options.scroll, scroll = _options$scroll === void 0 ? true : _options$scroll, _options$resize = options.resize, resize = _options$resize === void 0 ? true : _options$resize;
+  var window2 = getWindow(state.elements.popper);
+  var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
+  if (scroll) {
+    scrollParents.forEach(function(scrollParent) {
+      scrollParent.addEventListener("scroll", instance.update, passive);
+    });
+  }
+  if (resize) {
+    window2.addEventListener("resize", instance.update, passive);
+  }
+  return function() {
+    if (scroll) {
+      scrollParents.forEach(function(scrollParent) {
+        scrollParent.removeEventListener("scroll", instance.update, passive);
+      });
+    }
+    if (resize) {
+      window2.removeEventListener("resize", instance.update, passive);
+    }
+  };
+}
+const eventListeners = {
+  name: "eventListeners",
+  enabled: true,
+  phase: "write",
+  fn: function fn() {
+  },
+  effect,
+  data: {}
+};
+var hash$1 = {
+  left: "right",
+  right: "left",
+  bottom: "top",
+  top: "bottom"
+};
+function getOppositePlacement(placement) {
+  return placement.replace(/left|right|bottom|top/g, function(matched) {
+    return hash$1[matched];
+  });
+}
+var hash = {
+  start: "end",
+  end: "start"
+};
+function getOppositeVariationPlacement(placement) {
+  return placement.replace(/start|end/g, function(matched) {
+    return hash[matched];
+  });
+}
+function getWindowScroll(node2) {
+  var win = getWindow(node2);
+  var scrollLeft = win.pageXOffset;
+  var scrollTop = win.pageYOffset;
+  return {
+    scrollLeft,
+    scrollTop
+  };
+}
+function getWindowScrollBarX(element) {
+  return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
+}
+function getViewportRect(element, strategy) {
+  var win = getWindow(element);
+  var html = getDocumentElement(element);
+  var visualViewport = win.visualViewport;
+  var width2 = html.clientWidth;
+  var height2 = html.clientHeight;
+  var x2 = 0;
+  var y2 = 0;
+  if (visualViewport) {
+    width2 = visualViewport.width;
+    height2 = visualViewport.height;
+    var layoutViewport = isLayoutViewport();
+    if (layoutViewport || !layoutViewport && strategy === "fixed") {
+      x2 = visualViewport.offsetLeft;
+      y2 = visualViewport.offsetTop;
+    }
+  }
+  return {
+    width: width2,
+    height: height2,
+    x: x2 + getWindowScrollBarX(element),
+    y: y2
+  };
+}
+function getDocumentRect(element) {
+  var _element$ownerDocumen;
+  var html = getDocumentElement(element);
+  var winScroll = getWindowScroll(element);
+  var body = (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body;
+  var width2 = max(html.scrollWidth, html.clientWidth, body ? body.scrollWidth : 0, body ? body.clientWidth : 0);
+  var height2 = max(html.scrollHeight, html.clientHeight, body ? body.scrollHeight : 0, body ? body.clientHeight : 0);
+  var x2 = -winScroll.scrollLeft + getWindowScrollBarX(element);
+  var y2 = -winScroll.scrollTop;
+  if (getComputedStyle(body || html).direction === "rtl") {
+    x2 += max(html.clientWidth, body ? body.clientWidth : 0) - width2;
+  }
+  return {
+    width: width2,
+    height: height2,
+    x: x2,
+    y: y2
+  };
+}
+function isScrollParent(element) {
+  var _getComputedStyle = getComputedStyle(element), overflow = _getComputedStyle.overflow, overflowX = _getComputedStyle.overflowX, overflowY = _getComputedStyle.overflowY;
+  return /auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX);
+}
+function getScrollParent(node2) {
+  if (["html", "body", "#document"].indexOf(getNodeName(node2)) >= 0) {
+    return node2.ownerDocument.body;
+  }
+  if (isHTMLElement$1(node2) && isScrollParent(node2)) {
+    return node2;
+  }
+  return getScrollParent(getParentNode(node2));
+}
+function listScrollParents(element, list) {
+  var _element$ownerDocumen;
+  if (list === void 0) {
+    list = [];
+  }
+  var scrollParent = getScrollParent(element);
+  var isBody = scrollParent === ((_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body);
+  var win = getWindow(scrollParent);
+  var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
+  var updatedList = list.concat(target);
+  return isBody ? updatedList : (
+    // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
+    updatedList.concat(listScrollParents(getParentNode(target)))
+  );
+}
+function rectToClientRect(rect) {
+  return Object.assign({}, rect, {
+    left: rect.x,
+    top: rect.y,
+    right: rect.x + rect.width,
+    bottom: rect.y + rect.height
+  });
+}
+function getInnerBoundingClientRect(element, strategy) {
+  var rect = getBoundingClientRect(element, false, strategy === "fixed");
+  rect.top = rect.top + element.clientTop;
+  rect.left = rect.left + element.clientLeft;
+  rect.bottom = rect.top + element.clientHeight;
+  rect.right = rect.left + element.clientWidth;
+  rect.width = element.clientWidth;
+  rect.height = element.clientHeight;
+  rect.x = rect.left;
+  rect.y = rect.top;
+  return rect;
+}
+function getClientRectFromMixedType(element, clippingParent, strategy) {
+  return clippingParent === viewport ? rectToClientRect(getViewportRect(element, strategy)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent, strategy) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+}
+function getClippingParents(element) {
+  var clippingParents2 = listScrollParents(getParentNode(element));
+  var canEscapeClipping = ["absolute", "fixed"].indexOf(getComputedStyle(element).position) >= 0;
+  var clipperElement = canEscapeClipping && isHTMLElement$1(element) ? getOffsetParent(element) : element;
+  if (!isElement(clipperElement)) {
+    return [];
+  }
+  return clippingParents2.filter(function(clippingParent) {
+    return isElement(clippingParent) && contains(clippingParent, clipperElement) && getNodeName(clippingParent) !== "body";
+  });
+}
+function getClippingRect(element, boundary, rootBoundary, strategy) {
+  var mainClippingParents = boundary === "clippingParents" ? getClippingParents(element) : [].concat(boundary);
+  var clippingParents2 = [].concat(mainClippingParents, [rootBoundary]);
+  var firstClippingParent = clippingParents2[0];
+  var clippingRect = clippingParents2.reduce(function(accRect, clippingParent) {
+    var rect = getClientRectFromMixedType(element, clippingParent, strategy);
+    accRect.top = max(rect.top, accRect.top);
+    accRect.right = min(rect.right, accRect.right);
+    accRect.bottom = min(rect.bottom, accRect.bottom);
+    accRect.left = max(rect.left, accRect.left);
+    return accRect;
+  }, getClientRectFromMixedType(element, firstClippingParent, strategy));
+  clippingRect.width = clippingRect.right - clippingRect.left;
+  clippingRect.height = clippingRect.bottom - clippingRect.top;
+  clippingRect.x = clippingRect.left;
+  clippingRect.y = clippingRect.top;
+  return clippingRect;
+}
+function computeOffsets(_ref) {
+  var reference2 = _ref.reference, element = _ref.element, placement = _ref.placement;
+  var basePlacement = placement ? getBasePlacement(placement) : null;
+  var variation = placement ? getVariation(placement) : null;
+  var commonX = reference2.x + reference2.width / 2 - element.width / 2;
+  var commonY = reference2.y + reference2.height / 2 - element.height / 2;
+  var offsets;
+  switch (basePlacement) {
+    case top:
+      offsets = {
+        x: commonX,
+        y: reference2.y - element.height
+      };
+      break;
+    case bottom:
+      offsets = {
+        x: commonX,
+        y: reference2.y + reference2.height
+      };
+      break;
+    case right:
+      offsets = {
+        x: reference2.x + reference2.width,
+        y: commonY
+      };
+      break;
+    case left:
+      offsets = {
+        x: reference2.x - element.width,
+        y: commonY
+      };
+      break;
+    default:
+      offsets = {
+        x: reference2.x,
+        y: reference2.y
+      };
+  }
+  var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
+  if (mainAxis != null) {
+    var len = mainAxis === "y" ? "height" : "width";
+    switch (variation) {
+      case start:
+        offsets[mainAxis] = offsets[mainAxis] - (reference2[len] / 2 - element[len] / 2);
+        break;
+      case end:
+        offsets[mainAxis] = offsets[mainAxis] + (reference2[len] / 2 - element[len] / 2);
+        break;
+    }
+  }
+  return offsets;
+}
+function detectOverflow(state, options) {
+  if (options === void 0) {
+    options = {};
+  }
+  var _options = options, _options$placement = _options.placement, placement = _options$placement === void 0 ? state.placement : _options$placement, _options$strategy = _options.strategy, strategy = _options$strategy === void 0 ? state.strategy : _options$strategy, _options$boundary = _options.boundary, boundary = _options$boundary === void 0 ? clippingParents : _options$boundary, _options$rootBoundary = _options.rootBoundary, rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary, _options$elementConte = _options.elementContext, elementContext = _options$elementConte === void 0 ? popper : _options$elementConte, _options$altBoundary = _options.altBoundary, altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary, _options$padding = _options.padding, padding2 = _options$padding === void 0 ? 0 : _options$padding;
+  var paddingObject = mergePaddingObject(typeof padding2 !== "number" ? padding2 : expandToHashMap(padding2, basePlacements));
+  var altContext = elementContext === popper ? reference : popper;
+  var popperRect = state.rects.popper;
+  var element = state.elements[altBoundary ? altContext : elementContext];
+  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary, strategy);
+  var referenceClientRect = getBoundingClientRect(state.elements.reference);
+  var popperOffsets2 = computeOffsets({
+    reference: referenceClientRect,
+    element: popperRect,
+    strategy: "absolute",
+    placement
+  });
+  var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets2));
+  var elementClientRect = elementContext === popper ? popperClientRect : referenceClientRect;
+  var overflowOffsets = {
+    top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
+    bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
+    left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
+    right: elementClientRect.right - clippingClientRect.right + paddingObject.right
+  };
+  var offsetData = state.modifiersData.offset;
+  if (elementContext === popper && offsetData) {
+    var offset2 = offsetData[placement];
+    Object.keys(overflowOffsets).forEach(function(key) {
+      var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
+      var axis = [top, bottom].indexOf(key) >= 0 ? "y" : "x";
+      overflowOffsets[key] += offset2[axis] * multiply;
+    });
+  }
+  return overflowOffsets;
+}
+function computeAutoPlacement(state, options) {
+  if (options === void 0) {
+    options = {};
+  }
+  var _options = options, placement = _options.placement, boundary = _options.boundary, rootBoundary = _options.rootBoundary, padding2 = _options.padding, flipVariations = _options.flipVariations, _options$allowedAutoP = _options.allowedAutoPlacements, allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
+  var variation = getVariation(placement);
+  var placements$1 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function(placement2) {
+    return getVariation(placement2) === variation;
+  }) : basePlacements;
+  var allowedPlacements = placements$1.filter(function(placement2) {
+    return allowedAutoPlacements.indexOf(placement2) >= 0;
+  });
+  if (allowedPlacements.length === 0) {
+    allowedPlacements = placements$1;
+  }
+  var overflows = allowedPlacements.reduce(function(acc, placement2) {
+    acc[placement2] = detectOverflow(state, {
+      placement: placement2,
+      boundary,
+      rootBoundary,
+      padding: padding2
+    })[getBasePlacement(placement2)];
+    return acc;
+  }, {});
+  return Object.keys(overflows).sort(function(a, b2) {
+    return overflows[a] - overflows[b2];
+  });
+}
+function getExpandedFallbackPlacements(placement) {
+  if (getBasePlacement(placement) === auto) {
+    return [];
+  }
+  var oppositePlacement = getOppositePlacement(placement);
+  return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
+}
+function flip(_ref) {
+  var state = _ref.state, options = _ref.options, name = _ref.name;
+  if (state.modifiersData[name]._skip) {
+    return;
+  }
+  var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options.fallbackPlacements, padding2 = options.padding, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, _options$flipVariatio = options.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options.allowedAutoPlacements;
+  var preferredPlacement = state.options.placement;
+  var basePlacement = getBasePlacement(preferredPlacement);
+  var isBasePlacement = basePlacement === preferredPlacement;
+  var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
+  var placements2 = [preferredPlacement].concat(fallbackPlacements).reduce(function(acc, placement2) {
+    return acc.concat(getBasePlacement(placement2) === auto ? computeAutoPlacement(state, {
+      placement: placement2,
+      boundary,
+      rootBoundary,
+      padding: padding2,
+      flipVariations,
+      allowedAutoPlacements
+    }) : placement2);
+  }, []);
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var checksMap = /* @__PURE__ */ new Map();
+  var makeFallbackChecks = true;
+  var firstFittingPlacement = placements2[0];
+  for (var i = 0; i < placements2.length; i++) {
+    var placement = placements2[i];
+    var _basePlacement = getBasePlacement(placement);
+    var isStartVariation = getVariation(placement) === start;
+    var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
+    var len = isVertical ? "width" : "height";
+    var overflow = detectOverflow(state, {
+      placement,
+      boundary,
+      rootBoundary,
+      altBoundary,
+      padding: padding2
+    });
+    var mainVariationSide = isVertical ? isStartVariation ? right : left : isStartVariation ? bottom : top;
+    if (referenceRect[len] > popperRect[len]) {
+      mainVariationSide = getOppositePlacement(mainVariationSide);
+    }
+    var altVariationSide = getOppositePlacement(mainVariationSide);
+    var checks = [];
+    if (checkMainAxis) {
+      checks.push(overflow[_basePlacement] <= 0);
+    }
+    if (checkAltAxis) {
+      checks.push(overflow[mainVariationSide] <= 0, overflow[altVariationSide] <= 0);
+    }
+    if (checks.every(function(check) {
+      return check;
+    })) {
+      firstFittingPlacement = placement;
+      makeFallbackChecks = false;
+      break;
+    }
+    checksMap.set(placement, checks);
+  }
+  if (makeFallbackChecks) {
+    var numberOfChecks = flipVariations ? 3 : 1;
+    var _loop = function _loop2(_i2) {
+      var fittingPlacement = placements2.find(function(placement2) {
+        var checks2 = checksMap.get(placement2);
+        if (checks2) {
+          return checks2.slice(0, _i2).every(function(check) {
+            return check;
+          });
+        }
+      });
+      if (fittingPlacement) {
+        firstFittingPlacement = fittingPlacement;
+        return "break";
+      }
+    };
+    for (var _i = numberOfChecks; _i > 0; _i--) {
+      var _ret = _loop(_i);
+      if (_ret === "break") break;
+    }
+  }
+  if (state.placement !== firstFittingPlacement) {
+    state.modifiersData[name]._skip = true;
+    state.placement = firstFittingPlacement;
+    state.reset = true;
+  }
+}
+const flip$1 = {
+  name: "flip",
+  enabled: true,
+  phase: "main",
+  fn: flip,
+  requiresIfExists: ["offset"],
+  data: {
+    _skip: false
+  }
+};
+function getSideOffsets(overflow, rect, preventedOffsets) {
+  if (preventedOffsets === void 0) {
+    preventedOffsets = {
+      x: 0,
+      y: 0
+    };
+  }
+  return {
+    top: overflow.top - rect.height - preventedOffsets.y,
+    right: overflow.right - rect.width + preventedOffsets.x,
+    bottom: overflow.bottom - rect.height + preventedOffsets.y,
+    left: overflow.left - rect.width - preventedOffsets.x
+  };
+}
+function isAnySideFullyClipped(overflow) {
+  return [top, right, bottom, left].some(function(side) {
+    return overflow[side] >= 0;
+  });
+}
+function hide(_ref) {
+  var state = _ref.state, name = _ref.name;
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var preventedOffsets = state.modifiersData.preventOverflow;
+  var referenceOverflow = detectOverflow(state, {
+    elementContext: "reference"
+  });
+  var popperAltOverflow = detectOverflow(state, {
+    altBoundary: true
+  });
+  var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
+  var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
+  var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
+  var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
+  state.modifiersData[name] = {
+    referenceClippingOffsets,
+    popperEscapeOffsets,
+    isReferenceHidden,
+    hasPopperEscaped
+  };
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+    "data-popper-reference-hidden": isReferenceHidden,
+    "data-popper-escaped": hasPopperEscaped
+  });
+}
+const hide$1 = {
+  name: "hide",
+  enabled: true,
+  phase: "main",
+  requiresIfExists: ["preventOverflow"],
+  fn: hide
+};
+function distanceAndSkiddingToXY(placement, rects, offset2) {
+  var basePlacement = getBasePlacement(placement);
+  var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
+  var _ref = typeof offset2 === "function" ? offset2(Object.assign({}, rects, {
+    placement
+  })) : offset2, skidding = _ref[0], distance = _ref[1];
+  skidding = skidding || 0;
+  distance = (distance || 0) * invertDistance;
+  return [left, right].indexOf(basePlacement) >= 0 ? {
+    x: distance,
+    y: skidding
+  } : {
+    x: skidding,
+    y: distance
+  };
+}
+function offset(_ref2) {
+  var state = _ref2.state, options = _ref2.options, name = _ref2.name;
+  var _options$offset = options.offset, offset2 = _options$offset === void 0 ? [0, 0] : _options$offset;
+  var data = placements.reduce(function(acc, placement) {
+    acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset2);
+    return acc;
+  }, {});
+  var _data$state$placement = data[state.placement], x2 = _data$state$placement.x, y2 = _data$state$placement.y;
+  if (state.modifiersData.popperOffsets != null) {
+    state.modifiersData.popperOffsets.x += x2;
+    state.modifiersData.popperOffsets.y += y2;
+  }
+  state.modifiersData[name] = data;
+}
+const offset$1 = {
+  name: "offset",
+  enabled: true,
+  phase: "main",
+  requires: ["popperOffsets"],
+  fn: offset
+};
+function popperOffsets(_ref) {
+  var state = _ref.state, name = _ref.name;
+  state.modifiersData[name] = computeOffsets({
+    reference: state.rects.reference,
+    element: state.rects.popper,
+    strategy: "absolute",
+    placement: state.placement
+  });
+}
+const popperOffsets$1 = {
+  name: "popperOffsets",
+  enabled: true,
+  phase: "read",
+  fn: popperOffsets,
+  data: {}
+};
+function getAltAxis(axis) {
+  return axis === "x" ? "y" : "x";
+}
+function preventOverflow(_ref) {
+  var state = _ref.state, options = _ref.options, name = _ref.name;
+  var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, padding2 = options.padding, _options$tether = options.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
+  var overflow = detectOverflow(state, {
+    boundary,
+    rootBoundary,
+    padding: padding2,
+    altBoundary
+  });
+  var basePlacement = getBasePlacement(state.placement);
+  var variation = getVariation(state.placement);
+  var isBasePlacement = !variation;
+  var mainAxis = getMainAxisFromPlacement(basePlacement);
+  var altAxis = getAltAxis(mainAxis);
+  var popperOffsets2 = state.modifiersData.popperOffsets;
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var tetherOffsetValue = typeof tetherOffset === "function" ? tetherOffset(Object.assign({}, state.rects, {
+    placement: state.placement
+  })) : tetherOffset;
+  var normalizedTetherOffsetValue = typeof tetherOffsetValue === "number" ? {
+    mainAxis: tetherOffsetValue,
+    altAxis: tetherOffsetValue
+  } : Object.assign({
+    mainAxis: 0,
+    altAxis: 0
+  }, tetherOffsetValue);
+  var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
+  var data = {
+    x: 0,
+    y: 0
+  };
+  if (!popperOffsets2) {
+    return;
+  }
+  if (checkMainAxis) {
+    var _offsetModifierState$;
+    var mainSide = mainAxis === "y" ? top : left;
+    var altSide = mainAxis === "y" ? bottom : right;
+    var len = mainAxis === "y" ? "height" : "width";
+    var offset2 = popperOffsets2[mainAxis];
+    var min$1 = offset2 + overflow[mainSide];
+    var max$1 = offset2 - overflow[altSide];
+    var additive = tether ? -popperRect[len] / 2 : 0;
+    var minLen = variation === start ? referenceRect[len] : popperRect[len];
+    var maxLen = variation === start ? -popperRect[len] : -referenceRect[len];
+    var arrowElement = state.elements.arrow;
+    var arrowRect = tether && arrowElement ? getLayoutRect(arrowElement) : {
+      width: 0,
+      height: 0
+    };
+    var arrowPaddingObject = state.modifiersData["arrow#persistent"] ? state.modifiersData["arrow#persistent"].padding : getFreshSideObject();
+    var arrowPaddingMin = arrowPaddingObject[mainSide];
+    var arrowPaddingMax = arrowPaddingObject[altSide];
+    var arrowLen = within(0, referenceRect[len], arrowRect[len]);
+    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
+    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
+    var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
+    var clientOffset = arrowOffsetParent ? mainAxis === "y" ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
+    var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
+    var tetherMin = offset2 + minOffset - offsetModifierValue - clientOffset;
+    var tetherMax = offset2 + maxOffset - offsetModifierValue;
+    var preventedOffset = within(tether ? min(min$1, tetherMin) : min$1, offset2, tether ? max(max$1, tetherMax) : max$1);
+    popperOffsets2[mainAxis] = preventedOffset;
+    data[mainAxis] = preventedOffset - offset2;
+  }
+  if (checkAltAxis) {
+    var _offsetModifierState$2;
+    var _mainSide = mainAxis === "x" ? top : left;
+    var _altSide = mainAxis === "x" ? bottom : right;
+    var _offset = popperOffsets2[altAxis];
+    var _len = altAxis === "y" ? "height" : "width";
+    var _min = _offset + overflow[_mainSide];
+    var _max = _offset - overflow[_altSide];
+    var isOriginSide = [top, left].indexOf(basePlacement) !== -1;
+    var _offsetModifierValue = (_offsetModifierState$2 = offsetModifierState == null ? void 0 : offsetModifierState[altAxis]) != null ? _offsetModifierState$2 : 0;
+    var _tetherMin = isOriginSide ? _min : _offset - referenceRect[_len] - popperRect[_len] - _offsetModifierValue + normalizedTetherOffsetValue.altAxis;
+    var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
+    var _preventedOffset = tether && isOriginSide ? withinMaxClamp(_tetherMin, _offset, _tetherMax) : within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
+    popperOffsets2[altAxis] = _preventedOffset;
+    data[altAxis] = _preventedOffset - _offset;
+  }
+  state.modifiersData[name] = data;
+}
+const preventOverflow$1 = {
+  name: "preventOverflow",
+  enabled: true,
+  phase: "main",
+  fn: preventOverflow,
+  requiresIfExists: ["offset"]
+};
+function getHTMLElementScroll(element) {
+  return {
+    scrollLeft: element.scrollLeft,
+    scrollTop: element.scrollTop
+  };
+}
+function getNodeScroll(node2) {
+  if (node2 === getWindow(node2) || !isHTMLElement$1(node2)) {
+    return getWindowScroll(node2);
+  } else {
+    return getHTMLElementScroll(node2);
+  }
+}
+function isElementScaled(element) {
+  var rect = element.getBoundingClientRect();
+  var scaleX = round$1(rect.width) / element.offsetWidth || 1;
+  var scaleY = round$1(rect.height) / element.offsetHeight || 1;
+  return scaleX !== 1 || scaleY !== 1;
+}
+function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
+  if (isFixed === void 0) {
+    isFixed = false;
+  }
+  var isOffsetParentAnElement = isHTMLElement$1(offsetParent);
+  var offsetParentIsScaled = isHTMLElement$1(offsetParent) && isElementScaled(offsetParent);
+  var documentElement = getDocumentElement(offsetParent);
+  var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled, isFixed);
+  var scroll = {
+    scrollLeft: 0,
+    scrollTop: 0
+  };
+  var offsets = {
+    x: 0,
+    y: 0
+  };
+  if (isOffsetParentAnElement || !isOffsetParentAnElement && !isFixed) {
+    if (getNodeName(offsetParent) !== "body" || // https://github.com/popperjs/popper-core/issues/1078
+    isScrollParent(documentElement)) {
+      scroll = getNodeScroll(offsetParent);
+    }
+    if (isHTMLElement$1(offsetParent)) {
+      offsets = getBoundingClientRect(offsetParent, true);
+      offsets.x += offsetParent.clientLeft;
+      offsets.y += offsetParent.clientTop;
+    } else if (documentElement) {
+      offsets.x = getWindowScrollBarX(documentElement);
+    }
+  }
+  return {
+    x: rect.left + scroll.scrollLeft - offsets.x,
+    y: rect.top + scroll.scrollTop - offsets.y,
+    width: rect.width,
+    height: rect.height
+  };
+}
+function order(modifiers) {
+  var map = /* @__PURE__ */ new Map();
+  var visited = /* @__PURE__ */ new Set();
+  var result = [];
+  modifiers.forEach(function(modifier) {
+    map.set(modifier.name, modifier);
+  });
+  function sort(modifier) {
+    visited.add(modifier.name);
+    var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
+    requires.forEach(function(dep) {
+      if (!visited.has(dep)) {
+        var depModifier = map.get(dep);
+        if (depModifier) {
+          sort(depModifier);
+        }
+      }
+    });
+    result.push(modifier);
+  }
+  modifiers.forEach(function(modifier) {
+    if (!visited.has(modifier.name)) {
+      sort(modifier);
+    }
+  });
+  return result;
+}
+function orderModifiers(modifiers) {
+  var orderedModifiers = order(modifiers);
+  return modifierPhases.reduce(function(acc, phase) {
+    return acc.concat(orderedModifiers.filter(function(modifier) {
+      return modifier.phase === phase;
+    }));
+  }, []);
+}
+function debounce(fn2) {
+  var pending;
+  return function() {
+    if (!pending) {
+      pending = new Promise(function(resolve) {
+        Promise.resolve().then(function() {
+          pending = void 0;
+          resolve(fn2());
+        });
+      });
+    }
+    return pending;
+  };
+}
+function mergeByName(modifiers) {
+  var merged = modifiers.reduce(function(merged2, current) {
+    var existing = merged2[current.name];
+    merged2[current.name] = existing ? Object.assign({}, existing, current, {
+      options: Object.assign({}, existing.options, current.options),
+      data: Object.assign({}, existing.data, current.data)
+    }) : current;
+    return merged2;
+  }, {});
+  return Object.keys(merged).map(function(key) {
+    return merged[key];
+  });
+}
+var DEFAULT_OPTIONS = {
+  placement: "bottom",
+  modifiers: [],
+  strategy: "absolute"
+};
+function areValidElements() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+  return !args.some(function(element) {
+    return !(element && typeof element.getBoundingClientRect === "function");
+  });
+}
+function popperGenerator(generatorOptions) {
+  if (generatorOptions === void 0) {
+    generatorOptions = {};
+  }
+  var _generatorOptions = generatorOptions, _generatorOptions$def = _generatorOptions.defaultModifiers, defaultModifiers2 = _generatorOptions$def === void 0 ? [] : _generatorOptions$def, _generatorOptions$def2 = _generatorOptions.defaultOptions, defaultOptions = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
+  return function createPopper2(reference2, popper2, options) {
+    if (options === void 0) {
+      options = defaultOptions;
+    }
+    var state = {
+      placement: "bottom",
+      orderedModifiers: [],
+      options: Object.assign({}, DEFAULT_OPTIONS, defaultOptions),
+      modifiersData: {},
+      elements: {
+        reference: reference2,
+        popper: popper2
+      },
+      attributes: {},
+      styles: {}
+    };
+    var effectCleanupFns = [];
+    var isDestroyed = false;
+    var instance = {
+      state,
+      setOptions: function setOptions(setOptionsAction) {
+        var options2 = typeof setOptionsAction === "function" ? setOptionsAction(state.options) : setOptionsAction;
+        cleanupModifierEffects();
+        state.options = Object.assign({}, defaultOptions, state.options, options2);
+        state.scrollParents = {
+          reference: isElement(reference2) ? listScrollParents(reference2) : reference2.contextElement ? listScrollParents(reference2.contextElement) : [],
+          popper: listScrollParents(popper2)
+        };
+        var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers2, state.options.modifiers)));
+        state.orderedModifiers = orderedModifiers.filter(function(m2) {
+          return m2.enabled;
+        });
+        runModifierEffects();
+        return instance.update();
+      },
+      // Sync update – it will always be executed, even if not necessary. This
+      // is useful for low frequency updates where sync behavior simplifies the
+      // logic.
+      // For high frequency updates (e.g. `resize` and `scroll` events), always
+      // prefer the async Popper#update method
+      forceUpdate: function forceUpdate() {
+        if (isDestroyed) {
+          return;
+        }
+        var _state$elements = state.elements, reference3 = _state$elements.reference, popper3 = _state$elements.popper;
+        if (!areValidElements(reference3, popper3)) {
+          return;
+        }
+        state.rects = {
+          reference: getCompositeRect(reference3, getOffsetParent(popper3), state.options.strategy === "fixed"),
+          popper: getLayoutRect(popper3)
+        };
+        state.reset = false;
+        state.placement = state.options.placement;
+        state.orderedModifiers.forEach(function(modifier) {
+          return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
+        });
+        for (var index = 0; index < state.orderedModifiers.length; index++) {
+          if (state.reset === true) {
+            state.reset = false;
+            index = -1;
+            continue;
+          }
+          var _state$orderedModifie = state.orderedModifiers[index], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
+          if (typeof fn2 === "function") {
+            state = fn2({
+              state,
+              options: _options,
+              name,
+              instance
+            }) || state;
+          }
+        }
+      },
+      // Async and optimistically optimized update – it will not be executed if
+      // not necessary (debounced to run at most once-per-tick)
+      update: debounce(function() {
+        return new Promise(function(resolve) {
+          instance.forceUpdate();
+          resolve(state);
+        });
+      }),
+      destroy: function destroy() {
+        cleanupModifierEffects();
+        isDestroyed = true;
+      }
+    };
+    if (!areValidElements(reference2, popper2)) {
+      return instance;
+    }
+    instance.setOptions(options).then(function(state2) {
+      if (!isDestroyed && options.onFirstUpdate) {
+        options.onFirstUpdate(state2);
+      }
+    });
+    function runModifierEffects() {
+      state.orderedModifiers.forEach(function(_ref) {
+        var name = _ref.name, _ref$options = _ref.options, options2 = _ref$options === void 0 ? {} : _ref$options, effect2 = _ref.effect;
+        if (typeof effect2 === "function") {
+          var cleanupFn = effect2({
+            state,
+            name,
+            instance,
+            options: options2
+          });
+          var noopFn = function noopFn2() {
+          };
+          effectCleanupFns.push(cleanupFn || noopFn);
+        }
+      });
+    }
+    function cleanupModifierEffects() {
+      effectCleanupFns.forEach(function(fn2) {
+        return fn2();
+      });
+      effectCleanupFns = [];
+    }
+    return instance;
+  };
+}
+var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1, offset$1, flip$1, preventOverflow$1, arrow$1, hide$1];
+var createPopper = /* @__PURE__ */ popperGenerator({
+  defaultModifiers
 });
 function getContainer$1(container) {
   return typeof container === "function" ? container() : container;
@@ -14172,6 +15520,278 @@ const Portal = /* @__PURE__ */ reactExports.forwardRef(function Portal2(props, f
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Fragment, {
     children: mountNode ? /* @__PURE__ */ reactDomExports.createPortal(children, mountNode) : mountNode
+  });
+});
+function getPopperUtilityClass(slot) {
+  return generateUtilityClass("MuiPopper", slot);
+}
+generateUtilityClasses("MuiPopper", ["root"]);
+function flipPlacement(placement, direction) {
+  if (direction === "ltr") {
+    return placement;
+  }
+  switch (placement) {
+    case "bottom-end":
+      return "bottom-start";
+    case "bottom-start":
+      return "bottom-end";
+    case "top-end":
+      return "top-start";
+    case "top-start":
+      return "top-end";
+    default:
+      return placement;
+  }
+}
+function resolveAnchorEl$1(anchorEl) {
+  return typeof anchorEl === "function" ? anchorEl() : anchorEl;
+}
+function isHTMLElement(element) {
+  return element.nodeType !== void 0;
+}
+const useUtilityClasses$F = (ownerState) => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root"]
+  };
+  return composeClasses(slots, getPopperUtilityClass, classes);
+};
+const defaultPopperOptions = {};
+const PopperTooltip = /* @__PURE__ */ reactExports.forwardRef(function PopperTooltip2(props, forwardedRef) {
+  const {
+    anchorEl,
+    children,
+    direction,
+    disablePortal,
+    modifiers,
+    open,
+    placement: initialPlacement,
+    popperOptions,
+    popperRef: popperRefProp,
+    slotProps = {},
+    slots = {},
+    TransitionProps,
+    // @ts-ignore internal logic
+    ownerState: ownerStateProp,
+    // prevent from spreading to DOM, it can come from the parent component e.g. Select.
+    ...other
+  } = props;
+  const tooltipRef = reactExports.useRef(null);
+  const ownRef = useForkRef(tooltipRef, forwardedRef);
+  const popperRef = reactExports.useRef(null);
+  const handlePopperRef = useForkRef(popperRef, popperRefProp);
+  const handlePopperRefRef = reactExports.useRef(handlePopperRef);
+  useEnhancedEffect(() => {
+    handlePopperRefRef.current = handlePopperRef;
+  }, [handlePopperRef]);
+  reactExports.useImperativeHandle(popperRefProp, () => popperRef.current, []);
+  const rtlPlacement = flipPlacement(initialPlacement, direction);
+  const [placement, setPlacement] = reactExports.useState(rtlPlacement);
+  const [resolvedAnchorElement, setResolvedAnchorElement] = reactExports.useState(resolveAnchorEl$1(anchorEl));
+  reactExports.useEffect(() => {
+    if (popperRef.current) {
+      popperRef.current.forceUpdate();
+    }
+  });
+  reactExports.useEffect(() => {
+    if (anchorEl) {
+      setResolvedAnchorElement(resolveAnchorEl$1(anchorEl));
+    }
+  }, [anchorEl]);
+  useEnhancedEffect(() => {
+    if (!resolvedAnchorElement || !open) {
+      return void 0;
+    }
+    const handlePopperUpdate = (data) => {
+      setPlacement(data.placement);
+    };
+    let popperModifiers = [{
+      name: "preventOverflow",
+      options: {
+        altBoundary: disablePortal
+      }
+    }, {
+      name: "flip",
+      options: {
+        altBoundary: disablePortal
+      }
+    }, {
+      name: "onUpdate",
+      enabled: true,
+      phase: "afterWrite",
+      fn: ({
+        state
+      }) => {
+        handlePopperUpdate(state);
+      }
+    }];
+    if (modifiers != null) {
+      popperModifiers = popperModifiers.concat(modifiers);
+    }
+    if (popperOptions && popperOptions.modifiers != null) {
+      popperModifiers = popperModifiers.concat(popperOptions.modifiers);
+    }
+    const popper2 = createPopper(resolvedAnchorElement, tooltipRef.current, {
+      placement: rtlPlacement,
+      ...popperOptions,
+      modifiers: popperModifiers
+    });
+    handlePopperRefRef.current(popper2);
+    return () => {
+      popper2.destroy();
+      handlePopperRefRef.current(null);
+    };
+  }, [resolvedAnchorElement, disablePortal, modifiers, open, popperOptions, rtlPlacement]);
+  const childProps = {
+    placement
+  };
+  if (TransitionProps !== null) {
+    childProps.TransitionProps = TransitionProps;
+  }
+  const classes = useUtilityClasses$F(props);
+  const Root = slots.root ?? "div";
+  const rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: slotProps.root,
+    externalForwardedProps: other,
+    additionalProps: {
+      role: "tooltip",
+      ref: ownRef
+    },
+    ownerState: props,
+    className: classes.root
+  });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root, {
+    ...rootProps,
+    children: typeof children === "function" ? children(childProps) : children
+  });
+});
+const Popper$1 = /* @__PURE__ */ reactExports.forwardRef(function Popper2(props, forwardedRef) {
+  const {
+    anchorEl,
+    children,
+    container: containerProp,
+    direction = "ltr",
+    disablePortal = false,
+    keepMounted = false,
+    modifiers,
+    open,
+    placement = "bottom",
+    popperOptions = defaultPopperOptions,
+    popperRef,
+    style: style2,
+    transition = false,
+    slotProps = {},
+    slots = {},
+    ...other
+  } = props;
+  const [exited, setExited] = reactExports.useState(true);
+  const handleEnter = () => {
+    setExited(false);
+  };
+  const handleExited = () => {
+    setExited(true);
+  };
+  if (!keepMounted && !open && (!transition || exited)) {
+    return null;
+  }
+  let container;
+  if (containerProp) {
+    container = containerProp;
+  } else if (anchorEl) {
+    const resolvedAnchorEl = resolveAnchorEl$1(anchorEl);
+    container = resolvedAnchorEl && isHTMLElement(resolvedAnchorEl) ? ownerDocument(resolvedAnchorEl).body : ownerDocument(null).body;
+  }
+  const display = !open && keepMounted && (!transition || exited) ? "none" : void 0;
+  const transitionProps = transition ? {
+    in: open,
+    onEnter: handleEnter,
+    onExited: handleExited
+  } : void 0;
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Portal, {
+    disablePortal,
+    container,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsx(PopperTooltip, {
+      anchorEl,
+      direction,
+      disablePortal,
+      modifiers,
+      ref: forwardedRef,
+      open: transition ? !exited : open,
+      placement,
+      popperOptions,
+      popperRef,
+      slotProps,
+      slots,
+      ...other,
+      style: {
+        // Prevents scroll issue, waiting for Popper.js to add this style once initiated.
+        position: "fixed",
+        // Fix Popper.js display issue
+        top: 0,
+        left: 0,
+        display,
+        ...style2
+      },
+      TransitionProps: transitionProps,
+      children
+    })
+  });
+});
+const PopperRoot = styled(Popper$1, {
+  name: "MuiPopper",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})({});
+const Popper = /* @__PURE__ */ reactExports.forwardRef(function Popper22(inProps, ref) {
+  const isRtl = useRtl();
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiPopper"
+  });
+  const {
+    anchorEl,
+    component,
+    components,
+    componentsProps,
+    container,
+    disablePortal,
+    keepMounted,
+    modifiers,
+    open,
+    placement,
+    popperOptions,
+    popperRef,
+    transition,
+    slots,
+    slotProps,
+    ...other
+  } = props;
+  const RootComponent = (slots == null ? void 0 : slots.root) ?? (components == null ? void 0 : components.Root);
+  const otherProps = {
+    anchorEl,
+    container,
+    disablePortal,
+    keepMounted,
+    modifiers,
+    open,
+    placement,
+    popperOptions,
+    popperRef,
+    transition,
+    ...other
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(PopperRoot, {
+    as: component,
+    direction: isRtl ? "rtl" : "ltr",
+    slots: {
+      root: RootComponent
+    },
+    slotProps: slotProps ?? componentsProps,
+    ...otherProps,
+    ref
   });
 });
 function getStyleValue(value) {
@@ -14266,7 +15886,7 @@ const TextareaAutosize = /* @__PURE__ */ reactExports.forwardRef(function Textar
       syncHeight();
     };
     let rAF;
-    const debounceHandleResize = debounce(handleResize);
+    const debounceHandleResize = debounce$1(handleResize);
     const input = inputRef.current;
     const containerWindow = ownerWindow(input);
     containerWindow.addEventListener("resize", debounceHandleResize);
@@ -14366,7 +15986,7 @@ const inputOverridesResolver = (props, styles2) => {
   } = props;
   return [styles2.input, ownerState.size === "small" && styles2.inputSizeSmall, ownerState.multiline && styles2.inputMultiline, ownerState.type === "search" && styles2.inputTypeSearch, ownerState.startAdornment && styles2.inputAdornedStart, ownerState.endAdornment && styles2.inputAdornedEnd, ownerState.hiddenLabel && styles2.inputHiddenLabel];
 };
-const useUtilityClasses$B = (ownerState) => {
+const useUtilityClasses$E = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -14752,7 +16372,7 @@ const InputBase = /* @__PURE__ */ reactExports.forwardRef(function InputBase2(in
     startAdornment,
     type
   };
-  const classes = useUtilityClasses$B(ownerState);
+  const classes = useUtilityClasses$E(ownerState);
   const Root = slots.root || components.Root || InputBaseRoot;
   const rootProps = slotProps.root || componentsProps.root || {};
   const Input3 = slots.input || components.Input || InputBaseInput;
@@ -14961,7 +16581,7 @@ const removeOwnerState = (props) => {
   } = props;
   return rest;
 };
-const useUtilityClasses$A = (ownerState) => {
+const useUtilityClasses$D = (ownerState) => {
   const {
     classes,
     invisible
@@ -15024,7 +16644,7 @@ const Backdrop = /* @__PURE__ */ reactExports.forwardRef(function Backdrop2(inPr
     component,
     invisible
   };
-  const classes = useUtilityClasses$A(ownerState);
+  const classes = useUtilityClasses$D(ownerState);
   const backwardCompatibleSlots = {
     transition: TransitionComponentProp,
     root: components.Root,
@@ -15078,7 +16698,7 @@ function getButtonUtilityClass(slot) {
 const buttonClasses = generateUtilityClasses("MuiButton", ["root", "text", "textInherit", "textPrimary", "textSecondary", "textSuccess", "textError", "textInfo", "textWarning", "outlined", "outlinedInherit", "outlinedPrimary", "outlinedSecondary", "outlinedSuccess", "outlinedError", "outlinedInfo", "outlinedWarning", "contained", "containedInherit", "containedPrimary", "containedSecondary", "containedSuccess", "containedError", "containedInfo", "containedWarning", "disableElevation", "focusVisible", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorSuccess", "colorError", "colorInfo", "colorWarning", "textSizeSmall", "textSizeMedium", "textSizeLarge", "outlinedSizeSmall", "outlinedSizeMedium", "outlinedSizeLarge", "containedSizeSmall", "containedSizeMedium", "containedSizeLarge", "sizeMedium", "sizeSmall", "sizeLarge", "fullWidth", "startIcon", "endIcon", "icon", "iconSizeSmall", "iconSizeMedium", "iconSizeLarge"]);
 const ButtonGroupContext = /* @__PURE__ */ reactExports.createContext({});
 const ButtonGroupButtonContext = /* @__PURE__ */ reactExports.createContext(void 0);
-const useUtilityClasses$z = (ownerState) => {
+const useUtilityClasses$C = (ownerState) => {
   const {
     color: color2,
     disableElevation,
@@ -15410,7 +17030,7 @@ const Button = /* @__PURE__ */ reactExports.forwardRef(function Button2(inProps,
     type,
     variant
   };
-  const classes = useUtilityClasses$z(ownerState);
+  const classes = useUtilityClasses$C(ownerState);
   const startIcon = startIconProp && /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonStartIcon, {
     className: classes.startIcon,
     ownerState,
@@ -15440,7 +17060,7 @@ function getSwitchBaseUtilityClass(slot) {
   return generateUtilityClass("PrivateSwitchBase", slot);
 }
 generateUtilityClasses("PrivateSwitchBase", ["root", "checked", "disabled", "input", "edgeStart", "edgeEnd"]);
-const useUtilityClasses$y = (ownerState) => {
+const useUtilityClasses$B = (ownerState) => {
   const {
     classes,
     checked,
@@ -15576,7 +17196,7 @@ const SwitchBase = /* @__PURE__ */ reactExports.forwardRef(function SwitchBase2(
     disableFocusRipple,
     edge
   };
-  const classes = useUtilityClasses$y(ownerState);
+  const classes = useUtilityClasses$B(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SwitchBaseRoot, {
     component: "span",
     className: clsx(classes.root, className),
@@ -15625,7 +17245,7 @@ function getCheckboxUtilityClass(slot) {
   return generateUtilityClass("MuiCheckbox", slot);
 }
 const checkboxClasses = generateUtilityClasses("MuiCheckbox", ["root", "checked", "disabled", "indeterminate", "colorPrimary", "colorSecondary", "sizeSmall", "sizeMedium"]);
-const useUtilityClasses$x = (ownerState) => {
+const useUtilityClasses$A = (ownerState) => {
   const {
     classes,
     indeterminate,
@@ -15732,7 +17352,7 @@ const Checkbox = /* @__PURE__ */ reactExports.forwardRef(function Checkbox2(inPr
     indeterminate,
     size
   };
-  const classes = useUtilityClasses$x(ownerState);
+  const classes = useUtilityClasses$A(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CheckboxRoot, {
     type: "checkbox",
     inputProps: {
@@ -15788,7 +17408,7 @@ const rotateAnimation = typeof circularRotateKeyframe !== "string" ? css`
 const dashAnimation = typeof circularDashKeyframe !== "string" ? css`
         animation: ${circularDashKeyframe} 1.4s ease-in-out infinite;
       ` : null;
-const useUtilityClasses$w = (ownerState) => {
+const useUtilityClasses$z = (ownerState) => {
   const {
     classes,
     variant,
@@ -15911,7 +17531,7 @@ const CircularProgress = /* @__PURE__ */ reactExports.forwardRef(function Circul
     value,
     variant
   };
-  const classes = useUtilityClasses$w(ownerState);
+  const classes = useUtilityClasses$z(ownerState);
   const circleStyle = {};
   const rootStyle = {};
   const rootProps = {};
@@ -16505,7 +18125,7 @@ function getModalUtilityClass(slot) {
   return generateUtilityClass("MuiModal", slot);
 }
 generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
-const useUtilityClasses$v = (ownerState) => {
+const useUtilityClasses$y = (ownerState) => {
   const {
     open,
     exited,
@@ -16616,7 +18236,7 @@ const Modal = /* @__PURE__ */ reactExports.forwardRef(function Modal2(inProps, r
     ...propsWithDefaults,
     exited
   };
-  const classes = useUtilityClasses$v(ownerState);
+  const classes = useUtilityClasses$y(ownerState);
   const childProps = {};
   if (children.props.tabIndex === void 0) {
     childProps.tabIndex = "-1";
@@ -16709,7 +18329,7 @@ const DialogBackdrop = styled(Backdrop, {
   // Improve scrollable dialog support.
   zIndex: -1
 });
-const useUtilityClasses$u = (ownerState) => {
+const useUtilityClasses$x = (ownerState) => {
   const {
     classes,
     scroll,
@@ -16911,7 +18531,7 @@ const Dialog = /* @__PURE__ */ reactExports.forwardRef(function Dialog2(inProps,
     maxWidth: maxWidth2,
     scroll
   };
-  const classes = useUtilityClasses$u(ownerState);
+  const classes = useUtilityClasses$x(ownerState);
   const backdropClick = reactExports.useRef();
   const handleMouseDown = (event) => {
     backdropClick.current = event.target === event.currentTarget;
@@ -16989,7 +18609,7 @@ function getDialogActionsUtilityClass(slot) {
   return generateUtilityClass("MuiDialogActions", slot);
 }
 generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
-const useUtilityClasses$t = (ownerState) => {
+const useUtilityClasses$w = (ownerState) => {
   const {
     classes,
     disableSpacing
@@ -17039,7 +18659,7 @@ const DialogActions = /* @__PURE__ */ reactExports.forwardRef(function DialogAct
     ...props,
     disableSpacing
   };
-  const classes = useUtilityClasses$t(ownerState);
+  const classes = useUtilityClasses$w(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActionsRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -17055,7 +18675,7 @@ function getDialogTitleUtilityClass(slot) {
   return generateUtilityClass("MuiDialogTitle", slot);
 }
 const dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]);
-const useUtilityClasses$s = (ownerState) => {
+const useUtilityClasses$v = (ownerState) => {
   const {
     classes,
     dividers
@@ -17116,7 +18736,7 @@ const DialogContent = /* @__PURE__ */ reactExports.forwardRef(function DialogCon
     ...props,
     dividers
   };
-  const classes = useUtilityClasses$s(ownerState);
+  const classes = useUtilityClasses$v(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -17124,7 +18744,53 @@ const DialogContent = /* @__PURE__ */ reactExports.forwardRef(function DialogCon
     ...other
   });
 });
-const useUtilityClasses$r = (ownerState) => {
+function getDialogContentTextUtilityClass(slot) {
+  return generateUtilityClass("MuiDialogContentText", slot);
+}
+generateUtilityClasses("MuiDialogContentText", ["root"]);
+const useUtilityClasses$u = (ownerState) => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root"]
+  };
+  const composedClasses = composeClasses(slots, getDialogContentTextUtilityClass, classes);
+  return {
+    ...classes,
+    // forward classes to the Typography
+    ...composedClasses
+  };
+};
+const DialogContentTextRoot = styled(Typography, {
+  shouldForwardProp: (prop) => rootShouldForwardProp(prop) || prop === "classes",
+  name: "MuiDialogContentText",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})({});
+const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function DialogContentText2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiDialogContentText"
+  });
+  const {
+    children,
+    className,
+    ...ownerState
+  } = props;
+  const classes = useUtilityClasses$u(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentTextRoot, {
+    component: "p",
+    variant: "body1",
+    color: "textSecondary",
+    ref,
+    ownerState,
+    className: clsx(classes.root, className),
+    ...props,
+    classes
+  });
+});
+const useUtilityClasses$t = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -17152,7 +18818,7 @@ const DialogTitle = /* @__PURE__ */ reactExports.forwardRef(function DialogTitle
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$r(ownerState);
+  const classes = useUtilityClasses$t(ownerState);
   const {
     titleId = idProp
   } = reactExports.useContext(DialogContext);
@@ -17166,6 +18832,7 @@ const DialogTitle = /* @__PURE__ */ reactExports.forwardRef(function DialogTitle
     ...other
   });
 });
+const dividerClasses = generateUtilityClasses("MuiDivider", ["root", "absolute", "fullWidth", "inset", "middle", "flexItem", "light", "vertical", "withChildren", "withChildrenVertical", "textAlignRight", "textAlignLeft", "wrapper", "wrapperVertical"]);
 function getTranslateValue(direction, node2, resolvedContainer) {
   const rect = node2.getBoundingClientRect();
   const containerRect = resolvedContainer && resolvedContainer.getBoundingClientRect();
@@ -17324,7 +18991,7 @@ const Slide = /* @__PURE__ */ reactExports.forwardRef(function Slide2(props, ref
     if (inProp || direction === "down" || direction === "right") {
       return void 0;
     }
-    const handleResize = debounce(() => {
+    const handleResize = debounce$1(() => {
       if (childrenRef.current) {
         setTranslateValue(direction, childrenRef.current, containerProp);
       }
@@ -17367,7 +19034,7 @@ const Slide = /* @__PURE__ */ reactExports.forwardRef(function Slide2(props, ref
     }
   });
 });
-const useUtilityClasses$q = (ownerState) => {
+const useUtilityClasses$s = (ownerState) => {
   const {
     classes,
     disableUnderline,
@@ -17649,7 +19316,7 @@ const FilledInput = /* @__PURE__ */ reactExports.forwardRef(function FilledInput
     multiline,
     type
   };
-  const classes = useUtilityClasses$q(props);
+  const classes = useUtilityClasses$s(props);
   const filledInputComponentsProps = {
     root: {
       ownerState
@@ -17683,7 +19350,7 @@ function getFormControlUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControl", slot);
 }
 generateUtilityClasses("MuiFormControl", ["root", "marginNone", "marginNormal", "marginDense", "fullWidth", "disabled"]);
-const useUtilityClasses$p = (ownerState) => {
+const useUtilityClasses$r = (ownerState) => {
   const {
     classes,
     margin: margin2,
@@ -17776,7 +19443,7 @@ const FormControl = /* @__PURE__ */ reactExports.forwardRef(function FormControl
     size,
     variant
   };
-  const classes = useUtilityClasses$p(ownerState);
+  const classes = useUtilityClasses$r(ownerState);
   const [adornedStart, setAdornedStart] = reactExports.useState(() => {
     let initialAdornedStart = false;
     if (children) {
@@ -17858,7 +19525,7 @@ function getFormControlLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControlLabel", slot);
 }
 const formControlLabelClasses = generateUtilityClasses("MuiFormControlLabel", ["root", "labelPlacementStart", "labelPlacementTop", "labelPlacementBottom", "disabled", "label", "error", "required", "asterisk"]);
-const useUtilityClasses$o = (ownerState) => {
+const useUtilityClasses$q = (ownerState) => {
   const {
     classes,
     disabled,
@@ -17994,7 +19661,7 @@ const FormControlLabel = /* @__PURE__ */ reactExports.forwardRef(function FormCo
     required,
     error: fcs.error
   };
-  const classes = useUtilityClasses$o(ownerState);
+  const classes = useUtilityClasses$q(ownerState);
   const externalForwardedProps = {
     slots,
     slotProps: {
@@ -18035,7 +19702,7 @@ function getFormGroupUtilityClass(slot) {
   return generateUtilityClass("MuiFormGroup", slot);
 }
 generateUtilityClasses("MuiFormGroup", ["root", "row", "error"]);
-const useUtilityClasses$n = (ownerState) => {
+const useUtilityClasses$p = (ownerState) => {
   const {
     classes,
     row,
@@ -18089,7 +19756,7 @@ const FormGroup = /* @__PURE__ */ reactExports.forwardRef(function FormGroup2(in
     row,
     error: fcs.error
   };
-  const classes = useUtilityClasses$n(ownerState);
+  const classes = useUtilityClasses$p(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroupRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -18102,7 +19769,7 @@ function getFormHelperTextUtilityClasses(slot) {
 }
 const formHelperTextClasses = generateUtilityClasses("MuiFormHelperText", ["root", "error", "disabled", "sizeSmall", "sizeMedium", "contained", "focused", "filled", "required"]);
 var _span$2;
-const useUtilityClasses$m = (ownerState) => {
+const useUtilityClasses$o = (ownerState) => {
   const {
     classes,
     contained,
@@ -18197,7 +19864,7 @@ const FormHelperText = /* @__PURE__ */ reactExports.forwardRef(function FormHelp
     required: fcs.required
   };
   delete ownerState.ownerState;
-  const classes = useUtilityClasses$m(ownerState);
+  const classes = useUtilityClasses$o(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormHelperTextRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -18217,7 +19884,7 @@ function getFormLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormLabel", slot);
 }
 const formLabelClasses = generateUtilityClasses("MuiFormLabel", ["root", "colorSecondary", "focused", "disabled", "error", "filled", "required", "asterisk"]);
-const useUtilityClasses$l = (ownerState) => {
+const useUtilityClasses$n = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -18318,7 +19985,7 @@ const FormLabel = /* @__PURE__ */ reactExports.forwardRef(function FormLabel2(in
     focused: fcs.focused,
     required: fcs.required
   };
-  const classes = useUtilityClasses$l(ownerState);
+  const classes = useUtilityClasses$n(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(FormLabelRoot, {
     as: component,
     ownerState,
@@ -18646,7 +20313,7 @@ function resolveSpacingClasses(spacing, breakpoints) {
   });
   return classes;
 }
-const useUtilityClasses$k = (ownerState) => {
+const useUtilityClasses$m = (ownerState) => {
   const {
     classes,
     container,
@@ -18724,7 +20391,7 @@ const Grid = /* @__PURE__ */ reactExports.forwardRef(function Grid2(inProps, ref
     ...breakpointsValues,
     breakpoints: breakpoints.keys
   };
-  const classes = useUtilityClasses$k(ownerState);
+  const classes = useUtilityClasses$m(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(GridContext.Provider, {
     value: columns,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(GridRoot, {
@@ -18893,7 +20560,7 @@ const Grow = /* @__PURE__ */ reactExports.forwardRef(function Grow2(props, ref) 
 if (Grow) {
   Grow.muiSupportAuto = true;
 }
-const useUtilityClasses$j = (ownerState) => {
+const useUtilityClasses$l = (ownerState) => {
   const {
     classes,
     disableUnderline
@@ -19026,7 +20693,7 @@ const Input = /* @__PURE__ */ reactExports.forwardRef(function Input2(inProps, r
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$j(props);
+  const classes = useUtilityClasses$l(props);
   const ownerState = {
     disableUnderline
   };
@@ -19060,7 +20727,7 @@ function getInputLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiInputLabel", slot);
 }
 generateUtilityClasses("MuiInputLabel", ["root", "focused", "disabled", "error", "required", "asterisk", "formControl", "sizeSmall", "shrink", "animated", "standard", "filled", "outlined"]);
-const useUtilityClasses$i = (ownerState) => {
+const useUtilityClasses$k = (ownerState) => {
   const {
     classes,
     formControl,
@@ -19249,7 +20916,7 @@ const InputLabel = /* @__PURE__ */ reactExports.forwardRef(function InputLabel2(
     required: fcs.required,
     focused: fcs.focused
   };
-  const classes = useUtilityClasses$i(ownerState);
+  const classes = useUtilityClasses$k(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabelRoot, {
     "data-shrink": shrink,
     ref,
@@ -19264,7 +20931,7 @@ function getListUtilityClass(slot) {
   return generateUtilityClass("MuiList", slot);
 }
 generateUtilityClasses("MuiList", ["root", "padding", "dense", "subheader"]);
-const useUtilityClasses$h = (ownerState) => {
+const useUtilityClasses$j = (ownerState) => {
   const {
     classes,
     disablePadding,
@@ -19330,7 +20997,7 @@ const List = /* @__PURE__ */ reactExports.forwardRef(function List2(inProps, ref
     dense,
     disablePadding
   };
-  const classes = useUtilityClasses$h(ownerState);
+  const classes = useUtilityClasses$j(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
     value: context,
     children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ListRoot, {
@@ -19343,6 +21010,8 @@ const List = /* @__PURE__ */ reactExports.forwardRef(function List2(inProps, ref
     })
   });
 });
+const listItemIconClasses = generateUtilityClasses("MuiListItemIcon", ["root", "alignItemsFlexStart"]);
+const listItemTextClasses = generateUtilityClasses("MuiListItemText", ["root", "multiline", "dense", "inset", "primary", "secondary"]);
 function nextItem$1(list, item, disableListWrap) {
   if (list === item) {
     return list.firstChild;
@@ -19541,26 +21210,26 @@ function getPopoverUtilityClass(slot) {
 }
 generateUtilityClasses("MuiPopover", ["root", "paper"]);
 function getOffsetTop(rect, vertical) {
-  let offset = 0;
+  let offset2 = 0;
   if (typeof vertical === "number") {
-    offset = vertical;
+    offset2 = vertical;
   } else if (vertical === "center") {
-    offset = rect.height / 2;
+    offset2 = rect.height / 2;
   } else if (vertical === "bottom") {
-    offset = rect.height;
+    offset2 = rect.height;
   }
-  return offset;
+  return offset2;
 }
 function getOffsetLeft(rect, horizontal) {
-  let offset = 0;
+  let offset2 = 0;
   if (typeof horizontal === "number") {
-    offset = horizontal;
+    offset2 = horizontal;
   } else if (horizontal === "center") {
-    offset = rect.width / 2;
+    offset2 = rect.width / 2;
   } else if (horizontal === "right") {
-    offset = rect.width;
+    offset2 = rect.width;
   }
-  return offset;
+  return offset2;
 }
 function getTransformOriginValue(transformOrigin) {
   return [transformOrigin.horizontal, transformOrigin.vertical].map((n2) => typeof n2 === "number" ? `${n2}px` : n2).join(" ");
@@ -19568,7 +21237,7 @@ function getTransformOriginValue(transformOrigin) {
 function resolveAnchorEl(anchorEl) {
   return typeof anchorEl === "function" ? anchorEl() : anchorEl;
 }
-const useUtilityClasses$g = (ownerState) => {
+const useUtilityClasses$i = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -19650,7 +21319,7 @@ const Popover = /* @__PURE__ */ reactExports.forwardRef(function Popover2(inProp
     transitionDuration: transitionDurationProp,
     TransitionProps
   };
-  const classes = useUtilityClasses$g(ownerState);
+  const classes = useUtilityClasses$i(ownerState);
   const getAnchorOffset = reactExports.useCallback(() => {
     if (anchorReference === "anchorPosition") {
       return anchorPosition;
@@ -19683,34 +21352,34 @@ const Popover = /* @__PURE__ */ reactExports.forwardRef(function Popover2(inProp
       };
     }
     const anchorOffset = getAnchorOffset();
-    let top = anchorOffset.top - elemTransformOrigin.vertical;
-    let left = anchorOffset.left - elemTransformOrigin.horizontal;
-    const bottom = top + elemRect.height;
-    const right = left + elemRect.width;
+    let top2 = anchorOffset.top - elemTransformOrigin.vertical;
+    let left2 = anchorOffset.left - elemTransformOrigin.horizontal;
+    const bottom2 = top2 + elemRect.height;
+    const right2 = left2 + elemRect.width;
     const containerWindow = ownerWindow(resolveAnchorEl(anchorEl));
     const heightThreshold = containerWindow.innerHeight - marginThreshold;
     const widthThreshold = containerWindow.innerWidth - marginThreshold;
-    if (marginThreshold !== null && top < marginThreshold) {
-      const diff = top - marginThreshold;
-      top -= diff;
+    if (marginThreshold !== null && top2 < marginThreshold) {
+      const diff = top2 - marginThreshold;
+      top2 -= diff;
       elemTransformOrigin.vertical += diff;
-    } else if (marginThreshold !== null && bottom > heightThreshold) {
-      const diff = bottom - heightThreshold;
-      top -= diff;
+    } else if (marginThreshold !== null && bottom2 > heightThreshold) {
+      const diff = bottom2 - heightThreshold;
+      top2 -= diff;
       elemTransformOrigin.vertical += diff;
     }
-    if (marginThreshold !== null && left < marginThreshold) {
-      const diff = left - marginThreshold;
-      left -= diff;
+    if (marginThreshold !== null && left2 < marginThreshold) {
+      const diff = left2 - marginThreshold;
+      left2 -= diff;
       elemTransformOrigin.horizontal += diff;
-    } else if (right > widthThreshold) {
-      const diff = right - widthThreshold;
-      left -= diff;
+    } else if (right2 > widthThreshold) {
+      const diff = right2 - widthThreshold;
+      left2 -= diff;
       elemTransformOrigin.horizontal += diff;
     }
     return {
-      top: `${Math.round(top)}px`,
-      left: `${Math.round(left)}px`,
+      top: `${Math.round(top2)}px`,
+      left: `${Math.round(left2)}px`,
       transformOrigin: getTransformOriginValue(elemTransformOrigin)
     };
   }, [anchorEl, anchorReference, getAnchorOffset, getTransformOrigin, marginThreshold]);
@@ -19759,7 +21428,7 @@ const Popover = /* @__PURE__ */ reactExports.forwardRef(function Popover2(inProp
     if (!open) {
       return void 0;
     }
-    const handleResize = debounce(() => {
+    const handleResize = debounce$1(() => {
       setPositioningStyles();
     });
     const containerWindow = ownerWindow(anchorEl);
@@ -19848,7 +21517,7 @@ const LTR_ORIGIN = {
   vertical: "top",
   horizontal: "left"
 };
-const useUtilityClasses$f = (ownerState) => {
+const useUtilityClasses$h = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -19922,7 +21591,7 @@ const Menu = /* @__PURE__ */ reactExports.forwardRef(function Menu2(inProps, ref
     TransitionProps,
     variant
   };
-  const classes = useUtilityClasses$f(ownerState);
+  const classes = useUtilityClasses$h(ownerState);
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
   const menuListActionsRef = reactExports.useRef(null);
   const handleEntering = (element, isAppearing) => {
@@ -20007,11 +21676,200 @@ const Menu = /* @__PURE__ */ reactExports.forwardRef(function Menu2(inProps, ref
     })
   });
 });
+function getMenuItemUtilityClass(slot) {
+  return generateUtilityClass("MuiMenuItem", slot);
+}
+const menuItemClasses = generateUtilityClasses("MuiMenuItem", ["root", "focusVisible", "dense", "disabled", "divider", "gutters", "selected"]);
+const overridesResolver = (props, styles2) => {
+  const {
+    ownerState
+  } = props;
+  return [styles2.root, ownerState.dense && styles2.dense, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters];
+};
+const useUtilityClasses$g = (ownerState) => {
+  const {
+    disabled,
+    dense,
+    divider,
+    disableGutters,
+    selected,
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root", dense && "dense", disabled && "disabled", !disableGutters && "gutters", divider && "divider", selected && "selected"]
+  };
+  const composedClasses = composeClasses(slots, getMenuItemUtilityClass, classes);
+  return {
+    ...classes,
+    ...composedClasses
+  };
+};
+const MenuItemRoot = styled(ButtonBase, {
+  shouldForwardProp: (prop) => rootShouldForwardProp(prop) || prop === "classes",
+  name: "MuiMenuItem",
+  slot: "Root",
+  overridesResolver
+})(memoTheme(({
+  theme
+}) => ({
+  ...theme.typography.body1,
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  position: "relative",
+  textDecoration: "none",
+  minHeight: 48,
+  paddingTop: 6,
+  paddingBottom: 6,
+  boxSizing: "border-box",
+  whiteSpace: "nowrap",
+  "&:hover": {
+    textDecoration: "none",
+    backgroundColor: (theme.vars || theme).palette.action.hover,
+    // Reset on touch devices, it doesn't add specificity
+    "@media (hover: none)": {
+      backgroundColor: "transparent"
+    }
+  },
+  [`&.${menuItemClasses.selected}`]: {
+    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    [`&.${menuItemClasses.focusVisible}`]: {
+      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
+    }
+  },
+  [`&.${menuItemClasses.selected}:hover`]: {
+    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity),
+    // Reset on touch devices, it doesn't add specificity
+    "@media (hover: none)": {
+      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)
+    }
+  },
+  [`&.${menuItemClasses.focusVisible}`]: {
+    backgroundColor: (theme.vars || theme).palette.action.focus
+  },
+  [`&.${menuItemClasses.disabled}`]: {
+    opacity: (theme.vars || theme).palette.action.disabledOpacity
+  },
+  [`& + .${dividerClasses.root}`]: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  [`& + .${dividerClasses.inset}`]: {
+    marginLeft: 52
+  },
+  [`& .${listItemTextClasses.root}`]: {
+    marginTop: 0,
+    marginBottom: 0
+  },
+  [`& .${listItemTextClasses.inset}`]: {
+    paddingLeft: 36
+  },
+  [`& .${listItemIconClasses.root}`]: {
+    minWidth: 36
+  },
+  variants: [{
+    props: ({
+      ownerState
+    }) => !ownerState.disableGutters,
+    style: {
+      paddingLeft: 16,
+      paddingRight: 16
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.divider,
+    style: {
+      borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+      backgroundClip: "padding-box"
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !ownerState.dense,
+    style: {
+      [theme.breakpoints.up("sm")]: {
+        minHeight: "auto"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.dense,
+    style: {
+      minHeight: 32,
+      // https://m2.material.io/components/menus#specs > Dense
+      paddingTop: 4,
+      paddingBottom: 4,
+      ...theme.typography.body2,
+      [`& .${listItemIconClasses.root} svg`]: {
+        fontSize: "1.25rem"
+      }
+    }
+  }]
+})));
+const MenuItem = /* @__PURE__ */ reactExports.forwardRef(function MenuItem2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiMenuItem"
+  });
+  const {
+    autoFocus = false,
+    component = "li",
+    dense = false,
+    divider = false,
+    disableGutters = false,
+    focusVisibleClassName,
+    role = "menuitem",
+    tabIndex: tabIndexProp,
+    className,
+    ...other
+  } = props;
+  const context = reactExports.useContext(ListContext);
+  const childContext = reactExports.useMemo(() => ({
+    dense: dense || context.dense || false,
+    disableGutters
+  }), [context.dense, dense, disableGutters]);
+  const menuItemRef = reactExports.useRef(null);
+  useEnhancedEffect(() => {
+    if (autoFocus) {
+      if (menuItemRef.current) {
+        menuItemRef.current.focus();
+      }
+    }
+  }, [autoFocus]);
+  const ownerState = {
+    ...props,
+    dense: childContext.dense,
+    divider,
+    disableGutters
+  };
+  const classes = useUtilityClasses$g(props);
+  const handleRef = useForkRef(menuItemRef, ref);
+  let tabIndex;
+  if (!props.disabled) {
+    tabIndex = tabIndexProp !== void 0 ? tabIndexProp : -1;
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
+    value: childContext,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItemRoot, {
+      ref: handleRef,
+      role,
+      tabIndex,
+      component,
+      focusVisibleClassName: clsx(classes.focusVisible, focusVisibleClassName),
+      className: clsx(classes.root, className),
+      ...other,
+      ownerState,
+      classes
+    })
+  });
+});
 function getNativeSelectUtilityClasses(slot) {
   return generateUtilityClass("MuiNativeSelect", slot);
 }
 const nativeSelectClasses = generateUtilityClasses("MuiNativeSelect", ["root", "select", "multiple", "filled", "outlined", "standard", "disabled", "icon", "iconOpen", "iconFilled", "iconOutlined", "iconStandard", "nativeInput", "error"]);
-const useUtilityClasses$e = (ownerState) => {
+const useUtilityClasses$f = (ownerState) => {
   const {
     classes,
     variant,
@@ -20166,7 +22024,7 @@ const NativeSelectInput = /* @__PURE__ */ reactExports.forwardRef(function Nativ
     variant,
     error
   };
-  const classes = useUtilityClasses$e(ownerState);
+  const classes = useUtilityClasses$f(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
     children: [/* @__PURE__ */ jsxRuntimeExports.jsx(NativeSelectSelect, {
       ownerState,
@@ -20298,7 +22156,7 @@ function NotchedOutline(props) {
     })
   });
 }
-const useUtilityClasses$d = (ownerState) => {
+const useUtilityClasses$e = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -20477,7 +22335,7 @@ const OutlinedInput = /* @__PURE__ */ reactExports.forwardRef(function OutlinedI
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$d(props);
+  const classes = useUtilityClasses$e(props);
   const muiFormControl = useFormControl();
   const fcs = formControlState({
     props,
@@ -20600,7 +22458,7 @@ function areEqualValues(a, b2) {
 function isEmpty(display) {
   return display == null || typeof display === "string" && !display.trim();
 }
-const useUtilityClasses$c = (ownerState) => {
+const useUtilityClasses$d = (ownerState) => {
   const {
     classes,
     variant,
@@ -20902,7 +22760,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     open,
     error
   };
-  const classes = useUtilityClasses$c(ownerState);
+  const classes = useUtilityClasses$d(ownerState);
   const paperProps = {
     ...MenuProps.PaperProps,
     ...(_a = MenuProps.slotProps) == null ? void 0 : _a.paper
@@ -20989,7 +22847,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     })]
   });
 });
-const useUtilityClasses$b = (ownerState) => {
+const useUtilityClasses$c = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -21046,7 +22904,7 @@ const Select = /* @__PURE__ */ reactExports.forwardRef(function Select2(inProps,
     variant,
     classes: classesProp
   };
-  const classes = useUtilityClasses$b(ownerState);
+  const classes = useUtilityClasses$c(ownerState);
   const {
     root,
     ...restOfClasses
@@ -21112,6 +22970,610 @@ const Select = /* @__PURE__ */ reactExports.forwardRef(function Select2(inProps,
   });
 });
 Select.muiName = "Select";
+function getTooltipUtilityClass(slot) {
+  return generateUtilityClass("MuiTooltip", slot);
+}
+const tooltipClasses = generateUtilityClasses("MuiTooltip", ["popper", "popperInteractive", "popperArrow", "popperClose", "tooltip", "tooltipArrow", "touch", "tooltipPlacementLeft", "tooltipPlacementRight", "tooltipPlacementTop", "tooltipPlacementBottom", "arrow"]);
+function round(value) {
+  return Math.round(value * 1e5) / 1e5;
+}
+const useUtilityClasses$b = (ownerState) => {
+  const {
+    classes,
+    disableInteractive,
+    arrow: arrow2,
+    touch,
+    placement
+  } = ownerState;
+  const slots = {
+    popper: ["popper", !disableInteractive && "popperInteractive", arrow2 && "popperArrow"],
+    tooltip: ["tooltip", arrow2 && "tooltipArrow", touch && "touch", `tooltipPlacement${capitalize(placement.split("-")[0])}`],
+    arrow: ["arrow"]
+  };
+  return composeClasses(slots, getTooltipUtilityClass, classes);
+};
+const TooltipPopper = styled(Popper, {
+  name: "MuiTooltip",
+  slot: "Popper",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.popper, !ownerState.disableInteractive && styles2.popperInteractive, ownerState.arrow && styles2.popperArrow, !ownerState.open && styles2.popperClose];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  zIndex: (theme.vars || theme).zIndex.tooltip,
+  pointerEvents: "none",
+  variants: [{
+    props: ({
+      ownerState
+    }) => !ownerState.disableInteractive,
+    style: {
+      pointerEvents: "auto"
+    }
+  }, {
+    props: ({
+      open
+    }) => !open,
+    style: {
+      pointerEvents: "none"
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.arrow,
+    style: {
+      [`&[data-popper-placement*="bottom"] .${tooltipClasses.arrow}`]: {
+        top: 0,
+        marginTop: "-0.71em",
+        "&::before": {
+          transformOrigin: "0 100%"
+        }
+      },
+      [`&[data-popper-placement*="top"] .${tooltipClasses.arrow}`]: {
+        bottom: 0,
+        marginBottom: "-0.71em",
+        "&::before": {
+          transformOrigin: "100% 0"
+        }
+      },
+      [`&[data-popper-placement*="right"] .${tooltipClasses.arrow}`]: {
+        height: "1em",
+        width: "0.71em",
+        "&::before": {
+          transformOrigin: "100% 100%"
+        }
+      },
+      [`&[data-popper-placement*="left"] .${tooltipClasses.arrow}`]: {
+        height: "1em",
+        width: "0.71em",
+        "&::before": {
+          transformOrigin: "0 0"
+        }
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.arrow && !ownerState.isRtl,
+    style: {
+      [`&[data-popper-placement*="right"] .${tooltipClasses.arrow}`]: {
+        left: 0,
+        marginLeft: "-0.71em"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.arrow && !!ownerState.isRtl,
+    style: {
+      [`&[data-popper-placement*="right"] .${tooltipClasses.arrow}`]: {
+        right: 0,
+        marginRight: "-0.71em"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.arrow && !ownerState.isRtl,
+    style: {
+      [`&[data-popper-placement*="left"] .${tooltipClasses.arrow}`]: {
+        right: 0,
+        marginRight: "-0.71em"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.arrow && !!ownerState.isRtl,
+    style: {
+      [`&[data-popper-placement*="left"] .${tooltipClasses.arrow}`]: {
+        left: 0,
+        marginLeft: "-0.71em"
+      }
+    }
+  }]
+})));
+const TooltipTooltip = styled("div", {
+  name: "MuiTooltip",
+  slot: "Tooltip",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.tooltip, ownerState.touch && styles2.touch, ownerState.arrow && styles2.tooltipArrow, styles2[`tooltipPlacement${capitalize(ownerState.placement.split("-")[0])}`]];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  backgroundColor: theme.vars ? theme.vars.palette.Tooltip.bg : alpha(theme.palette.grey[700], 0.92),
+  borderRadius: (theme.vars || theme).shape.borderRadius,
+  color: (theme.vars || theme).palette.common.white,
+  fontFamily: theme.typography.fontFamily,
+  padding: "4px 8px",
+  fontSize: theme.typography.pxToRem(11),
+  maxWidth: 300,
+  margin: 2,
+  wordWrap: "break-word",
+  fontWeight: theme.typography.fontWeightMedium,
+  [`.${tooltipClasses.popper}[data-popper-placement*="left"] &`]: {
+    transformOrigin: "right center"
+  },
+  [`.${tooltipClasses.popper}[data-popper-placement*="right"] &`]: {
+    transformOrigin: "left center"
+  },
+  [`.${tooltipClasses.popper}[data-popper-placement*="top"] &`]: {
+    transformOrigin: "center bottom",
+    marginBottom: "14px"
+  },
+  [`.${tooltipClasses.popper}[data-popper-placement*="bottom"] &`]: {
+    transformOrigin: "center top",
+    marginTop: "14px"
+  },
+  variants: [{
+    props: ({
+      ownerState
+    }) => ownerState.arrow,
+    style: {
+      position: "relative",
+      margin: 0
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.touch,
+    style: {
+      padding: "8px 16px",
+      fontSize: theme.typography.pxToRem(14),
+      lineHeight: `${round(16 / 14)}em`,
+      fontWeight: theme.typography.fontWeightRegular
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !ownerState.isRtl,
+    style: {
+      [`.${tooltipClasses.popper}[data-popper-placement*="left"] &`]: {
+        marginRight: "14px"
+      },
+      [`.${tooltipClasses.popper}[data-popper-placement*="right"] &`]: {
+        marginLeft: "14px"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !ownerState.isRtl && ownerState.touch,
+    style: {
+      [`.${tooltipClasses.popper}[data-popper-placement*="left"] &`]: {
+        marginRight: "24px"
+      },
+      [`.${tooltipClasses.popper}[data-popper-placement*="right"] &`]: {
+        marginLeft: "24px"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !!ownerState.isRtl,
+    style: {
+      [`.${tooltipClasses.popper}[data-popper-placement*="left"] &`]: {
+        marginLeft: "14px"
+      },
+      [`.${tooltipClasses.popper}[data-popper-placement*="right"] &`]: {
+        marginRight: "14px"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !!ownerState.isRtl && ownerState.touch,
+    style: {
+      [`.${tooltipClasses.popper}[data-popper-placement*="left"] &`]: {
+        marginLeft: "24px"
+      },
+      [`.${tooltipClasses.popper}[data-popper-placement*="right"] &`]: {
+        marginRight: "24px"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.touch,
+    style: {
+      [`.${tooltipClasses.popper}[data-popper-placement*="top"] &`]: {
+        marginBottom: "24px"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.touch,
+    style: {
+      [`.${tooltipClasses.popper}[data-popper-placement*="bottom"] &`]: {
+        marginTop: "24px"
+      }
+    }
+  }]
+})));
+const TooltipArrow = styled("span", {
+  name: "MuiTooltip",
+  slot: "Arrow",
+  overridesResolver: (props, styles2) => styles2.arrow
+})(memoTheme(({
+  theme
+}) => ({
+  overflow: "hidden",
+  position: "absolute",
+  width: "1em",
+  height: "0.71em",
+  boxSizing: "border-box",
+  color: theme.vars ? theme.vars.palette.Tooltip.bg : alpha(theme.palette.grey[700], 0.9),
+  "&::before": {
+    content: '""',
+    margin: "auto",
+    display: "block",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "currentColor",
+    transform: "rotate(45deg)"
+  }
+})));
+let hystersisOpen = false;
+const hystersisTimer = new Timeout();
+let cursorPosition = {
+  x: 0,
+  y: 0
+};
+function composeEventHandler(handler, eventHandler) {
+  return (event, ...params) => {
+    if (eventHandler) {
+      eventHandler(event, ...params);
+    }
+    handler(event, ...params);
+  };
+}
+const Tooltip = /* @__PURE__ */ reactExports.forwardRef(function Tooltip2(inProps, ref) {
+  var _a, _b, _c;
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiTooltip"
+  });
+  const {
+    arrow: arrow2 = false,
+    children: childrenProp,
+    classes: classesProp,
+    components = {},
+    componentsProps = {},
+    describeChild = false,
+    disableFocusListener = false,
+    disableHoverListener = false,
+    disableInteractive: disableInteractiveProp = false,
+    disableTouchListener = false,
+    enterDelay = 100,
+    enterNextDelay = 0,
+    enterTouchDelay = 700,
+    followCursor = false,
+    id: idProp,
+    leaveDelay = 0,
+    leaveTouchDelay = 1500,
+    onClose,
+    onOpen,
+    open: openProp,
+    placement = "bottom",
+    PopperComponent: PopperComponentProp,
+    PopperProps = {},
+    slotProps = {},
+    slots = {},
+    title,
+    TransitionComponent: TransitionComponentProp = Grow,
+    TransitionProps,
+    ...other
+  } = props;
+  const children = /* @__PURE__ */ reactExports.isValidElement(childrenProp) ? childrenProp : /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
+    children: childrenProp
+  });
+  const theme = useTheme();
+  const isRtl = useRtl();
+  const [childNode, setChildNode] = reactExports.useState();
+  const [arrowRef, setArrowRef] = reactExports.useState(null);
+  const ignoreNonTouchEvents = reactExports.useRef(false);
+  const disableInteractive = disableInteractiveProp || followCursor;
+  const closeTimer = useTimeout();
+  const enterTimer = useTimeout();
+  const leaveTimer = useTimeout();
+  const touchTimer = useTimeout();
+  const [openState, setOpenState] = useControlled({
+    controlled: openProp,
+    default: false,
+    name: "Tooltip",
+    state: "open"
+  });
+  let open = openState;
+  const id2 = useId(idProp);
+  const prevUserSelect = reactExports.useRef();
+  const stopTouchInteraction = useEventCallback(() => {
+    if (prevUserSelect.current !== void 0) {
+      document.body.style.WebkitUserSelect = prevUserSelect.current;
+      prevUserSelect.current = void 0;
+    }
+    touchTimer.clear();
+  });
+  reactExports.useEffect(() => stopTouchInteraction, [stopTouchInteraction]);
+  const handleOpen = (event) => {
+    hystersisTimer.clear();
+    hystersisOpen = true;
+    setOpenState(true);
+    if (onOpen && !open) {
+      onOpen(event);
+    }
+  };
+  const handleClose = useEventCallback(
+    /**
+     * @param {React.SyntheticEvent | Event} event
+     */
+    (event) => {
+      hystersisTimer.start(800 + leaveDelay, () => {
+        hystersisOpen = false;
+      });
+      setOpenState(false);
+      if (onClose && open) {
+        onClose(event);
+      }
+      closeTimer.start(theme.transitions.duration.shortest, () => {
+        ignoreNonTouchEvents.current = false;
+      });
+    }
+  );
+  const handleMouseOver = (event) => {
+    if (ignoreNonTouchEvents.current && event.type !== "touchstart") {
+      return;
+    }
+    if (childNode) {
+      childNode.removeAttribute("title");
+    }
+    enterTimer.clear();
+    leaveTimer.clear();
+    if (enterDelay || hystersisOpen && enterNextDelay) {
+      enterTimer.start(hystersisOpen ? enterNextDelay : enterDelay, () => {
+        handleOpen(event);
+      });
+    } else {
+      handleOpen(event);
+    }
+  };
+  const handleMouseLeave = (event) => {
+    enterTimer.clear();
+    leaveTimer.start(leaveDelay, () => {
+      handleClose(event);
+    });
+  };
+  const [, setChildIsFocusVisible] = reactExports.useState(false);
+  const handleBlur = (event) => {
+    if (!isFocusVisible(event.target)) {
+      setChildIsFocusVisible(false);
+      handleMouseLeave(event);
+    }
+  };
+  const handleFocus = (event) => {
+    if (!childNode) {
+      setChildNode(event.currentTarget);
+    }
+    if (isFocusVisible(event.target)) {
+      setChildIsFocusVisible(true);
+      handleMouseOver(event);
+    }
+  };
+  const detectTouchStart = (event) => {
+    ignoreNonTouchEvents.current = true;
+    const childrenProps2 = children.props;
+    if (childrenProps2.onTouchStart) {
+      childrenProps2.onTouchStart(event);
+    }
+  };
+  const handleTouchStart = (event) => {
+    detectTouchStart(event);
+    leaveTimer.clear();
+    closeTimer.clear();
+    stopTouchInteraction();
+    prevUserSelect.current = document.body.style.WebkitUserSelect;
+    document.body.style.WebkitUserSelect = "none";
+    touchTimer.start(enterTouchDelay, () => {
+      document.body.style.WebkitUserSelect = prevUserSelect.current;
+      handleMouseOver(event);
+    });
+  };
+  const handleTouchEnd = (event) => {
+    if (children.props.onTouchEnd) {
+      children.props.onTouchEnd(event);
+    }
+    stopTouchInteraction();
+    leaveTimer.start(leaveTouchDelay, () => {
+      handleClose(event);
+    });
+  };
+  reactExports.useEffect(() => {
+    if (!open) {
+      return void 0;
+    }
+    function handleKeyDown(nativeEvent) {
+      if (nativeEvent.key === "Escape") {
+        handleClose(nativeEvent);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleClose, open]);
+  const handleRef = useForkRef(getReactNodeRef(children), setChildNode, ref);
+  if (!title && title !== 0) {
+    open = false;
+  }
+  const popperRef = reactExports.useRef();
+  const handleMouseMove = (event) => {
+    const childrenProps2 = children.props;
+    if (childrenProps2.onMouseMove) {
+      childrenProps2.onMouseMove(event);
+    }
+    cursorPosition = {
+      x: event.clientX,
+      y: event.clientY
+    };
+    if (popperRef.current) {
+      popperRef.current.update();
+    }
+  };
+  const nameOrDescProps = {};
+  const titleIsString = typeof title === "string";
+  if (describeChild) {
+    nameOrDescProps.title = !open && titleIsString && !disableHoverListener ? title : null;
+    nameOrDescProps["aria-describedby"] = open ? id2 : null;
+  } else {
+    nameOrDescProps["aria-label"] = titleIsString ? title : null;
+    nameOrDescProps["aria-labelledby"] = open && !titleIsString ? id2 : null;
+  }
+  const childrenProps = {
+    ...nameOrDescProps,
+    ...other,
+    ...children.props,
+    className: clsx(other.className, children.props.className),
+    onTouchStart: detectTouchStart,
+    ref: handleRef,
+    ...followCursor ? {
+      onMouseMove: handleMouseMove
+    } : {}
+  };
+  const interactiveWrapperListeners = {};
+  if (!disableTouchListener) {
+    childrenProps.onTouchStart = handleTouchStart;
+    childrenProps.onTouchEnd = handleTouchEnd;
+  }
+  if (!disableHoverListener) {
+    childrenProps.onMouseOver = composeEventHandler(handleMouseOver, childrenProps.onMouseOver);
+    childrenProps.onMouseLeave = composeEventHandler(handleMouseLeave, childrenProps.onMouseLeave);
+    if (!disableInteractive) {
+      interactiveWrapperListeners.onMouseOver = handleMouseOver;
+      interactiveWrapperListeners.onMouseLeave = handleMouseLeave;
+    }
+  }
+  if (!disableFocusListener) {
+    childrenProps.onFocus = composeEventHandler(handleFocus, childrenProps.onFocus);
+    childrenProps.onBlur = composeEventHandler(handleBlur, childrenProps.onBlur);
+    if (!disableInteractive) {
+      interactiveWrapperListeners.onFocus = handleFocus;
+      interactiveWrapperListeners.onBlur = handleBlur;
+    }
+  }
+  const popperOptions = reactExports.useMemo(() => {
+    var _a2;
+    let tooltipModifiers = [{
+      name: "arrow",
+      enabled: Boolean(arrowRef),
+      options: {
+        element: arrowRef,
+        padding: 4
+      }
+    }];
+    if ((_a2 = PopperProps.popperOptions) == null ? void 0 : _a2.modifiers) {
+      tooltipModifiers = tooltipModifiers.concat(PopperProps.popperOptions.modifiers);
+    }
+    return {
+      ...PopperProps.popperOptions,
+      modifiers: tooltipModifiers
+    };
+  }, [arrowRef, PopperProps]);
+  const ownerState = {
+    ...props,
+    isRtl,
+    arrow: arrow2,
+    disableInteractive,
+    placement,
+    PopperComponentProp,
+    touch: ignoreNonTouchEvents.current
+  };
+  const classes = useUtilityClasses$b(ownerState);
+  const PopperComponent = slots.popper ?? components.Popper ?? TooltipPopper;
+  const TransitionComponent = slots.transition ?? components.Transition ?? TransitionComponentProp ?? Grow;
+  const TooltipComponent = slots.tooltip ?? components.Tooltip ?? TooltipTooltip;
+  const ArrowComponent = slots.arrow ?? components.Arrow ?? TooltipArrow;
+  const popperProps = appendOwnerState(PopperComponent, {
+    ...PopperProps,
+    ...slotProps.popper ?? componentsProps.popper,
+    className: clsx(classes.popper, PopperProps == null ? void 0 : PopperProps.className, (_a = slotProps.popper ?? componentsProps.popper) == null ? void 0 : _a.className)
+  }, ownerState);
+  const transitionProps = appendOwnerState(TransitionComponent, {
+    ...TransitionProps,
+    ...slotProps.transition ?? componentsProps.transition
+  }, ownerState);
+  const tooltipProps = appendOwnerState(TooltipComponent, {
+    ...slotProps.tooltip ?? componentsProps.tooltip,
+    className: clsx(classes.tooltip, (_b = slotProps.tooltip ?? componentsProps.tooltip) == null ? void 0 : _b.className)
+  }, ownerState);
+  const tooltipArrowProps = appendOwnerState(ArrowComponent, {
+    ...slotProps.arrow ?? componentsProps.arrow,
+    className: clsx(classes.arrow, (_c = slotProps.arrow ?? componentsProps.arrow) == null ? void 0 : _c.className)
+  }, ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
+    children: [/* @__PURE__ */ reactExports.cloneElement(children, childrenProps), /* @__PURE__ */ jsxRuntimeExports.jsx(PopperComponent, {
+      as: PopperComponentProp ?? Popper,
+      placement,
+      anchorEl: followCursor ? {
+        getBoundingClientRect: () => ({
+          top: cursorPosition.y,
+          left: cursorPosition.x,
+          right: cursorPosition.x,
+          bottom: cursorPosition.y,
+          width: 0,
+          height: 0
+        })
+      } : childNode,
+      popperRef,
+      open: childNode ? open : false,
+      id: id2,
+      transition: true,
+      ...interactiveWrapperListeners,
+      ...popperProps,
+      popperOptions,
+      children: ({
+        TransitionProps: TransitionPropsInner
+      }) => /* @__PURE__ */ jsxRuntimeExports.jsx(TransitionComponent, {
+        timeout: theme.transitions.duration.shorter,
+        ...TransitionPropsInner,
+        ...transitionProps,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TooltipComponent, {
+          ...tooltipProps,
+          children: [title, arrow2 ? /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowComponent, {
+            ...tooltipArrowProps,
+            ref: setArrowRef
+          }) : null]
+        })
+      })
+    })]
+  });
+});
 function getTabUtilityClass(slot) {
   return generateUtilityClass("MuiTab", slot);
 }
@@ -22006,7 +24468,7 @@ function animate(property, element, to, options = {}, cb2 = () => {
     duration: duration2 = 300
     // standard
   } = options;
-  let start = null;
+  let start2 = null;
   const from2 = element[property];
   let cancelled = false;
   const cancel = () => {
@@ -22017,10 +24479,10 @@ function animate(property, element, to, options = {}, cb2 = () => {
       cb2(new Error("Animation cancelled"));
       return;
     }
-    if (start === null) {
-      start = timestamp;
+    if (start2 === null) {
+      start2 = timestamp;
     }
-    const time = Math.min(1, (timestamp - start) / duration2);
+    const time = Math.min(1, (timestamp - start2) / duration2);
     element[property] = ease(time) * (to - from2) + from2;
     if (time >= 1) {
       requestAnimationFrame(() => {
@@ -22055,7 +24517,7 @@ function ScrollbarSize(props) {
     scrollbarHeight.current = nodeRef.current.offsetHeight - nodeRef.current.clientHeight;
   };
   useEnhancedEffect(() => {
-    const handleResize = debounce(() => {
+    const handleResize = debounce$1(() => {
       const prevHeight = scrollbarHeight.current;
       setMeasurements();
       if (prevHeight !== scrollbarHeight.current) {
@@ -22450,8 +24912,8 @@ const Tabs = /* @__PURE__ */ reactExports.forwardRef(function Tabs2(inProps, ref
   const scrollable = variant === "scrollable";
   const vertical = orientation === "vertical";
   const scrollStart = vertical ? "scrollTop" : "scrollLeft";
-  const start = vertical ? "top" : "left";
-  const end = vertical ? "bottom" : "right";
+  const start2 = vertical ? "top" : "left";
+  const end2 = vertical ? "bottom" : "right";
   const clientSize = vertical ? "clientHeight" : "clientWidth";
   const size = vertical ? "height" : "width";
   const ownerState = {
@@ -22651,13 +25113,13 @@ const Tabs = /* @__PURE__ */ reactExports.forwardRef(function Tabs2(inProps, ref
     if (!tabMeta || !tabsMeta) {
       return;
     }
-    if (tabMeta[start] < tabsMeta[start]) {
-      const nextScrollStart = tabsMeta[scrollStart] + (tabMeta[start] - tabsMeta[start]);
+    if (tabMeta[start2] < tabsMeta[start2]) {
+      const nextScrollStart = tabsMeta[scrollStart] + (tabMeta[start2] - tabsMeta[start2]);
       scroll(nextScrollStart, {
         animation
       });
-    } else if (tabMeta[end] > tabsMeta[end]) {
-      const nextScrollStart = tabsMeta[scrollStart] + (tabMeta[end] - tabsMeta[end]);
+    } else if (tabMeta[end2] > tabsMeta[end2]) {
+      const nextScrollStart = tabsMeta[scrollStart] + (tabMeta[end2] - tabsMeta[end2]);
       scroll(nextScrollStart, {
         animation
       });
@@ -22669,7 +25131,7 @@ const Tabs = /* @__PURE__ */ reactExports.forwardRef(function Tabs2(inProps, ref
     }
   });
   reactExports.useEffect(() => {
-    const handleResize = debounce(() => {
+    const handleResize = debounce$1(() => {
       if (tabsRef.current) {
         updateIndicatorState();
       }
@@ -23030,9 +25492,9 @@ const TextField = /* @__PURE__ */ reactExports.forwardRef(function TextField2(in
     })]
   });
 });
-function bind(fn, thisArg) {
+function bind(fn2, thisArg) {
   return function wrap() {
-    return fn.apply(thisArg, arguments);
+    return fn2.apply(thisArg, arguments);
   };
 }
 const { toString } = Object.prototype;
@@ -23086,7 +25548,7 @@ const isFormData = (thing) => {
 const isURLSearchParams = kindOfTest("URLSearchParams");
 const [isReadableStream, isRequest, isResponse, isHeaders] = ["ReadableStream", "Request", "Response", "Headers"].map(kindOfTest);
 const trim = (str) => str.trim ? str.trim() : str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
-function forEach(obj, fn, { allOwnKeys = false } = {}) {
+function forEach(obj, fn2, { allOwnKeys = false } = {}) {
   if (obj === null || typeof obj === "undefined") {
     return;
   }
@@ -23097,7 +25559,7 @@ function forEach(obj, fn, { allOwnKeys = false } = {}) {
   }
   if (isArray(obj)) {
     for (i = 0, l2 = obj.length; i < l2; i++) {
-      fn.call(null, obj[i], i, obj);
+      fn2.call(null, obj[i], i, obj);
     }
   } else {
     const keys = allOwnKeys ? Object.getOwnPropertyNames(obj) : Object.keys(obj);
@@ -23105,7 +25567,7 @@ function forEach(obj, fn, { allOwnKeys = false } = {}) {
     let key;
     for (i = 0; i < len; i++) {
       key = keys[i];
-      fn.call(null, obj[key], key, obj);
+      fn2.call(null, obj[key], key, obj);
     }
   }
 }
@@ -23217,13 +25679,13 @@ const isTypedArray = /* @__PURE__ */ ((TypedArray) => {
     return TypedArray && thing instanceof TypedArray;
   };
 })(typeof Uint8Array !== "undefined" && getPrototypeOf(Uint8Array));
-const forEachEntry = (obj, fn) => {
+const forEachEntry = (obj, fn2) => {
   const generator = obj && obj[Symbol.iterator];
   const iterator = generator.call(obj);
   let result;
   while ((result = iterator.next()) && !result.done) {
     const pair = result.value;
-    fn.call(obj, pair[0], pair[1]);
+    fn2.call(obj, pair[0], pair[1]);
   }
 };
 const matchAll = (regExp, str) => {
@@ -23701,10 +26163,10 @@ class InterceptorManager {
    *
    * @returns {void}
    */
-  forEach(fn) {
+  forEach(fn2) {
     utils$1.forEach(this.handlers, function forEachHandler(h2) {
       if (h2 !== null) {
-        fn(h2);
+        fn2(h2);
       }
     });
   }
@@ -24179,8 +26641,8 @@ function transformData(fns, response) {
   const context = response || config2;
   const headers = AxiosHeaders.from(context.headers);
   let data = context.data;
-  utils$1.forEach(fns, function transform(fn) {
-    data = fn.call(config2, data, headers.normalize(), response ? response.status : void 0);
+  utils$1.forEach(fns, function transform(fn2) {
+    data = fn2.call(config2, data, headers.normalize(), response ? response.status : void 0);
   });
   headers.normalize();
   return data;
@@ -24213,14 +26675,14 @@ function parseProtocol(url) {
   const match2 = /^([-+\w]{1,25})(:?\/\/|:)/.exec(url);
   return match2 && match2[1] || "";
 }
-function speedometer(samplesCount, min) {
+function speedometer(samplesCount, min2) {
   samplesCount = samplesCount || 10;
   const bytes = new Array(samplesCount);
   const timestamps = new Array(samplesCount);
   let head = 0;
   let tail = 0;
   let firstSampleTS;
-  min = min !== void 0 ? min : 1e3;
+  min2 = min2 !== void 0 ? min2 : 1e3;
   return function push(chunkLength) {
     const now = Date.now();
     const startedAt = timestamps[tail];
@@ -24239,14 +26701,14 @@ function speedometer(samplesCount, min) {
     if (head === tail) {
       tail = (tail + 1) % samplesCount;
     }
-    if (now - firstSampleTS < min) {
+    if (now - firstSampleTS < min2) {
       return;
     }
     const passed = startedAt && now - startedAt;
     return passed ? Math.round(bytesCount * 1e3 / passed) : void 0;
   };
 }
-function throttle(fn, freq) {
+function throttle(fn2, freq) {
   let timestamp = 0;
   let threshold = 1e3 / freq;
   let lastArgs;
@@ -24258,7 +26720,7 @@ function throttle(fn, freq) {
       clearTimeout(timer);
       timer = null;
     }
-    fn.apply(null, args);
+    fn2.apply(null, args);
   };
   const throttled = (...args) => {
     const now = Date.now();
@@ -24310,7 +26772,7 @@ const progressEventDecorator = (total, throttled) => {
     loaded
   }), throttled[1]];
 };
-const asyncDecorator = (fn) => (...args) => utils$1.asap(() => fn(...args));
+const asyncDecorator = (fn2) => (...args) => utils$1.asap(() => fn2(...args));
 const isURLSameOrigin = platform.hasStandardBrowserEnv ? (
   // Standard browser envs have full support of the APIs needed to test
   // whether the request URL is of the same origin as current location.
@@ -24667,11 +27129,11 @@ const streamChunk = function* (chunk, chunkSize) {
     return;
   }
   let pos = 0;
-  let end;
+  let end2;
   while (pos < len) {
-    end = pos + chunkSize;
-    yield chunk.slice(pos, end);
-    pos = end;
+    end2 = pos + chunkSize;
+    yield chunk.slice(pos, end2);
+    pos = end2;
   }
 };
 const readBytes = async function* (iterable, chunkSize) {
@@ -24738,9 +27200,9 @@ const trackStream = (stream, chunkSize, onProgress, onFinish) => {
 const isFetchSupported = typeof fetch === "function" && typeof Request === "function" && typeof Response === "function";
 const isReadableStreamSupported = isFetchSupported && typeof ReadableStream === "function";
 const encodeText = isFetchSupported && (typeof TextEncoder === "function" ? /* @__PURE__ */ ((encoder) => (str) => encoder.encode(str))(new TextEncoder()) : async (str) => new Uint8Array(await new Response(str).arrayBuffer()));
-const test = (fn, ...args) => {
+const test = (fn2, ...args) => {
   try {
-    return !!fn(...args);
+    return !!fn2(...args);
   } catch (e2) {
     return false;
   }
@@ -24902,13 +27364,13 @@ const knownAdapters = {
   xhr: xhrAdapter,
   fetch: fetchAdapter
 };
-utils$1.forEach(knownAdapters, (fn, value) => {
-  if (fn) {
+utils$1.forEach(knownAdapters, (fn2, value) => {
+  if (fn2) {
     try {
-      Object.defineProperty(fn, "name", { value });
+      Object.defineProperty(fn2, "name", { value });
     } catch (e2) {
     }
-    Object.defineProperty(fn, "adapterName", { value });
+    Object.defineProperty(fn2, "adapterName", { value });
   }
 });
 const renderReason = (reason) => `- ${reason}`;
@@ -25492,7 +27954,7 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
       open: openHistory,
       handleClose: onClose,
       title: "Product History",
-      maxWidth: "sm",
+      maxWidth: "xl",
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { value: tabIndex, onChange: handleTabChange, indicatorColor: "primary", textColor: "primary", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "History of Changes" }),
@@ -25506,7 +27968,7 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Change Amount" })
           ] }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.stock && productHistory.stock.length > 0 && productHistory.stock.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.date).toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.timestamp).toLocaleString() }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_type }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_amount })
           ] }, record.id)) })
@@ -25515,12 +27977,14 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Date" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Price per Item" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "quantity_purchase" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Total Price" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Supplier" })
           ] }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.purchase && productHistory.purchase.length > 0 && productHistory.purchase.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date).toLocaleString() }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price_per_item }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_purchase }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.total_price }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.supplier })
           ] }, record.id)) })
@@ -25529,12 +27993,16 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Date" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Price" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Quantity Sold" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "total_price" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Quantity Sold" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "customer" })
           ] }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.sales && productHistory.sales.length > 0 && productHistory.sales.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.sale_date).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_sold })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price_per_item }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.total_price }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_sold }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.customer })
           ] }, record.id)) })
         ] }) }) })
       ] })
@@ -25550,40 +28018,274 @@ const fakeResponse = {
       "category_ids": [],
       "id": 1,
       "name": "Палочка Воландеморта",
-      "price_per_item": 507,
+      "price_per_item": "507.6",
       "quantity": 1,
-      "supplier": "skladoptom.com.ua",
-      "total_price": 507
+      "supplier": {
+        "contact_info": null,
+        "id": 1,
+        "name": "skladoptom.com.ua"
+      },
+      "total_price": "507.6"
     },
     {
       "category_ids": [],
       "id": 2,
       "name": "Палочка Грюма",
-      "price_per_item": 507,
+      "price_per_item": "507.6",
       "quantity": 1,
-      "supplier": "skladoptom.com.ua",
-      "total_price": 507
+      "supplier": {
+        "contact_info": null,
+        "id": 1,
+        "name": "skladoptom.com.ua"
+      },
+      "total_price": "507.6"
     },
     {
       "category_ids": [],
       "id": 3,
       "name": "Брелок с гербом Пуффендуя",
-      "price_per_item": 65,
+      "price_per_item": "65.49",
       "quantity": 1,
-      "supplier": "skladoptom.com.ua",
-      "total_price": 65
+      "supplier": {
+        "contact_info": null,
+        "id": 1,
+        "name": "skladoptom.com.ua"
+      },
+      "total_price": "65.49"
     },
     {
-      "category_ids": [
-        1,
-        2
-      ],
+      "category_ids": [],
       "id": 4,
-      "name": "test",
-      "price_per_item": 6,
-      "quantity": 6,
-      "supplier": "еуіе",
-      "total_price": 5
+      "name": "Брелок с гербом Когтевран",
+      "price_per_item": "86",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "86"
+    },
+    {
+      "category_ids": [],
+      "id": 5,
+      "name": "Брелок Дары Смерти",
+      "price_per_item": "81",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "81"
+    },
+    {
+      "category_ids": [],
+      "id": 6,
+      "name": "Брелок Грифиндор круглый",
+      "price_per_item": "60",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "60"
+    },
+    {
+      "category_ids": [],
+      "id": 7,
+      "name": "Брелок Слизерин круглый",
+      "price_per_item": "60",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "60"
+    },
+    {
+      "category_ids": [],
+      "id": 8,
+      "name": "Брелок Когтевран круглый",
+      "price_per_item": "60",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "60"
+    },
+    {
+      "category_ids": [],
+      "id": 9,
+      "name": "Брелок Пуфендуй круглый",
+      "price_per_item": "60",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "60"
+    },
+    {
+      "category_ids": [],
+      "id": 10,
+      "name": "Брелок Хогвартс круглый",
+      "price_per_item": "0",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "0"
+    },
+    {
+      "category_ids": [],
+      "id": 11,
+      "name": "Светильник Сова",
+      "price_per_item": "390",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 2,
+        "name": "misteria.prom.ua"
+      },
+      "total_price": "390"
+    },
+    {
+      "category_ids": [],
+      "id": 12,
+      "name": "Сервиз чайный Хогвартс",
+      "price_per_item": "3800",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 3,
+        "name": "Настя @tykkinykki"
+      },
+      "total_price": "3800"
+    },
+    {
+      "category_ids": [],
+      "id": 13,
+      "name": "Шарф Гриффиндор",
+      "price_per_item": "900",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 4,
+        "name": "Татьяна Явтуховская"
+      },
+      "total_price": "900"
+    },
+    {
+      "category_ids": [],
+      "id": 14,
+      "name": "Чашка с молнией",
+      "price_per_item": "165",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 5,
+        "name": "starsandsky.com.ua"
+      },
+      "total_price": "165"
+    },
+    {
+      "category_ids": [],
+      "id": 15,
+      "name": "Чашка с гербом Хогвартса",
+      "price_per_item": "165",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 5,
+        "name": "starsandsky.com.ua"
+      },
+      "total_price": "165"
+    },
+    {
+      "category_ids": [],
+      "id": 16,
+      "name": "Чашка с оленем",
+      "price_per_item": "165",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 5,
+        "name": "starsandsky.com.ua"
+      },
+      "total_price": "165"
+    },
+    {
+      "category_ids": [],
+      "id": 17,
+      "name": "Чашка с совой",
+      "price_per_item": "135",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 5,
+        "name": "starsandsky.com.ua"
+      },
+      "total_price": "135"
+    },
+    {
+      "category_ids": [],
+      "id": 18,
+      "name": "Чашка с башней",
+      "price_per_item": "135",
+      "quantity": 1,
+      "supplier": {
+        "contact_info": null,
+        "id": 5,
+        "name": "starsandsky.com.ua"
+      },
+      "total_price": "135"
+    },
+    {
+      "category_ids": [],
+      "id": 19,
+      "name": "Мешочки тканевые 23х17",
+      "price_per_item": "23",
+      "quantity": 4,
+      "supplier": {
+        "contact_info": null,
+        "id": 6,
+        "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
+      },
+      "total_price": "92"
+    },
+    {
+      "category_ids": [],
+      "id": 20,
+      "name": "Мешочки тканевые 13х10",
+      "price_per_item": "10",
+      "quantity": 10,
+      "supplier": {
+        "contact_info": null,
+        "id": 6,
+        "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
+      },
+      "total_price": "100"
+    },
+    {
+      "category_ids": [],
+      "id": 21,
+      "name": "Мешочки тканевые 10х8",
+      "price_per_item": "8",
+      "quantity": 15,
+      "supplier": {
+        "contact_info": null,
+        "id": 6,
+        "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
+      },
+      "total_price": "120"
     }
   ]
 };
@@ -25600,6 +28302,40 @@ const fakeCategory = {
     {
       "id": 3,
       "name": "Володар Перснів"
+    }
+  ]
+};
+const fakeResponseSuppliers = {
+  data: [
+    {
+      "contact_info": null,
+      "id": 1,
+      "name": "skladoptom.com.ua"
+    },
+    {
+      "contact_info": null,
+      "id": 2,
+      "name": "misteria.prom.ua"
+    },
+    {
+      "contact_info": null,
+      "id": 3,
+      "name": "Настя @tykkinykki"
+    },
+    {
+      "contact_info": null,
+      "id": 4,
+      "name": "Татьяна Явтуховская"
+    },
+    {
+      "contact_info": null,
+      "id": 5,
+      "name": "starsandsky.com.ua"
+    },
+    {
+      "contact_info": null,
+      "id": 6,
+      "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
     }
   ]
 };
@@ -25632,6 +28368,20 @@ api.interceptors.request.use((config2) => {
       }, 500);
     });
   }
+  if (config2.url === "/supplier") {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        config2.adapter = () => Promise.resolve({
+          data: fakeResponseSuppliers.data,
+          status: 200,
+          statusText: "OK",
+          headers: {},
+          config: config2
+        });
+        resolve(config2);
+      }, 500);
+    });
+  }
   return config2;
 }, (error) => {
   return Promise.reject(error);
@@ -25648,6 +28398,12 @@ const fetchGetAllCategories = () => {
     return [];
   });
 };
+const addSupplier = (newSupplier) => {
+  return api.post("/supplier", newSupplier).catch((error) => {
+    console.error("Error adding supplier:", error);
+    throw error;
+  });
+};
 const deleteProduct = (productId) => {
   return api.delete(`/product/${productId}`).catch((error) => {
     console.error("Error deleting product:", error);
@@ -25660,7 +28416,14 @@ const addProduct = (newProduct) => {
     throw error;
   });
 };
+const addNewCategory = (name) => {
+  return api.post("/categories", name).catch((error) => {
+    console.error("Error adding category:", error);
+    throw error;
+  });
+};
 const updateProduct = (productId, editProduct) => {
+  console.log(editProduct);
   return api.put(`/product/${productId}`, editProduct).catch((error) => {
     console.error("Error updating product:", error);
     throw error;
@@ -25678,6 +28441,12 @@ const addSale = (productId, saleData) => {
     throw error;
   });
 };
+const fetchGetAllSuppliers = () => {
+  return api.get("/suppliers").then((response) => response.data).catch((error) => {
+    console.error("Error fetching suppliers:", error);
+    return [];
+  });
+};
 const AddProductModal = ({
   open,
   handleCloseAdd,
@@ -25686,7 +28455,8 @@ const AddProductModal = ({
   categories,
   selectedCategories,
   handleCategoryChange,
-  handleAdd
+  handleAdd,
+  suppliers
 }) => {
   const [errors, setErrors] = reactExports.useState({
     name: "",
@@ -25697,7 +28467,7 @@ const AddProductModal = ({
   const validateFields = () => {
     const newErrors = {
       name: newProduct.name.trim() === "" ? "Name is required" : "",
-      supplier: newProduct.supplier.trim() === "" ? "Supplier is required" : "",
+      supplier: newProduct.supplier_id === null ? "Supplier is required" : "",
       quantity: newProduct.quantity < 0 ? "Quantity must be greater than or equal to 0" : "",
       price_per_item: newProduct.price_per_item < 0 ? "Price per item must be greater than or equal to 0" : ""
     };
@@ -25736,19 +28506,18 @@ const AddProductModal = ({
                 inputProps: { maxLength: 100 }
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TextField,
-              {
-                label: "Постачальник",
-                value: newProduct.supplier,
-                onChange: (e2) => setNewProduct({ ...newProduct, supplier: e2.target.value }),
-                fullWidth: true,
-                margin: "normal",
-                error: !!errors.supplier,
-                helperText: errors.supplier,
-                inputProps: { maxLength: 100 }
-              }
-            ) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { fullWidth: true, margin: "normal", error: !!errors.supplier, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { children: "Постачальник" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Select,
+                {
+                  value: newProduct.supplier_id,
+                  onChange: (e2) => setNewProduct({ ...newProduct, supplier_id: Number(e2.target.value) }),
+                  children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: supplier.id, children: supplier.name }, supplier.id))
+                }
+              ),
+              errors.supplier && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "error", children: errors.supplier })
+            ] }) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -25815,6 +28584,7 @@ const AddProductModal = ({
   );
 };
 const EditProductModal = ({
+  suppliers,
   open,
   handleCloseEdit,
   editProduct,
@@ -25842,13 +28612,6 @@ const EditProductModal = ({
       isValid = false;
     } else if (editProduct.name.length > 100) {
       tempErrors.name = "Name cannot exceed 100 characters";
-      isValid = false;
-    }
-    if (!editProduct.supplier.trim()) {
-      tempErrors.supplier = "Supplier is required";
-      isValid = false;
-    } else if (editProduct.supplier.length > 100) {
-      tempErrors.supplier = "Supplier cannot exceed 100 characters";
       isValid = false;
     }
     if (editProduct.quantity < 0) {
@@ -25896,19 +28659,18 @@ const EditProductModal = ({
                 inputProps: { maxLength: 100 }
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TextField,
-              {
-                label: "Supplier",
-                value: editProduct.supplier,
-                onChange: (e2) => setEditProduct({ ...editProduct, supplier: e2.target.value }),
-                fullWidth: true,
-                margin: "normal",
-                error: !!errors.supplier,
-                helperText: errors.supplier,
-                inputProps: { maxLength: 100 }
-              }
-            ) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { fullWidth: true, margin: "normal", error: !!errors.supplier, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { children: "Постачальник" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Select,
+                {
+                  value: editProduct.supplier_id ? editProduct.supplier_id : "",
+                  onChange: (e2) => setEditProduct({ ...editProduct, supplier_id: Number(e2.target.value) }),
+                  children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: supplier.id, children: supplier.name }, supplier.id))
+                }
+              ),
+              errors.supplier && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "error", children: errors.supplier })
+            ] }) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -25975,7 +28737,8 @@ const EditProductModal = ({
   );
 };
 const PurchaseProductModal = ({
-  open,
+  suppliers,
+  openPurchase,
   handleClosePurchase,
   purchaseDetails,
   setPurchaseDetails,
@@ -25993,7 +28756,7 @@ const PurchaseProductModal = ({
       quantity: purchaseDetails.quantity <= 0 ? "Quantity must be greater than 0" : "",
       price_per_item: purchaseDetails.price_per_item <= 0 ? "Price per item must be greater than 0" : "",
       total_price: purchaseDetails.total_price <= 0 ? "Total price must be greater than 0" : "",
-      supplier: purchaseDetails.supplier.trim() === "" ? "Supplier is required" : "",
+      supplier: purchaseDetails.supplier_id === null ? "Supplier is required" : "",
       purchase_date: purchaseDetails.purchase_date === "" ? "Purchase date is required" : ""
     };
     setErrors(newErrors);
@@ -26011,26 +28774,25 @@ const PurchaseProductModal = ({
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
-      open,
+      open: openPurchase,
       handleClose: handleClosePurchase,
       title: "Purchase Product",
       maxWidth: "md",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TextField,
-              {
-                label: "Supplier",
-                value: purchaseDetails.supplier,
-                onChange: (e2) => setPurchaseDetails({ ...purchaseDetails, supplier: e2.target.value }),
-                fullWidth: true,
-                margin: "normal",
-                error: !!errors.supplier,
-                helperText: errors.supplier,
-                inputProps: { maxLength: 100 }
-              }
-            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { disabled: true, fullWidth: true, margin: "normal", error: !!errors.supplier, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { children: "Постачальник" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Select,
+                {
+                  value: purchaseDetails.supplier_id ? purchaseDetails.supplier_id : "",
+                  onChange: (e2) => setPurchaseDetails({ ...purchaseDetails, supplier_id: Number(e2.target.value) }),
+                  children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: supplier.id, children: supplier.name }, supplier.id))
+                }
+              ),
+              errors.supplier && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "error", children: errors.supplier })
+            ] }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               TextField,
               {
@@ -26225,15 +28987,12 @@ const SaleProductModal = ({ openSale, handleCloseSale, saleData, setSaleData, ha
     }
   );
 };
-const CreateNewCategoryModal = ({ openCategoryCreateModal, handleCloseCategoryModal }) => {
+const CreateNewCategoryModal = ({
+  openCategoryCreateModal,
+  handleCloseCategoryModal,
+  createNewCategory
+}) => {
   const [categoryName, setCategoryName] = reactExports.useState("");
-  const createCategory = () => {
-    axios.post("http://localhost:5000/api/categories", { name: categoryName }).then((response) => {
-      console.log(response.data);
-    }).catch((error) => {
-      console.error("Error creating category", error);
-    });
-  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -26252,7 +29011,7 @@ const CreateNewCategoryModal = ({ openCategoryCreateModal, handleCloseCategoryMo
         ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseCategoryModal, color: "primary", children: "Cancel" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: createCategory, children: "Створити категорію" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: () => createNewCategory(categoryName), children: "Створити категорію" })
         ] })
       ]
     }
@@ -26278,9 +29037,24 @@ const CategoryFilter = ({
     category.id
   )) });
 };
+const EditIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"
+}), "Edit");
+const DeleteIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"
+}), "Delete");
+const ShoppingCartIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2M1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2"
+}), "ShoppingCart");
+const SellIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "m21.41 11.41-8.83-8.83c-.37-.37-.88-.58-1.41-.58H4c-1.1 0-2 .9-2 2v7.17c0 .53.21 1.04.59 1.41l8.83 8.83c.78.78 2.05.78 2.83 0l7.17-7.17c.78-.78.78-2.04-.01-2.83M6.5 8C5.67 8 5 7.33 5 6.5S5.67 5 6.5 5 8 5.67 8 6.5 7.33 8 6.5 8"
+}), "Sell");
+const HistoryIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9m-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8z"
+}), "History");
 const ProductTable = ({
   filteredProducts,
-  order,
+  order: order2,
   orderBy,
   handleSort,
   sortProducts,
@@ -26289,8 +29063,7 @@ const ProductTable = ({
   handleDelete,
   handlePurchase,
   handleOpenSale,
-  setProductId,
-  setOpenHistory
+  handleOpenHistoryModal
 }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
@@ -26299,7 +29072,7 @@ const ProductTable = ({
         TableSortLabel,
         {
           active: orderBy === "name",
-          direction: orderBy === "name" ? order : "asc",
+          direction: orderBy === "name" ? order2 : "asc",
           onClick: () => handleSort("name"),
           children: "Name"
         }
@@ -26309,7 +29082,7 @@ const ProductTable = ({
         TableSortLabel,
         {
           active: orderBy === "quantity",
-          direction: orderBy === "quantity" ? order : "asc",
+          direction: orderBy === "quantity" ? order2 : "asc",
           onClick: () => handleSort("quantity"),
           children: "Quantity"
         }
@@ -26318,7 +29091,7 @@ const ProductTable = ({
         TableSortLabel,
         {
           active: orderBy === "total_price",
-          direction: orderBy === "total_price" ? order : "asc",
+          direction: orderBy === "total_price" ? order2 : "asc",
           onClick: () => handleSort("total_price"),
           children: "Total Price"
         }
@@ -26327,64 +29100,101 @@ const ProductTable = ({
         TableSortLabel,
         {
           active: orderBy === "price_per_item",
-          direction: orderBy === "price_per_item" ? order : "asc",
+          direction: orderBy === "price_per_item" ? order2 : "asc",
           onClick: () => handleSort("price_per_item"),
           children: "Price per Item"
         }
       ) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Actions" })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredProducts.length > 0 && sortProducts(filteredProducts, getComparator(order, orderBy)).map((product, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.supplier }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.quantity }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.total_price }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.price_per_item }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button,
-          {
-            variant: "contained",
-            color: "primary",
-            onClick: () => handleOpenEdit(product),
-            children: "Edit"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button,
-          {
-            variant: "contained",
-            color: "secondary",
-            onClick: () => handleDelete(product.id),
-            children: "Delete"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button,
-          {
-            variant: "contained",
-            color: "primary",
-            onClick: () => handlePurchase(product),
-            children: "Purchase"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button,
-          {
-            variant: "contained",
-            color: "primary",
-            onClick: () => handleOpenSale(product),
-            children: "Sale"
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: () => {
-          setProductId(product.id);
-          setOpenHistory(true);
-        }, children: "History" })
-      ] })
-    ] }, `${product.id}${index}`)) })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredProducts.length > 0 && sortProducts(filteredProducts, getComparator(order2, orderBy)).map((product, index) => {
+      var _a;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: (_a = product.supplier) == null ? void 0 : _a.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.quantity }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.total_price }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.price_per_item }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, {}) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "secondary", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, {}) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, {}) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, {}) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { onClick: () => {
+            handleOpenHistoryModal(product.id);
+          }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, {}) }) })
+        ] })
+      ] }, `${product.id}${index}`);
+    }) })
   ] }) });
+};
+const AddSupplierModal = ({ open, handleClose, fetchSuppliersFunc }) => {
+  const [name, setName] = reactExports.useState("");
+  const [contactInfo, setContactInfo] = reactExports.useState("");
+  const [error, setError] = reactExports.useState(null);
+  const handleAddSupplier = () => {
+    const newSupplier = { name, contact_info: contactInfo };
+    addSupplier(newSupplier).then(() => {
+      fetchSuppliersFunc();
+      handleClose();
+    }).catch((error2) => {
+      setError("Error adding supplier: " + error2.message);
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open, onClose: handleClose, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Add New Supplier" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TextField,
+        {
+          autoFocus: true,
+          margin: "dense",
+          label: "Supplier Name",
+          fullWidth: true,
+          value: name,
+          onChange: (e2) => setName(e2.target.value),
+          error: !!error,
+          helperText: error
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TextField,
+        {
+          margin: "dense",
+          label: "Contact Info",
+          fullWidth: true,
+          value: contactInfo,
+          onChange: (e2) => setContactInfo(e2.target.value)
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleClose, color: "primary", children: "Cancel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleAddSupplier, color: "primary", variant: "contained", children: "Add Supplier" })
+    ] })
+  ] });
+};
+const SupplierFilter = ({
+  selectedFilterSuppliers,
+  handleSupplierFilterChange,
+  suppliers
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    FormControlLabel,
+    {
+      control: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Checkbox,
+        {
+          checked: selectedFilterSuppliers.includes(supplier.id),
+          onChange: () => handleSupplierFilterChange(supplier.id)
+        }
+      ),
+      label: supplier.name
+    },
+    supplier.id
+  )) });
 };
 function App() {
   const [products, setProducts] = reactExports.useState([]);
@@ -26393,26 +29203,30 @@ function App() {
   const [error, setError] = reactExports.useState(null);
   const [newProduct, setNewProduct] = reactExports.useState({
     name: "",
-    supplier: "",
+    supplier_id: null,
     quantity: 0,
     total_price: 0,
     price_per_item: 0,
     category_ids: []
+    // created_date: '',
   });
   const [editProduct, setEditProduct] = reactExports.useState(null);
   const [openEdit, setOpenEdit] = reactExports.useState(false);
   const [openAdd, setOpenAdd] = reactExports.useState(false);
-  const [order, setOrder] = reactExports.useState("asc");
+  const [order2, setOrder] = reactExports.useState("asc");
   const [orderBy, setOrderBy] = reactExports.useState("name");
   const [openHistory, setOpenHistory] = reactExports.useState(false);
   const [openPurchase, setOpenPurchase] = reactExports.useState(false);
   const [productId, setProductId] = reactExports.useState(null);
   const [openCategoryCreateModal, setOpenCategoryCreateModal] = reactExports.useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = reactExports.useState(false);
+  const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = reactExports.useState(null);
+  const [suppliers, setSuppliers] = reactExports.useState([]);
   const [purchaseDetails, setPurchaseDetails] = reactExports.useState({
     quantity: 0,
     price_per_item: 0,
     total_price: 0,
-    supplier: "",
+    supplier_id: null,
     purchase_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10)
     // Формат YYYY-MM-DD
   });
@@ -26421,8 +29235,15 @@ function App() {
   const [categories, setCategories] = reactExports.useState([]);
   const [selectedCategories, setSelectedCategories] = reactExports.useState([]);
   const [selectedFilterCategories, setSelectedFilterCategories] = reactExports.useState([]);
+  const [selectedFilterSuppliers, setSelectedFilterSuppliers] = reactExports.useState([]);
+  const [isModalAddSupplierOpen, setModalOpenAddSupplierOpen] = reactExports.useState(false);
+  const handleOpenModal = () => {
+    setModalOpenAddSupplierOpen(true);
+  };
+  const handleCloseModal = () => {
+    setModalOpenAddSupplierOpen(false);
+  };
   const handleOpenSale = (product) => {
-    setEditProduct(product);
     setSaleData({
       customer: "",
       quantity: 1,
@@ -26440,16 +29261,32 @@ function App() {
     setSaleData(null);
   };
   const handlePurchase = (product) => {
-    setEditProduct(product);
+    setEditProduct({
+      id: product.id,
+      name: product.name,
+      supplier_id: product.supplier ? product.supplier.id : null,
+      quantity: product.quantity,
+      total_price: product.total_price,
+      price_per_item: product.price_per_item,
+      category_ids: product.category_ids
+    });
     setPurchaseDetails({
       ...purchaseDetails,
-      supplier: product.supplier,
+      supplier_id: product.supplier ? product.supplier.id : null,
       price_per_item: product.price_per_item
     });
     setOpenPurchase(true);
   };
   const handleOpenEdit = (product) => {
-    setEditProduct(product);
+    setEditProduct({
+      id: product.id,
+      name: product.name,
+      supplier_id: product.supplier ? product.supplier.id : null,
+      quantity: product.quantity,
+      total_price: product.total_price,
+      price_per_item: product.price_per_item,
+      category_ids: product.category_ids
+    });
     setOpenEdit(true);
     setSelectedCategories(product.category_ids);
   };
@@ -26458,15 +29295,23 @@ function App() {
     setOpenEdit(false);
     setSelectedCategories([]);
   };
-  const handleOpenAdd = () => setOpenAdd(true);
+  const handleOpenAdd = () => {
+    setOpenAdd(true);
+    setNewProduct((newProduct2) => {
+      return {
+        ...newProduct2
+      };
+    });
+  };
   const handleCloseAdd = () => {
     setNewProduct({
       name: "",
-      supplier: "",
+      supplier_id: null,
       quantity: 0,
       total_price: 0,
       price_per_item: 0,
       category_ids: []
+      // created_date: '',
     });
     setOpenAdd(false);
   };
@@ -26475,7 +29320,7 @@ function App() {
       quantity: 0,
       price_per_item: 0,
       total_price: 0,
-      supplier: "",
+      supplier_id: null,
       purchase_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10)
     });
     setOpenPurchase(false);
@@ -26506,7 +29351,10 @@ function App() {
     });
   };
   const handleDelete = (productId2) => {
-    deleteProduct(productId2).then(() => fetchProductsFunc()).catch((error2) => {
+    deleteProduct(productId2).then(() => {
+      handleCloseDeleteModal();
+      fetchProductsFunc();
+    }).catch((error2) => {
       console.error("There was an error deleting the product!", error2);
     });
   };
@@ -26514,14 +29362,6 @@ function App() {
     addProduct(newProduct).then(() => {
       fetchProductsFunc();
       handleCloseAdd();
-      setNewProduct({
-        name: "",
-        supplier: "",
-        quantity: 0,
-        total_price: 0,
-        price_per_item: 0,
-        category_ids: []
-      });
     }).catch((error2) => {
       console.error("There was an error adding the product!", error2);
     });
@@ -26536,28 +29376,28 @@ function App() {
     });
   };
   const handleSort = (property) => {
-    const isAsc = orderBy === property && order === "asc";
+    const isAsc = orderBy === property && order2 === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
   const sortProducts = (products2, comparator) => {
     const stabilizedProducts = products2.map((el2, index) => [el2, index]);
     stabilizedProducts.sort((a, b2) => {
-      const order2 = comparator(a[0], b2[0]);
-      if (order2 !== 0) return order2;
+      const order22 = comparator(a[0], b2[0]);
+      if (order22 !== 0) return order22;
       return a[1] - b2[1];
     });
     return stabilizedProducts.map((el2) => el2[0]);
   };
-  const getComparator = (order2, orderBy2) => {
-    return order2 === "desc" ? (a, b2) => b2[orderBy2] < a[orderBy2] ? -1 : 1 : (a, b2) => a[orderBy2] < b2[orderBy2] ? -1 : 1;
+  const getComparator = (order22, orderBy2) => {
+    return order22 === "desc" ? (a, b2) => b2[orderBy2] != null && a[orderBy2] != null ? b2[orderBy2] < a[orderBy2] ? -1 : 1 : 0 : (a, b2) => a[orderBy2] != null && b2[orderBy2] != null ? a[orderBy2] < b2[orderBy2] ? -1 : 1 : 0;
   };
   const handleSubmitPurchase = () => {
     const purchaseData = {
       quantity: purchaseDetails.quantity,
       price_per_item: purchaseDetails.price_per_item,
       total_price: purchaseDetails.total_price,
-      supplier: purchaseDetails.supplier,
+      supplier_id: purchaseDetails.supplier_id,
       purchase_date: purchaseDetails.purchase_date
     };
     if (!editProduct) return null;
@@ -26569,14 +29409,26 @@ function App() {
     });
   };
   const handleSale = () => {
-    if (saleData && editProduct) {
-      addSale(editProduct.id, saleData).then(() => {
+    if (saleData) {
+      addSale(saleData.productId, saleData).then(() => {
         handleCloseSale();
         fetchProductsFunc();
       }).catch((error2) => {
         console.error("There was an error saving the sale!", error2);
       });
     }
+  };
+  const fetchSuppliersFunc = () => {
+    fetchGetAllSuppliers().then((data) => {
+      if (Array.isArray(data)) {
+        setSuppliers(data);
+      } else {
+        console.error("Fetched data is not an array:", data);
+        setSuppliers([]);
+      }
+    }).catch((error2) => {
+      console.error("Error fetching suppliers", error2);
+    });
   };
   reactExports.useEffect(() => {
     fetchGetAllCategories().then((data) => {
@@ -26589,7 +29441,23 @@ function App() {
     }).catch((error2) => {
       console.error("Error fetching categories", error2);
     });
+    fetchSuppliersFunc();
   }, []);
+  const createNewCategory = (categoryName) => {
+    addNewCategory(categoryName).then(() => {
+      fetchGetAllCategories().then((data) => {
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          console.error("Fetched data is not an array:", data);
+          setCategories([]);
+        }
+      });
+      handleCloseCategoryModal();
+    }).catch((error2) => {
+      console.error("There was an error adding the product!", error2);
+    });
+  };
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories((prevState) => {
       if (prevState.includes(categoryId)) {
@@ -26613,14 +29481,46 @@ function App() {
   const handleCategoryFilterChange = (categoryID) => {
     const updatedCategories = selectedFilterCategories.includes(categoryID) ? selectedFilterCategories.filter((id2) => id2 !== categoryID) : [...selectedFilterCategories, categoryID];
     setSelectedFilterCategories(updatedCategories);
+    applyFilters(updatedCategories, selectedFilterSuppliers);
+  };
+  const handleSupplierFilterChange = (supplierID) => {
+    console.log("supplierID", supplierID);
+    const updatedSuppliers = selectedFilterSuppliers.includes(supplierID) ? selectedFilterSuppliers.filter((id2) => id2 !== supplierID) : [...selectedFilterSuppliers, supplierID];
+    setSelectedFilterSuppliers(updatedSuppliers);
+    applyFilters(selectedFilterCategories, updatedSuppliers);
+  };
+  const applyFilters = (updatedCategories, updatedSuppliers) => {
+    let filtered = products;
     if (updatedCategories.length > 0) {
-      const filtered = products.filter(
+      filtered = filtered.filter(
         (product) => product.category_ids.some((categoryId) => updatedCategories.includes(categoryId))
       );
-      setFilteredProducts(filtered);
-    } else {
-      setFilteredProducts(products);
     }
+    if (updatedSuppliers.length > 0) {
+      filtered = filtered.filter(
+        (product) => {
+          if (product.supplier === null) return false;
+          return updatedSuppliers.includes(product.supplier.id);
+        }
+      );
+    }
+    setFilteredProducts(filtered);
+  };
+  const handleDeleteModalOpen = (productId2) => {
+    setSelectedDeleteModalProductId(productId2);
+    setOpenDeleteModal(true);
+  };
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+    setSelectedDeleteModalProductId(null);
+  };
+  const handleOpenHistoryModal = (product_id) => {
+    setProductId(product_id);
+    setOpenHistory(true);
+  };
+  const handleCloseHistoryModal = () => {
+    setOpenHistory(false);
+    setProductId(null);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", flexDirection: "column", alignItems: "center", children: [
@@ -26631,28 +29531,43 @@ function App() {
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Product List" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenAdd, children: "Add New Product" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { color: "primary", onClick: handleOpenCategoryCreateModal, variant: "outlined", children: "Add New Category" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        CategoryFilter,
-        {
-          categories,
-          selectedFilterCategories,
-          handleCategoryFilterChange
-        }
-      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenModal, children: "Add Supplier" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: "20px" }, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Категорії" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            CategoryFilter,
+            {
+              selectedFilterCategories,
+              handleCategoryFilterChange,
+              categories
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Постачальники" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            SupplierFilter,
+            {
+              selectedFilterSuppliers,
+              handleSupplierFilterChange,
+              suppliers
+            }
+          )
+        ] })
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         ProductTable,
         {
           filteredProducts,
-          order,
+          order: order2,
           orderBy,
           handleSort,
           sortProducts,
           getComparator,
           handleOpenEdit,
-          handleDelete: (productId2) => {
-            console.log("Delete product with id:", productId2);
-            handleDelete(productId2);
-          },
+          handleDelete: handleDeleteModalOpen,
           handlePurchase: (product) => {
             console.log("Purchase product:", product);
             handlePurchase(product);
@@ -26661,8 +29576,7 @@ function App() {
             console.log("Open sale for product:", product);
             handleOpenSale(product);
           },
-          setProductId,
-          setOpenHistory
+          handleOpenHistoryModal
         }
       ),
       " "
@@ -26670,6 +29584,7 @@ function App() {
     openAdd && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddProductModal,
       {
+        suppliers,
         setNewProduct,
         newProduct,
         open: openAdd,
@@ -26683,6 +29598,7 @@ function App() {
     openEdit && editProduct && /* @__PURE__ */ jsxRuntimeExports.jsx(
       EditProductModal,
       {
+        suppliers,
         selectedCategories,
         categories,
         handleCategoryChange,
@@ -26697,14 +29613,15 @@ function App() {
       ProductHistoryModal,
       {
         openHistory,
-        onClose: () => setOpenHistory(false),
+        onClose: handleCloseHistoryModal,
         productId
       }
     ),
-    openPurchase && /* @__PURE__ */ jsxRuntimeExports.jsx(
+    openPurchase && purchaseDetails && /* @__PURE__ */ jsxRuntimeExports.jsx(
       PurchaseProductModal,
       {
-        open: openPurchase,
+        openPurchase,
+        suppliers,
         handleClosePurchase,
         purchaseDetails,
         setPurchaseDetails,
@@ -26724,8 +29641,25 @@ function App() {
     openCategoryCreateModal && /* @__PURE__ */ jsxRuntimeExports.jsx(
       CreateNewCategoryModal,
       {
+        createNewCategory,
         openCategoryCreateModal,
         handleCloseCategoryModal
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: openDeleteModal, onClose: handleCloseDeleteModal, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Confirm Delete" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Are you sure you want to delete this product?" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseDeleteModal, color: "primary", children: "Cancel" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => handleDelete(selectedDeleteModalProductId), color: "secondary", children: "Delete" })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddSupplierModal,
+      {
+        fetchSuppliersFunc,
+        open: isModalAddSupplierOpen,
+        handleClose: handleCloseModal
       }
     )
   ] });
