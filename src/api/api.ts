@@ -376,7 +376,7 @@ api.interceptors.request.use((config) => {
         });
     }
 
-    if (config.url === '/supplier') {
+    if (config.url === '/suppliers') {
         return new Promise((resolve) => {
             setTimeout(() => {
                 config.adapter = () => Promise.resolve({
