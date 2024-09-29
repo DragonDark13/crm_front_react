@@ -17,7 +17,7 @@ import {
     addPurchase,
     addSale,
     deleteProduct,
-    fetchGetAllCategories,
+    fetchGetAllCategories, fetchGetAllSuppliers,
     fetchProducts,
     updateProduct
 } from "./api/api";
@@ -32,7 +32,6 @@ import ProductTable from "./components/ProductTable/ProductTable";
 
 export interface IBaseProduct {
     name: string;
-    supplier: string;
     quantity: number;
     total_price: number;
     price_per_item: number;
@@ -41,11 +40,18 @@ export interface IBaseProduct {
 export interface IProduct extends IBaseProduct {
     id: number;
     category_ids: number[]
+    supplier: ISupplier | null
 }
 
 export interface INewProduct extends IBaseProduct {
     category_ids: number[]
-    created_date: string,
+    supplier_id: number | null;
+}
+
+export interface IEditProduct extends IBaseProduct {
+    id: number;
+    category_ids: number[]
+    supplier_id: number | null;
 }
 
 export interface ICategory {
@@ -57,7 +63,7 @@ export interface IPurchaseData {
     quantity: number
     price_per_item: number,
     total_price: number,
-    supplier: string,
+    supplier_id: number | null,
     purchase_date: string,
 }
 
@@ -70,6 +76,11 @@ export interface ISaleData {
     productId: number
 }
 
+export interface ISupplier {
+    id: number;
+    name: string;
+    contact_info: string | null
+}
 
 function App() {
     const [products, setProducts] = useState<IProduct[]>([]);
@@ -79,14 +90,14 @@ function App() {
     const [error, setError] = useState<string | null>(null); // Стан для помилок
     const [newProduct, setNewProduct] = useState<INewProduct>({
         name: '',
-        supplier: '',
+        supplier_id: null,
         quantity: 0,
         total_price: 0,
         price_per_item: 0,
         category_ids: [],
-        created_date: '', // ��ормат YYYY-MM-DD
+        // created_date: '',
     });
-    const [editProduct, setEditProduct] = useState<IProduct | null>(null); // Для зберігання товару, який редагується
+    const [editProduct, setEditProduct] = useState<IEditProduct | null>(null); // Для зберігання товару, який редагується
     const [openEdit, setOpenEdit] = useState(false); // Відповідає за стан модального вікна для редагування
     const [openAdd, setOpenAdd] = useState(false); // Відповідає за стан модального вікна для додавання
 
@@ -101,13 +112,13 @@ function App() {
     const [openCategoryCreateModal, setOpenCategoryCreateModal] = useState<boolean>(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = useState<number | null>(null);
-
+    const [suppliers, setSuppliers] = useState<ISupplier[]>([])
 
     const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
         quantity: 0,
         price_per_item: 0,
         total_price: 0,
-        supplier: '',
+        supplier_id: null,
         purchase_date: new Date().toISOString().slice(0, 10), // Формат YYYY-MM-DD
     });
 
@@ -121,7 +132,6 @@ function App() {
 
 
     const handleOpenSale = (product: IProduct) => {
-        setEditProduct(product)
         setSaleData({
             customer: '',
             quantity: 1,
@@ -141,10 +151,18 @@ function App() {
 
     // Функція для відкриття модального вікна покупки
     const handlePurchase = (product: IProduct) => {
-        setEditProduct(product)
+        setEditProduct({
+            id: product.id,
+            name: product.name,
+            supplier_id: product.supplier ? product.supplier.id : null,
+            quantity: product.quantity,
+            total_price: product.total_price,
+            price_per_item: product.price_per_item,
+            category_ids: product.category_ids,
+        })
         setPurchaseDetails({
             ...purchaseDetails,
-            supplier: product.supplier,
+            supplier_id: product.supplier ? product.supplier.id : null,
             price_per_item: product.price_per_item,
         });
         setOpenPurchase(true);
@@ -152,7 +170,15 @@ function App() {
 
     // Функції для відкриття/закриття модальних вікон
     const handleOpenEdit = (product: IProduct) => {
-        setEditProduct(product);
+        setEditProduct({
+            id: product.id,
+            name: product.name,
+            supplier_id: product.supplier ? product.supplier.id : null,
+            quantity: product.quantity,
+            total_price: product.total_price,
+            price_per_item: product.price_per_item,
+            category_ids: product.category_ids,
+        });
         setOpenEdit(true);
         setSelectedCategories(product.category_ids);
     };
@@ -167,19 +193,18 @@ function App() {
         setNewProduct((newProduct) => {
             return {
                 ...newProduct,
-                created_date: new Date().toISOString().slice(0, 10),
             }
         })
     };
     const handleCloseAdd = () => {
         setNewProduct({
             name: '',
-            supplier: '',
+            supplier_id: null,
             quantity: 0,
             total_price: 0,
             price_per_item: 0,
             category_ids: [],
-            created_date: '',
+            // created_date: '',
         })
         setOpenAdd(false);
     }
@@ -188,7 +213,7 @@ function App() {
             quantity: 0,
             price_per_item: 0,
             total_price: 0,
-            supplier: '',
+            supplier_id: null,
             purchase_date: new Date().toISOString().slice(0, 10),
         })
 
@@ -289,7 +314,7 @@ function App() {
             quantity: purchaseDetails.quantity,
             price_per_item: purchaseDetails.price_per_item,
             total_price: purchaseDetails.total_price,
-            supplier: purchaseDetails.supplier,
+            supplier_id: purchaseDetails.supplier_id,
             purchase_date: purchaseDetails.purchase_date,
         };
 
@@ -306,8 +331,8 @@ function App() {
     };
 
     const handleSale = () => {
-        if (saleData && editProduct) {
-            addSale(editProduct.id, saleData).then(() => {
+        if (saleData) {
+            addSale(saleData.productId, saleData).then(() => {
                 handleCloseSale();
                 fetchProductsFunc();
                 // Тут можна також оновити список продуктів або історію, якщо потрібно
@@ -334,6 +359,19 @@ function App() {
         })
             .catch(error => {
                 console.error('Error fetching categories', error);
+            });
+
+        fetchGetAllSuppliers()
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setSuppliers(data);  // Припустимо, що ви маєте state для постачальників
+                } else {
+                    console.error('Fetched data is not an array:', data);
+                    setSuppliers([]);  // Очищення при помилці
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching suppliers', error);
             });
     }, []);
 
@@ -462,6 +500,7 @@ function App() {
 
             {
                 openAdd && <AddProductModal
+                    suppliers={suppliers}
                     setNewProduct={setNewProduct}
                     newProduct={newProduct}
                     open={openAdd}
@@ -473,7 +512,8 @@ function App() {
             }
 
             {(openEdit && editProduct) &&
-            <EditProductModal selectedCategories={selectedCategories} categories={categories}
+            <EditProductModal suppliers={suppliers}
+                              selectedCategories={selectedCategories} categories={categories}
                               handleCategoryChange={handleCategoryChange} open={openEdit}
                               handleCloseEdit={handleCloseEdit}
                               editProduct={editProduct}
@@ -488,11 +528,12 @@ function App() {
                 />
             )}
 
-            {openPurchase && <PurchaseProductModal open={openPurchase}
-                                                   handleClosePurchase={handleClosePurchase}
-                                                   purchaseDetails={purchaseDetails}
-                                                   setPurchaseDetails={setPurchaseDetails}
-                                                   handleSubmitPurchase={handleSubmitPurchase}/>}
+            {(openPurchase && purchaseDetails) && <PurchaseProductModal openPurchase={openPurchase}
+                                                                        suppliers={suppliers}
+                                                                        handleClosePurchase={handleClosePurchase}
+                                                                        purchaseDetails={purchaseDetails}
+                                                                        setPurchaseDetails={setPurchaseDetails}
+                                                                        handleSubmitPurchase={handleSubmitPurchase}/>}
 
 
             {

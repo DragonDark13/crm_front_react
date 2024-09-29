@@ -7,23 +7,26 @@ import {
     FormGroup,
     FormControlLabel,
     Checkbox,
-    Grid
+    Grid, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
-import {ICategory, IProduct} from "../../App";
+import {ICategory, IEditProduct, IProduct, ISupplier} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IEditProductModalProps {
     open: boolean;
     handleCloseEdit: () => void;
-    editProduct: IProduct;
-    setEditProduct: (product: IProduct) => void;
+    editProduct: IEditProduct;
+    setEditProduct: (product: IEditProduct) => void;
     handleEditSave: () => void;
     categories: ICategory[],
     selectedCategories: number[],
     handleCategoryChange: (categoryID: number) => void,
+    suppliers: ISupplier[];  // Додано
+
 }
 
 const EditProductModal: React.FC<IEditProductModalProps> = ({
+                                                                suppliers,
                                                                 open,
                                                                 handleCloseEdit,
                                                                 editProduct,
@@ -57,13 +60,10 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             isValid = false;
         }
 
-        if (!editProduct.supplier.trim()) {
-            tempErrors.supplier = 'Supplier is required';
-            isValid = false;
-        } else if (editProduct.supplier.length > 100) {
-            tempErrors.supplier = 'Supplier cannot exceed 100 characters';
-            isValid = false;
-        }
+        // if (!editProduct.supplier) {
+        //     tempErrors.supplier = 'Supplier is required';
+        //     isValid = false;
+        // }
 
         if (editProduct.quantity < 0) {
             tempErrors.quantity = 'Quantity cannot be less than 0';
@@ -109,20 +109,23 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             margin="normal"
                             error={!!errors.name}
                             helperText={errors.name}
-                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
+                            inputProps={{maxLength: 100}}  // Максимальна довжина 100 символів
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField
-                            label="Supplier"
-                            value={editProduct.supplier}
-                            onChange={(e) => setEditProduct({...editProduct, supplier: e.target.value})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.supplier}
-                            helperText={errors.supplier}
-                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
-                        />
+                        <FormControl fullWidth margin="normal" error={!!errors.supplier}>
+                            <InputLabel>Постачальник</InputLabel>
+                            <Select
+                                value={editProduct.supplier_id ? editProduct.supplier_id : ''}  // Змінено для використання
+                                // id постачальника
+                                onChange={(e) => setEditProduct({...editProduct, supplier_id: e.target.value})}
+                            >
+                                {suppliers.map(supplier => (
+                                    <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>
+                                ))}
+                            </Select>
+                            {errors.supplier && <span className="error">{errors.supplier}</span>}
+                        </FormControl>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
@@ -136,7 +139,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             margin="normal"
                             error={!!errors.quantity}
                             helperText={errors.quantity}
-                            inputProps={{ min: 0, max: 100000 }}  // Обмеження значення від 0 до 100000
+                            inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
@@ -149,7 +152,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             margin="normal"
                             error={!!errors.price_per_item}
                             helperText={errors.price_per_item}
-                            inputProps={{ min: 0, max: 100000 }}  // Обмеження значення від 0 до 100000
+                            inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
@@ -187,5 +190,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         </CustomDialog>
     );
 };
+
+// TODO перевірка на зміни
 
 export default EditProductModal;

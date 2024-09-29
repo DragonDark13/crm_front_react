@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {INewProduct, IProduct, IPurchaseData, ISaleData} from "../App";
+import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../App";
 
 
 // Створення екземпляра axios з правильним типом конфігурації
@@ -153,7 +153,8 @@ export const addProduct = (newProduct: INewProduct) => {
 };
 
 // Функція для оновлення продукту
-export const updateProduct = (productId: number, editProduct: IProduct) => {
+export const updateProduct = (productId: number, editProduct: IEditProduct) => {
+    console.log(editProduct);
     return api.put(`/product/${productId}`, editProduct)
         .catch(error => {
             console.error('Error updating product:', error);
@@ -176,6 +177,16 @@ export const addSale = (productId: number, saleData: ISaleData) => {
         .catch(error => {
             console.error('Error adding sale:', error);
             throw error;
+        });
+};
+
+// Функція для отримання списку постачальників
+export const fetchGetAllSuppliers = () => {
+    return api.get('/suppliers')  // Припустимо, що API-метод для отримання постачальників - це '/suppliers'
+        .then(response => response.data)
+        .catch(error => {
+            console.error('Error fetching suppliers:', error);
+            return [];
         });
 };
 

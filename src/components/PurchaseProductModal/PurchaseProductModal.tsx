@@ -1,18 +1,30 @@
-import {TextField, Button, DialogActions, DialogContent, Grid} from '@mui/material';
+import {
+    TextField,
+    Button,
+    DialogActions,
+    DialogContent,
+    Grid,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem
+} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import  {useState, useEffect} from "react";
-import {IPurchaseData} from "../../App";
+import React, {useState, useEffect} from "react";
+import {IPurchaseData, ISupplier} from "../../App";
 
 interface IPurchaseProductModal {
-    open: boolean;
+    openPurchase: boolean;
     handleClosePurchase: () => void;
     purchaseDetails: IPurchaseData;
     setPurchaseDetails: (details: IPurchaseData) => void;
     handleSubmitPurchase: () => void;
+    suppliers: ISupplier[];  // Додано
 }
 
 const PurchaseProductModal = ({
-                                  open,
+                                  suppliers,
+                                  openPurchase,
                                   handleClosePurchase,
                                   purchaseDetails,
                                   setPurchaseDetails,
@@ -32,7 +44,7 @@ const PurchaseProductModal = ({
             quantity: purchaseDetails.quantity <= 0 ? 'Quantity must be greater than 0' : '',
             price_per_item: purchaseDetails.price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
             total_price: purchaseDetails.total_price <= 0 ? 'Total price must be greater than 0' : '',
-            supplier: purchaseDetails.supplier.trim() === '' ? 'Supplier is required' : '',
+            supplier: purchaseDetails.supplier_id === null ? 'Supplier is required' : '',
             purchase_date: purchaseDetails.purchase_date === '' ? 'Purchase date is required' : ''
         };
         setErrors(newErrors);
@@ -56,7 +68,7 @@ const PurchaseProductModal = ({
 
     return (
         <CustomDialog
-            open={open}
+            open={openPurchase}
             handleClose={handleClosePurchase}
             title="Purchase Product"
             maxWidth="md"
@@ -64,16 +76,19 @@ const PurchaseProductModal = ({
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={8}>
-                        <TextField
-                            label="Supplier"
-                            value={purchaseDetails.supplier}
-                            onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier: e.target.value})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.supplier}
-                            helperText={errors.supplier}
-                            inputProps={{maxLength: 100}}  // Обмеження на довжину тексту
-                        />
+                        <FormControl disabled fullWidth margin="normal" error={!!errors.supplier}>
+                            <InputLabel>Постачальник</InputLabel>
+                            <Select
+                                value={purchaseDetails.supplier_id ? purchaseDetails.supplier_id : ''}  // Змінено для використання
+                                // id постачальника
+                                onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier_id: e.target.value})}
+                            >
+                                {suppliers.map(supplier => (
+                                    <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>
+                                ))}
+                            </Select>
+                            {errors.supplier && <span className="error">{errors.supplier}</span>}
+                        </FormControl>
 
                     </Grid>
                     <Grid item xs={12} sm={4}>

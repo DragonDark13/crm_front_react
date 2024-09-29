@@ -6,7 +6,7 @@ import {
     Checkbox,
     DialogContent,
     DialogActions,
-    Grid
+    Grid, FormControl, Select, MenuItem, InputLabel
 } from '@mui/material';
 import {ICategory, INewProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
@@ -23,6 +23,8 @@ interface IAddProductModal {
     selectedCategories: number[],
     handleCategoryChange: (categoryID: number) => void,
     handleAdd: () => void
+    suppliers: { id: number; name: string }[];  // Додано
+
 }
 
 const AddProductModal = ({
@@ -33,7 +35,8 @@ const AddProductModal = ({
                              categories,
                              selectedCategories,
                              handleCategoryChange,
-                             handleAdd
+                             handleAdd,
+                             suppliers
                          }: IAddProductModal) => {
     const [errors, setErrors] = useState({
         name: '',
@@ -45,7 +48,7 @@ const AddProductModal = ({
     const validateFields = () => {
         const newErrors = {
             name: newProduct.name.trim() === '' ? 'Name is required' : '',
-            supplier: newProduct.supplier.trim() === '' ? 'Supplier is required' : '',
+            supplier: newProduct.supplier_id === null ? 'Supplier is required' : '',
             quantity: newProduct.quantity < 0 ? 'Quantity must be greater than or equal to 0' : '',
             price_per_item: newProduct.price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
         };
@@ -85,20 +88,22 @@ const AddProductModal = ({
                             margin="normal"
                             error={!!errors.name}
                             helperText={errors.name}
-                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
+                            inputProps={{maxLength: 100}}  // Максимальна довжина 100 символів
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField
-                            label="Постачальник"
-                            value={newProduct.supplier}
-                            onChange={(e) => setNewProduct({...newProduct, supplier: e.target.value})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.supplier}
-                            helperText={errors.supplier}
-                            inputProps={{ maxLength: 100 }}  // Максимальна довжина 100 символів
-                        />
+                        <FormControl fullWidth margin="normal" error={!!errors.supplier}>
+                            <InputLabel>Постачальник</InputLabel>
+                            <Select
+                                value={newProduct.supplier_id}  // Змінено для використання id постачальника
+                                onChange={(e) => setNewProduct({...newProduct, supplier_id: e.target.value})}
+                            >
+                                {suppliers.map(supplier => (
+                                    <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>
+                                ))}
+                            </Select>
+                            {errors.supplier && <span className="error">{errors.supplier}</span>}
+                        </FormControl>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>

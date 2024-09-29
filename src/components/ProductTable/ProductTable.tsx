@@ -92,7 +92,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                         <TableRow key={`${product.id}${index}`}>
                             <TableCell>{product.id}</TableCell>
                             <TableCell>{product.name}</TableCell>
-                            <TableCell>{product.supplier}</TableCell>
+                            <TableCell>{product.supplier?.name}</TableCell>
                             <TableCell>{product.quantity}</TableCell>
                             <TableCell>{product.total_price}</TableCell>
                             <TableCell>{product.price_per_item}</TableCell>
