@@ -27,10 +27,9 @@ import EditProductModal from "./components/EditProductModal/EditProductModal";
 import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProductModal";
 import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
 import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNewCategoryModal";
-import CategoryFilter from "./components/CategoryFilter/CategoryFilter";
 import ProductTable from "./components/ProductTable/ProductTable";
 import AddSupplierModal from "./components/AddSupplierModal/AddSupplierModal";
-import SupplierFilter from "./components/SupplierFilter/SupplierFilter";
+import FilterComponent from "./components/FilterComponent/FilterComponent";
 
 
 export interface IBaseProduct {
@@ -47,7 +46,7 @@ export interface IProduct extends IBaseProduct {
 }
 
 export interface ISupplierID {
-    supplier_id: number | null;
+    supplier_id: number | '';
 }
 
 export interface INewProduct extends IBaseProduct, ISupplierID {
@@ -94,8 +93,8 @@ function App() {
     const [error, setError] = useState<string | null>(null); // Стан для помилок
     const [newProduct, setNewProduct] = useState<INewProduct>({
         name: '',
-        supplier_id: null,
-        quantity: 0,
+        supplier_id: '',
+        quantity: 1,
         total_price: 0,
         price_per_item: 0,
         category_ids: [],
@@ -122,7 +121,7 @@ function App() {
         quantity: 0,
         price_per_item: 0,
         total_price: 0,
-        supplier_id: null,
+        supplier_id: '',
         purchase_date: new Date().toISOString().slice(0, 10), // Формат YYYY-MM-DD
     });
 
@@ -171,7 +170,7 @@ function App() {
         setEditProduct({
             id: product.id,
             name: product.name,
-            supplier_id: product.supplier ? product.supplier.id : null,
+            supplier_id: product.supplier ? product.supplier.id : '',
             quantity: product.quantity,
             total_price: product.total_price,
             price_per_item: product.price_per_item,
@@ -179,7 +178,7 @@ function App() {
         })
         setPurchaseDetails({
             ...purchaseDetails,
-            supplier_id: product.supplier ? product.supplier.id : null,
+            supplier_id: product.supplier ? product.supplier.id : '',
             price_per_item: product.price_per_item,
         });
         setOpenPurchase(true);
@@ -190,7 +189,7 @@ function App() {
         setEditProduct({
             id: product.id,
             name: product.name,
-            supplier_id: product.supplier ? product.supplier.id : null,
+            supplier_id: product.supplier ? product.supplier.id : '',
             quantity: product.quantity,
             total_price: product.total_price,
             price_per_item: product.price_per_item,
@@ -216,7 +215,7 @@ function App() {
     const handleCloseAdd = () => {
         setNewProduct({
             name: '',
-            supplier_id: null,
+            supplier_id: '',
             quantity: 0,
             total_price: 0,
             price_per_item: 0,
@@ -230,7 +229,7 @@ function App() {
             quantity: 0,
             price_per_item: 0,
             total_price: 0,
-            supplier_id: null,
+            supplier_id: '',
             purchase_date: new Date().toISOString().slice(0, 10),
         })
 
@@ -320,10 +319,17 @@ function App() {
         return stabilizedProducts.map((el) => el[0]);
     };
 
+    const getFieldValue = (product: IProduct, field: keyof IProduct): any => {
+        if (field === 'supplier') {
+            return product.supplier?.name || ''; // Повертає ім'я постачальника або порожній рядок
+        }
+        return product[field];
+    };
+
     const getComparator = (order: 'asc' | 'desc', orderBy: keyof IProduct) => {
         return order === 'desc'
-            ? (a: IProduct, b: IProduct) => (b[orderBy] != null && a[orderBy] != null ? (b[orderBy] < a[orderBy] ? -1 : 1) : 0)
-            : (a: IProduct, b: IProduct) => (a[orderBy] != null && b[orderBy] != null ? (a[orderBy] < b[orderBy] ? -1 : 1) : 0);
+            ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
+            : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
     };
     const handleSubmitPurchase = () => {
         const purchaseData: IPurchaseData = {
@@ -561,39 +567,15 @@ function App() {
                             <Button variant={"outlined"} onClick={toggleDrawer(false)}>
                                 Закрити
                             </Button>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    <h2>Фільтри</h2>
-                                    <div>
-                                        <div>
-                                            <h3>Категорії</h3>
-                                            <CategoryFilter
-                                                selectedFilterCategories={selectedFilterCategories}
-                                                handleCategoryFilterChange={handleCategoryFilterChange}
-                                                categories={categories}
-                                            />
-                                        </div>
-                                        <div>
-                                            <h3>Постачальники</h3>
-                                            <SupplierFilter
-                                                selectedFilterSuppliers={selectedFilterSuppliers}
-                                                handleSupplierFilterChange={handleSupplierFilterChange}
-                                                suppliers={suppliers}
-                                            />
-                                        </div>
-                                        <Button variant={"contained"} onClick={() => {
-                                            setSelectedFilterCategories([]);
-                                            setSelectedFilterSuppliers([]);
-                                            applyFilters([], []);
-                                        }}>
-                                            Очистити
-                                        </Button>
-                                    </div>
-
-                                </Grid>
-
-                            </Grid>
-
+                            <FilterComponent selectedFilterCategories={selectedFilterCategories}
+                                             handleCategoryFilterChange={handleCategoryFilterChange}
+                                             categories={categories}
+                                             selectedFilterSuppliers={selectedFilterSuppliers}
+                                             handleSupplierFilterChange={handleSupplierFilterChange}
+                                             suppliers={suppliers}
+                                             applyFilters={applyFilters}
+                                             setSelectedFilterCategories={setSelectedFilterCategories}
+                                             setSelectedFilterSuppliers={setSelectedFilterSuppliers}/>
                         </Drawer>
 
                         <ProductTable
@@ -628,7 +610,7 @@ function App() {
                     suppliers={suppliers}
                     setNewProduct={setNewProduct}
                     newProduct={newProduct}
-                    open={openAdd}
+                    openAdd={openAdd}
                     categories={categories}
                     handleAdd={handleAdd}
                     handleCategoryChange={handleCategoryChange}
@@ -639,7 +621,7 @@ function App() {
             {(openEdit && editProduct) &&
             <EditProductModal suppliers={suppliers}
                               selectedCategories={selectedCategories} categories={categories}
-                              handleCategoryChange={handleCategoryChange} open={openEdit}
+                              handleCategoryChange={handleCategoryChange} openEdit={openEdit}
                               handleCloseEdit={handleCloseEdit}
                               editProduct={editProduct}
                               setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}

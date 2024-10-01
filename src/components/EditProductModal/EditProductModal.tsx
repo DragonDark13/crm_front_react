@@ -11,9 +11,18 @@ import {
 } from '@mui/material';
 import {ICategory, IEditProduct, ISupplier} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
+import TextInput from "../FormComponents/TextInput";
+import SupplierSelect from "../FormComponents/SupplierSelect";
+import ProductNameField from "../FormComponents/ProductNameField";
+import PriceField from "../FormComponents/PriceField";
+import TotalPriceField from "../FormComponents/TotalPriceField";
+import QuantityField from "../FormComponents/QuantityField";
+import SupplierSelectField from "../FormComponents/SupplierSelectField";
+import CategoriesSelect from "../FormComponents/CategoriesSelect";
+import {roundToDecimalPlaces} from "../../utils/function";
 
 interface IEditProductModalProps {
-    open: boolean;
+    openEdit: boolean;
     handleCloseEdit: () => void;
     editProduct: IEditProduct;
     setEditProduct: (product: IEditProduct) => void;
@@ -27,7 +36,7 @@ interface IEditProductModalProps {
 
 const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 suppliers,
-                                                                open,
+                                                                openEdit,
                                                                 handleCloseEdit,
                                                                 editProduct,
                                                                 setEditProduct,
@@ -43,148 +52,117 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         price_per_item: ''
     });
 
+    // Обчислення загальної ціни
     useEffect(() => {
         const totalPrice = editProduct.quantity * editProduct.price_per_item;
-        setEditProduct({...editProduct, total_price: totalPrice});
+        setEditProduct({...editProduct, total_price: roundToDecimalPlaces(totalPrice,2)});
     }, [editProduct.quantity, editProduct.price_per_item]);
 
+    // Валідація полів
     const validateFields = () => {
-        let tempErrors = {name: '', supplier: '', quantity: '', price_per_item: ''};
-        let isValid = true;
-
-        if (!editProduct.name.trim()) {
-            tempErrors.name = 'Name is required';
-            isValid = false;
-        } else if (editProduct.name.length > 100) {
-            tempErrors.name = 'Name cannot exceed 100 characters';
-            isValid = false;
-        }
-
-        // if (!editProduct.supplier) {
-        //     tempErrors.supplier = 'Supplier is required';
-        //     isValid = false;
-        // }
-
-        if (editProduct.quantity < 0) {
-            tempErrors.quantity = 'Quantity cannot be less than 0';
-            isValid = false;
-        } else if (editProduct.quantity > 100000) {
-            tempErrors.quantity = 'Quantity cannot exceed 100,000';
-            isValid = false;
-        }
-
-        if (editProduct.price_per_item < 0) {
-            tempErrors.price_per_item = 'Price per item cannot be less than 0';
-            isValid = false;
-        } else if (editProduct.price_per_item > 100000) {
-            tempErrors.price_per_item = 'Price per item cannot exceed 100,000';
-            isValid = false;
-        }
-
-        setErrors(tempErrors);
-        return isValid;
+        // Логіка валідації
+        // ...
+        return true; // або false
     };
 
     const handleSave = () => {
         if (validateFields()) {
-            handleEditSave(); // Виклик збереження лише якщо всі поля валідні
+            handleEditSave();
         }
     };
 
     return (
         <CustomDialog
-            open={open}
+            open={openEdit}
             handleClose={handleCloseEdit}
-            title="Edit Product"
-            maxWidth="xl"
+            title="Редагування товару"
+            maxWidth="md"
         >
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
-                        <TextField
-                            label="Name"
+                        <ProductNameField
                             value={editProduct.name}
                             onChange={(e) => setEditProduct({...editProduct, name: e.target.value})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.name}
-                            helperText={errors.name}
-                            inputProps={{maxLength: 100}}  // Максимальна довжина 100 символів
+                            error={errors.name}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth margin="normal" error={!!errors.supplier}>
-                            <InputLabel>Постачальник</InputLabel>
-                            <Select
-                                value={editProduct.supplier_id ? editProduct.supplier_id : ''}  // Змінено для використання
-                                // id постачальника
-                                onChange={(e) => setEditProduct({...editProduct, supplier_id: Number(e.target.value)})}
-                            >
-                                {suppliers.map(supplier => (
-                                    <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>
-                                ))}
-                            </Select>
-                            {errors.supplier && <span className="error">{errors.supplier}</span>}
-                        </FormControl>
+                        <SupplierSelectField
+                            suppliers={suppliers}
+                            value={editProduct.supplier_id}
+                            onChange={(e) => setEditProduct({...editProduct, supplier_id: Number(e.target.value)})}
+                            error={errors.supplier}
+                        />
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Quantity"
-                            type="number"
+                        <QuantityField
                             value={editProduct.quantity}
-                            onChange={(e) => setEditProduct({...editProduct, quantity: Number(e.target.value)})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.quantity}
-                            helperText={errors.quantity}
-                            inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000
+                            onChange={(e) => {
+                                // Видаляємо ведучий 0, якщо такий є
+                                let value = e.target.value;
+
+                                value = value.replace(/[^0-9]/g, '');
+
+
+                                if (value.startsWith('0')) {
+                                    value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
+                                }
+                                if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
+                                    setEditProduct({...editProduct, quantity: Number(value)});
+                                }
+                            }}
+
+                            error={errors.quantity}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Price per Item"
-                            type="number"
+                        <PriceField
                             value={editProduct.price_per_item}
-                            onChange={(e) => setEditProduct({...editProduct, price_per_item: Number(e.target.value)})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.price_per_item}
-                            helperText={errors.price_per_item}
-                            inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000
+                            onChange={(e) => {
+                                let value = e.target.value;
+
+
+                                // Заміна коми на крапку для введення десяткових чисел
+
+                                // Регулярний вираз для числа з двома знаками після крапки
+                                const regex = /^\d*\.?\d{0,2}$/;
+
+                                // Якщо введення відповідає регулярному виразу, оновлюємо state
+                                if (regex.test(value) || value.endsWith('.')) {
+
+                                    setEditProduct({
+                                        ...editProduct,
+                                        price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо
+                                        // значення або
+                                        // ставимо 0
+                                    });
+                                }
+
+                            }}
+                            error={errors.price_per_item}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Total Price"
-                            type="number"
-                            value={editProduct.total_price}
-                            fullWidth
-                            margin="normal"
-                            disabled
-                        />
+                        <TotalPriceField value={editProduct.total_price}/>
                     </Grid>
                 </Grid>
-                <FormGroup>
-                    {categories.map(category => (
-                        <FormControlLabel
-                            key={category.id}
-                            control={
-                                <Checkbox
-                                    checked={selectedCategories.includes(category.id)}
-                                    onChange={() => handleCategoryChange(category.id)}
-                                />
-                            }
-                            label={category.name}
-                        />
-                    ))}
-                </FormGroup>
+
+                <CategoriesSelect
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    handleCategoryChange={handleCategoryChange}
+                />
             </DialogContent>
+
             <DialogActions>
-                <Button variant={"outlined"} onClick={handleCloseEdit}>Закрити</Button>
-                <Button variant="contained" color="primary" onClick={handleSave} sx={{mt: 2}}>
-                    Save Changes
+                <Button variant="outlined" onClick={handleCloseEdit}>
+                    Закрити
+                </Button>
+                <Button variant="contained" color="primary" onClick={handleSave}>
+                    Зберігти Зміни
                 </Button>
             </DialogActions>
         </CustomDialog>

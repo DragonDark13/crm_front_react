@@ -3,7 +3,7 @@
 import React from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper,  TableSortLabel,
+    TableRow, Paper, TableSortLabel, Box,
 } from '@mui/material';
 import {IProduct} from "../../App";
 import {IconButton, Tooltip} from '@mui/material';
@@ -53,26 +53,25 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                 direction={orderBy === 'name' ? order : 'asc'}
                                 onClick={() => handleSort('name')}
                             >
-                                Name
+                                Назва
                             </TableSortLabel>
                         </TableCell>
-                        <TableCell>Supplier</TableCell>
+                        <TableCell>
+                            <TableSortLabel
+                                active={orderBy === 'supplier'}
+                                direction={orderBy === 'supplier' ? order : 'asc'}
+                                onClick={() => handleSort('supplier')}
+                            >
+                                Постачальник
+                            </TableSortLabel>
+                        </TableCell>
                         <TableCell>
                             <TableSortLabel
                                 active={orderBy === 'quantity'}
                                 direction={orderBy === 'quantity' ? order : 'asc'}
                                 onClick={() => handleSort('quantity')}
                             >
-                                Quantity
-                            </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                            <TableSortLabel
-                                active={orderBy === 'total_price'}
-                                direction={orderBy === 'total_price' ? order : 'asc'}
-                                onClick={() => handleSort('total_price')}
-                            >
-                                Total Price
+                                Кількість
                             </TableSortLabel>
                         </TableCell>
                         <TableCell>
@@ -81,48 +80,60 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                 direction={orderBy === 'price_per_item' ? order : 'asc'}
                                 onClick={() => handleSort('price_per_item')}
                             >
-                                Price per Item
+                                Ціна за 1шт
                             </TableSortLabel>
                         </TableCell>
-                        <TableCell>Actions</TableCell>
+                        <TableCell>
+                            <TableSortLabel
+                                active={orderBy === 'total_price'}
+                                direction={orderBy === 'total_price' ? order : 'asc'}
+                                onClick={() => handleSort('total_price')}
+                            >
+                                Сумма
+                            </TableSortLabel>
+                        </TableCell>
+
+                        <TableCell>Дія</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {filteredProducts.length > 0 && sortProducts(filteredProducts, getComparator(order, orderBy)).map((product: IProduct, index) => (
-                        <TableRow key={`${product.id}${index}`}>
+                        <TableRow key={`${product.id}${index}${product.total_price}`}>
                             <TableCell>{product.id}</TableCell>
                             <TableCell>{product.name}</TableCell>
-                            <TableCell>{product.supplier?.name}</TableCell>
+                            <TableCell>{product.supplier?.name || 'N/A'}</TableCell>
                             <TableCell>{product.quantity}</TableCell>
-                            <TableCell>{product.total_price}</TableCell>
                             <TableCell>{product.price_per_item}</TableCell>
-                            <TableCell> <Tooltip title="Редагувати">
-                                <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
-                                    <EditIcon fontSize={"small"}/>
-                                </IconButton>
-                            </Tooltip>
-                                <Tooltip title="Видалити">
-                                    <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
-                                        <DeleteIcon fontSize={"small"}/>
+                            <TableCell>{product.total_price}</TableCell>
+
+                            <TableCell>
+                                <Box display={"flex"}> <Tooltip title="Редагувати">
+                                    <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
+                                        <EditIcon fontSize={"small"}/>
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip title="Купівля">
-                                    <IconButton color="primary" onClick={() => handlePurchase(product)}>
-                                        <ShoppingCartIcon fontSize={"small"}/>
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Продаж">
-                                    <IconButton color="primary" onClick={() => handleOpenSale(product)}>
-                                        <SellIcon fontSize={"small"}/>
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Історія">
-                                    <IconButton  onClick={() => {
-                                        handleOpenHistoryModal(product.id);
-                                    }}>
-                                        <HistoryIcon fontSize={"small"}/>
-                                    </IconButton>
-                                </Tooltip>
+                                    <Tooltip title="Видалити">
+                                        <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
+                                            <DeleteIcon fontSize={"small"}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Купівля">
+                                        <IconButton color="primary" onClick={() => handlePurchase(product)}>
+                                            <ShoppingCartIcon fontSize={"small"}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Продаж">
+                                        <IconButton color="primary" onClick={() => handleOpenSale(product)}>
+                                            <SellIcon fontSize={"small"}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Історія">
+                                        <IconButton size={"small"} onClick={() => {
+                                            handleOpenHistoryModal(product.id);
+                                        }}>
+                                            <HistoryIcon fontSize={"small"}/>
+                                        </IconButton>
+                                    </Tooltip></Box>
                             </TableCell>
                         </TableRow>
                     ))}
