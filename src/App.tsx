@@ -245,6 +245,7 @@ function App() {
     }, []);
 
     const fetchProductsFunc = () => {
+        setIsLoading(true)
         fetchProducts()
             .then(data => {
                 if (Array.isArray(data)) {
@@ -261,6 +262,8 @@ function App() {
                 console.error('There was an error fetching the products!', error);
                 setError('There was an error fetching the products!');
                 setFilteredProducts([]);
+                setIsLoading(false)
+
 
                 setProducts([]); // Встановлюємо порожній масив у разі помилки
             })

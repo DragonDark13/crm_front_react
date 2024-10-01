@@ -2,7 +2,7 @@ import {ChangeEvent, FC} from "react";
 import {TextField} from "@mui/material";
 
 const PriceField: FC<{
-    value: string;
+    value: number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     error: string;
 }> = ({value, onChange, error}) => (

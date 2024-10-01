@@ -11,15 +11,14 @@ import {
 } from '@mui/material';
 import {ICategory, IEditProduct, ISupplier} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
-import TextInput from "../FormComponents/TextInput";
-import SupplierSelect from "../FormComponents/SupplierSelect";
+
 import ProductNameField from "../FormComponents/ProductNameField";
 import PriceField from "../FormComponents/PriceField";
 import TotalPriceField from "../FormComponents/TotalPriceField";
 import QuantityField from "../FormComponents/QuantityField";
-import SupplierSelectField from "../FormComponents/SupplierSelectField";
 import CategoriesSelect from "../FormComponents/CategoriesSelect";
 import {roundToDecimalPlaces} from "../../utils/function";
+import SupplierSelect from "../FormComponents/SupplierSelect";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -88,7 +87,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <SupplierSelectField
+                        <SupplierSelect
                             suppliers={suppliers}
                             value={editProduct.supplier_id}
                             onChange={(e) => setEditProduct({...editProduct, supplier_id: Number(e.target.value)})}

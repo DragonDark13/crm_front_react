@@ -15,9 +15,9 @@ import ProductNameField from "../FormComponents/ProductNameField";
 import PriceField from "../FormComponents/PriceField";
 import TotalPriceField from "../FormComponents/TotalPriceField";
 import QuantityField from "../FormComponents/QuantityField";
-import SupplierSelectField from "../FormComponents/SupplierSelectField";
 import CategoriesSelect from "../FormComponents/CategoriesSelect";
 import {roundToDecimalPlaces} from "../../utils/function";
+import SupplierSelect from "../FormComponents/SupplierSelect";
 //TODO додай постачальників таблиці
 // Повідомлення про успіх
 
@@ -99,7 +99,7 @@ const AddProductModal = ({
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <SupplierSelectField
+                        <SupplierSelect
                             suppliers={suppliers}
                             value={newProduct.supplier_id}
                             onChange={(e) => setNewProduct({...newProduct, supplier_id: Number(e.target.value)})}
