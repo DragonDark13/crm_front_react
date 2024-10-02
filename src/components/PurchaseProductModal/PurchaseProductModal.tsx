@@ -10,8 +10,9 @@ import {
     MenuItem
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import  {useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import {IPurchaseData, ISupplier} from "../../App";
+import SupplierSelect from "../FormComponents/SupplierSelect";
 
 interface IPurchaseProductModal {
     openPurchase: boolean;
@@ -70,25 +71,34 @@ const PurchaseProductModal = ({
         <CustomDialog
             open={openPurchase}
             handleClose={handleClosePurchase}
-            title="Purchase Product"
+            title="Закупити"
             maxWidth="md"
         >
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={8}>
-                        <FormControl disabled fullWidth margin="normal" error={!!errors.supplier}>
-                            <InputLabel>Постачальник</InputLabel>
-                            <Select
-                                value={purchaseDetails.supplier_id ? purchaseDetails.supplier_id : ''}  // Змінено для використання
-                                // id постачальника
-                                onChange={(e) => setPurchaseDetails({...purchaseDetails, supplier_id: Number(e.target.value)})}
-                            >
-                                {suppliers.map(supplier => (
-                                    <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>
-                                ))}
-                            </Select>
-                            {errors.supplier && <span className="error">{errors.supplier}</span>}
-                        </FormControl>
+                        <SupplierSelect  disabled={true} suppliers={suppliers} value={purchaseDetails.supplier_id} onChange={(e) => setPurchaseDetails({
+                                    ...purchaseDetails,
+                                    supplier_id: Number(e.target.value)
+                                })}/>
+                        {/*<FormControl disabled fullWidth margin="normal" error={!!errors.supplier}>*/}
+                        {/*    <InputLabel id={"label3"}>Постачальник</InputLabel>*/}
+                        {/*    <Select*/}
+                        {/*        labelId={'label3'}*/}
+                        {/*        label={"Постачальник"}*/}
+                        {/*        value={purchaseDetails.supplier_id ? purchaseDetails.supplier_id : ''}  // Змінено для використання*/}
+                        {/*        // id постачальника*/}
+                        {/*        onChange={(e) => setPurchaseDetails({*/}
+                        {/*            ...purchaseDetails,*/}
+                        {/*            supplier_id: Number(e.target.value)*/}
+                        {/*        })}*/}
+                        {/*    >*/}
+                        {/*        {suppliers.map(supplier => (*/}
+                        {/*            <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>*/}
+                        {/*        ))}*/}
+                        {/*    </Select>*/}
+                        {/*    {errors.supplier && <span className="error">{errors.supplier}</span>}*/}
+                        {/*</FormControl>*/}
 
                     </Grid>
                     <Grid item xs={12} sm={4}>
@@ -156,8 +166,8 @@ const PurchaseProductModal = ({
             <DialogActions>
                 <Button variant={"outlined"} onClick={handleClosePurchase}>Закрити</Button>
 
-                <Button variant="contained" color="primary" onClick={handleSubmit} sx={{mt: 2}}>
-                    Confirm Purchase
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Підтвердити закупівлю
                 </Button>
             </DialogActions>
         </CustomDialog>

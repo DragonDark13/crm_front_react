@@ -1,13 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {
     DialogContent,
-    TextField,
     Button,
-    DialogActions,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
-    Grid, FormControl, InputLabel, Select, MenuItem
+    DialogActions, Grid,
 } from '@mui/material';
 import {ICategory, IEditProduct, ISupplier} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
@@ -24,7 +19,7 @@ interface IEditProductModalProps {
     openEdit: boolean;
     handleCloseEdit: () => void;
     editProduct: IEditProduct;
-    setEditProduct: (product: IEditProduct) => void;
+    setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct>>;
     handleEditSave: () => void;
     categories: ICategory[],
     selectedCategories: number[],
@@ -54,15 +49,71 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     // Обчислення загальної ціни
     useEffect(() => {
         const totalPrice = editProduct.quantity * editProduct.price_per_item;
-        setEditProduct({...editProduct, total_price: roundToDecimalPlaces(totalPrice,2)});
+        // setEditProduct({...editProduct, total_price: roundToDecimalPlaces(totalPrice, 2)});
+        handleFieldChange('total_price', roundToDecimalPlaces(totalPrice, 2))
     }, [editProduct.quantity, editProduct.price_per_item]);
 
     // Валідація полів
     const validateFields = () => {
-        // Логіка валідації
-        // ...
-        return true; // або false
+        let tempErrors = {name: '', supplier: '', quantity: '', price_per_item: ''};
+        let isValid = true;
+
+        if (!editProduct.name.trim()) {
+            tempErrors.name = 'Name is required';
+            isValid = false;
+        } else if (editProduct.name.length > 100) {
+            tempErrors.name = 'Name cannot exceed 100 characters';
+            isValid = false;
+        }
+
+        // if (!editProduct.supplier) {
+        //     tempErrors.supplier = 'Supplier is required';
+        //     isValid = false;
+        // }
+
+        if (editProduct.quantity < 0) {
+            tempErrors.quantity = 'Quantity cannot be less than 0';
+            isValid = false;
+        } else if (editProduct.quantity > 100000) {
+            tempErrors.quantity = 'Quantity cannot exceed 100,000';
+            isValid = false;
+        }
+
+        if (editProduct.price_per_item < 0) {
+            tempErrors.price_per_item = 'Price per item cannot be less than 0';
+            isValid = false;
+        } else if (editProduct.price_per_item > 100000) {
+            tempErrors.price_per_item = 'Price per item cannot exceed 100,000';
+            isValid = false;
+        }
+
+        setErrors(tempErrors);
+        return isValid;
     };
+
+    const [isModified, setIsModified] = useState(false);
+    const [originalProduct, setOriginalProduct] = useState<IEditProduct>(editProduct);
+
+    useEffect(() => {
+
+            setOriginalProduct(editProduct);
+            setIsModified(false); // Reset modified state when opening modal
+
+    }, []);
+
+    const handleFieldChange = (field: keyof IEditProduct, value: any) => {
+        // Use functional form of setEditProduct
+        setEditProduct((prevEd) => {
+            const updatedProduct: IEditProduct = {
+                ...prevEd, // Spread previous state, correctly typed
+                [field]: value, // Update the specific field
+            };
+            setIsModified(JSON.stringify(originalProduct) !== JSON.stringify(updatedProduct)); // Check if modified
+            return updatedProduct; // Return updated state
+        });
+    };
+
+    console.log("isModified",isModified);
 
     const handleSave = () => {
         if (validateFields()) {
@@ -82,7 +133,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                     <Grid item xs={12} sm={6}>
                         <ProductNameField
                             value={editProduct.name}
-                            onChange={(e) => setEditProduct({...editProduct, name: e.target.value})}
+                            onChange={(e) => handleFieldChange('name', e.target.value)}
                             error={errors.name}
                         />
                     </Grid>
@@ -90,7 +141,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                         <SupplierSelect
                             suppliers={suppliers}
                             value={editProduct.supplier_id}
-                            onChange={(e) => setEditProduct({...editProduct, supplier_id: Number(e.target.value)})}
+                            onChange={(e) => handleFieldChange('supplier_id', Number(e.target.value))}
                             error={errors.supplier}
                         />
                     </Grid>
@@ -110,7 +161,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                     value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
                                 }
                                 if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
-                                    setEditProduct({...editProduct, quantity: Number(value)});
+                                    handleFieldChange('quantity', Number(value));
                                 }
                             }}
 
@@ -123,7 +174,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             onChange={(e) => {
                                 let value = e.target.value;
 
-
                                 // Заміна коми на крапку для введення десяткових чисел
 
                                 // Регулярний вираз для числа з двома знаками після крапки
@@ -131,13 +181,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
                                 // Якщо введення відповідає регулярному виразу, оновлюємо state
                                 if (regex.test(value) || value.endsWith('.')) {
+                                    handleFieldChange('price_per_item', value === '' ? 0 : parseFloat(value));
 
-                                    setEditProduct({
-                                        ...editProduct,
-                                        price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо
-                                        // значення або
-                                        // ставимо 0
-                                    });
+
                                 }
 
                             }}
@@ -160,7 +206,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                 <Button variant="outlined" onClick={handleCloseEdit}>
                     Закрити
                 </Button>
-                <Button variant="contained" color="primary" onClick={handleSave}>
+                <Button disabled={!isModified} variant="contained" color="primary" onClick={handleSave}>
                     Зберігти Зміни
                 </Button>
             </DialogActions>

@@ -6,15 +6,17 @@ interface ISupplierSelectProps {
     value: number | string;
     onChange: (e: ChangeEvent<{ value: unknown }>) => void;
     error?: string;
+    disabled?: boolean; // Для заблокованого вибору постачальника (наприклад, при редагуванні замовлення)
 }
 
 const SupplierSelect: FC<ISupplierSelectProps> = ({
+                                                      disabled = false,
                                                       suppliers,
                                                       value,
                                                       onChange,
                                                       error,
                                                   }) => (
-    <FormControl fullWidth margin="normal" error={!!error}>
+    <FormControl disabled={disabled} fullWidth margin="normal" error={!!error}>
         <InputLabel id="supplier-select-label">Постачальник</InputLabel>
         <Select
             labelId="supplier-select-label"
