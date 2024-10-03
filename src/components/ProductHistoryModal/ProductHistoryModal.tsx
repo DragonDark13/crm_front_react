@@ -104,23 +104,23 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
         <CustomDialog
             open={openHistory}
             handleClose={onClose}
-            title={"Product History"}
+            title={"Історія товару"}
             maxWidth={"xl"}
         >
             <DialogContent>
                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
-                    <Tab label="History of Changes"/>
-                    <Tab label="Purchase History"/>
-                    <Tab label="Sales History"/>
+                    <Tab label="Історія змін"/>
+                    <Tab label="Історія закупівель"/>
+                    <Tab label="Історія продажів"/>
                 </Tabs>
                 <TabPanel value={tabIndex} index={0}>
                     <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell>Change Type</TableCell>
-                                    <TableCell>Change Amount</TableCell>
+                                    <TableCell>Дата</TableCell>
+                                    <TableCell>Тип зміни</TableCell>
+                                    <TableCell>Кількість змін</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -140,11 +140,11 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell>Price per Item</TableCell>
-                                    <TableCell>quantity_purchase</TableCell>
-                                    <TableCell>Total Price</TableCell>
-                                    <TableCell>Supplier</TableCell>
+                                    <TableCell>Дата</TableCell>
+                                    <TableCell>Ціна за одиницю</TableCell>
+                                    <TableCell>Кількість закупівлі</TableCell>
+                                    <TableCell>Загальна ціна</TableCell>
+                                    <TableCell>Постачальник</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -166,11 +166,11 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell>Price</TableCell>
-                                    <TableCell>total_price</TableCell>
-                                    <TableCell>Quantity Sold</TableCell>
-                                    <TableCell>customer</TableCell>
+                                    <TableCell>Дата</TableCell>
+                                    <TableCell>Ціна</TableCell>
+                                    <TableCell>Загальна ціна</TableCell>
+                                    <TableCell>Кількість проданих одиниць</TableCell>
+                                    <TableCell>Клієнт</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -189,6 +189,6 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                 </TabPanel>
             </DialogContent>
         </CustomDialog>
-    );
+        );
 };
 export default ProductHistoryModal
