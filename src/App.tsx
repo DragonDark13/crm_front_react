@@ -1,6 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button, Box, DialogContent, DialogTitle, Dialog, DialogContentText, DialogActions, Drawer, Grid, Container
+    Button,
+    Box,
+    DialogContent,
+    DialogTitle,
+    Dialog,
+    DialogContentText,
+    DialogActions,
+    Drawer,
+    Grid,
+    Container,
+    Alert,
+    Snackbar
 } from '@mui/material';
 
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
@@ -83,6 +94,13 @@ function App() {
 
     const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
     const [orderBy, setOrderBy] = useState<keyof IProduct>('name'); // Колонка для сортування
+    const [snackbar, setSnackbar] = useState<{ message: string; severity: 'success' | 'error' | 'info' | 'warning' | undefined }>({
+        message: '',
+        severity: undefined,
+    });
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
 
     // Load products and suppliers
     useEffect(() => {
@@ -189,38 +207,52 @@ function App() {
         setSelectedDeleteModalProductId(null);
     };
 
+    const showSnackbar = (message: string, severity: 'success' | 'error' | 'info' | 'warning') => {
+        setSnackbar({message, severity});
+        setOpenSnackbar(true);
+    };
+
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
+
+
     const handleDelete = async (productId: number) => {
         try {
-            await deleteProduct(productId); // Assuming deleteProduct() returns a Promise
+            await deleteProduct(productId);
             handleCloseDeleteModal();
-            await fetchProductsFunc(); // Refresh product list
+            await fetchProductsFunc();
+            showSnackbar('Product deleted successfully!', 'success'); // Show success message
         } catch (error) {
             console.error('There was an error deleting the product!', error);
+            showSnackbar('Failed to delete the product!', 'error'); // Show error message
         }
     };
 
     const handleAddProduct = async () => {
         try {
-            await addProduct(newProduct); // Assuming addProduct() returns a Promise
+            await addProduct(newProduct);
             await fetchProductsFunc();
             handleModalClose('openAdd');
+            showSnackbar('Product added successfully!', 'success'); // Show success message
         } catch (error) {
             console.error('There was an error adding the product!', error);
+            showSnackbar('Failed to add the product!', 'error'); // Show error message
         }
     };
 
     const handleEditSave = async () => {
-        if (!editProduct) return; // Check if there is a product to edit
+        if (!editProduct) return;
         try {
-            await updateProduct(editProduct.id, editProduct); // Assuming updateProduct() returns a Promise
+            await updateProduct(editProduct.id, editProduct);
             handleModalClose('openEdit');
             await fetchProductsFunc();
-
+            showSnackbar('Product updated successfully!', 'success'); // Show success message
         } catch (error) {
             console.error('There was an error updating the product!', error);
+            showSnackbar('Failed to update the product!', 'error'); // Show error message
         }
     };
-
     const handlePurchase = (product: IProduct) => {
         setEditProduct(mapProductToEditProduct(product));
         setPurchaseDetails(prevDetails => ({
@@ -232,7 +264,8 @@ function App() {
         handleModalOpen('openPurchase');
     };
 
-    const handleSubmitPurchase = () => {
+    const handleSubmitPurchase = async () => {
+        if (!editProduct) return;
         const purchaseData: IPurchaseData = {
             quantity: purchaseDetails.quantity,
             price_per_item: purchaseDetails.price_per_item,
@@ -241,26 +274,27 @@ function App() {
             purchase_date: purchaseDetails.purchase_date,
         };
 
-        if (!editProduct) return null
-
-        addPurchase(editProduct.id, purchaseData).then(() => {
-
-            handleModalClose("openPurchase")
-            fetchProductsFunc(); // Оновити список товарів
-        })
-            .catch(error => {
-                console.error('There was an error processing the purchase!', error);
-            });
+        try {
+            await addPurchase(editProduct.id, purchaseData);
+            handleModalClose('openPurchase');
+            await fetchProductsFunc();
+            showSnackbar('Purchase submitted successfully!', 'success'); // Show success message
+        } catch (error) {
+            console.error('There was an error processing the purchase!', error);
+            showSnackbar('Failed to process the purchase!', 'error'); // Show error message
+        }
     };
 
     const handleSale = async () => {
         if (saleData) {
             try {
-                await addSale(saleData.productId, saleData); // Assuming addSale() returns a Promise
+                await addSale(saleData.productId, saleData);
                 handleModalClose('openSale');
                 await fetchProductsFunc();
+                showSnackbar('Sale completed successfully!', 'success'); // Show success message
             } catch (error) {
                 console.error('There was an error saving the sale!', error);
+                showSnackbar('Failed to save the sale!', 'error'); // Show error message
             }
         }
     };
@@ -603,6 +637,17 @@ function App() {
                 open={modalState.openAddSupplierOpen}
                 handleClose={() => handleModalClose("openAddSupplierOpen")}
             />
+
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={1000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+            >
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
 
 
         </React.Fragment>
