@@ -31,7 +31,6 @@ import ProductTable from "./components/ProductTable/ProductTable";
 import AddSupplierModal from "./components/AddSupplierModal/AddSupplierModal";
 import FilterComponent from "./components/FilterComponent/FilterComponent";
 import {ICategory, IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData, ISupplier} from "./utils/types";
-import {amET} from "@mui/material/locale";
 
 
 function App() {
@@ -383,10 +382,6 @@ function App() {
         handleModalOpen("openHistory")
     }
 
-    const closeDrawer = () => {
-        handleModalClose("openDrawer")
-    }
-
     const handleCategoryChange = (categoryId: number) => {
 
         setSelectedCategories((prevState: number[]) => {
@@ -461,7 +456,7 @@ function App() {
                                     <Grid>
                                         <Button variant={"outlined"}
                                                 color={"primary"}
-                                                onClick={() => handleModalOpen("openAdd")}>
+                                                onClick={handleOpenAdd}>
                                             Додати Товар
                                         </Button>
                                     </Grid>
