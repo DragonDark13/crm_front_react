@@ -1,4 +1,3 @@
-
 export interface IBaseProduct {
     name: string;
     quantity: number;
@@ -50,4 +49,9 @@ export interface ISupplier {
     id: number;
     name: string;
     contact_info: string | null
+}
+
+export interface INewSupplier {
+    name: string,
+    contact_info: string
 }

@@ -21,11 +21,12 @@ const CreateNewCategoryModal = ({
         <CustomDialog
             open={openCategoryCreateModal}
             handleClose={handleCloseCategoryModal}
-            title="Add New Category"
+            title="Добадавання нової Категорії"
             maxWidth="xs"
         >
             <DialogContent>
                 <TextField
+                    fullWidth
                     label="Назва категорії"
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
@@ -33,10 +34,10 @@ const CreateNewCategoryModal = ({
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseCategoryModal} color="primary">
-                    Cancel
+                    Відміна
                 </Button>
                 <Button variant="contained" color="primary" onClick={() => createNewCategory(categoryName)}>
-                    Створити категорію
+                    Зберігти категорію
                 </Button>
             </DialogActions>
         </CustomDialog>

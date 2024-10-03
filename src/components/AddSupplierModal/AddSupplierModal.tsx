@@ -1,38 +1,28 @@
 import React, {useState} from "react";
 import {Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 import {addSupplier} from "../../api/api";
+import {INewSupplier} from "../../utils/types";
 
 interface AddSupplierModalProps {
     open: boolean;
     handleClose: () => void;
-    fetchSuppliersFunc: () => void;
+    handleAddSupplier: (newSupplier: INewSupplier) => void;
 }
 
-const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, fetchSuppliersFunc}) => {
+const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, handleAddSupplier}) => {
     const [name, setName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
     const [error, setError] = useState<string | null>(null);
 
-    const handleAddSupplier = () => {
-        const newSupplier = {name, contact_info: contactInfo};
 
-        addSupplier(newSupplier)
-            .then(() => {
-                fetchSuppliersFunc(); // Оновити список постачальників після додавання
-                handleClose(); // Закрити модальне вікно після успішного додавання
-            })
-            .catch((error) => {
-                setError('Error adding supplier: ' + error.message);
-            });
-    };
     return (
         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Add New Supplier</DialogTitle>
+            <DialogTitle>Додати нового постачальника</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     margin="dense"
-                    label="Supplier Name"
+                    label="Назва Постачальника"
                     fullWidth
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -41,7 +31,7 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, f
                 />
                 <TextField
                     margin="dense"
-                    label="Contact Info"
+                    label="Контактна інформація"
                     fullWidth
                     value={contactInfo}
                     onChange={(e) => setContactInfo(e.target.value)}
@@ -49,10 +39,17 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, f
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                    Cancel
+                    Відміна
                 </Button>
-                <Button onClick={handleAddSupplier} color="primary" variant="contained">
-                    Add Supplier
+
+                <Button onClick={() => {
+                    const newSupplier: INewSupplier = {
+                        name: name,
+                        contact_info: contactInfo
+                    }
+                    handleAddSupplier(newSupplier)
+                }} color="primary" variant="contained">
+                    Зберігти постачальника
                 </Button>
             </DialogActions>
         </Dialog>

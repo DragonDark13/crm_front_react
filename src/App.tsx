@@ -27,7 +27,7 @@ import {
     addNewCategory,
     addProduct,
     addPurchase,
-    addSale,
+    addSale, addSupplier,
     deleteProduct,
     fetchGetAllCategories, fetchGetAllSuppliers,
     fetchProducts,
@@ -41,7 +41,16 @@ import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNe
 import ProductTable from "./components/ProductTable/ProductTable";
 import AddSupplierModal from "./components/AddSupplierModal/AddSupplierModal";
 import FilterComponent from "./components/FilterComponent/FilterComponent";
-import {ICategory, IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData, ISupplier} from "./utils/types";
+import {
+    ICategory,
+    IEditProduct,
+    INewProduct,
+    INewSupplier,
+    IProduct,
+    IPurchaseData,
+    ISaleData,
+    ISupplier
+} from "./utils/types";
 
 
 function App() {
@@ -299,6 +308,20 @@ function App() {
         }
     };
 
+    const handleAddSupplier = (newSupplier: INewSupplier) => {
+
+        addSupplier(newSupplier)
+            .then(() => {
+                handleModalClose("openAddSupplierOpen");
+                showSnackbar('Supplier completed successfully!', 'success'); // Show success message
+                fetchSuppliersFunc(); // Оновити список постачальників після додавання
+            })
+            .catch((error) => {
+                console.error('There was an error saving the supplier!', error);
+                showSnackbar('There was an error saving the supplier!', "error");
+            });
+    };
+
     const handleOpenEdit = (product: IProduct) => {
         setEditProduct(mapProductToEditProduct(product));
         setSelectedCategories(product.category_ids);
@@ -479,7 +502,7 @@ function App() {
             ) : (
                 <React.Fragment>
                     <Container maxWidth={"xl"}>
-                        <h1>Product List</h1>
+                        <h1>Список товарів</h1>
                         <Grid container justifyContent={"space-between"}>
                             <Grid item>
                                 <Button variant={"contained"}
@@ -633,7 +656,7 @@ function App() {
             </Dialog>
 
             <AddSupplierModal
-                fetchSuppliersFunc={fetchSuppliersFunc}
+                handleAddSupplier={handleAddSupplier}
                 open={modalState.openAddSupplierOpen}
                 handleClose={() => handleModalClose("openAddSupplierOpen")}
             />
