@@ -10,9 +10,10 @@ import {
     MenuItem
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {IPurchaseData, ISupplier} from "../../App";
 import SupplierSelect from "../FormComponents/SupplierSelect";
+import QuantityField from "../FormComponents/QuantityField";
 
 interface IPurchaseProductModal {
     openPurchase: boolean;
@@ -21,6 +22,7 @@ interface IPurchaseProductModal {
     setPurchaseDetails: (details: IPurchaseData) => void;
     handleSubmitPurchase: () => void;
     suppliers: ISupplier[];  // Додано
+    nameProduct: string
 }
 
 const PurchaseProductModal = ({
@@ -29,7 +31,8 @@ const PurchaseProductModal = ({
                                   handleClosePurchase,
                                   purchaseDetails,
                                   setPurchaseDetails,
-                                  handleSubmitPurchase
+                                  handleSubmitPurchase,
+                                  nameProduct
                               }: IPurchaseProductModal) => {
     const [errors, setErrors] = useState({
         quantity: '',
@@ -45,7 +48,7 @@ const PurchaseProductModal = ({
             quantity: purchaseDetails.quantity <= 0 ? 'Quantity must be greater than 0' : '',
             price_per_item: purchaseDetails.price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
             total_price: purchaseDetails.total_price <= 0 ? 'Total price must be greater than 0' : '',
-            supplier: purchaseDetails.supplier_id === null ? 'Supplier is required' : '',
+            supplier: purchaseDetails.supplier_id === '' ? 'Supplier is required' : '',
             purchase_date: purchaseDetails.purchase_date === '' ? 'Purchase date is required' : ''
         };
         setErrors(newErrors);
@@ -71,16 +74,17 @@ const PurchaseProductModal = ({
         <CustomDialog
             open={openPurchase}
             handleClose={handleClosePurchase}
-            title="Закупити"
+            title={`Закупити ${nameProduct} x ${purchaseDetails.quantity}шт`}
             maxWidth="md"
         >
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={8}>
-                        <SupplierSelect  disabled={true} suppliers={suppliers} value={purchaseDetails.supplier_id} onChange={(e) => setPurchaseDetails({
-                                    ...purchaseDetails,
-                                    supplier_id: Number(e.target.value)
-                                })}/>
+                        <SupplierSelect disabled={true} suppliers={suppliers} value={purchaseDetails.supplier_id}
+                                        onChange={(e) => setPurchaseDetails({
+                                            ...purchaseDetails,
+                                            supplier_id: Number(e.target.value)
+                                        })}/>
                         {/*<FormControl disabled fullWidth margin="normal" error={!!errors.supplier}>*/}
                         {/*    <InputLabel id={"label3"}>Постачальник</InputLabel>*/}
                         {/*    <Select*/}
@@ -118,17 +122,37 @@ const PurchaseProductModal = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Quantity"
-                            type="number"
+                        {/*<TextField*/}
+                        {/*    label="Quantity"*/}
+                        {/*    type="number"*/}
+                        {/*    value={purchaseDetails.quantity}*/}
+                        {/*    onChange={(e) => setPurchaseDetails({...purchaseDetails, quantity: Number(e.target.value)})}*/}
+                        {/*    fullWidth*/}
+                        {/*    margin="normal"*/}
+                        {/*    error={!!errors.quantity}*/}
+                        {/*    helperText={errors.quantity}*/}
+                        {/*    inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000*/}
+                        {/*/>*/}
+                        <QuantityField
                             value={purchaseDetails.quantity}
-                            onChange={(e) => setPurchaseDetails({...purchaseDetails, quantity: Number(e.target.value)})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.quantity}
-                            helperText={errors.quantity}
-                            inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000
+                            onChange={(e) => {
+                                // Видаляємо ведучий 0, якщо такий є
+                                let value = e.target.value;
+
+                                value = value.replace(/[^0-9]/g, '');
+
+
+                                if (value.startsWith('0')) {
+                                    value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
+                                }
+                                if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
+                                    setPurchaseDetails({...purchaseDetails, quantity: Number(e.target.value)})
+                                }
+                            }}
+
+                            error={errors.quantity}
                         />
+
 
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>

@@ -118,7 +118,7 @@ function App() {
     const [suppliers, setSuppliers] = useState<ISupplier[]>([])
 
     const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
-        quantity: 0,
+        quantity: 1,
         price_per_item: 0,
         total_price: 0,
         supplier_id: '',
@@ -180,6 +180,7 @@ function App() {
             ...purchaseDetails,
             supplier_id: product.supplier ? product.supplier.id : '',
             price_per_item: product.price_per_item,
+            total_price: product.price_per_item
         });
         setOpenPurchase(true);
     };
@@ -226,7 +227,7 @@ function App() {
     }
     const handleClosePurchase = () => {
         setPurchaseDetails({
-            quantity: 0,
+            quantity: 1,
             price_per_item: 0,
             total_price: 0,
             supplier_id: '',
@@ -638,12 +639,13 @@ function App() {
                 />
             )}
 
-            {(openPurchase && purchaseDetails) && <PurchaseProductModal openPurchase={openPurchase}
-                                                                        suppliers={suppliers}
-                                                                        handleClosePurchase={handleClosePurchase}
-                                                                        purchaseDetails={purchaseDetails}
-                                                                        setPurchaseDetails={setPurchaseDetails}
-                                                                        handleSubmitPurchase={handleSubmitPurchase}/>}
+            {(openPurchase && purchaseDetails) && <PurchaseProductModal
+                nameProduct={editProduct?.name} openPurchase={openPurchase}
+                suppliers={suppliers}
+                handleClosePurchase={handleClosePurchase}
+                purchaseDetails={purchaseDetails}
+                setPurchaseDetails={setPurchaseDetails}
+                handleSubmitPurchase={handleSubmitPurchase}/>}
 
 
             {

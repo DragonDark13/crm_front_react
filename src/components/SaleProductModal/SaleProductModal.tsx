@@ -1,7 +1,7 @@
 import {TextField, Button, DialogContent, DialogActions, Grid} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {ISaleData} from "../../App";
-import  {useState} from "react";
+import {useState} from "react";
 
 interface ISaleProductModal {
     openSale: boolean;
@@ -9,9 +9,17 @@ interface ISaleProductModal {
     saleData: ISaleData;
     setSaleData: (data: ISaleData) => void;
     handleSale: () => void;
+    nameProduct: string
 }
 
-const SaleProductModal = ({openSale, handleCloseSale, saleData, setSaleData, handleSale}: ISaleProductModal) => {
+const SaleProductModal = ({
+                              openSale,
+                              handleCloseSale,
+                              saleData,
+                              setSaleData,
+                              handleSale,
+                              nameProduct
+                          }: ISaleProductModal) => {
     const [errors, setErrors] = useState({
         customer: '',
         sale_date: '',
@@ -45,14 +53,15 @@ const SaleProductModal = ({openSale, handleCloseSale, saleData, setSaleData, han
         <CustomDialog
             open={openSale}
             handleClose={handleCloseSale}
-            title="Sale Product"
+            title={`Продаж ${nameProduct} x ${saleData.quantity}шт`}
+
             maxWidth="md"
         >
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={8}>
                         <TextField
-                            label="Customer"
+                            label="Покупець"
                             value={saleData.customer}
                             onChange={(e) => setSaleData({...saleData, customer: e.target.value})}
                             fullWidth
@@ -132,10 +141,10 @@ const SaleProductModal = ({openSale, handleCloseSale, saleData, setSaleData, han
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseSale} color="primary">
-                    Cancel
+                    Відміна
                 </Button>
-                <Button variant="contained" color="primary" onClick={handleSubmit} sx={{mt: 2}}>
-                    Save Sale
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Підтвердити продаж
                 </Button>
             </DialogActions>
         </CustomDialog>
