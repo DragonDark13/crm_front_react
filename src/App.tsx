@@ -233,6 +233,27 @@ function App() {
         handleModalOpen('openPurchase');
     };
 
+    const handleSubmitPurchase = () => {
+        const purchaseData: IPurchaseData = {
+            quantity: purchaseDetails.quantity,
+            price_per_item: purchaseDetails.price_per_item,
+            total_price: purchaseDetails.total_price,
+            supplier_id: purchaseDetails.supplier_id,
+            purchase_date: purchaseDetails.purchase_date,
+        };
+
+        if (!editProduct) return null
+
+        addPurchase(editProduct.id, purchaseData).then(() => {
+
+            handleModalClose("openPurchase")
+            fetchProductsFunc(); // Оновити список товарів
+        })
+            .catch(error => {
+                console.error('There was an error processing the purchase!', error);
+            });
+    };
+
     const handleSale = async () => {
         if (saleData) {
             try {
@@ -539,7 +560,7 @@ function App() {
                 handleClosePurchase={() => handleModalClose("openPurchase")}
                 purchaseDetails={purchaseDetails}
                 setPurchaseDetails={setPurchaseDetails}
-                handleSubmitPurchase={handlePurchase}/>}
+                handleSubmitPurchase={handleSubmitPurchase}/>}
 
 
             {
