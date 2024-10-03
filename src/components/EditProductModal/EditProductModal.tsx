@@ -4,7 +4,6 @@ import {
     Button,
     DialogActions, Grid,
 } from '@mui/material';
-import {ICategory, IEditProduct, ISupplier} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 import ProductNameField from "../FormComponents/ProductNameField";
@@ -14,6 +13,7 @@ import QuantityField from "../FormComponents/QuantityField";
 import CategoriesSelect from "../FormComponents/CategoriesSelect";
 import {roundToDecimalPlaces} from "../../utils/function";
 import SupplierSelect from "../FormComponents/SupplierSelect";
+import {ICategory, IEditProduct, ISupplier} from "../../utils/types";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -96,10 +96,28 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
     useEffect(() => {
 
-            setOriginalProduct(editProduct);
-            setIsModified(false); // Reset modified state when opening modal
+        setOriginalProduct(editProduct);
+        setIsModified(false); // Reset modified state when opening modal
 
     }, []);
+
+    handleCategoryChange = (categoryId: number) => {
+
+        setEditProduct((prevProduct) => {
+            const updatedCategories = prevProduct.category_ids.includes(categoryId)
+                ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
+                : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
+
+            setIsModified(JSON.stringify(originalProduct.category_ids) !== JSON.stringify(updatedCategories)); // Check if modified
+
+
+            return {
+                ...prevProduct,
+                category_ids: updatedCategories // Оновлення категорій
+            };
+        });
+    };
+
 
     const handleFieldChange = (field: keyof IEditProduct, value: any) => {
         // Use functional form of setEditProduct
@@ -113,7 +131,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         });
     };
 
-    console.log("isModified",isModified);
+    console.log("selectedCategories", selectedCategories);
+
 
     const handleSave = () => {
         if (validateFields()) {
@@ -197,7 +216,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
                 <CategoriesSelect
                     categories={categories}
-                    selectedCategories={selectedCategories}
+                    selectedCategories={editProduct.category_ids}
                     handleCategoryChange={handleCategoryChange}
                 />
             </DialogContent>

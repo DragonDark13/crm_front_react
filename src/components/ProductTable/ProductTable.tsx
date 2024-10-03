@@ -5,13 +5,13 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead,
     TableRow, Paper, TableSortLabel, Box,
 } from '@mui/material';
-import {IProduct} from "../../App";
 import {IconButton, Tooltip} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SellIcon from '@mui/icons-material/Sell';
 import HistoryIcon from '@mui/icons-material/History';
+import {IProduct} from "../../utils/types";
 
 interface IProductTableProps {
     filteredProducts: IProduct[];

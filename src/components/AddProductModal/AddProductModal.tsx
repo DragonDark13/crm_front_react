@@ -8,7 +8,6 @@ import {
     DialogActions,
     Grid, FormControl, Select, MenuItem, InputLabel
 } from '@mui/material';
-import {ICategory, INewProduct} from "../../App";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
 import ProductNameField from "../FormComponents/ProductNameField";
@@ -18,6 +17,7 @@ import QuantityField from "../FormComponents/QuantityField";
 import CategoriesSelect from "../FormComponents/CategoriesSelect";
 import {roundToDecimalPlaces} from "../../utils/function";
 import SupplierSelect from "../FormComponents/SupplierSelect";
+import {ICategory, INewProduct} from "../../utils/types";
 //TODO додай постачальників таблиці
 // Повідомлення про успіх
 

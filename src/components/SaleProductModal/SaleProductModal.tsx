@@ -1,7 +1,10 @@
 import {TextField, Button, DialogContent, DialogActions, Grid} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import {ISaleData} from "../../App";
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
+import QuantityField from "../FormComponents/QuantityField";
+import {roundToDecimalPlaces} from "../../utils/function";
+import TotalPriceField from "../FormComponents/TotalPriceField";
+import {ISaleData} from "../../utils/types";
 
 interface ISaleProductModal {
     openSale: boolean;
@@ -49,6 +52,11 @@ const SaleProductModal = ({
         }
     };
 
+    useEffect(() => {
+        const totalPrice = saleData.quantity * saleData.price_per_item;
+        setSaleData({...saleData, total_price: roundToDecimalPlaces(totalPrice, 2)});
+    }, [saleData.quantity, saleData.price_per_item]);
+
     return (
         <CustomDialog
             open={openSale}
@@ -73,7 +81,7 @@ const SaleProductModal = ({
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
-                            label="Sale Date"
+                            label="Дата продажу"
                             type="date"
                             value={saleData.sale_date}
                             onChange={(e) => setSaleData({...saleData, sale_date: e.target.value})}
@@ -86,16 +94,39 @@ const SaleProductModal = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
+                        <QuantityField
+                            value={saleData.quantity}
+                            onChange={(e) => {
+                                // Видаляємо ведучий 0, якщо такий є
+                                let value = e.target.value;
+
+                                value = value.replace(/[^0-9]/g, '');
+
+
+                                if (value.startsWith('0')) {
+                                    value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
+                                    setSaleData({...saleData, quantity: Number(value)});
+                                }
+                                if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
+                                    setSaleData({...saleData, quantity: Number(value)});
+                                }
+                            }}
+
+                            error={errors.quantity}
+                        />
+
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={4}>
                         <TextField
-                            label="Price per Item"
+                            label="Ціна за 1шт"
                             type="number"
                             value={saleData.price_per_item}
                             onChange={(e) => {
-                                const price = Number(e.target.value);
+                                const pricePerItem = Number(e.target.value);
                                 setSaleData({
                                     ...saleData,
-                                    price_per_item: price,
-                                    total_price: (price * saleData.quantity)
+                                    price_per_item: pricePerItem,
                                 });
                             }}
                             fullWidth
@@ -106,36 +137,7 @@ const SaleProductModal = ({
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Quantity"
-                            type="number"
-                            value={saleData.quantity}
-                            onChange={(e) => {
-                                const quantity = Number(e.target.value);
-                                setSaleData({
-                                    ...saleData,
-                                    quantity,
-                                    total_price: (quantity * saleData.price_per_item)
-                                });
-                            }}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.quantity}
-                            helperText={errors.quantity}
-                            inputProps={{min: 1, max: 10000}}  // Обмеження кількості
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            disabled
-                            label="Total Price"
-                            value={saleData.total_price}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                            fullWidth
-                            margin="normal"
-                        />
+                        <TotalPriceField value={saleData.total_price}/>
                     </Grid>
                 </Grid>
             </DialogContent>

@@ -11,9 +11,11 @@ import {
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import React, {useState, useEffect} from "react";
-import {IPurchaseData, ISupplier} from "../../App";
 import SupplierSelect from "../FormComponents/SupplierSelect";
 import QuantityField from "../FormComponents/QuantityField";
+import {roundToDecimalPlaces} from "../../utils/function";
+import TotalPriceField from "../FormComponents/TotalPriceField";
+import {IPurchaseData, ISupplier} from "../../utils/types";
 
 interface IPurchaseProductModal {
     openPurchase: boolean;
@@ -67,7 +69,7 @@ const PurchaseProductModal = ({
     // Автоматичний розрахунок total_price
     useEffect(() => {
         const totalPrice = purchaseDetails.quantity * purchaseDetails.price_per_item;
-        setPurchaseDetails({...purchaseDetails, total_price: totalPrice});
+        setPurchaseDetails({...purchaseDetails, total_price: roundToDecimalPlaces(totalPrice, 2)});
     }, [purchaseDetails.quantity, purchaseDetails.price_per_item]);
 
     return (
@@ -157,7 +159,7 @@ const PurchaseProductModal = ({
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                         <TextField
-                            label="Price per Item"
+                            label="Ціна за 1шт"
                             type="number"
                             value={purchaseDetails.price_per_item}
                             onChange={(e) => setPurchaseDetails({
@@ -172,16 +174,7 @@ const PurchaseProductModal = ({
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Total Price"
-                            type="number"
-                            value={purchaseDetails.total_price}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.total_price}
-                            helperText={errors.total_price}
-                            disabled // Поле заблоковане для редагування
-                        />
+                        <TotalPriceField value={purchaseDetails.total_price}/>
                     </Grid>
 
                 </Grid>

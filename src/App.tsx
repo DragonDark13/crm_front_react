@@ -30,282 +30,281 @@ import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNe
 import ProductTable from "./components/ProductTable/ProductTable";
 import AddSupplierModal from "./components/AddSupplierModal/AddSupplierModal";
 import FilterComponent from "./components/FilterComponent/FilterComponent";
+import {ICategory, IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData, ISupplier} from "./utils/types";
+import {amET} from "@mui/material/locale";
 
-
-export interface IBaseProduct {
-    name: string;
-    quantity: number;
-    total_price: number;
-    price_per_item: number;
-}
-
-export interface IProduct extends IBaseProduct {
-    id: number;
-    category_ids: number[]
-    supplier: ISupplier | null
-}
-
-export interface ISupplierID {
-    supplier_id: number | '';
-}
-
-export interface INewProduct extends IBaseProduct, ISupplierID {
-    category_ids: number[]
-}
-
-export interface IEditProduct extends IBaseProduct, ISupplierID {
-    id: number;
-    category_ids: number[]
-}
-
-export interface ICategory {
-    id: number
-    name: string;
-}
-
-export interface IPurchaseData extends ISupplierID {
-    quantity: number
-    price_per_item: number,
-    total_price: number,
-    purchase_date: string,
-}
-
-export interface ISaleData {
-    customer: string,
-    quantity: number,
-    price_per_item: number,
-    total_price: number,
-    sale_date: string
-    productId: number
-}
-
-export interface ISupplier {
-    id: number;
-    name: string;
-    contact_info: string | null
-}
 
 function App() {
     const [products, setProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+    const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
+    const [categories, setCategories] = useState<ICategory[]>([]);
 
-    const [isLoading, setIsLoading] = useState<boolean>(true); // Стан для прелоадера
-    const [error, setError] = useState<string | null>(null); // Стан для помилок
+    const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
+        isLoading: true,
+        error: null
+    });
     const [newProduct, setNewProduct] = useState<INewProduct>({
         name: '',
         supplier_id: '',
         quantity: 1,
         total_price: 0,
         price_per_item: 0,
-        category_ids: [],
-        // created_date: '',
+        category_ids: []
     });
-    const [editProduct, setEditProduct] = useState<IEditProduct | null>(null); // Для зберігання товару, який редагується
-    const [openEdit, setOpenEdit] = useState(false); // Відповідає за стан модального вікна для редагування
-    const [openAdd, setOpenAdd] = useState(false); // Відповідає за стан модального вікна для додавання
+    const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
 
-    const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
-    const [orderBy, setOrderBy] = useState<keyof IProduct>('name'); // Колонка для сортування
+    // Modal States
+    const [modalState, setModalState] = useState({
+        openEdit: false,
+        openAdd: false,
+        openHistory: false,
+        openPurchase: false,
+        openCategoryCreate: false,
+        openDelete: false,
+        openDrawer: false,
+        openSale: false,
+        openAddSupplierOpen: false
+    });
 
-
-    const [openHistory, setOpenHistory] = useState(false); // Стан для модального вікна історії
-    const [openPurchase, setOpenPurchase] = useState(false); // Стан для модального вікна історії
-
-    const [productId, setProductId] = useState<number | null>(null)
-    const [openCategoryCreateModal, setOpenCategoryCreateModal] = useState<boolean>(false);
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = useState<number | null>(null);
-    const [suppliers, setSuppliers] = useState<ISupplier[]>([])
-
+    const [productId, setProductId] = useState<number | null>(null);
     const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
         quantity: 1,
         price_per_item: 0,
         total_price: 0,
         supplier_id: '',
-        purchase_date: new Date().toISOString().slice(0, 10), // Формат YYYY-MM-DD
+        purchase_date: new Date().toISOString().slice(0, 10)
     });
-
-    const [openSale, setOpenSale] = useState(false);
-
     const [saleData, setSaleData] = useState<ISaleData | null>(null);
 
-    const [categories, setCategories] = useState<ICategory[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
     const [selectedFilterCategories, setSelectedFilterCategories] = useState<number[]>([]);
     const [selectedFilterSuppliers, setSelectedFilterSuppliers] = useState<number[]>([]);
+    const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = useState<number | null>(null);
 
-    const [isModalAddSupplierOpen, setModalOpenAddSupplierOpen] = useState(false);
+    const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
+    const [orderBy, setOrderBy] = useState<keyof IProduct>('name'); // Колонка для сортування
 
-    const [openDrawer, setOpenDrawer] = React.useState(false);
+    // Load products and suppliers
+    useEffect(() => {
+        fetchProductsFunc();
+        fetchSuppliersFunc();
+        fetchCategoriesFunc();
+    }, []);
 
-    const handleOpenModal = () => {
-        setModalOpenAddSupplierOpen(true);
+    const fetchProductsFunc = async () => {
+        try {
+            setLoadingState({isLoading: true, error: null});
+            const data = await fetchProducts(); // Assuming fetchProducts() returns a Promise
+            if (Array.isArray(data)) {
+                setProducts(data);
+                setFilteredProducts(data);
+            } else {
+                throw new Error('Fetched data is not an array');
+            }
+        } catch (error) {
+            console.error('There was an error fetching the products!', error);
+            setLoadingState({isLoading: false, error: 'There was an error fetching the products!'});
+            setProducts([]);
+            setFilteredProducts([]);
+        } finally {
+            setLoadingState(prev => ({...prev, isLoading: false}));
+        }
     };
 
-    const handleCloseModal = () => {
-        setModalOpenAddSupplierOpen(false);
+    const fetchSuppliersFunc = async () => {
+        try {
+            const data = await fetchGetAllSuppliers(); // Assuming fetchGetAllSuppliers() returns a Promise
+            if (Array.isArray(data)) {
+                setSuppliers(data);
+            } else {
+                throw new Error('Fetched data is not an array');
+            }
+        } catch (error) {
+            console.error('Error fetching suppliers', error);
+        }
     };
 
-
-    const handleOpenSale = (product: IProduct) => {
-        setSaleData({
-            customer: '',
-            quantity: 1,
-            price_per_item: product.price_per_item,
-            total_price: product.price_per_item,
-            sale_date: new Date().toISOString().split('T')[0],
-            productId: product.id, // Зберігаємо ID продукту для відправки на сервер
-        });
-        setOpenSale(true);
+    const fetchCategoriesFunc = async () => {
+        try {
+            const data = await fetchGetAllCategories(); // Assuming fetchGetAllCategories() returns a Promise
+            if (Array.isArray(data)) {
+                setCategories(data);
+            } else {
+                throw new Error('Fetched data is not an array');
+            }
+        } catch (error) {
+            console.error('Error fetching categories', error);
+        }
     };
 
-    const handleCloseSale = () => {
-        setEditProduct(null)
-        setOpenSale(false);
-        setSaleData(null);
+    const handleModalOpen = (modal: 'openAdd' | 'openSale' | 'openEdit' | 'openPurchase' | 'openDrawer' | 'openDelete' | 'openHistory' | 'openCategoryCreate' | 'openAddSupplierOpen') => {
+        setModalState(prevState => ({...prevState, [modal]: true}));
     };
 
-    // Функція для відкриття модального вікна покупки
-    const handlePurchase = (product: IProduct) => {
-        setEditProduct({
-            id: product.id,
-            name: product.name,
-            supplier_id: product.supplier ? product.supplier.id : '',
-            quantity: product.quantity,
-            total_price: product.total_price,
-            price_per_item: product.price_per_item,
-            category_ids: product.category_ids,
-        })
+    const handleModalClose = (modal: 'openAdd' | 'openSale' | 'openEdit' | 'openPurchase' | 'openDrawer' | 'openDelete' | 'openHistory' | 'openCategoryCreate' | 'openAddSupplierOpen') => {
+        setModalState(prevState => ({...prevState, [modal]: false}));
+        // Reset states based on modal closed
+        if (modal === 'openAdd') {
+            resetNewProduct();
+        } else if (modal === 'openPurchase') {
+            resetPurchaseDetails();
+        } else if (modal === 'openEdit') {
+            resetEditProduct();
+        } else if (modal === 'openSale') {
+            resetSaleData();
+        }
+    };
+
+    const resetNewProduct = () => {
+        setNewProduct({name: '', supplier_id: '', quantity: 1, total_price: 0, price_per_item: 0, category_ids: []});
+    };
+
+    const resetPurchaseDetails = () => {
         setPurchaseDetails({
-            ...purchaseDetails,
-            supplier_id: product.supplier ? product.supplier.id : '',
-            price_per_item: product.price_per_item,
-            total_price: product.price_per_item
+            quantity: 1,
+            price_per_item: 0,
+            total_price: 0,
+            supplier_id: '',
+            purchase_date: new Date().toISOString().slice(0, 10)
         });
-        setOpenPurchase(true);
     };
 
-    // Функції для відкриття/закриття модальних вікон
-    const handleOpenEdit = (product: IProduct) => {
-        setEditProduct({
-            id: product.id,
-            name: product.name,
-            supplier_id: product.supplier ? product.supplier.id : '',
-            quantity: product.quantity,
-            total_price: product.total_price,
-            price_per_item: product.price_per_item,
-            category_ids: product.category_ids,
-        });
-        setOpenEdit(true);
-        setSelectedCategories(product.category_ids);
-    };
-    const handleCloseEdit = () => {
+    const resetEditProduct = () => {
         setEditProduct(null);
-        setOpenEdit(false)
         setSelectedCategories([]);
     };
 
+    const resetSaleData = () => {
+        setSaleData(null);
+    };
+
+    const handleDeleteModalOpen = (productId: number) => {
+        setSelectedDeleteModalProductId(productId);
+        handleModalOpen('openDelete');
+    };
+
+    const handleCloseDeleteModal = () => {
+        handleModalClose('openDelete');
+
+        setSelectedDeleteModalProductId(null);
+    };
+
+    const handleDelete = async (productId: number) => {
+        try {
+            await deleteProduct(productId); // Assuming deleteProduct() returns a Promise
+            handleCloseDeleteModal();
+            await fetchProductsFunc(); // Refresh product list
+        } catch (error) {
+            console.error('There was an error deleting the product!', error);
+        }
+    };
+
+    const handleAddProduct = async () => {
+        try {
+            await addProduct(newProduct); // Assuming addProduct() returns a Promise
+            await fetchProductsFunc();
+            handleModalClose('openAdd');
+        } catch (error) {
+            console.error('There was an error adding the product!', error);
+        }
+    };
+
+    const handleEditSave = async () => {
+        if (!editProduct) return; // Check if there is a product to edit
+        try {
+            await updateProduct(editProduct.id, editProduct); // Assuming updateProduct() returns a Promise
+            handleModalClose('openEdit');
+            await fetchProductsFunc();
+
+        } catch (error) {
+            console.error('There was an error updating the product!', error);
+        }
+    };
+
+    const handlePurchase = (product: IProduct) => {
+        setEditProduct(mapProductToEditProduct(product));
+        setPurchaseDetails(prevDetails => ({
+            ...prevDetails,
+            supplier_id: product.supplier ? product.supplier.id : '',
+            price_per_item: product.price_per_item,
+            total_price: product.price_per_item
+        }));
+        handleModalOpen('openPurchase');
+    };
+
+    const handleSale = async () => {
+        if (saleData) {
+            try {
+                await addSale(saleData.productId, saleData); // Assuming addSale() returns a Promise
+                handleModalClose('openSale');
+                await fetchProductsFunc();
+            } catch (error) {
+                console.error('There was an error saving the sale!', error);
+            }
+        }
+    };
+
+    const handleOpenEdit = (product: IProduct) => {
+        setEditProduct(mapProductToEditProduct(product));
+        setSelectedCategories(product.category_ids);
+        handleModalOpen('openEdit');
+    };
+
     const handleOpenAdd = () => {
-        setOpenAdd(true)
+        handleModalOpen("openAdd");
         setNewProduct((newProduct) => {
             return {
                 ...newProduct,
             }
         })
     };
-    const handleCloseAdd = () => {
-        setNewProduct({
-            name: '',
-            supplier_id: '',
-            quantity: 0,
-            total_price: 0,
-            price_per_item: 0,
-            category_ids: [],
-            // created_date: '',
-        })
-        setOpenAdd(false);
-    }
-    const handleClosePurchase = () => {
-        setPurchaseDetails({
-            quantity: 1,
-            price_per_item: 0,
-            total_price: 0,
-            supplier_id: '',
-            purchase_date: new Date().toISOString().slice(0, 10),
-        })
 
-        setOpenPurchase(false)
-    }
+    const mapProductToEditProduct = (product: IProduct): IEditProduct => ({
+        id: product.id,
+        name: product.name,
+        supplier_id: product.supplier ? product.supplier.id : '',
+        quantity: product.quantity,
+        total_price: product.total_price,
+        price_per_item: product.price_per_item,
+        category_ids: product.category_ids,
+    });
 
-    const handleCloseCategoryModal = () => {
-        setOpenCategoryCreateModal(false)
-    }
+    const applyFilters = (updatedCategories: number[], updatedSuppliers: number[]) => {
+        let filtered = products;
 
-    useEffect(() => {
-        fetchProductsFunc();
-    }, []);
+        // Filter by categories
+        if (updatedCategories.length > 0) {
+            filtered = filtered.filter(product =>
+                product.category_ids.some(categoryId => updatedCategories.includes(categoryId))
+            );
+        }
 
-    const fetchProductsFunc = () => {
-        setIsLoading(true)
-        fetchProducts()
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setProducts(data);
-                    setFilteredProducts(data);
+        // Filter by suppliers
+        if (updatedSuppliers.length > 0) {
+            filtered = filtered.filter(product => product.supplier && updatedSuppliers.includes(product.supplier.id));
+        }
 
-                } else {
-                    console.error('Fetched data is not an array:', data);
-                    setProducts([]); // Встановлюємо порожній масив у разі невідповідності
-                    setFilteredProducts([]);
-                }
-            })
-            .catch(error => {
-                console.error('There was an error fetching the products!', error);
-                setError('There was an error fetching the products!');
-                setFilteredProducts([]);
-                setIsLoading(false)
-
-
-                setProducts([]); // Встановлюємо порожній масив у разі помилки
-            })
-            .finally(() => {
-                setIsLoading(false); // Завершуємо завантаження
-            });
+        setFilteredProducts(filtered);
     };
 
-    const handleDelete = (productId: number) => {
-        deleteProduct(productId)
-            .then(() => {
-                handleCloseDeleteModal()
-                fetchProductsFunc()
-            }) // Після видалення оновлюємо список продуктів
-            .catch(error => {
-                console.error('There was an error deleting the product!', error);
-            });
+    const handleCategoryFilterChange = (categoryID: number) => {
+        const updatedCategories = toggleFilter(selectedFilterCategories, categoryID);
+        setSelectedFilterCategories(updatedCategories);
+        applyFilters(updatedCategories, selectedFilterSuppliers);
     };
 
-    const handleAdd = () => {
-        addProduct(newProduct)
-            .then(() => {
-                fetchProductsFunc();
-                handleCloseAdd(); // Закрити модальне вікно після додавання
-            })
-            .catch(error => {
-                console.error('There was an error adding the product!', error);
-            });
+    const handleSupplierFilterChange = (supplierID: number) => {
+        const updatedSuppliers = toggleFilter(selectedFilterSuppliers, supplierID);
+        setSelectedFilterSuppliers(updatedSuppliers);
+        applyFilters(selectedFilterCategories, updatedSuppliers);
     };
 
-    const handleEditSave = () => {
-        if (!editProduct) return; // Перевірка, чи �� продукт для редагування
-        updateProduct(editProduct.id, editProduct).then(() => {
-            fetchProductsFunc();
-            handleCloseEdit(); // Закрити модальне вікно після збереження
-        })
-            .catch(error => {
-                console.error('There was an error updating the product!', error);
-            });
+    const toggleFilter = (currentFilters: number[], id: number) => {
+        return currentFilters.includes(id)
+            ? currentFilters.filter(filterId => filterId !== id)
+            : [...currentFilters, id];
     };
-
 
     const handleSort = (property: keyof IProduct) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -318,7 +317,7 @@ function App() {
         stabilizedProducts.sort((a, b) => {
             const order = comparator(a[0], b[0]);
             if (order !== 0) return order;
-            return a[1] - b[1];  // This is fine because `index` is a number
+            return a[1] - b[1];  // This is fine because index is a number
         });
         return stabilizedProducts.map((el) => el[0]);
     };
@@ -335,96 +334,37 @@ function App() {
             ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
             : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
     };
-    const handleSubmitPurchase = () => {
-        const purchaseData: IPurchaseData = {
-            quantity: purchaseDetails.quantity,
-            price_per_item: purchaseDetails.price_per_item,
-            total_price: purchaseDetails.total_price,
-            supplier_id: purchaseDetails.supplier_id,
-            purchase_date: purchaseDetails.purchase_date,
-        };
 
-        if (!editProduct) return null
-
-        addPurchase(editProduct.id, purchaseData).then(() => {
-
-            handleClosePurchase(); // Закрити модальне вікно
-            fetchProductsFunc(); // Оновити список товарів
+    const handleOpenSale = (product: IProduct) => {
+        setEditProduct({
+            id: product.id,
+            name: product.name,
+            supplier_id: product.supplier ? product.supplier.id : '',
+            quantity: product.quantity,
+            total_price: product.total_price,
+            price_per_item: product.price_per_item,
+            category_ids: product.category_ids,
         })
-            .catch(error => {
-                console.error('There was an error processing the purchase!', error);
-            });
+
+        setSaleData({
+            customer: '',
+            quantity: 1,
+            price_per_item: product.price_per_item,
+            total_price: product.price_per_item,
+            sale_date: new Date().toISOString().split('T')[0],
+            productId: product.id, // Зберігаємо ID продукту для відправки на сервер
+        });
+        handleModalOpen("openSale")
     };
 
-    const handleSale = () => {
-        if (saleData) {
-            addSale(saleData.productId, saleData).then(() => {
-                handleCloseSale();
-                fetchProductsFunc();
-                // Тут можна також оновити список продуктів або історію, якщо потрібно
-            })
-                .catch(error => {
-                    console.error('There was an error saving the sale!', error);
-                });
-        }
+    const handleOpenHistoryModal = (product_id: number) => {
+        setProductId(product_id); // Встановлюємо productId
+        handleModalOpen("openHistory")
+    }
 
-    };
-
-    const fetchSuppliersFunc = () => {
-        fetchGetAllSuppliers()
-            .then(data => {
-                if (Array.isArray(data)) {
-                    setSuppliers(data);  // Припустимо, що ви маєте state для постачальників
-                } else {
-                    console.error('Fetched data is not an array:', data);
-                    setSuppliers([]);  // Очищення при помилці
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching suppliers', error);
-            });
-    };
-
-    useEffect(() => {
-        // Отримання списку всіх
-
-        fetchGetAllCategories().then(data => {
-
-            if (Array.isArray(data)) {
-                setCategories(data as ICategory[]);
-            } else {
-                console.error('Fetched data is not an array:', data);
-                setCategories([])
-            }
-
-        })
-            .catch(error => {
-                console.error('Error fetching categories', error);
-            });
-
-        fetchSuppliersFunc();
-    }, []);
-
-    const createNewCategory = (categoryName: string) => {
-        addNewCategory(categoryName).then(() => {
-            fetchGetAllCategories().then(data => {
-
-                if (Array.isArray(data)) {
-                    setCategories(data as ICategory[]);
-                } else {
-                    console.error('Fetched data is not an array:', data);
-                    setCategories([])
-                }
-
-            })
-
-            handleCloseCategoryModal(); // Закрити модальне вікно після додавання
-        })
-            .catch(error => {
-                console.error('There was an error adding the product!', error);
-            });
-    };
-
+    const closeDrawer = () => {
+        handleModalClose("openDrawer")
+    }
 
     const handleCategoryChange = (categoryId: number) => {
 
@@ -449,84 +389,34 @@ function App() {
         });
     };
 
-    const handleOpenCategoryCreateModal = () => {
-        setOpenCategoryCreateModal(true)
-    }
 
-    // Функція для фільтрації по категоріях
-    const handleCategoryFilterChange = (categoryID: number) => {
-        const updatedCategories = selectedFilterCategories.includes(categoryID)
-            ? selectedFilterCategories.filter(id => id !== categoryID)
-            : [...selectedFilterCategories, categoryID];
+    const createNewCategory = (categoryName: string) => {
+        addNewCategory(categoryName).then(() => {
+            fetchGetAllCategories().then(data => {
 
-        setSelectedFilterCategories(updatedCategories);
-        applyFilters(updatedCategories, selectedFilterSuppliers);
-    };
-
-    // Функція для фільтрації по постачальниках
-    const handleSupplierFilterChange = (supplierID: number) => {
-        console.log("supplierID", supplierID);
-        const updatedSuppliers = selectedFilterSuppliers.includes(supplierID)
-            ? selectedFilterSuppliers.filter(id => id !== supplierID)
-            : [...selectedFilterSuppliers, supplierID];
-
-        setSelectedFilterSuppliers(updatedSuppliers);
-        applyFilters(selectedFilterCategories, updatedSuppliers);
-    };
-
-    // Функція застосування обох фільтрів
-    const applyFilters = (updatedCategories: number[], updatedSuppliers: number[]) => {
-        let filtered = products;
-
-        // Фільтрація по категоріях
-        if (updatedCategories.length > 0) {
-            filtered = filtered.filter(product =>
-                product.category_ids.some(categoryId => updatedCategories.includes(categoryId))
-            );
-        }
-
-        // Фільтрація по постачальниках
-        if (updatedSuppliers.length > 0) {
-            filtered = filtered.filter(product => {
-                    if (product.supplier === null) return false
-                    return updatedSuppliers.includes(product.supplier.id)
+                if (Array.isArray(data)) {
+                    setCategories(data as ICategory[]);
+                } else {
+                    console.error('Fetched data is not an array:', data);
+                    setCategories([])
                 }
-            );
-        }
 
-        setFilteredProducts(filtered);
-    };
+            })
 
-    const handleDeleteModalOpen = (productId: number) => {
-        setSelectedDeleteModalProductId(productId)
-        setOpenDeleteModal(true)
-    }
-
-    const handleCloseDeleteModal = () => {
-        setOpenDeleteModal(false);
-        setSelectedDeleteModalProductId(null);
-    };
-
-    const handleOpenHistoryModal = (product_id: number) => {
-        setProductId(product_id); // Встановлюємо productId
-        setOpenHistory(true); // Відкриваємо модальне вікно
-    }
-
-    const handleCloseHistoryModal = () => {
-        setOpenHistory(false);
-        setProductId(null); // Встановлюємо productId
-    }
-
-    const toggleDrawer = (newOpen: boolean) => () => {
-        setOpenDrawer(newOpen);
+            handleModalClose("openCategoryCreate"); // Закрити модальне вікно після додавання
+        })
+            .catch(error => {
+                console.error('There was an error adding the product!', error);
+            });
     };
 
     return (
         <React.Fragment>
 
 
-            {isLoading ? (
-                <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
+            {loadingState.isLoading ? (
+                <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center"
+                     height="100vh">
                     <Box display="flex" flexDirection="column" alignItems="center">
                         <CircularProgress/> {/* Прелоадер */}
                         <Typography variant="h6" sx={{mt: 2}}>
@@ -534,41 +424,45 @@ function App() {
                         </Typography>
                     </Box>
                 </Box>
-            ) : error ? (
-                <div>{error}</div> // Відображення помилки
+            ) : loadingState.error ? (
+                <div>{loadingState.error}</div> // Відображення помилки
             ) : (
                 <React.Fragment>
                     <Container maxWidth={"xl"}>
                         <h1>Product List</h1>
                         <Grid container justifyContent={"space-between"}>
                             <Grid item>
-                                <Button variant={"contained"} onClick={toggleDrawer(true)}>Фільтр</Button>
+                                <Button variant={"contained"}
+                                        onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
                             </Grid>
                             <Grid item>
                                 <Grid container gap={1}>
                                     <Grid>
-                                        <Button variant={"outlined"} color={"primary"} onClick={handleOpenAdd}>
+                                        <Button variant={"outlined"}
+                                                color={"primary"}
+                                                onClick={() => handleModalOpen("openAdd")}>
                                             Додати Товар
                                         </Button>
                                     </Grid>
                                     <Grid>
                                         <Button variant={"outlined"} color={"primary"}
-                                                onClick={handleOpenCategoryCreateModal}
+                                                onClick={() => handleModalOpen("openCategoryCreate")}
                                         >
                                             Додати Категорію
                                         </Button>
                                     </Grid>
                                     <Grid>
 
-                                        <Button variant={"outlined"} color={"primary"} onClick={handleOpenModal}>
+                                        <Button variant={"outlined"} color={"primary"}
+                                                onClick={() => handleModalOpen("openAddSupplierOpen")}>
                                             Додати Постачальника
                                         </Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Drawer open={openDrawer} onClose={toggleDrawer(false)}>
-                            <Button variant={"outlined"} onClick={toggleDrawer(false)}>
+                        <Drawer open={modalState.openDrawer} onClose={() => handleModalClose("openDrawer")}>
+                            <Button variant={"outlined"} onClick={() => handleModalClose("openDrawer")}>
                                 Закрити
                             </Button>
                             <FilterComponent selectedFilterCategories={selectedFilterCategories}
@@ -610,49 +504,50 @@ function App() {
             {/* Модальне вікно для додавання нового товару */}
 
             {
-                openAdd && <AddProductModal
+                modalState.openAdd && <AddProductModal
                     suppliers={suppliers}
                     setNewProduct={setNewProduct}
                     newProduct={newProduct}
-                    openAdd={openAdd}
+                    openAdd={modalState.openAdd}
                     categories={categories}
-                    handleAdd={handleAdd}
+                    handleAdd={handleAddProduct}
                     handleCategoryChange={handleCategoryChange}
-                    handleCloseAdd={handleCloseAdd}
+                    handleCloseAdd={() => handleModalClose("openAdd")}
                     selectedCategories={selectedCategories}/>
             }
 
-            {(openEdit && editProduct) &&
+            {(modalState.openEdit && editProduct) &&
             <EditProductModal suppliers={suppliers}
                               selectedCategories={selectedCategories} categories={categories}
-                              handleCategoryChange={handleCategoryChange} openEdit={openEdit}
-                              handleCloseEdit={handleCloseEdit}
+                              handleCategoryChange={handleCategoryChange} openEdit={modalState.openEdit}
+                              handleCloseEdit={() => handleModalClose("openEdit")}
                               editProduct={editProduct}
                               setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
 
 
-            {(openHistory && productId) && (
+            {(modalState.openHistory && productId) && (
                 <ProductHistoryModal
-                    openHistory={openHistory}
-                    onClose={handleCloseHistoryModal}
+                    openHistory={modalState.openHistory}
+                    onClose={() => handleModalClose("openHistory")}
                     productId={productId} // Передаємо productId
                 />
             )}
 
-            {(openPurchase && purchaseDetails) && <PurchaseProductModal
-                nameProduct={editProduct?.name} openPurchase={openPurchase}
+            {(modalState.openPurchase && purchaseDetails) && <PurchaseProductModal
+                nameProduct={editProduct?.name} openPurchase={modalState.openPurchase}
                 suppliers={suppliers}
-                handleClosePurchase={handleClosePurchase}
+                handleClosePurchase={() => handleModalClose("openPurchase")}
                 purchaseDetails={purchaseDetails}
                 setPurchaseDetails={setPurchaseDetails}
-                handleSubmitPurchase={handleSubmitPurchase}/>}
+                handleSubmitPurchase={handlePurchase}/>}
 
 
             {
-                (openSale && saleData) &&
+                (modalState.openSale && saleData) &&
                 <SaleProductModal
-                    openSale={openSale}
-                    handleCloseSale={handleCloseSale}
+                    nameProduct={editProduct?.name}
+                    openSale={modalState.openSale}
+                    handleCloseSale={() => handleModalClose("openSale")}
                     saleData={saleData}
                     setSaleData={setSaleData}
                     handleSale={handleSale}
@@ -660,15 +555,15 @@ function App() {
             }
 
             {
-                openCategoryCreateModal &&
+                modalState.openCategoryCreate &&
                 <CreateNewCategoryModal
                     createNewCategory={createNewCategory}
-                    openCategoryCreateModal={openCategoryCreateModal}
-                    handleCloseCategoryModal={handleCloseCategoryModal}
+                    openCategoryCreateModal={modalState.openCategoryCreate}
+                    handleCloseCategoryModal={() => handleModalClose("openCategoryCreate")}
                 />
             }
 
-            <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
+            <Dialog open={modalState.openDelete} onClose={handleCloseDeleteModal}>
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -679,7 +574,9 @@ function App() {
                     <Button onClick={handleCloseDeleteModal} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={() => handleDelete(selectedDeleteModalProductId!)} color="secondary">
+                    <Button onClick={() => {
+                        selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId!)
+                    }} color="secondary">
                         Delete
                     </Button>
                 </DialogActions>
@@ -687,8 +584,8 @@ function App() {
 
             <AddSupplierModal
                 fetchSuppliersFunc={fetchSuppliersFunc}
-                open={isModalAddSupplierOpen}
-                handleClose={handleCloseModal}
+                open={modalState.openAddSupplierOpen}
+                handleClose={() => handleModalClose("openAddSupplierOpen")}
             />
 
 

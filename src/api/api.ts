@@ -445,7 +445,8 @@ export const addProduct = (newProduct: INewProduct) => {
 };
 
 export const addNewCategory = (name: string) => {
-    return api.post('/categories', name).catch(error => {
+
+    return api.post('/categories', {name: name}).catch(error => {
         console.error('Error adding category:', error);
         throw error;
     });
