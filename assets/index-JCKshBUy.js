@@ -8674,7 +8674,7 @@ function GlobalStyles$3(props) {
   });
 }
 /**
- * @mui/styled-engine v6.1.1
+ * @mui/styled-engine v6.1.2
  *
  * @license MIT
  * This source code is licensed under the MIT license found in the
@@ -10373,6 +10373,85 @@ function useThemeProps$1({
   });
 }
 const useEnhancedEffect = typeof window !== "undefined" ? reactExports.useLayoutEffect : reactExports.useEffect;
+function useMediaQueryOld(query, defaultMatches, matchMedia, ssrMatchMedia, noSsr) {
+  const [match2, setMatch] = reactExports.useState(() => {
+    if (noSsr && matchMedia) {
+      return matchMedia(query).matches;
+    }
+    if (ssrMatchMedia) {
+      return ssrMatchMedia(query).matches;
+    }
+    return defaultMatches;
+  });
+  useEnhancedEffect(() => {
+    if (!matchMedia) {
+      return void 0;
+    }
+    const queryList = matchMedia(query);
+    const updateMatch = () => {
+      setMatch(queryList.matches);
+    };
+    updateMatch();
+    queryList.addEventListener("change", updateMatch);
+    return () => {
+      queryList.removeEventListener("change", updateMatch);
+    };
+  }, [query, matchMedia]);
+  return match2;
+}
+const safeReact$1 = {
+  ...React$1
+};
+const maybeReactUseSyncExternalStore = safeReact$1.useSyncExternalStore;
+function useMediaQueryNew(query, defaultMatches, matchMedia, ssrMatchMedia, noSsr) {
+  const getDefaultSnapshot = reactExports.useCallback(() => defaultMatches, [defaultMatches]);
+  const getServerSnapshot = reactExports.useMemo(() => {
+    if (noSsr && matchMedia) {
+      return () => matchMedia(query).matches;
+    }
+    if (ssrMatchMedia !== null) {
+      const {
+        matches
+      } = ssrMatchMedia(query);
+      return () => matches;
+    }
+    return getDefaultSnapshot;
+  }, [getDefaultSnapshot, query, ssrMatchMedia, noSsr, matchMedia]);
+  const [getSnapshot, subscribe] = reactExports.useMemo(() => {
+    if (matchMedia === null) {
+      return [getDefaultSnapshot, () => () => {
+      }];
+    }
+    const mediaQueryList = matchMedia(query);
+    return [() => mediaQueryList.matches, (notify) => {
+      mediaQueryList.addEventListener("change", notify);
+      return () => {
+        mediaQueryList.removeEventListener("change", notify);
+      };
+    }];
+  }, [getDefaultSnapshot, matchMedia, query]);
+  const match2 = maybeReactUseSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  return match2;
+}
+function useMediaQuery(queryInput, options = {}) {
+  const theme = useTheme$2();
+  const supportMatchMedia = typeof window !== "undefined" && typeof window.matchMedia !== "undefined";
+  const {
+    defaultMatches = false,
+    matchMedia = supportMatchMedia ? window.matchMedia : null,
+    ssrMatchMedia = null,
+    noSsr = false
+  } = getThemeProps$1({
+    name: "MuiUseMediaQuery",
+    props: options,
+    theme
+  });
+  let query = typeof queryInput === "function" ? queryInput(theme) : queryInput;
+  query = query.replace(/^@media( ?)/m, "");
+  const useMediaQueryImplementation = maybeReactUseSyncExternalStore !== void 0 ? useMediaQueryNew : useMediaQueryOld;
+  const match2 = useMediaQueryImplementation(query, defaultMatches, matchMedia, ssrMatchMedia, noSsr);
+  return match2;
+}
 function clamp(val, min2 = Number.MIN_SAFE_INTEGER, max2 = Number.MAX_SAFE_INTEGER) {
   return Math.max(min2, Math.min(val, max2));
 }
@@ -10730,10 +10809,17 @@ function isFocusVisible(element) {
   }
   return false;
 }
-function getScrollbarSize(doc) {
-  const documentWidth = doc.documentElement.clientWidth;
-  return Math.abs(window.innerWidth - documentWidth);
+function getScrollbarSize(win = window) {
+  const documentWidth = win.document.documentElement.clientWidth;
+  return win.innerWidth - documentWidth;
 }
+const usePreviousProps = (value) => {
+  const ref = reactExports.useRef({});
+  reactExports.useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+};
 function composeClasses(slots, getUtilityClass, classes = void 0) {
   const output = {};
   for (const slotName in slots) {
@@ -10881,16 +10967,12 @@ function useSlotProps(parameters) {
   }, ownerState);
   return props;
 }
-function getReactNodeRef(element) {
-  if (!element || !/* @__PURE__ */ reactExports.isValidElement(element)) {
-    return null;
+function getReactElementRef(element) {
+  var _a;
+  if (parseInt(reactExports.version, 10) >= 19) {
+    return (_a = element.props) == null ? void 0 : _a.ref;
   }
-  return element.props.propertyIsEnumerable("ref") ? element.props.ref : (
-    // @ts-expect-error element.ref is not included in the ReactElement type
-    // We cannot check for it, but isValidElement is true at this point
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/70189
-    element.ref
-  );
+  return element == null ? void 0 : element.ref;
 }
 const RtlContext = /* @__PURE__ */ reactExports.createContext();
 const useRtl = () => {
@@ -11208,7 +11290,7 @@ const useThemePropsDefault = (inProps) => useThemeProps$1({
   name: "MuiContainer",
   defaultTheme: defaultTheme$2
 });
-const useUtilityClasses$R = (ownerState, componentName) => {
+const useUtilityClasses$Z = (ownerState, componentName) => {
   const getContainerUtilityClass = (slot) => {
     return generateUtilityClass(componentName, slot);
   };
@@ -11298,7 +11380,7 @@ function createContainer(options = {}) {
       fixed,
       maxWidth: maxWidth2
     };
-    const classes = useUtilityClasses$R(ownerState, componentName);
+    const classes = useUtilityClasses$Z(ownerState, componentName);
     return (
       // @ts-ignore theme is injected by the styled util
       /* @__PURE__ */ jsxRuntimeExports.jsx(ContainerRoot, {
@@ -11854,11 +11936,12 @@ function createColorScheme(options) {
 }
 function shouldSkipGeneratingVar(keys) {
   var _a;
-  return !!keys[0].match(/(cssVarPrefix|colorSchemeSelector|typography|mixins|breakpoints|direction|transitions)/) || !!keys[0].match(/sxConfig$/) || // ends with sxConfig
+  return !!keys[0].match(/(cssVarPrefix|colorSchemeSelector|rootSelector|typography|mixins|breakpoints|direction|transitions)/) || !!keys[0].match(/sxConfig$/) || // ends with sxConfig
   keys[0] === "palette" && !!((_a = keys[1]) == null ? void 0 : _a.match(/(mode|contrastThreshold|tonalOffset)/));
 }
 const excludeVariablesFromRoot = (cssVarPrefix) => [...[...Array(25)].map((_, index) => `--${cssVarPrefix ? `${cssVarPrefix}-` : ""}overlays-${index}`), `--${cssVarPrefix ? `${cssVarPrefix}-` : ""}palette-AppBar-darkBg`, `--${cssVarPrefix ? `${cssVarPrefix}-` : ""}palette-AppBar-darkColor`];
 const defaultGetSelector = (theme) => (colorScheme, css2) => {
+  const root = theme.rootSelector || ":root";
   const selector = theme.colorSchemeSelector;
   let rule = selector;
   if (selector === "class") {
@@ -11879,33 +11962,33 @@ const defaultGetSelector = (theme) => (colorScheme, css2) => {
       });
       if (rule === "media") {
         return {
-          ":root": css2,
+          [root]: css2,
           [`@media (prefers-color-scheme: dark)`]: {
-            ":root": excludedVariables
+            [root]: excludedVariables
           }
         };
       }
       if (rule) {
         return {
           [rule.replace("%s", colorScheme)]: excludedVariables,
-          [`:root, ${rule.replace("%s", colorScheme)}`]: css2
+          [`${root}, ${rule.replace("%s", colorScheme)}`]: css2
         };
       }
       return {
-        ":root": {
+        [root]: {
           ...css2,
           ...excludedVariables
         }
       };
     }
     if (rule && rule !== "media") {
-      return `:root, ${rule.replace("%s", String(colorScheme))}`;
+      return `${root}, ${rule.replace("%s", String(colorScheme))}`;
     }
   } else if (colorScheme) {
     if (rule === "media") {
       return {
         [`@media (prefers-color-scheme: ${String(colorScheme)})`]: {
-          ":root": css2
+          [root]: css2
         }
       };
     }
@@ -11913,7 +11996,7 @@ const defaultGetSelector = (theme) => (colorScheme, css2) => {
       return rule.replace("%s", String(colorScheme));
     }
   }
-  return ":root";
+  return root;
 };
 function isSerializable(val) {
   return isPlainObject$1(val) || typeof val === "undefined" || typeof val === "string" || typeof val === "boolean" || typeof val === "number" || Array.isArray(val);
@@ -12034,6 +12117,7 @@ function createThemeWithVars(options = {}, ...args) {
     cssVarPrefix = "mui",
     shouldSkipGeneratingVar: shouldSkipGeneratingVar$1 = shouldSkipGeneratingVar,
     colorSchemeSelector: selector = colorSchemesInput.light && colorSchemesInput.dark ? "media" : void 0,
+    rootSelector = ":root",
     ...input
   } = options;
   const firstColorScheme = Object.keys(colorSchemesInput)[0];
@@ -12067,6 +12151,7 @@ function createThemeWithVars(options = {}, ...args) {
     ...muiTheme,
     cssVarPrefix,
     colorSchemeSelector: selector,
+    rootSelector,
     getCssVar,
     colorSchemes,
     font: {
@@ -12444,7 +12529,7 @@ function getSvgIconUtilityClass(slot) {
   return generateUtilityClass("MuiSvgIcon", slot);
 }
 generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
-const useUtilityClasses$Q = (ownerState) => {
+const useUtilityClasses$Y = (ownerState) => {
   const {
     color: color2,
     fontSize,
@@ -12589,7 +12674,7 @@ const SvgIcon = /* @__PURE__ */ reactExports.forwardRef(function SvgIcon2(inProp
   if (!inheritViewBox) {
     more.viewBox = viewBox;
   }
-  const classes = useUtilityClasses$Q(ownerState);
+  const classes = useUtilityClasses$Y(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SvgIconRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -13093,7 +13178,7 @@ function getPaperUtilityClass(slot) {
   return generateUtilityClass("MuiPaper", slot);
 }
 generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
-const useUtilityClasses$P = (ownerState) => {
+const useUtilityClasses$X = (ownerState) => {
   const {
     square,
     elevation,
@@ -13166,7 +13251,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     square,
     variant
   };
-  const classes = useUtilityClasses$P(ownerState);
+  const classes = useUtilityClasses$X(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(PaperRoot, {
     as: component,
     ownerState,
@@ -13632,7 +13717,7 @@ function getButtonBaseUtilityClass(slot) {
   return generateUtilityClass("MuiButtonBase", slot);
 }
 const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]);
-const useUtilityClasses$O = (ownerState) => {
+const useUtilityClasses$W = (ownerState) => {
   const {
     disabled,
     focusVisible,
@@ -13861,7 +13946,7 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
     tabIndex,
     focusVisible
   };
-  const classes = useUtilityClasses$O(ownerState);
+  const classes = useUtilityClasses$W(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonBaseRoot, {
     as: ComponentProp,
     className: clsx(classes.root, className),
@@ -13916,7 +14001,7 @@ function getIconButtonUtilityClass(slot) {
   return generateUtilityClass("MuiIconButton", slot);
 }
 const iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge"]);
-const useUtilityClasses$N = (ownerState) => {
+const useUtilityClasses$V = (ownerState) => {
   const {
     classes,
     disabled,
@@ -14072,7 +14157,7 @@ const IconButton = /* @__PURE__ */ reactExports.forwardRef(function IconButton2(
     disableRipple,
     size
   };
-  const classes = useUtilityClasses$N(ownerState);
+  const classes = useUtilityClasses$V(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(IconButtonRoot, {
     className: clsx(classes.root, className),
     centerRipple: true,
@@ -14100,7 +14185,7 @@ const InfoOutlinedIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("pa
 const ClearIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 }), "Close");
-const useUtilityClasses$M = (ownerState) => {
+const useUtilityClasses$U = (ownerState) => {
   const {
     variant,
     color: color2,
@@ -14255,7 +14340,7 @@ const Alert = /* @__PURE__ */ reactExports.forwardRef(function Alert2(inProps, r
     variant,
     colorSeverity: color2 || severity
   };
-  const classes = useUtilityClasses$M(ownerState);
+  const classes = useUtilityClasses$U(ownerState);
   const externalForwardedProps = {
     slots: {
       closeButton: components.CloseButton,
@@ -14317,7 +14402,7 @@ const Alert = /* @__PURE__ */ reactExports.forwardRef(function Alert2(inProps, r
 function getTypographyUtilityClass(slot) {
   return generateUtilityClass("MuiTypography", slot);
 }
-generateUtilityClasses("MuiTypography", ["root", "h1", "h2", "h3", "h4", "h5", "h6", "subtitle1", "subtitle2", "body1", "body2", "inherit", "button", "caption", "overline", "alignLeft", "alignRight", "alignCenter", "alignJustify", "noWrap", "gutterBottom", "paragraph"]);
+const typographyClasses = generateUtilityClasses("MuiTypography", ["root", "h1", "h2", "h3", "h4", "h5", "h6", "subtitle1", "subtitle2", "body1", "body2", "inherit", "button", "caption", "overline", "alignLeft", "alignRight", "alignCenter", "alignJustify", "noWrap", "gutterBottom", "paragraph"]);
 const v6Colors = {
   primary: true,
   secondary: true,
@@ -14330,7 +14415,7 @@ const v6Colors = {
   textDisabled: true
 };
 const extendSxProp = internal_createExtendSxProp();
-const useUtilityClasses$L = (ownerState) => {
+const useUtilityClasses$T = (ownerState) => {
   const {
     align,
     gutterBottom,
@@ -14473,7 +14558,7 @@ const Typography = /* @__PURE__ */ reactExports.forwardRef(function Typography2(
     variantMapping
   };
   const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
-  const classes = useUtilityClasses$L(ownerState);
+  const classes = useUtilityClasses$T(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TypographyRoot, {
     as: Component,
     ref,
@@ -15846,7 +15931,7 @@ const Portal = /* @__PURE__ */ reactExports.forwardRef(function Portal2(props, f
     disablePortal = false
   } = props;
   const [mountNode, setMountNode] = reactExports.useState(null);
-  const handleRef = useForkRef(getReactNodeRef(children), forwardedRef);
+  const handleRef = useForkRef(/* @__PURE__ */ reactExports.isValidElement(children) ? getReactElementRef(children) : null, forwardedRef);
   useEnhancedEffect(() => {
     if (!disablePortal) {
       setMountNode(getContainer$1(container) || document.body);
@@ -15903,7 +15988,7 @@ function resolveAnchorEl$1(anchorEl) {
 function isHTMLElement(element) {
   return element.nodeType !== void 0;
 }
-const useUtilityClasses$K = (ownerState) => {
+const useUtilityClasses$S = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -16004,7 +16089,7 @@ const PopperTooltip = /* @__PURE__ */ reactExports.forwardRef(function PopperToo
   if (TransitionProps !== null) {
     childProps.TransitionProps = TransitionProps;
   }
-  const classes = useUtilityClasses$K(props);
+  const classes = useUtilityClasses$S(props);
   const Root = slots.root ?? "div";
   const rootProps = useSlotProps({
     elementType: Root,
@@ -16340,7 +16425,7 @@ const inputOverridesResolver = (props, styles2) => {
   } = props;
   return [styles2.input, ownerState.size === "small" && styles2.inputSizeSmall, ownerState.multiline && styles2.inputMultiline, ownerState.type === "search" && styles2.inputTypeSearch, ownerState.startAdornment && styles2.inputAdornedStart, ownerState.endAdornment && styles2.inputAdornedEnd, ownerState.hiddenLabel && styles2.inputHiddenLabel];
 };
-const useUtilityClasses$J = (ownerState) => {
+const useUtilityClasses$R = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -16726,7 +16811,7 @@ const InputBase = /* @__PURE__ */ reactExports.forwardRef(function InputBase2(in
     startAdornment,
     type
   };
-  const classes = useUtilityClasses$J(ownerState);
+  const classes = useUtilityClasses$R(ownerState);
   const Root = slots.root || components.Root || InputBaseRoot;
   const rootProps = slotProps.root || componentsProps.root || {};
   const Input3 = slots.input || components.Input || InputBaseInput;
@@ -16847,7 +16932,7 @@ const Fade = /* @__PURE__ */ reactExports.forwardRef(function Fade2(props, ref) 
     ...other
   } = props;
   const nodeRef = reactExports.useRef(null);
-  const handleRef = useForkRef(nodeRef, getReactNodeRef(children), ref);
+  const handleRef = useForkRef(nodeRef, getReactElementRef(children), ref);
   const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
     if (callback) {
       const node2 = nodeRef.current;
@@ -16935,7 +17020,7 @@ const removeOwnerState = (props) => {
   } = props;
   return rest;
 };
-const useUtilityClasses$I = (ownerState) => {
+const useUtilityClasses$Q = (ownerState) => {
   const {
     classes,
     invisible
@@ -16998,7 +17083,7 @@ const Backdrop = /* @__PURE__ */ reactExports.forwardRef(function Backdrop2(inPr
     component,
     invisible
   };
-  const classes = useUtilityClasses$I(ownerState);
+  const classes = useUtilityClasses$Q(ownerState);
   const backwardCompatibleSlots = {
     transition: TransitionComponentProp,
     root: components.Root,
@@ -17038,6 +17123,355 @@ const Backdrop = /* @__PURE__ */ reactExports.forwardRef(function Backdrop2(inPr
     })
   });
 });
+function useBadge(parameters) {
+  const {
+    badgeContent: badgeContentProp,
+    invisible: invisibleProp = false,
+    max: maxProp = 99,
+    showZero = false
+  } = parameters;
+  const prevProps = usePreviousProps({
+    badgeContent: badgeContentProp,
+    max: maxProp
+  });
+  let invisible = invisibleProp;
+  if (invisibleProp === false && badgeContentProp === 0 && !showZero) {
+    invisible = true;
+  }
+  const {
+    badgeContent,
+    max: max2 = maxProp
+  } = invisible ? prevProps : parameters;
+  const displayValue = badgeContent && Number(badgeContent) > max2 ? `${max2}+` : badgeContent;
+  return {
+    badgeContent,
+    invisible,
+    max: max2,
+    displayValue
+  };
+}
+function getBadgeUtilityClass(slot) {
+  return generateUtilityClass("MuiBadge", slot);
+}
+const badgeClasses = generateUtilityClasses("MuiBadge", [
+  "root",
+  "badge",
+  "dot",
+  "standard",
+  "anchorOriginTopRight",
+  "anchorOriginBottomRight",
+  "anchorOriginTopLeft",
+  "anchorOriginBottomLeft",
+  "invisible",
+  "colorError",
+  "colorInfo",
+  "colorPrimary",
+  "colorSecondary",
+  "colorSuccess",
+  "colorWarning",
+  "overlapRectangular",
+  "overlapCircular",
+  // TODO: v6 remove the overlap value from these class keys
+  "anchorOriginTopLeftCircular",
+  "anchorOriginTopLeftRectangular",
+  "anchorOriginTopRightCircular",
+  "anchorOriginTopRightRectangular",
+  "anchorOriginBottomLeftCircular",
+  "anchorOriginBottomLeftRectangular",
+  "anchorOriginBottomRightCircular",
+  "anchorOriginBottomRightRectangular"
+]);
+const RADIUS_STANDARD = 10;
+const RADIUS_DOT = 4;
+const useUtilityClasses$P = (ownerState) => {
+  const {
+    color: color2,
+    anchorOrigin,
+    invisible,
+    overlap,
+    variant,
+    classes = {}
+  } = ownerState;
+  const slots = {
+    root: ["root"],
+    badge: ["badge", variant, invisible && "invisible", `anchorOrigin${capitalize(anchorOrigin.vertical)}${capitalize(anchorOrigin.horizontal)}`, `anchorOrigin${capitalize(anchorOrigin.vertical)}${capitalize(anchorOrigin.horizontal)}${capitalize(overlap)}`, `overlap${capitalize(overlap)}`, color2 !== "default" && `color${capitalize(color2)}`]
+  };
+  return composeClasses(slots, getBadgeUtilityClass, classes);
+};
+const BadgeRoot = styled("span", {
+  name: "MuiBadge",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})({
+  position: "relative",
+  display: "inline-flex",
+  // For correct alignment with the text.
+  verticalAlign: "middle",
+  flexShrink: 0
+});
+const BadgeBadge = styled("span", {
+  name: "MuiBadge",
+  slot: "Badge",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.badge, styles2[ownerState.variant], styles2[`anchorOrigin${capitalize(ownerState.anchorOrigin.vertical)}${capitalize(ownerState.anchorOrigin.horizontal)}${capitalize(ownerState.overlap)}`], ownerState.color !== "default" && styles2[`color${capitalize(ownerState.color)}`], ownerState.invisible && styles2.invisible];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  alignContent: "center",
+  alignItems: "center",
+  position: "absolute",
+  boxSizing: "border-box",
+  fontFamily: theme.typography.fontFamily,
+  fontWeight: theme.typography.fontWeightMedium,
+  fontSize: theme.typography.pxToRem(12),
+  minWidth: RADIUS_STANDARD * 2,
+  lineHeight: 1,
+  padding: "0 6px",
+  height: RADIUS_STANDARD * 2,
+  borderRadius: RADIUS_STANDARD,
+  zIndex: 1,
+  // Render the badge on top of potential ripples.
+  transition: theme.transitions.create("transform", {
+    easing: theme.transitions.easing.easeInOut,
+    duration: theme.transitions.duration.enteringScreen
+  }),
+  variants: [...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["contrastText"])).map(([color2]) => ({
+    props: {
+      color: color2
+    },
+    style: {
+      backgroundColor: (theme.vars || theme).palette[color2].main,
+      color: (theme.vars || theme).palette[color2].contrastText
+    }
+  })), {
+    props: {
+      variant: "dot"
+    },
+    style: {
+      borderRadius: RADIUS_DOT,
+      height: RADIUS_DOT * 2,
+      minWidth: RADIUS_DOT * 2,
+      padding: 0
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "top" && ownerState.anchorOrigin.horizontal === "right" && ownerState.overlap === "rectangular",
+    style: {
+      top: 0,
+      right: 0,
+      transform: "scale(1) translate(50%, -50%)",
+      transformOrigin: "100% 0%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(50%, -50%)"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "bottom" && ownerState.anchorOrigin.horizontal === "right" && ownerState.overlap === "rectangular",
+    style: {
+      bottom: 0,
+      right: 0,
+      transform: "scale(1) translate(50%, 50%)",
+      transformOrigin: "100% 100%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(50%, 50%)"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "top" && ownerState.anchorOrigin.horizontal === "left" && ownerState.overlap === "rectangular",
+    style: {
+      top: 0,
+      left: 0,
+      transform: "scale(1) translate(-50%, -50%)",
+      transformOrigin: "0% 0%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(-50%, -50%)"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "bottom" && ownerState.anchorOrigin.horizontal === "left" && ownerState.overlap === "rectangular",
+    style: {
+      bottom: 0,
+      left: 0,
+      transform: "scale(1) translate(-50%, 50%)",
+      transformOrigin: "0% 100%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(-50%, 50%)"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "top" && ownerState.anchorOrigin.horizontal === "right" && ownerState.overlap === "circular",
+    style: {
+      top: "14%",
+      right: "14%",
+      transform: "scale(1) translate(50%, -50%)",
+      transformOrigin: "100% 0%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(50%, -50%)"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "bottom" && ownerState.anchorOrigin.horizontal === "right" && ownerState.overlap === "circular",
+    style: {
+      bottom: "14%",
+      right: "14%",
+      transform: "scale(1) translate(50%, 50%)",
+      transformOrigin: "100% 100%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(50%, 50%)"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "top" && ownerState.anchorOrigin.horizontal === "left" && ownerState.overlap === "circular",
+    style: {
+      top: "14%",
+      left: "14%",
+      transform: "scale(1) translate(-50%, -50%)",
+      transformOrigin: "0% 0%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(-50%, -50%)"
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.anchorOrigin.vertical === "bottom" && ownerState.anchorOrigin.horizontal === "left" && ownerState.overlap === "circular",
+    style: {
+      bottom: "14%",
+      left: "14%",
+      transform: "scale(1) translate(-50%, 50%)",
+      transformOrigin: "0% 100%",
+      [`&.${badgeClasses.invisible}`]: {
+        transform: "scale(0) translate(-50%, 50%)"
+      }
+    }
+  }, {
+    props: {
+      invisible: true
+    },
+    style: {
+      transition: theme.transitions.create("transform", {
+        easing: theme.transitions.easing.easeInOut,
+        duration: theme.transitions.duration.leavingScreen
+      })
+    }
+  }]
+})));
+const Badge = /* @__PURE__ */ reactExports.forwardRef(function Badge2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiBadge"
+  });
+  const {
+    anchorOrigin: anchorOriginProp = {
+      vertical: "top",
+      horizontal: "right"
+    },
+    className,
+    classes: classesProp,
+    component,
+    components = {},
+    componentsProps = {},
+    children,
+    overlap: overlapProp = "rectangular",
+    color: colorProp = "default",
+    invisible: invisibleProp = false,
+    max: maxProp = 99,
+    badgeContent: badgeContentProp,
+    slots,
+    slotProps,
+    showZero = false,
+    variant: variantProp = "standard",
+    ...other
+  } = props;
+  const {
+    badgeContent,
+    invisible: invisibleFromHook,
+    max: max2,
+    displayValue: displayValueFromHook
+  } = useBadge({
+    max: maxProp,
+    invisible: invisibleProp,
+    badgeContent: badgeContentProp,
+    showZero
+  });
+  const prevProps = usePreviousProps({
+    anchorOrigin: anchorOriginProp,
+    color: colorProp,
+    overlap: overlapProp,
+    variant: variantProp,
+    badgeContent: badgeContentProp
+  });
+  const invisible = invisibleFromHook || badgeContent == null && variantProp !== "dot";
+  const {
+    color: color2 = colorProp,
+    overlap = overlapProp,
+    anchorOrigin = anchorOriginProp,
+    variant = variantProp
+  } = invisible ? prevProps : props;
+  const displayValue = variant !== "dot" ? displayValueFromHook : void 0;
+  const ownerState = {
+    ...props,
+    badgeContent,
+    invisible,
+    max: max2,
+    displayValue,
+    showZero,
+    anchorOrigin,
+    color: color2,
+    overlap,
+    variant
+  };
+  const classes = useUtilityClasses$P(ownerState);
+  const RootSlot = (slots == null ? void 0 : slots.root) ?? components.Root ?? BadgeRoot;
+  const BadgeSlot = (slots == null ? void 0 : slots.badge) ?? components.Badge ?? BadgeBadge;
+  const rootSlotProps = (slotProps == null ? void 0 : slotProps.root) ?? componentsProps.root;
+  const badgeSlotProps = (slotProps == null ? void 0 : slotProps.badge) ?? componentsProps.badge;
+  const rootProps = useSlotProps({
+    elementType: RootSlot,
+    externalSlotProps: rootSlotProps,
+    externalForwardedProps: other,
+    additionalProps: {
+      ref,
+      as: component
+    },
+    ownerState,
+    className: clsx(rootSlotProps == null ? void 0 : rootSlotProps.className, classes.root, className)
+  });
+  const badgeProps = useSlotProps({
+    elementType: BadgeSlot,
+    externalSlotProps: badgeSlotProps,
+    ownerState,
+    className: clsx(classes.badge, badgeSlotProps == null ? void 0 : badgeSlotProps.className)
+  });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(RootSlot, {
+    ...rootProps,
+    children: [children, /* @__PURE__ */ jsxRuntimeExports.jsx(BadgeSlot, {
+      ...badgeProps,
+      children: displayValue
+    })]
+  });
+});
 const boxClasses = generateUtilityClasses("MuiBox", ["root"]);
 const defaultTheme = createTheme();
 const Box = createBox({
@@ -17052,7 +17486,7 @@ function getButtonUtilityClass(slot) {
 const buttonClasses = generateUtilityClasses("MuiButton", ["root", "text", "textInherit", "textPrimary", "textSecondary", "textSuccess", "textError", "textInfo", "textWarning", "outlined", "outlinedInherit", "outlinedPrimary", "outlinedSecondary", "outlinedSuccess", "outlinedError", "outlinedInfo", "outlinedWarning", "contained", "containedInherit", "containedPrimary", "containedSecondary", "containedSuccess", "containedError", "containedInfo", "containedWarning", "disableElevation", "focusVisible", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorSuccess", "colorError", "colorInfo", "colorWarning", "textSizeSmall", "textSizeMedium", "textSizeLarge", "outlinedSizeSmall", "outlinedSizeMedium", "outlinedSizeLarge", "containedSizeSmall", "containedSizeMedium", "containedSizeLarge", "sizeMedium", "sizeSmall", "sizeLarge", "fullWidth", "startIcon", "endIcon", "icon", "iconSizeSmall", "iconSizeMedium", "iconSizeLarge"]);
 const ButtonGroupContext = /* @__PURE__ */ reactExports.createContext({});
 const ButtonGroupButtonContext = /* @__PURE__ */ reactExports.createContext(void 0);
-const useUtilityClasses$H = (ownerState) => {
+const useUtilityClasses$O = (ownerState) => {
   const {
     color: color2,
     disableElevation,
@@ -17115,7 +17549,6 @@ const ButtonRoot = styled(ButtonBase, {
 })(memoTheme(({
   theme
 }) => {
-  var _a, _b;
   const inheritContainedBackgroundColor = theme.palette.mode === "light" ? theme.palette.grey[300] : theme.palette.grey[800];
   const inheritContainedHoverBackgroundColor = theme.palette.mode === "light" ? theme.palette.grey.A100 : theme.palette.grey[700];
   return {
@@ -17183,7 +17616,7 @@ const ButtonRoot = styled(ButtonBase, {
         color: `var(--variant-textColor)`,
         backgroundColor: `var(--variant-textBg)`
       }
-    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark", "contrastText"])).map(([color2]) => ({
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
       props: {
         color: color2
       },
@@ -17207,10 +17640,8 @@ const ButtonRoot = styled(ButtonBase, {
         color: "inherit"
       },
       style: {
-        "--variant-containedColor": theme.vars ? (
-          // this is safe because grey does not change between default light/dark mode
-          theme.vars.palette.text.primary
-        ) : (_b = (_a = theme.palette).getContrastText) == null ? void 0 : _b.call(_a, inheritContainedBackgroundColor),
+        color: "inherit",
+        borderColor: "currentColor",
         "--variant-containedBg": theme.vars ? theme.vars.palette.Button.inheritContainedBg : inheritContainedBackgroundColor,
         "@media (hover: hover)": {
           "&:hover": {
@@ -17384,7 +17815,7 @@ const Button = /* @__PURE__ */ reactExports.forwardRef(function Button2(inProps,
     type,
     variant
   };
-  const classes = useUtilityClasses$H(ownerState);
+  const classes = useUtilityClasses$O(ownerState);
   const startIcon = startIconProp && /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonStartIcon, {
     className: classes.startIcon,
     ownerState,
@@ -17410,11 +17841,100 @@ const Button = /* @__PURE__ */ reactExports.forwardRef(function Button2(inProps,
     children: [startIcon, children, endIcon]
   });
 });
+function getCardUtilityClass(slot) {
+  return generateUtilityClass("MuiCard", slot);
+}
+generateUtilityClasses("MuiCard", ["root"]);
+const useUtilityClasses$N = (ownerState) => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root"]
+  };
+  return composeClasses(slots, getCardUtilityClass, classes);
+};
+const CardRoot = styled(Paper, {
+  name: "MuiCard",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})({
+  overflow: "hidden"
+});
+const Card = /* @__PURE__ */ reactExports.forwardRef(function Card2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiCard"
+  });
+  const {
+    className,
+    raised = false,
+    ...other
+  } = props;
+  const ownerState = {
+    ...props,
+    raised
+  };
+  const classes = useUtilityClasses$N(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CardRoot, {
+    className: clsx(classes.root, className),
+    elevation: raised ? 8 : void 0,
+    ref,
+    ownerState,
+    ...other
+  });
+});
+function getCardContentUtilityClass(slot) {
+  return generateUtilityClass("MuiCardContent", slot);
+}
+generateUtilityClasses("MuiCardContent", ["root"]);
+const useUtilityClasses$M = (ownerState) => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root"]
+  };
+  return composeClasses(slots, getCardContentUtilityClass, classes);
+};
+const CardContentRoot = styled("div", {
+  name: "MuiCardContent",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})({
+  padding: 16,
+  "&:last-child": {
+    paddingBottom: 24
+  }
+});
+const CardContent = /* @__PURE__ */ reactExports.forwardRef(function CardContent2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiCardContent"
+  });
+  const {
+    className,
+    component = "div",
+    ...other
+  } = props;
+  const ownerState = {
+    ...props,
+    component
+  };
+  const classes = useUtilityClasses$M(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CardContentRoot, {
+    as: component,
+    className: clsx(classes.root, className),
+    ownerState,
+    ref,
+    ...other
+  });
+});
 function getSwitchBaseUtilityClass(slot) {
   return generateUtilityClass("PrivateSwitchBase", slot);
 }
 generateUtilityClasses("PrivateSwitchBase", ["root", "checked", "disabled", "input", "edgeStart", "edgeEnd"]);
-const useUtilityClasses$G = (ownerState) => {
+const useUtilityClasses$L = (ownerState) => {
   const {
     classes,
     checked,
@@ -17550,7 +18070,7 @@ const SwitchBase = /* @__PURE__ */ reactExports.forwardRef(function SwitchBase2(
     disableFocusRipple,
     edge
   };
-  const classes = useUtilityClasses$G(ownerState);
+  const classes = useUtilityClasses$L(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SwitchBaseRoot, {
     component: "span",
     className: clsx(classes.root, className),
@@ -17599,7 +18119,7 @@ function getCheckboxUtilityClass(slot) {
   return generateUtilityClass("MuiCheckbox", slot);
 }
 const checkboxClasses = generateUtilityClasses("MuiCheckbox", ["root", "checked", "disabled", "indeterminate", "colorPrimary", "colorSecondary", "sizeSmall", "sizeMedium"]);
-const useUtilityClasses$F = (ownerState) => {
+const useUtilityClasses$K = (ownerState) => {
   const {
     classes,
     indeterminate,
@@ -17706,7 +18226,7 @@ const Checkbox = /* @__PURE__ */ reactExports.forwardRef(function Checkbox2(inPr
     indeterminate,
     size
   };
-  const classes = useUtilityClasses$F(ownerState);
+  const classes = useUtilityClasses$K(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CheckboxRoot, {
     type: "checkbox",
     inputProps: {
@@ -17762,7 +18282,7 @@ const rotateAnimation = typeof circularRotateKeyframe !== "string" ? css`
 const dashAnimation = typeof circularDashKeyframe !== "string" ? css`
         animation: ${circularDashKeyframe} 1.4s ease-in-out infinite;
       ` : null;
-const useUtilityClasses$E = (ownerState) => {
+const useUtilityClasses$J = (ownerState) => {
   const {
     classes,
     variant,
@@ -17885,7 +18405,7 @@ const CircularProgress = /* @__PURE__ */ reactExports.forwardRef(function Circul
     value,
     variant
   };
-  const classes = useUtilityClasses$E(ownerState);
+  const classes = useUtilityClasses$J(ownerState);
   const circleStyle = {};
   const rootStyle = {};
   const rootProps = {};
@@ -17952,7 +18472,7 @@ function ClickAwayListener(props) {
       activatedRef.current = false;
     };
   }, []);
-  const handleRef = useForkRef(getReactNodeRef(children), nodeRef);
+  const handleRef = useForkRef(getReactElementRef(children), nodeRef);
   const handleClickAway = useEventCallback((event) => {
     const insideReactTree = syntheticEventRef.current;
     syntheticEventRef.current = false;
@@ -18177,8 +18697,8 @@ function isOverflowing(container) {
   }
   return container.scrollHeight > container.clientHeight;
 }
-function ariaHidden(element, show) {
-  if (show) {
+function ariaHidden(element, hide2) {
+  if (hide2) {
     element.setAttribute("aria-hidden", "true");
   } else {
     element.removeAttribute("aria-hidden");
@@ -18193,13 +18713,13 @@ function isAriaHiddenForbiddenOnElement(element) {
   const isInputHidden = element.tagName === "INPUT" && element.getAttribute("type") === "hidden";
   return isForbiddenTagName || isInputHidden;
 }
-function ariaHiddenSiblings(container, mountElement, currentElement, elementsToExclude, show) {
+function ariaHiddenSiblings(container, mountElement, currentElement, elementsToExclude, hide2) {
   const blacklist = [mountElement, currentElement, ...elementsToExclude];
   [].forEach.call(container.children, (element) => {
     const isNotExcludedElement = !blacklist.includes(element);
     const isNotForbiddenElement = !isAriaHiddenForbiddenOnElement(element);
     if (isNotExcludedElement && isNotForbiddenElement) {
-      ariaHidden(element, show);
+      ariaHidden(element, hide2);
     }
   });
 }
@@ -18219,7 +18739,7 @@ function handleContainer(containerInfo, props) {
   const container = containerInfo.container;
   if (!props.disableScrollLock) {
     if (isOverflowing(container)) {
-      const scrollbarSize = getScrollbarSize(ownerDocument(container));
+      const scrollbarSize = getScrollbarSize(ownerWindow(container));
       restoreStyle.push({
         value: container.style.paddingRight,
         property: "padding-right",
@@ -18421,7 +18941,7 @@ function FocusTrap(props) {
   const reactFocusEventTarget = reactExports.useRef(null);
   const activated = reactExports.useRef(false);
   const rootRef = reactExports.useRef(null);
-  const handleRef = useForkRef(getReactNodeRef(children), rootRef);
+  const handleRef = useForkRef(getReactElementRef(children), rootRef);
   const lastKeydown = reactExports.useRef(null);
   reactExports.useEffect(() => {
     if (!open || !rootRef.current) {
@@ -18565,14 +19085,12 @@ function getContainer(container) {
 function getHasTransition(children) {
   return children ? children.props.hasOwnProperty("in") : false;
 }
-const defaultManager = new ModalManager();
+const manager = new ModalManager();
 function useModal(parameters) {
   const {
     container,
     disableEscapeKeyDown = false,
     disableScrollLock = false,
-    // @ts-ignore internal logic - Base UI supports the manager as a prop too
-    manager = defaultManager,
     closeAfterTransition = false,
     onTransitionEnter,
     onTransitionExited,
@@ -18612,7 +19130,7 @@ function useModal(parameters) {
       handleMounted();
     }
   });
-  const isTopModal = reactExports.useCallback(() => manager.isTopModal(getModal()), [manager]);
+  const isTopModal = () => manager.isTopModal(getModal());
   const handlePortalRef = useEventCallback((node2) => {
     mountNodeRef.current = node2;
     if (!node2) {
@@ -18626,7 +19144,7 @@ function useModal(parameters) {
   });
   const handleClose = reactExports.useCallback(() => {
     manager.remove(getModal(), ariaHiddenProp);
-  }, [ariaHiddenProp, manager]);
+  }, [ariaHiddenProp]);
   reactExports.useEffect(() => {
     return () => {
       handleClose();
@@ -18723,7 +19241,7 @@ function getModalUtilityClass(slot) {
   return generateUtilityClass("MuiModal", slot);
 }
 generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
-const useUtilityClasses$D = (ownerState) => {
+const useUtilityClasses$I = (ownerState) => {
   const {
     open,
     exited,
@@ -18834,7 +19352,7 @@ const Modal = /* @__PURE__ */ reactExports.forwardRef(function Modal2(inProps, r
     ...propsWithDefaults,
     exited
   };
-  const classes = useUtilityClasses$D(ownerState);
+  const classes = useUtilityClasses$I(ownerState);
   const childProps = {};
   if (children.props.tabIndex === void 0) {
     childProps.tabIndex = "-1";
@@ -18877,12 +19395,12 @@ const Modal = /* @__PURE__ */ reactExports.forwardRef(function Modal2(inProps, r
     getSlotProps: (otherHandlers) => {
       return getBackdropProps({
         ...otherHandlers,
-        onClick: (e2) => {
+        onClick: (event) => {
           if (onBackdropClick) {
-            onBackdropClick(e2);
+            onBackdropClick(event);
           }
           if (otherHandlers == null ? void 0 : otherHandlers.onClick) {
-            otherHandlers.onClick(e2);
+            otherHandlers.onClick(event);
           }
         }
       });
@@ -18927,7 +19445,7 @@ const DialogBackdrop = styled(Backdrop, {
   // Improve scrollable dialog support.
   zIndex: -1
 });
-const useUtilityClasses$C = (ownerState) => {
+const useUtilityClasses$H = (ownerState) => {
   const {
     classes,
     scroll,
@@ -19129,7 +19647,7 @@ const Dialog = /* @__PURE__ */ reactExports.forwardRef(function Dialog2(inProps,
     maxWidth: maxWidth2,
     scroll
   };
-  const classes = useUtilityClasses$C(ownerState);
+  const classes = useUtilityClasses$H(ownerState);
   const backdropClick = reactExports.useRef();
   const handleMouseDown = (event) => {
     backdropClick.current = event.target === event.currentTarget;
@@ -19207,7 +19725,7 @@ function getDialogActionsUtilityClass(slot) {
   return generateUtilityClass("MuiDialogActions", slot);
 }
 generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
-const useUtilityClasses$B = (ownerState) => {
+const useUtilityClasses$G = (ownerState) => {
   const {
     classes,
     disableSpacing
@@ -19257,7 +19775,7 @@ const DialogActions = /* @__PURE__ */ reactExports.forwardRef(function DialogAct
     ...props,
     disableSpacing
   };
-  const classes = useUtilityClasses$B(ownerState);
+  const classes = useUtilityClasses$G(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActionsRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -19273,7 +19791,7 @@ function getDialogTitleUtilityClass(slot) {
   return generateUtilityClass("MuiDialogTitle", slot);
 }
 const dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]);
-const useUtilityClasses$A = (ownerState) => {
+const useUtilityClasses$F = (ownerState) => {
   const {
     classes,
     dividers
@@ -19334,7 +19852,7 @@ const DialogContent = /* @__PURE__ */ reactExports.forwardRef(function DialogCon
     ...props,
     dividers
   };
-  const classes = useUtilityClasses$A(ownerState);
+  const classes = useUtilityClasses$F(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -19346,7 +19864,7 @@ function getDialogContentTextUtilityClass(slot) {
   return generateUtilityClass("MuiDialogContentText", slot);
 }
 generateUtilityClasses("MuiDialogContentText", ["root"]);
-const useUtilityClasses$z = (ownerState) => {
+const useUtilityClasses$E = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -19376,7 +19894,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     className,
     ...ownerState
   } = props;
-  const classes = useUtilityClasses$z(ownerState);
+  const classes = useUtilityClasses$E(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentTextRoot, {
     component: "p",
     variant: "body1",
@@ -19388,7 +19906,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     classes
   });
 });
-const useUtilityClasses$y = (ownerState) => {
+const useUtilityClasses$D = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -19416,7 +19934,7 @@ const DialogTitle = /* @__PURE__ */ reactExports.forwardRef(function DialogTitle
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$y(ownerState);
+  const classes = useUtilityClasses$D(ownerState);
   const {
     titleId = idProp
   } = reactExports.useContext(DialogContext);
@@ -19514,7 +20032,7 @@ const Slide = /* @__PURE__ */ reactExports.forwardRef(function Slide2(props, ref
     ...other
   } = props;
   const childrenRef = reactExports.useRef(null);
-  const handleRef = useForkRef(getReactNodeRef(children), childrenRef, ref);
+  const handleRef = useForkRef(getReactElementRef(children), childrenRef, ref);
   const normalizedTransitionCallback = (callback) => (isAppearing) => {
     if (callback) {
       if (isAppearing === void 0) {
@@ -19636,13 +20154,13 @@ function getDrawerUtilityClass(slot) {
   return generateUtilityClass("MuiDrawer", slot);
 }
 generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "paperAnchorLeft", "paperAnchorRight", "paperAnchorTop", "paperAnchorBottom", "paperAnchorDockedLeft", "paperAnchorDockedRight", "paperAnchorDockedTop", "paperAnchorDockedBottom", "modal"]);
-const overridesResolver$1 = (props, styles2) => {
+const overridesResolver$3 = (props, styles2) => {
   const {
     ownerState
   } = props;
   return [styles2.root, (ownerState.variant === "permanent" || ownerState.variant === "persistent") && styles2.docked, styles2.modal];
 };
-const useUtilityClasses$x = (ownerState) => {
+const useUtilityClasses$C = (ownerState) => {
   const {
     classes,
     anchor,
@@ -19659,7 +20177,7 @@ const useUtilityClasses$x = (ownerState) => {
 const DrawerRoot = styled(Modal, {
   name: "MuiDrawer",
   slot: "Root",
-  overridesResolver: overridesResolver$1
+  overridesResolver: overridesResolver$3
 })(memoTheme(({
   theme
 }) => ({
@@ -19670,7 +20188,7 @@ const DrawerDockedRoot = styled("div", {
   name: "MuiDrawer",
   slot: "Docked",
   skipVariantsResolver: false,
-  overridesResolver: overridesResolver$1
+  overridesResolver: overridesResolver$3
 })({
   flex: "0 0 auto"
 });
@@ -19830,7 +20348,7 @@ const Drawer = /* @__PURE__ */ reactExports.forwardRef(function Drawer2(inProps,
     variant,
     ...other
   };
-  const classes = useUtilityClasses$x(ownerState);
+  const classes = useUtilityClasses$C(ownerState);
   const drawer = /* @__PURE__ */ jsxRuntimeExports.jsx(DrawerPaper, {
     elevation: variant === "temporary" ? elevation : 0,
     square: true,
@@ -19882,7 +20400,7 @@ const Drawer = /* @__PURE__ */ reactExports.forwardRef(function Drawer2(inProps,
     children: slidingDrawer
   });
 });
-const useUtilityClasses$w = (ownerState) => {
+const useUtilityClasses$B = (ownerState) => {
   const {
     classes,
     disableUnderline,
@@ -20164,7 +20682,7 @@ const FilledInput = /* @__PURE__ */ reactExports.forwardRef(function FilledInput
     multiline,
     type
   };
-  const classes = useUtilityClasses$w(props);
+  const classes = useUtilityClasses$B(props);
   const filledInputComponentsProps = {
     root: {
       ownerState
@@ -20198,7 +20716,7 @@ function getFormControlUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControl", slot);
 }
 generateUtilityClasses("MuiFormControl", ["root", "marginNone", "marginNormal", "marginDense", "fullWidth", "disabled"]);
-const useUtilityClasses$v = (ownerState) => {
+const useUtilityClasses$A = (ownerState) => {
   const {
     classes,
     margin: margin2,
@@ -20291,7 +20809,7 @@ const FormControl = /* @__PURE__ */ reactExports.forwardRef(function FormControl
     size,
     variant
   };
-  const classes = useUtilityClasses$v(ownerState);
+  const classes = useUtilityClasses$A(ownerState);
   const [adornedStart, setAdornedStart] = reactExports.useState(() => {
     let initialAdornedStart = false;
     if (children) {
@@ -20373,7 +20891,7 @@ function getFormControlLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControlLabel", slot);
 }
 const formControlLabelClasses = generateUtilityClasses("MuiFormControlLabel", ["root", "labelPlacementStart", "labelPlacementTop", "labelPlacementBottom", "disabled", "label", "error", "required", "asterisk"]);
-const useUtilityClasses$u = (ownerState) => {
+const useUtilityClasses$z = (ownerState) => {
   const {
     classes,
     disabled,
@@ -20509,7 +21027,7 @@ const FormControlLabel = /* @__PURE__ */ reactExports.forwardRef(function FormCo
     required,
     error: fcs.error
   };
-  const classes = useUtilityClasses$u(ownerState);
+  const classes = useUtilityClasses$z(ownerState);
   const externalForwardedProps = {
     slots,
     slotProps: {
@@ -20550,7 +21068,7 @@ function getFormGroupUtilityClass(slot) {
   return generateUtilityClass("MuiFormGroup", slot);
 }
 generateUtilityClasses("MuiFormGroup", ["root", "row", "error"]);
-const useUtilityClasses$t = (ownerState) => {
+const useUtilityClasses$y = (ownerState) => {
   const {
     classes,
     row,
@@ -20604,7 +21122,7 @@ const FormGroup = /* @__PURE__ */ reactExports.forwardRef(function FormGroup2(in
     row,
     error: fcs.error
   };
-  const classes = useUtilityClasses$t(ownerState);
+  const classes = useUtilityClasses$y(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroupRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -20616,8 +21134,8 @@ function getFormHelperTextUtilityClasses(slot) {
   return generateUtilityClass("MuiFormHelperText", slot);
 }
 const formHelperTextClasses = generateUtilityClasses("MuiFormHelperText", ["root", "error", "disabled", "sizeSmall", "sizeMedium", "contained", "focused", "filled", "required"]);
-var _span$2;
-const useUtilityClasses$s = (ownerState) => {
+var _span$3;
+const useUtilityClasses$x = (ownerState) => {
   const {
     classes,
     contained,
@@ -20712,7 +21230,7 @@ const FormHelperText = /* @__PURE__ */ reactExports.forwardRef(function FormHelp
     required: fcs.required
   };
   delete ownerState.ownerState;
-  const classes = useUtilityClasses$s(ownerState);
+  const classes = useUtilityClasses$x(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormHelperTextRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -20721,7 +21239,7 @@ const FormHelperText = /* @__PURE__ */ reactExports.forwardRef(function FormHelp
     ownerState,
     children: children === " " ? (
       // notranslate needed while Google Translate will not fix zero-width space issue
-      _span$2 || (_span$2 = /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
+      _span$3 || (_span$3 = /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
         className: "notranslate",
         children: "​"
       }))
@@ -20732,7 +21250,7 @@ function getFormLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormLabel", slot);
 }
 const formLabelClasses = generateUtilityClasses("MuiFormLabel", ["root", "colorSecondary", "focused", "disabled", "error", "filled", "required", "asterisk"]);
-const useUtilityClasses$r = (ownerState) => {
+const useUtilityClasses$w = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -20833,7 +21351,7 @@ const FormLabel = /* @__PURE__ */ reactExports.forwardRef(function FormLabel2(in
     focused: fcs.focused,
     required: fcs.required
   };
-  const classes = useUtilityClasses$r(ownerState);
+  const classes = useUtilityClasses$w(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(FormLabelRoot, {
     as: component,
     ownerState,
@@ -21161,7 +21679,7 @@ function resolveSpacingClasses(spacing, breakpoints) {
   });
   return classes;
 }
-const useUtilityClasses$q = (ownerState) => {
+const useUtilityClasses$v = (ownerState) => {
   const {
     classes,
     container,
@@ -21239,7 +21757,7 @@ const Grid = /* @__PURE__ */ reactExports.forwardRef(function Grid2(inProps, ref
     ...breakpointsValues,
     breakpoints: breakpoints.keys
   };
-  const classes = useUtilityClasses$q(ownerState);
+  const classes = useUtilityClasses$v(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(GridContext.Provider, {
     value: columns,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(GridRoot, {
@@ -21288,7 +21806,7 @@ const Grow = /* @__PURE__ */ reactExports.forwardRef(function Grow2(props, ref) 
   const autoTimeout = reactExports.useRef();
   const theme = useTheme();
   const nodeRef = reactExports.useRef(null);
-  const handleRef = useForkRef(nodeRef, getReactNodeRef(children), ref);
+  const handleRef = useForkRef(nodeRef, getReactElementRef(children), ref);
   const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
     if (callback) {
       const node2 = nodeRef.current;
@@ -21408,7 +21926,7 @@ const Grow = /* @__PURE__ */ reactExports.forwardRef(function Grow2(props, ref) 
 if (Grow) {
   Grow.muiSupportAuto = true;
 }
-const useUtilityClasses$p = (ownerState) => {
+const useUtilityClasses$u = (ownerState) => {
   const {
     classes,
     disableUnderline
@@ -21541,7 +22059,7 @@ const Input = /* @__PURE__ */ reactExports.forwardRef(function Input2(inProps, r
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$p(props);
+  const classes = useUtilityClasses$u(props);
   const ownerState = {
     disableUnderline
   };
@@ -21571,11 +22089,133 @@ const Input = /* @__PURE__ */ reactExports.forwardRef(function Input2(inProps, r
 if (Input) {
   Input.muiName = "Input";
 }
+function getInputAdornmentUtilityClass(slot) {
+  return generateUtilityClass("MuiInputAdornment", slot);
+}
+const inputAdornmentClasses = generateUtilityClasses("MuiInputAdornment", ["root", "filled", "standard", "outlined", "positionStart", "positionEnd", "disablePointerEvents", "hiddenLabel", "sizeSmall"]);
+var _span$2;
+const overridesResolver$2 = (props, styles2) => {
+  const {
+    ownerState
+  } = props;
+  return [styles2.root, styles2[`position${capitalize(ownerState.position)}`], ownerState.disablePointerEvents === true && styles2.disablePointerEvents, styles2[ownerState.variant]];
+};
+const useUtilityClasses$t = (ownerState) => {
+  const {
+    classes,
+    disablePointerEvents,
+    hiddenLabel,
+    position: position2,
+    size,
+    variant
+  } = ownerState;
+  const slots = {
+    root: ["root", disablePointerEvents && "disablePointerEvents", position2 && `position${capitalize(position2)}`, variant, hiddenLabel && "hiddenLabel", size && `size${capitalize(size)}`]
+  };
+  return composeClasses(slots, getInputAdornmentUtilityClass, classes);
+};
+const InputAdornmentRoot = styled("div", {
+  name: "MuiInputAdornment",
+  slot: "Root",
+  overridesResolver: overridesResolver$2
+})(memoTheme(({
+  theme
+}) => ({
+  display: "flex",
+  maxHeight: "2em",
+  alignItems: "center",
+  whiteSpace: "nowrap",
+  color: (theme.vars || theme).palette.action.active,
+  variants: [{
+    props: {
+      variant: "filled"
+    },
+    style: {
+      [`&.${inputAdornmentClasses.positionStart}&:not(.${inputAdornmentClasses.hiddenLabel})`]: {
+        marginTop: 16
+      }
+    }
+  }, {
+    props: {
+      position: "start"
+    },
+    style: {
+      marginRight: 8
+    }
+  }, {
+    props: {
+      position: "end"
+    },
+    style: {
+      marginLeft: 8
+    }
+  }, {
+    props: {
+      disablePointerEvents: true
+    },
+    style: {
+      pointerEvents: "none"
+    }
+  }]
+})));
+const InputAdornment = /* @__PURE__ */ reactExports.forwardRef(function InputAdornment2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiInputAdornment"
+  });
+  const {
+    children,
+    className,
+    component = "div",
+    disablePointerEvents = false,
+    disableTypography = false,
+    position: position2,
+    variant: variantProp,
+    ...other
+  } = props;
+  const muiFormControl = useFormControl() || {};
+  let variant = variantProp;
+  if (variantProp && muiFormControl.variant) ;
+  if (muiFormControl && !variant) {
+    variant = muiFormControl.variant;
+  }
+  const ownerState = {
+    ...props,
+    hiddenLabel: muiFormControl.hiddenLabel,
+    size: muiFormControl.size,
+    disablePointerEvents,
+    position: position2,
+    variant
+  };
+  const classes = useUtilityClasses$t(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(FormControlContext.Provider, {
+    value: null,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornmentRoot, {
+      as: component,
+      ownerState,
+      className: clsx(classes.root, className),
+      ref,
+      ...other,
+      children: typeof children === "string" && !disableTypography ? /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, {
+        color: "textSecondary",
+        children
+      }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
+        children: [position2 === "start" ? (
+          /* notranslate needed while Google Translate will not fix zero-width space issue */
+          _span$2 || (_span$2 = /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
+            className: "notranslate",
+            children: "​"
+          }))
+        ) : null, children]
+      })
+    })
+  });
+});
 function getInputLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiInputLabel", slot);
 }
 generateUtilityClasses("MuiInputLabel", ["root", "focused", "disabled", "error", "required", "asterisk", "formControl", "sizeSmall", "shrink", "animated", "standard", "filled", "outlined"]);
-const useUtilityClasses$o = (ownerState) => {
+const useUtilityClasses$s = (ownerState) => {
   const {
     classes,
     formControl,
@@ -21764,7 +22404,7 @@ const InputLabel = /* @__PURE__ */ reactExports.forwardRef(function InputLabel2(
     required: fcs.required,
     focused: fcs.focused
   };
-  const classes = useUtilityClasses$o(ownerState);
+  const classes = useUtilityClasses$s(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabelRoot, {
     "data-shrink": shrink,
     ref,
@@ -21779,7 +22419,7 @@ function getListUtilityClass(slot) {
   return generateUtilityClass("MuiList", slot);
 }
 generateUtilityClasses("MuiList", ["root", "padding", "dense", "subheader"]);
-const useUtilityClasses$n = (ownerState) => {
+const useUtilityClasses$r = (ownerState) => {
   const {
     classes,
     disablePadding,
@@ -21845,7 +22485,7 @@ const List = /* @__PURE__ */ reactExports.forwardRef(function List2(inProps, ref
     dense,
     disablePadding
   };
-  const classes = useUtilityClasses$n(ownerState);
+  const classes = useUtilityClasses$r(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
     value: context,
     children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ListRoot, {
@@ -21858,8 +22498,481 @@ const List = /* @__PURE__ */ reactExports.forwardRef(function List2(inProps, ref
     })
   });
 });
+function getListItemUtilityClass(slot) {
+  return generateUtilityClass("MuiListItem", slot);
+}
+generateUtilityClasses("MuiListItem", ["root", "container", "dense", "alignItemsFlexStart", "divider", "gutters", "padding", "secondaryAction"]);
+const listItemButtonClasses = generateUtilityClasses("MuiListItemButton", ["root", "focusVisible", "dense", "alignItemsFlexStart", "disabled", "divider", "gutters", "selected"]);
+function getListItemSecondaryActionClassesUtilityClass(slot) {
+  return generateUtilityClass("MuiListItemSecondaryAction", slot);
+}
+generateUtilityClasses("MuiListItemSecondaryAction", ["root", "disableGutters"]);
+const useUtilityClasses$q = (ownerState) => {
+  const {
+    disableGutters,
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root", disableGutters && "disableGutters"]
+  };
+  return composeClasses(slots, getListItemSecondaryActionClassesUtilityClass, classes);
+};
+const ListItemSecondaryActionRoot = styled("div", {
+  name: "MuiListItemSecondaryAction",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.root, ownerState.disableGutters && styles2.disableGutters];
+  }
+})({
+  position: "absolute",
+  right: 16,
+  top: "50%",
+  transform: "translateY(-50%)",
+  variants: [{
+    props: ({
+      ownerState
+    }) => ownerState.disableGutters,
+    style: {
+      right: 0
+    }
+  }]
+});
+const ListItemSecondaryAction = /* @__PURE__ */ reactExports.forwardRef(function ListItemSecondaryAction2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiListItemSecondaryAction"
+  });
+  const {
+    className,
+    ...other
+  } = props;
+  const context = reactExports.useContext(ListContext);
+  const ownerState = {
+    ...props,
+    disableGutters: context.disableGutters
+  };
+  const classes = useUtilityClasses$q(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemSecondaryActionRoot, {
+    className: clsx(classes.root, className),
+    ownerState,
+    ref,
+    ...other
+  });
+});
+ListItemSecondaryAction.muiName = "ListItemSecondaryAction";
+const overridesResolver$1 = (props, styles2) => {
+  const {
+    ownerState
+  } = props;
+  return [styles2.root, ownerState.dense && styles2.dense, ownerState.alignItems === "flex-start" && styles2.alignItemsFlexStart, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters, !ownerState.disablePadding && styles2.padding, ownerState.hasSecondaryAction && styles2.secondaryAction];
+};
+const useUtilityClasses$p = (ownerState) => {
+  const {
+    alignItems,
+    classes,
+    dense,
+    disableGutters,
+    disablePadding,
+    divider,
+    hasSecondaryAction
+  } = ownerState;
+  const slots = {
+    root: ["root", dense && "dense", !disableGutters && "gutters", !disablePadding && "padding", divider && "divider", alignItems === "flex-start" && "alignItemsFlexStart", hasSecondaryAction && "secondaryAction"],
+    container: ["container"]
+  };
+  return composeClasses(slots, getListItemUtilityClass, classes);
+};
+const ListItemRoot = styled("div", {
+  name: "MuiListItem",
+  slot: "Root",
+  overridesResolver: overridesResolver$1
+})(memoTheme(({
+  theme
+}) => ({
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  position: "relative",
+  textDecoration: "none",
+  width: "100%",
+  boxSizing: "border-box",
+  textAlign: "left",
+  variants: [{
+    props: ({
+      ownerState
+    }) => !ownerState.disablePadding,
+    style: {
+      paddingTop: 8,
+      paddingBottom: 8
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !ownerState.disablePadding && ownerState.dense,
+    style: {
+      paddingTop: 4,
+      paddingBottom: 4
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !ownerState.disablePadding && !ownerState.disableGutters,
+    style: {
+      paddingLeft: 16,
+      paddingRight: 16
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !ownerState.disablePadding && !!ownerState.secondaryAction,
+    style: {
+      // Add some space to avoid collision as `ListItemSecondaryAction`
+      // is absolutely positioned.
+      paddingRight: 48
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => !!ownerState.secondaryAction,
+    style: {
+      [`& > .${listItemButtonClasses.root}`]: {
+        paddingRight: 48
+      }
+    }
+  }, {
+    props: {
+      alignItems: "flex-start"
+    },
+    style: {
+      alignItems: "flex-start"
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.divider,
+    style: {
+      borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+      backgroundClip: "padding-box"
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.button,
+    style: {
+      transition: theme.transitions.create("background-color", {
+        duration: theme.transitions.duration.shortest
+      }),
+      "&:hover": {
+        textDecoration: "none",
+        backgroundColor: (theme.vars || theme).palette.action.hover,
+        // Reset on touch devices, it doesn't add specificity
+        "@media (hover: none)": {
+          backgroundColor: "transparent"
+        }
+      }
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.hasSecondaryAction,
+    style: {
+      // Add some space to avoid collision as `ListItemSecondaryAction`
+      // is absolutely positioned.
+      paddingRight: 48
+    }
+  }]
+})));
+const ListItemContainer = styled("li", {
+  name: "MuiListItem",
+  slot: "Container",
+  overridesResolver: (props, styles2) => styles2.container
+})({
+  position: "relative"
+});
+const ListItem = /* @__PURE__ */ reactExports.forwardRef(function ListItem2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiListItem"
+  });
+  const {
+    alignItems = "center",
+    children: childrenProp,
+    className,
+    component: componentProp,
+    components = {},
+    componentsProps = {},
+    ContainerComponent = "li",
+    ContainerProps: {
+      className: ContainerClassName,
+      ...ContainerProps
+    } = {},
+    dense = false,
+    disableGutters = false,
+    disablePadding = false,
+    divider = false,
+    secondaryAction,
+    slotProps = {},
+    slots = {},
+    ...other
+  } = props;
+  const context = reactExports.useContext(ListContext);
+  const childContext = reactExports.useMemo(() => ({
+    dense: dense || context.dense || false,
+    alignItems,
+    disableGutters
+  }), [alignItems, context.dense, dense, disableGutters]);
+  const listItemRef = reactExports.useRef(null);
+  const children = reactExports.Children.toArray(childrenProp);
+  const hasSecondaryAction = children.length && isMuiElement(children[children.length - 1], ["ListItemSecondaryAction"]);
+  const ownerState = {
+    ...props,
+    alignItems,
+    dense: childContext.dense,
+    disableGutters,
+    disablePadding,
+    divider,
+    hasSecondaryAction
+  };
+  const classes = useUtilityClasses$p(ownerState);
+  const handleRef = useForkRef(listItemRef, ref);
+  const Root = slots.root || components.Root || ListItemRoot;
+  const rootProps = slotProps.root || componentsProps.root || {};
+  const componentProps = {
+    className: clsx(classes.root, rootProps.className, className),
+    ...other
+  };
+  let Component = componentProp || "li";
+  if (hasSecondaryAction) {
+    Component = !componentProps.component && !componentProp ? "div" : Component;
+    if (ContainerComponent === "li") {
+      if (Component === "li") {
+        Component = "div";
+      } else if (componentProps.component === "li") {
+        componentProps.component = "div";
+      }
+    }
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
+      value: childContext,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ListItemContainer, {
+        as: ContainerComponent,
+        className: clsx(classes.container, ContainerClassName),
+        ref: handleRef,
+        ownerState,
+        ...ContainerProps,
+        children: [/* @__PURE__ */ jsxRuntimeExports.jsx(Root, {
+          ...rootProps,
+          ...!isHostComponent(Root) && {
+            as: Component,
+            ownerState: {
+              ...ownerState,
+              ...rootProps.ownerState
+            }
+          },
+          ...componentProps,
+          children
+        }), children.pop()]
+      })
+    });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
+    value: childContext,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Root, {
+      ...rootProps,
+      as: Component,
+      ref: handleRef,
+      ...!isHostComponent(Root) && {
+        ownerState: {
+          ...ownerState,
+          ...rootProps.ownerState
+        }
+      },
+      ...componentProps,
+      children: [children, secondaryAction && /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemSecondaryAction, {
+        children: secondaryAction
+      })]
+    })
+  });
+});
+function getListItemIconUtilityClass(slot) {
+  return generateUtilityClass("MuiListItemIcon", slot);
+}
 const listItemIconClasses = generateUtilityClasses("MuiListItemIcon", ["root", "alignItemsFlexStart"]);
+const useUtilityClasses$o = (ownerState) => {
+  const {
+    alignItems,
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root", alignItems === "flex-start" && "alignItemsFlexStart"]
+  };
+  return composeClasses(slots, getListItemIconUtilityClass, classes);
+};
+const ListItemIconRoot = styled("div", {
+  name: "MuiListItemIcon",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.root, ownerState.alignItems === "flex-start" && styles2.alignItemsFlexStart];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  minWidth: 56,
+  color: (theme.vars || theme).palette.action.active,
+  flexShrink: 0,
+  display: "inline-flex",
+  variants: [{
+    props: {
+      alignItems: "flex-start"
+    },
+    style: {
+      marginTop: 8
+    }
+  }]
+})));
+const ListItemIcon = /* @__PURE__ */ reactExports.forwardRef(function ListItemIcon2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiListItemIcon"
+  });
+  const {
+    className,
+    ...other
+  } = props;
+  const context = reactExports.useContext(ListContext);
+  const ownerState = {
+    ...props,
+    alignItems: context.alignItems
+  };
+  const classes = useUtilityClasses$o(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemIconRoot, {
+    className: clsx(classes.root, className),
+    ownerState,
+    ref,
+    ...other
+  });
+});
+function getListItemTextUtilityClass(slot) {
+  return generateUtilityClass("MuiListItemText", slot);
+}
 const listItemTextClasses = generateUtilityClasses("MuiListItemText", ["root", "multiline", "dense", "inset", "primary", "secondary"]);
+const useUtilityClasses$n = (ownerState) => {
+  const {
+    classes,
+    inset,
+    primary,
+    secondary,
+    dense
+  } = ownerState;
+  const slots = {
+    root: ["root", inset && "inset", dense && "dense", primary && secondary && "multiline"],
+    primary: ["primary"],
+    secondary: ["secondary"]
+  };
+  return composeClasses(slots, getListItemTextUtilityClass, classes);
+};
+const ListItemTextRoot = styled("div", {
+  name: "MuiListItemText",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [{
+      [`& .${listItemTextClasses.primary}`]: styles2.primary
+    }, {
+      [`& .${listItemTextClasses.secondary}`]: styles2.secondary
+    }, styles2.root, ownerState.inset && styles2.inset, ownerState.primary && ownerState.secondary && styles2.multiline, ownerState.dense && styles2.dense];
+  }
+})({
+  flex: "1 1 auto",
+  minWidth: 0,
+  marginTop: 4,
+  marginBottom: 4,
+  [`.${typographyClasses.root}:where(& .${listItemTextClasses.primary})`]: {
+    display: "block"
+  },
+  [`.${typographyClasses.root}:where(& .${listItemTextClasses.secondary})`]: {
+    display: "block"
+  },
+  variants: [{
+    props: ({
+      ownerState
+    }) => ownerState.primary && ownerState.secondary,
+    style: {
+      marginTop: 6,
+      marginBottom: 6
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.inset,
+    style: {
+      paddingLeft: 56
+    }
+  }]
+});
+const ListItemText = /* @__PURE__ */ reactExports.forwardRef(function ListItemText2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiListItemText"
+  });
+  const {
+    children,
+    className,
+    disableTypography = false,
+    inset = false,
+    primary: primaryProp,
+    primaryTypographyProps,
+    secondary: secondaryProp,
+    secondaryTypographyProps,
+    ...other
+  } = props;
+  const {
+    dense
+  } = reactExports.useContext(ListContext);
+  let primary = primaryProp != null ? primaryProp : children;
+  let secondary = secondaryProp;
+  const ownerState = {
+    ...props,
+    disableTypography,
+    inset,
+    primary: !!primary,
+    secondary: !!secondary,
+    dense
+  };
+  const classes = useUtilityClasses$n(ownerState);
+  if (primary != null && primary.type !== Typography && !disableTypography) {
+    primary = /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, {
+      variant: dense ? "body2" : "body1",
+      className: classes.primary,
+      component: (primaryTypographyProps == null ? void 0 : primaryTypographyProps.variant) ? void 0 : "span",
+      ...primaryTypographyProps,
+      children: primary
+    });
+  }
+  if (secondary != null && secondary.type !== Typography && !disableTypography) {
+    secondary = /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, {
+      variant: "body2",
+      className: classes.secondary,
+      color: "textSecondary",
+      ...secondaryTypographyProps,
+      children: secondary
+    });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(ListItemTextRoot, {
+    className: clsx(classes.root, className),
+    ownerState,
+    ref,
+    ...other,
+    children: [primary, secondary]
+  });
+});
 function nextItem$1(list, item, disableListWrap) {
   if (list === item) {
     return list.firstChild;
@@ -21948,7 +23061,7 @@ const MenuList = /* @__PURE__ */ reactExports.forwardRef(function MenuList2(prop
     }) => {
       const noExplicitWidth = !listRef.current.style.width;
       if (containerElement.clientHeight < listRef.current.clientHeight && noExplicitWidth) {
-        const scrollbarSize = `${getScrollbarSize(ownerDocument(containerElement))}px`;
+        const scrollbarSize = `${getScrollbarSize(ownerWindow(containerElement))}px`;
         listRef.current.style[direction === "rtl" ? "paddingLeft" : "paddingRight"] = scrollbarSize;
         listRef.current.style.width = `calc(100% + ${scrollbarSize})`;
       }
@@ -23775,7 +24888,7 @@ const Select = /* @__PURE__ */ reactExports.forwardRef(function Select2(inProps,
       ownerState
     })
   }[variant];
-  const inputComponentRef = useForkRef(ref, getReactNodeRef(InputComponent));
+  const inputComponentRef = useForkRef(ref, getReactElementRef(InputComponent));
   return /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Fragment, {
     children: /* @__PURE__ */ reactExports.cloneElement(InputComponent, {
       // Most of the logic is implemented in `SelectInput`.
@@ -24673,7 +25786,7 @@ const Tooltip = /* @__PURE__ */ reactExports.forwardRef(function Tooltip2(inProp
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleClose, open]);
-  const handleRef = useForkRef(getReactNodeRef(children), setChildNode, ref);
+  const handleRef = useForkRef(getReactElementRef(children), setChildNode, ref);
   if (!title && title !== 0) {
     open = false;
   }
@@ -27157,6 +28270,12 @@ const TextField = /* @__PURE__ */ reactExports.forwardRef(function TextField2(in
     })]
   });
 });
+const NotificationImportantIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M18 16v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-5 0h-2v-2h2zm0-4h-2V8h2zm-1 10c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2"
+}), "NotificationImportant");
+const CloseIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+}), "Close");
 function bind(fn2, thisArg) {
   return function wrap() {
     return fn2.apply(thisArg, arguments);
@@ -29537,9 +30656,6 @@ axios.formToJSON = (thing) => formDataToJSON(utils$1.isHTMLForm(thing) ? new For
 axios.getAdapter = adapters.getAdapter;
 axios.HttpStatusCode = HttpStatusCode;
 axios.default = axios;
-const CloseIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-}), "Close");
 const Transition = React.forwardRef(function Transition2(props, ref) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { direction: "up", ref, ...props });
 });
@@ -29610,8 +30726,14 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
     });
   };
   const handleTabChange = (event, newValue) => {
-    console.log(event);
     setTabIndex(newValue);
+  };
+  const sortByDate = (history, dateKey) => {
+    return history.slice().sort((a, b2) => {
+      const dateA = new Date(a[dateKey]).getTime();
+      const dateB = new Date(b2[dateKey]).getTime();
+      return dateB - dateA;
+    });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     CustomDialog,
@@ -29630,9 +30752,9 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип зміни" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість змін" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Зміни по Кількості" })
           ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.stock && productHistory.stock.length > 0 && productHistory.stock.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.stock && productHistory.stock.length > 0 && sortByDate(productHistory.stock, "timestamp").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.timestamp).toLocaleString() }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_type }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_amount })
@@ -29646,7 +30768,7 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" })
           ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.purchase && productHistory.purchase.length > 0 && productHistory.purchase.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.purchase && productHistory.purchase.length > 0 && sortByDate(productHistory.purchase, "purchase_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date).toLocaleString() }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price_per_item }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_purchase }),
@@ -29662,7 +30784,7 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість проданих одиниць" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Клієнт" })
           ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.sales && productHistory.sales.length > 0 && productHistory.sales.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.sales && productHistory.sales.length > 0 && sortByDate(productHistory.sales, "sale_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.sale_date).toLocaleString() }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price_per_item }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.total_price }),
@@ -30154,53 +31276,71 @@ const TotalPriceField = ({ value }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     inputProps: { min: 0, step: 0.01, max: 1e4 }
   }
 );
+const Add = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
+}), "Add");
+const DeleteIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"
+}), "Delete");
+const EditIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"
+}), "Edit");
+const HistoryIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9m-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8z"
+}), "History");
+const Remove = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M19 13H5v-2h14z"
+}), "Remove");
+const SellIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "m21.41 11.41-8.83-8.83c-.37-.37-.88-.58-1.41-.58H4c-1.1 0-2 .9-2 2v7.17c0 .53.21 1.04.59 1.41l8.83 8.83c.78.78 2.05.78 2.83 0l7.17-7.17c.78-.78.78-2.04-.01-2.83M6.5 8C5.67 8 5 7.33 5 6.5S5.67 5 6.5 5 8 5.67 8 6.5 7.33 8 6.5 8"
+}), "Sell");
+const ShoppingCartIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2M1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2"
+}), "ShoppingCart");
 const QuantityField = ({ value, onChange, error, onIncrement, onDecrement }) => {
-  console.log("value:::::", value);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", alignItems: "center", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Button,
-      {
-        variant: "outlined",
-        onClick: onDecrement,
-        disabled: value <= 1,
-        children: "-"
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { display: "flex", alignItems: "center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    TextField,
+    {
+      label: "Кількість",
+      type: "text",
+      value: value.toString(),
+      onChange,
+      fullWidth: true,
+      margin: "normal",
+      error: !!error,
+      helperText: error,
+      inputProps: {
+        min: 1,
+        max: 1e3,
+        step: 1,
+        pattern: "[1-9][0-9]*"
+      },
+      InputProps: {
+        startAdornment: /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornment, { position: "start", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            onClick: onDecrement,
+            disabled: value <= 1,
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Remove, {})
+          }
+        ) }),
+        endAdornment: /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornment, { position: "end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            onClick: onIncrement,
+            disabled: value >= 1e3,
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Add, {})
+          }
+        ) })
       }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TextField,
-      {
-        label: "Кількість",
-        type: "text",
-        value: value.toString(),
-        onChange,
-        fullWidth: true,
-        margin: "normal",
-        error: !!error,
-        helperText: error,
-        inputProps: {
-          min: 1,
-          max: 1e3,
-          step: 1,
-          pattern: "[1-9][0-9]*"
-        }
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Button,
-      {
-        variant: "outlined",
-        onClick: onIncrement,
-        disabled: value >= 1e3,
-        children: "+"
-      }
-    )
-  ] });
+    }
+  ) });
 };
 const CategoriesSelect = ({
   categories,
   selectedCategories,
   handleCategoryChange
-}) => /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+}) => /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 3, lg: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
   FormControlLabel,
   {
     control: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -30211,9 +31351,8 @@ const CategoriesSelect = ({
       }
     ),
     label: category.name
-  },
-  category.id
-)) });
+  }
+) }, category.id + category.name)) }) });
 function roundToDecimalPlaces(num, decimalPlaces) {
   const factor = Math.pow(10, decimalPlaces);
   return Math.round(num * factor) / factor;
@@ -30257,7 +31396,7 @@ const AddProductModal = ({
   });
   const validateFields = () => {
     const newErrors = {
-      name: newProduct.name.trim() === "" ? "Name is required" : "",
+      name: newProduct.name.trim().length < 10 ? "Name must be at least 10 characters long" : "",
       supplier: newProduct.supplier_id === "" ? "Supplier is required" : "",
       quantity: newProduct.quantity < 0 ? "Quantity must be greater than or equal to 0" : "",
       price_per_item: newProduct.price_per_item < 0 ? "Price per item must be greater than or equal to 0" : ""
@@ -30290,7 +31429,7 @@ const AddProductModal = ({
     const totalPrice = newProduct.quantity * newProduct.price_per_item;
     setNewProduct({ ...newProduct, total_price: roundToDecimalPlaces(totalPrice, 2) });
   }, [newProduct.quantity, newProduct.price_per_item]);
-  const isAddButtonDisabled = !newProduct.name.trim() || !newProduct.supplier_id || newProduct.quantity <= 0;
+  const isAddButtonDisabled = newProduct.name.trim().length < 10 || !newProduct.supplier_id || newProduct.quantity <= 0;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -30406,6 +31545,9 @@ const EditProductModal = ({
     if (!editProduct.name.trim()) {
       tempErrors.name = "Name is required";
       isValid = false;
+    } else if (editProduct.name.trim().length < 10) {
+      tempErrors.name = "Name must be at least 10 characters long";
+      isValid = false;
     } else if (editProduct.name.length > 100) {
       tempErrors.name = "Name cannot exceed 100 characters";
       isValid = false;
@@ -30458,7 +31600,6 @@ const EditProductModal = ({
       return updatedProduct;
     });
   };
-  console.log("selectedCategories", selectedCategories);
   const handleSave = () => {
     if (validateFields()) {
       handleEditSave();
@@ -30872,141 +32013,6 @@ const CreateNewCategoryModal = ({
     }
   );
 };
-const EditIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"
-}), "Edit");
-const DeleteIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"
-}), "Delete");
-const ShoppingCartIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2M1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2"
-}), "ShoppingCart");
-const SellIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "m21.41 11.41-8.83-8.83c-.37-.37-.88-.58-1.41-.58H4c-1.1 0-2 .9-2 2v7.17c0 .53.21 1.04.59 1.41l8.83 8.83c.78.78 2.05.78 2.83 0l7.17-7.17c.78-.78.78-2.04-.01-2.83M6.5 8C5.67 8 5 7.33 5 6.5S5.67 5 6.5 5 8 5.67 8 6.5 7.33 8 6.5 8"
-}), "Sell");
-const HistoryIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9m-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8z"
-}), "History");
-const ProductTable = ({
-  filteredProducts,
-  order: order2,
-  orderBy,
-  handleSort,
-  sortProducts,
-  getComparator,
-  handleOpenEdit,
-  handleDelete,
-  handlePurchase,
-  handleOpenSale,
-  handleOpenHistoryModal
-}) => {
-  const [searchTerm, setSearchTerm] = reactExports.useState("");
-  const [currentPage, setCurrentPage] = reactExports.useState(0);
-  const [itemsPerPage, setItemsPerPage] = reactExports.useState(10);
-  const filteredAndSearchedProducts = filteredProducts.filter(
-    (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TextField,
-      {
-        label: "Пошук товару",
-        variant: "outlined",
-        fullWidth: true,
-        margin: "normal",
-        value: searchTerm,
-        onChange: (e2) => setSearchTerm(e2.target.value)
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "name",
-            direction: orderBy === "name" ? order2 : "asc",
-            onClick: () => handleSort("name"),
-            children: "Назва"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "supplier",
-            direction: orderBy === "supplier" ? order2 : "asc",
-            onClick: () => handleSort("supplier"),
-            children: "Постачальник"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "quantity",
-            direction: orderBy === "quantity" ? order2 : "asc",
-            onClick: () => handleSort("quantity"),
-            children: "Кількість"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "price_per_item",
-            direction: orderBy === "price_per_item" ? order2 : "asc",
-            onClick: () => handleSort("price_per_item"),
-            children: "Ціна за 1шт"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "total_price",
-            direction: orderBy === "total_price" ? order2 : "asc",
-            onClick: () => handleSort("total_price"),
-            children: "Сумма"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дія" })
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
-        var _a;
-        return /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.quantity }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.price_per_item }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.total_price }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", children: [
-            " ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "secondary", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", onClick: () => {
-              handleOpenHistoryModal(product.id);
-            }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
-          ] }) })
-        ] }, `${product.id}${index}${product.total_price}`);
-      }) })
-    ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TablePagination,
-      {
-        rowsPerPageOptions: [5, 10, 25],
-        component: "div",
-        count: filteredAndSearchedProducts.length,
-        rowsPerPage: itemsPerPage,
-        page: currentPage,
-        onPageChange: (event, newPage) => setCurrentPage(newPage),
-        onRowsPerPageChange: (event) => {
-          setItemsPerPage(parseInt(event.target.value, 10));
-          setCurrentPage(0);
-        }
-      }
-    )
-  ] });
-};
 const AddSupplierModal = ({ open, handleClose, handleAddSupplier }) => {
   const [name, setName] = reactExports.useState("");
   const [contactInfo, setContactInfo] = reactExports.useState("");
@@ -31014,6 +32020,9 @@ const AddSupplierModal = ({ open, handleClose, handleAddSupplier }) => {
   const validate = () => {
     if (!name.trim()) {
       setError("Назва постачальника обов'язкова");
+      return false;
+    } else if (name.trim().length < 10) {
+      setError("Назва постачальника повинна містит не менше 10 символів");
       return false;
     }
     setError(null);
@@ -31035,6 +32044,8 @@ const AddSupplierModal = ({ open, handleClose, handleAddSupplier }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         TextField,
         {
+          minLength: 10,
+          maxLength: 100,
           required: true,
           autoFocus: true,
           margin: "dense",
@@ -31156,8 +32167,344 @@ const FilterComponent = ({
     }, children: "Очистити" })
   ] }) });
 };
+const modalNames = [
+  "openAdd",
+  "openSale",
+  "openEdit",
+  "openPurchase",
+  "openDrawer",
+  "openDelete",
+  "openHistory",
+  "openCategoryCreate",
+  "openAddSupplierOpen",
+  "openNotificationDrawer",
+  "snackbarNotifyOpen"
+];
+const ProductCardView = ({
+  filteredProducts,
+  order: order2,
+  orderBy,
+  handleSort,
+  sortProducts,
+  getComparator,
+  handleOpenEdit,
+  handleDelete,
+  handlePurchase,
+  handleOpenSale,
+  handleOpenHistoryModal
+}) => {
+  const [searchTerm, setSearchTerm] = reactExports.useState("");
+  const [currentPage, setCurrentPage] = reactExports.useState(0);
+  const [itemsPerPage, setItemsPerPage] = reactExports.useState(10);
+  const filteredAndSearchedProducts = filteredProducts.filter(
+    (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "flex-end", spacing: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TextField,
+      {
+        label: "Пошук товару",
+        variant: "outlined",
+        fullWidth: true,
+        margin: "normal",
+        value: searchTerm,
+        onChange: (e2) => setSearchTerm(e2.target.value)
+      }
+    ) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 2, children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
+      var _a;
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+          "ID: ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Typography,
+            {
+              component: "span",
+              variant: "body1",
+              color: "textPrimary",
+              children: product.id
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+          "Постачальник: ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Typography,
+            {
+              component: "span",
+              variant: "body1",
+              color: "textPrimary",
+              children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+          "Кількість: ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Typography,
+            {
+              component: "span",
+              variant: "body1",
+              color: "textPrimary",
+              children: product.quantity
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+          "Ціна за 1 шт: ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Typography,
+            {
+              component: "span",
+              variant: "body1",
+              color: "textPrimary",
+              children: product.price_per_item
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+          "Сума: ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Typography,
+            {
+              component: "span",
+              variant: "body1",
+              color: "textPrimary",
+              children: product.total_price
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "error", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "success", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "warning", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "info", onClick: () => handleOpenHistoryModal(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
+        ] })
+      ] }) }) }, `${product.id}${index}${product.total_price}`);
+    }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TablePagination,
+      {
+        rowsPerPageOptions: [5, 10, 25],
+        component: "div",
+        count: filteredAndSearchedProducts.length,
+        rowsPerPage: itemsPerPage,
+        page: currentPage,
+        onPageChange: (event, newPage) => setCurrentPage(newPage),
+        onRowsPerPageChange: (event) => {
+          setItemsPerPage(parseInt(event.target.value, 10));
+          setCurrentPage(0);
+        }
+      }
+    )
+  ] });
+};
+const ProductTable = ({
+  filteredProducts,
+  order: order2,
+  orderBy,
+  handleSort,
+  sortProducts,
+  getComparator,
+  handleOpenEdit,
+  handleDelete,
+  handlePurchase,
+  handleOpenSale,
+  handleOpenHistoryModal
+}) => {
+  const [searchTerm, setSearchTerm] = reactExports.useState("");
+  const [currentPage, setCurrentPage] = reactExports.useState(0);
+  const [itemsPerPage, setItemsPerPage] = reactExports.useState(10);
+  const filteredAndSearchedProducts = filteredProducts.filter(
+    (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "flex-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TextField,
+      {
+        label: "Пошук товару",
+        variant: "outlined",
+        fullWidth: true,
+        margin: "normal",
+        value: searchTerm,
+        onChange: (e2) => setSearchTerm(e2.target.value)
+      }
+    ) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TableSortLabel,
+          {
+            active: orderBy === "name",
+            direction: orderBy === "name" ? order2 : "asc",
+            onClick: () => handleSort("name"),
+            children: "Назва"
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TableSortLabel,
+          {
+            active: orderBy === "supplier",
+            direction: orderBy === "supplier" ? order2 : "asc",
+            onClick: () => handleSort("supplier"),
+            children: "Постачальник"
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TableSortLabel,
+          {
+            active: orderBy === "quantity",
+            direction: orderBy === "quantity" ? order2 : "asc",
+            onClick: () => handleSort("quantity"),
+            children: "Кількість"
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TableSortLabel,
+          {
+            active: orderBy === "price_per_item",
+            direction: orderBy === "price_per_item" ? order2 : "asc",
+            onClick: () => handleSort("price_per_item"),
+            children: "Ціна за 1шт"
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TableSortLabel,
+          {
+            active: orderBy === "total_price",
+            direction: orderBy === "total_price" ? order2 : "asc",
+            onClick: () => handleSort("total_price"),
+            children: "Сумма"
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дія" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
+        var _a;
+        const lowQuantity = product.quantity < 5;
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          TableRow,
+          {
+            className: lowQuantity ? "low-quantity-row" : "",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                TableCell,
+                {
+                  children: [
+                    " ",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Typography,
+                      {
+                        className: lowQuantity ? "low-quantity" : "",
+                        children: product.quantity
+                      }
+                    )
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.price_per_item }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.total_price }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  IconButton,
+                  {
+                    color: "secondary",
+                    onClick: () => handleDelete(product.id),
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
+                  }
+                ) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", onClick: () => {
+                  handleOpenHistoryModal(product.id);
+                }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
+              ] }) })
+            ]
+          },
+          `${product.id}${index}${product.total_price}`
+        );
+      }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TablePagination,
+      {
+        rowsPerPageOptions: [5, 10, 25],
+        component: "div",
+        count: filteredAndSearchedProducts.length,
+        rowsPerPage: itemsPerPage,
+        page: currentPage,
+        onPageChange: (event, newPage) => setCurrentPage(newPage),
+        onRowsPerPageChange: (event) => {
+          setItemsPerPage(parseInt(event.target.value, 10));
+          setCurrentPage(0);
+        }
+      }
+    )
+  ] });
+};
+const ResponsiveProductView = ({
+  filteredProducts,
+  order: order2,
+  orderBy,
+  handleSort,
+  sortProducts,
+  getComparator,
+  handleOpenEdit,
+  handleDelete,
+  handlePurchase,
+  handleOpenSale,
+  handleOpenHistoryModal
+}) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+    ProductCardView,
+    {
+      filteredProducts,
+      order: order2,
+      orderBy,
+      handleSort,
+      sortProducts,
+      getComparator,
+      handleOpenEdit,
+      handleDelete,
+      handlePurchase,
+      handleOpenSale,
+      handleOpenHistoryModal
+    }
+  ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+    ProductTable,
+    {
+      filteredProducts,
+      order: order2,
+      orderBy,
+      handleSort,
+      sortProducts,
+      getComparator,
+      handleOpenEdit,
+      handleDelete,
+      handlePurchase,
+      handleOpenSale,
+      handleOpenHistoryModal
+    }
+  ) });
+};
+const NotificationPanel = ({ lowQuantityProducts }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(List, { children: lowQuantityProducts.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ListItem, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemIcon, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationImportantIcon, {}) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemText, { primary: product.name, secondary: `Кількість: ${product.quantity}` })
+  ] }, product.id)) });
+};
 function App() {
   const [products, setProducts] = reactExports.useState([]);
+  const [lowQuantityProducts, setLowQuantityProducts] = reactExports.useState([]);
   const [filteredProducts, setFilteredProducts] = reactExports.useState([]);
   const [suppliers, setSuppliers] = reactExports.useState([]);
   const [categories, setCategories] = reactExports.useState([]);
@@ -31174,17 +32521,9 @@ function App() {
     category_ids: []
   });
   const [editProduct, setEditProduct] = reactExports.useState(null);
-  const [modalState, setModalState] = reactExports.useState({
-    openEdit: false,
-    openAdd: false,
-    openHistory: false,
-    openPurchase: false,
-    openCategoryCreate: false,
-    openDelete: false,
-    openDrawer: false,
-    openSale: false,
-    openAddSupplierOpen: false
-  });
+  const [modalState, setModalState] = reactExports.useState(
+    Object.fromEntries(modalNames.map((modal) => [modal, false]))
+  );
   const [productId, setProductId] = reactExports.useState(null);
   const [purchaseDetails, setPurchaseDetails] = reactExports.useState({
     quantity: 1,
@@ -31516,6 +32855,11 @@ function App() {
       console.error("There was an error adding the product!", error);
     });
   };
+  reactExports.useEffect(() => {
+    const lowQuantity = products.filter((product) => product.quantity < 5);
+    setLowQuantityProducts(lowQuantity);
+    lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen");
+  }, [products]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     loadingState.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       Box,
@@ -31590,7 +32934,7 @@ function App() {
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
-        ProductTable,
+        ResponsiveProductView,
         {
           filteredProducts,
           order: order2,
@@ -31610,8 +32954,7 @@ function App() {
           },
           handleOpenHistoryModal
         }
-      ),
-      " "
+      )
     ] }) }),
     modalState.openAdd && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddProductModal,
@@ -31706,6 +33049,43 @@ function App() {
         onClose: handleCloseSnackbar,
         anchorOrigin: { vertical: "top", horizontal: "right" },
         children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { onClose: handleCloseSnackbar, severity: snackbar.severity, children: snackbar.message })
+      }
+    ),
+    lowQuantityProducts.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      IconButton,
+      {
+        onClick: () => handleModalOpen("openNotificationDrawer"),
+        style: { position: "absolute", top: 16, right: 16 },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { badgeContent: lowQuantityProducts.length, color: "error", children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationImportantIcon, {}) })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Drawer,
+      {
+        anchor: "right",
+        open: modalState.openNotificationDrawer,
+        onClose: () => handleModalClose("openNotificationDrawer"),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationPanel, { lowQuantityProducts })
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Snackbar,
+      {
+        anchorOrigin: { vertical: "top", horizontal: "right" },
+        open: modalState.snackbarNotifyOpen,
+        autoHideDuration: 6e3,
+        onClose: () => handleModalClose("snackbarNotifyOpen"),
+        message: `${lowQuantityProducts.length} товарів з низькою кількістю`,
+        action: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            size: "small",
+            "aria-label": "close",
+            color: "inherit",
+            onClick: () => handleModalClose("snackbarNotifyOpen"),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(CloseIcon, { fontSize: "small" })
+          }
+        )
       }
     )
   ] });
