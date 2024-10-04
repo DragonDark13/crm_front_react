@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid,
+    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography,
 } from '@mui/material';
 import {IconButton, Tooltip} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -126,46 +126,56 @@ const ProductTable: React.FC<IProductTableProps> = ({
                         {filteredAndSearchedProducts.length > 0 &&
                         sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
                             .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
-                            .map((product: IProduct, index) => (
-                                <TableRow key={`${product.id}${index}${product.total_price}`}>
-                                    <TableCell>{product.id}</TableCell>
-                                    <TableCell>{product.name}</TableCell>
-                                    <TableCell>{product.supplier?.name || 'N/A'}</TableCell>
-                                    <TableCell>{product.quantity}</TableCell>
-                                    <TableCell>{product.price_per_item}</TableCell>
-                                    <TableCell>{product.total_price}</TableCell>
-
-                                    <TableCell>
-                                        <Box display={"flex"}> <Tooltip title="Редагувати">
-                                            <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
-                                                <EditIcon fontSize={"small"}/>
-                                            </IconButton>
-                                        </Tooltip>
-                                            <Tooltip title="Видалити">
-                                                <IconButton color="secondary" onClick={() => handleDelete(product.id)}>
-                                                    <DeleteIcon fontSize={"small"}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="Купівля">
-                                                <IconButton color="primary" onClick={() => handlePurchase(product)}>
-                                                    <ShoppingCartIcon fontSize={"small"}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="Продаж">
-                                                <IconButton color="primary" onClick={() => handleOpenSale(product)}>
-                                                    <SellIcon fontSize={"small"}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="Історія">
-                                                <IconButton size={"small"} onClick={() => {
-                                                    handleOpenHistoryModal(product.id);
-                                                }}>
-                                                    <HistoryIcon fontSize={"small"}/>
-                                                </IconButton>
-                                            </Tooltip></Box>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            .map((product: IProduct, index) => {
+                                const lowQuantity = product.quantity < 5; // умова для низької кількості
+                                return (
+                                    <TableRow key={`${product.id}${index}${product.total_price}`}
+                                              className={lowQuantity ? 'low-quantity-row' : ''}>
+                                        <TableCell>{product.id}</TableCell>
+                                        <TableCell>{product.name}</TableCell>
+                                        <TableCell>{product.supplier?.name || 'N/A'}</TableCell>
+                                        <TableCell
+                                        > <Typography
+                                            className={lowQuantity ? 'low-quantity' : ''}>{product.quantity}</Typography></TableCell>
+                                        <TableCell>
+                                            {product.price_per_item}
+                                        </TableCell>
+                                        <TableCell>{product.total_price}</TableCell>
+                                        <TableCell>
+                                            <Box display={"flex"}>
+                                                <Tooltip title="Редагувати">
+                                                    <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
+                                                        <EditIcon fontSize={"small"}/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Видалити">
+                                                    <IconButton color="secondary"
+                                                                onClick={() => handleDelete(product.id)}>
+                                                        <DeleteIcon fontSize={"small"}/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Купівля">
+                                                    <IconButton color="primary" onClick={() => handlePurchase(product)}>
+                                                        <ShoppingCartIcon fontSize={"small"}/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Продаж">
+                                                    <IconButton color="primary" onClick={() => handleOpenSale(product)}>
+                                                        <SellIcon fontSize={"small"}/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Історія">
+                                                    <IconButton size={"small"} onClick={() => {
+                                                        handleOpenHistoryModal(product.id);
+                                                    }}>
+                                                        <HistoryIcon fontSize={"small"}/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                     </TableBody>
                 </Table>
             </TableContainer>
