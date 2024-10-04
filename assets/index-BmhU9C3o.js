@@ -30154,27 +30154,47 @@ const TotalPriceField = ({ value }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     inputProps: { min: 0, step: 0.01, max: 1e4 }
   }
 );
-const QuantityField = ({ value, onChange, error }) => {
+const QuantityField = ({ value, onChange, error, onIncrement, onDecrement }) => {
   console.log("value:::::", value);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    TextField,
-    {
-      label: "Кількість",
-      type: "text",
-      value: value.toString(),
-      onChange,
-      fullWidth: true,
-      margin: "normal",
-      error: !!error,
-      helperText: error,
-      inputProps: {
-        min: 1,
-        max: 1e3,
-        step: 1,
-        pattern: "[1-9][0-9]*"
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", alignItems: "center", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Button,
+      {
+        variant: "outlined",
+        onClick: onDecrement,
+        disabled: value <= 1,
+        children: "-"
       }
-    }
-  );
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TextField,
+      {
+        label: "Кількість",
+        type: "text",
+        value: value.toString(),
+        onChange,
+        fullWidth: true,
+        margin: "normal",
+        error: !!error,
+        helperText: error,
+        inputProps: {
+          min: 1,
+          max: 1e3,
+          step: 1,
+          pattern: "[1-9][0-9]*"
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Button,
+      {
+        variant: "outlined",
+        onClick: onIncrement,
+        disabled: value >= 1e3,
+        children: "+"
+      }
+    )
+  ] });
 };
 const CategoriesSelect = ({
   categories,
@@ -30250,6 +30270,22 @@ const AddProductModal = ({
       handleAdd();
     }
   };
+  const incrementQuantity = () => {
+    if (newProduct.quantity < 1e3) {
+      setNewProduct({
+        ...newProduct,
+        quantity: newProduct.quantity + 1
+      });
+    }
+  };
+  const decrementQuantity = () => {
+    if (newProduct.quantity > 1) {
+      setNewProduct({
+        ...newProduct,
+        quantity: newProduct.quantity = 1
+      });
+    }
+  };
   reactExports.useEffect(() => {
     const totalPrice = newProduct.quantity * newProduct.price_per_item;
     setNewProduct({ ...newProduct, total_price: roundToDecimalPlaces(totalPrice, 2) });
@@ -30287,6 +30323,8 @@ const AddProductModal = ({
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               QuantityField,
               {
+                onIncrement: incrementQuantity,
+                onDecrement: decrementQuantity,
                 value: newProduct.quantity,
                 onChange: (e2) => {
                   let value = e2.target.value;
@@ -30426,6 +30464,16 @@ const EditProductModal = ({
       handleEditSave();
     }
   };
+  const incrementQuantity = () => {
+    if (editProduct.quantity < 1e3) {
+      handleFieldChange("quantity", Number(editProduct.quantity + 1));
+    }
+  };
+  const decrementQuantity = () => {
+    if (editProduct.quantity > 1) {
+      handleFieldChange("quantity", Number(editProduct.quantity - 1));
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -30458,6 +30506,8 @@ const EditProductModal = ({
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               QuantityField,
               {
+                onIncrement: incrementQuantity,
+                onDecrement: decrementQuantity,
                 value: editProduct.quantity,
                 onChange: (e2) => {
                   let value = e2.target.value;
@@ -30541,6 +30591,22 @@ const PurchaseProductModal = ({
     const totalPrice = purchaseDetails.quantity * purchaseDetails.price_per_item;
     setPurchaseDetails({ ...purchaseDetails, total_price: roundToDecimalPlaces(totalPrice, 2) });
   }, [purchaseDetails.quantity, purchaseDetails.price_per_item]);
+  const incrementQuantity = () => {
+    if (purchaseDetails.quantity < 1e3) {
+      setPurchaseDetails({
+        ...purchaseDetails,
+        quantity: purchaseDetails.quantity + 1
+      });
+    }
+  };
+  const decrementQuantity = () => {
+    if (purchaseDetails.quantity > 1) {
+      setPurchaseDetails({
+        ...purchaseDetails,
+        quantity: purchaseDetails.quantity = 1
+      });
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -30581,6 +30647,8 @@ const PurchaseProductModal = ({
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               QuantityField,
               {
+                onIncrement: incrementQuantity,
+                onDecrement: decrementQuantity,
                 value: purchaseDetails.quantity,
                 onChange: (e2) => {
                   let value = e2.target.value;
@@ -30656,6 +30724,26 @@ const SaleProductModal = ({
     const totalPrice = saleData.quantity * saleData.price_per_item;
     setSaleData({ ...saleData, total_price: roundToDecimalPlaces(totalPrice, 2) });
   }, [saleData.quantity, saleData.price_per_item]);
+  const incrementQuantity = () => {
+    if (saleData.quantity < 1e3) {
+      setSaleData({
+        ...saleData,
+        quantity: saleData.quantity + 1
+      });
+    }
+  };
+  const decrementQuantity = () => {
+    if (saleData.quantity > 1) {
+      setSaleData({
+        ...saleData,
+        quantity: saleData.quantity - 1
+        // Виправлено на зменшення значення
+      });
+    }
+  };
+  const isSubmitDisabled = () => {
+    return saleData.customer.trim() === "" || saleData.price_per_item <= 0 || saleData.quantity <= 0;
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -30697,13 +30785,14 @@ const SaleProductModal = ({
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               QuantityField,
               {
+                onIncrement: incrementQuantity,
+                onDecrement: decrementQuantity,
                 value: saleData.quantity,
                 onChange: (e2) => {
                   let value = e2.target.value;
                   value = value.replace(/[^0-9]/g, "");
                   if (value.startsWith("0")) {
                     value = value.replace(/^0+/, "");
-                    setSaleData({ ...saleData, quantity: Number(value) });
                   }
                   if (/^\d+$/.test(value)) {
                     setSaleData({ ...saleData, quantity: Number(value) });
@@ -30737,7 +30826,16 @@ const SaleProductModal = ({
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseSale, color: "primary", children: "Відміна" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleSubmit, children: "Підтвердити продаж" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              onClick: handleSubmit,
+              disabled: isSubmitDisabled(),
+              children: "Підтвердити продаж"
+            }
+          )
         ] })
       ]
     }
