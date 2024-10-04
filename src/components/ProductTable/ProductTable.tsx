@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination,
+    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid,
 } from '@mui/material';
 import {IconButton, Tooltip} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -34,7 +34,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                         handleSort,
                                                         sortProducts,
                                                         getComparator,
-                                                           handleOpenEdit,
+                                                        handleOpenEdit,
                                                         handleDelete,
                                                         handlePurchase,
                                                         handleOpenSale,
@@ -53,14 +53,21 @@ const ProductTable: React.FC<IProductTableProps> = ({
 
     return (
         <React.Fragment>
-            <TextField
-                label="Пошук товару"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <Grid container justifyContent={"flex-end"}>
+
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label="Пошук товару"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </Grid>
+
+            </Grid>
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>

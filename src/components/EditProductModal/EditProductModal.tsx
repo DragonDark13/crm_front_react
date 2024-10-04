@@ -62,6 +62,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         if (!editProduct.name.trim()) {
             tempErrors.name = 'Name is required';
             isValid = false;
+        } else if (!editProduct.name.trim().length < 10) {
+            tempErrors.name = 'Name must be at least 10 characters long'
+            isValid = false;
         } else if (editProduct.name.length > 100) {
             tempErrors.name = 'Name cannot exceed 100 characters';
             isValid = false;
@@ -140,7 +143,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         });
     };
 
-    console.log("selectedCategories", selectedCategories);
 
 
     const handleSave = () => {

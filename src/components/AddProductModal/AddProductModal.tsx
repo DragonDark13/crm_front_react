@@ -50,7 +50,7 @@ const AddProductModal = ({
 
     const validateFields = () => {
         const newErrors = {
-            name: newProduct.name.trim() === '' ? 'Name is required' : '',
+            name: newProduct.name.trim().length < 10 ? 'Name must be at least 10 characters long' : '',
             supplier: newProduct.supplier_id === '' ? 'Supplier is required' : '',
             quantity: newProduct.quantity < 0 ? 'Quantity must be greater than or equal to 0' : '',
             price_per_item: newProduct.price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
@@ -92,7 +92,8 @@ const AddProductModal = ({
         setNewProduct({...newProduct, total_price: roundToDecimalPlaces(totalPrice, 2)});
     }, [newProduct.quantity, newProduct.price_per_item]);
 
-    const isAddButtonDisabled = !newProduct.name.trim() || !newProduct.supplier_id || newProduct.quantity <= 0;
+    const isAddButtonDisabled = newProduct.name.trim().length < 10 ||
+       !newProduct.supplier_id || newProduct.quantity <= 0;
 
 
     return (
@@ -144,35 +145,7 @@ const AddProductModal = ({
 
                             error={errors.quantity}
                         />
-                        {/*<TextField*/}
-                        {/*    label="Кількість"*/}
-                        {/*    type="number"*/}
-                        {/*    value={newProduct.quantity}*/}
-                        {/*    onChange={(e) => {*/}
-                        {/*        // Видаляємо ведучий 0, якщо такий є*/}
-                        {/*        let value = e.target.value;*/}
 
-                        {/*        value = value.replace(/[^0-9]/g, '');*/}
-
-
-                        {/*        if (value.startsWith('0')) {*/}
-                        {/*            value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі*/}
-                        {/*        }*/}
-                        {/*        if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр*/}
-                        {/*            setNewProduct({...newProduct, quantity: Number(value)});*/}
-                        {/*        }*/}
-                        {/*    }}*/}
-                        {/*    fullWidth*/}
-                        {/*    margin="normal"*/}
-                        {/*    inputProps={{*/}
-                        {/*        min: 1,*/}
-                        {/*        max: 1000,*/}
-                        {/*        step: 1,*/}
-                        {/*        pattern: "[1-9][0-9]*"*/}
-                        {/*    }}  // Обмеження значення від 0 до 1000*/}
-                        {/*    error={!!errors.quantity}*/}
-                        {/*    helperText={errors.quantity}*/}
-                        {/*/>*/}
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                         <PriceField
@@ -201,37 +174,7 @@ const AddProductModal = ({
 
                             error={errors.price_per_item}
                         />
-                        {/*<TextField*/}
-                        {/*    label="Ціна за 1шт"*/}
-                        {/*    type="number"  // Використовуємо текст, щоб контролювати введення*/}
-                        {/*    value={newProduct.price_per_item}  // Перетворюємо значення в рядок*/}
-                        {/*    onChange={(e) => {*/}
-                        {/*        let value = e.target.value;*/}
 
-
-                        {/*        // Заміна коми на крапку для введення десяткових чисел*/}
-
-                        {/*        // Регулярний вираз для числа з двома знаками після крапки*/}
-                        {/*        const regex = /^\d*\.?\d{0,2}$/;*/}
-
-                        {/*        // Якщо введення відповідає регулярному виразу, оновлюємо state*/}
-                        {/*        if (regex.test(value) || value.endsWith('.')) {*/}
-
-                        {/*            setNewProduct({*/}
-                        {/*                ...newProduct,*/}
-                        {/*                price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо*/}
-                        {/*                // значення або*/}
-                        {/*                // ставимо 0*/}
-                        {/*            });*/}
-                        {/*        }*/}
-
-                        {/*    }}*/}
-                        {/*    fullWidth*/}
-                        {/*    margin="normal"*/}
-                        {/*    inputProps={{inputMode: 'decimal', pattern: '[0-9]*[.,]?[0-9]{0,2}', step: 0.01}}*/}
-                        {/*    error={!!errors.price_per_item}*/}
-                        {/*    helperText={errors.price_per_item}*/}
-                        {/*/>*/}
 
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
@@ -240,20 +183,7 @@ const AddProductModal = ({
                 </Grid>
                 <CategoriesSelect categories={categories} selectedCategories={selectedCategories}
                                   handleCategoryChange={handleCategoryChange}/>
-                {/*<FormGroup>*/}
-                {/*    {categories.map(category => (*/}
-                {/*     category   <FormControlLabel*/}
-                {/*            key={category.id}*/}
-                {/*            control={*/}
-                {/*                <Checkbox*/}
-                {/*                    checked={selectedCategories.includes(category.id)}*/}
-                {/*                    onChange={() => handleCategoryChange(category.id)}*/}
-                {/*                />*/}
-                {/*            }*/}
-                {/*            label={category.name}*/}
-                {/*        />*/}
-                {/*    ))}*/}
-                {/*</FormGroup>*/}
+
             </DialogContent>
             <DialogActions>
                 <Button variant={"outlined"} onClick={handleCloseAdd}>Закрити</Button>

@@ -93,7 +93,6 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
     };
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-        console.log(event);
         setTabIndex(newValue);
     };
 
@@ -120,7 +119,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 <TableRow>
                                     <TableCell>Дата</TableCell>
                                     <TableCell>Тип зміни</TableCell>
-                                    <TableCell>Кількість змін</TableCell>
+                                    <TableCell>Зміни по Кількості</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

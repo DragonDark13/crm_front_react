@@ -1,6 +1,8 @@
 import {ChangeEvent, FC} from "react";
-import {Box, Button, TextField} from "@mui/material";
+import {Box, Button, IconButton, InputAdornment, TextField} from "@mui/material";
 //TODO інркремент і дкремент
+import {Add, Remove} from '@mui/icons-material';
+
 
 const QuantityField: FC<{
     value: number;
@@ -8,18 +10,11 @@ const QuantityField: FC<{
     error: string;
     onIncrement: () => void; // Додано проп для інкременту
     onDecrement: () => void; // Додано проп для декременту
-}> = ({ value, onChange, error, onIncrement, onDecrement }) => {
-    console.log("value:::::", value);
+}> = ({value, onChange, error, onIncrement, onDecrement}) => {
 
     return (
         <Box display="flex" alignItems="center">
-            <Button
-                variant="outlined"
-                onClick={onDecrement}
-                disabled={value <= 1} // Вимкнути кнопку, якщо значення <= 1
-            >
-                -
-            </Button>
+
             <TextField
                 label="Кількість"
                 type="text"
@@ -35,14 +30,31 @@ const QuantityField: FC<{
                     step: 1,
                     pattern: "[1-9][0-9]*"
                 }} // Обмеження значення від 1 до 1000
+
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <IconButton
+                                onClick={onDecrement}
+                                disabled={value <= 1} // Вимкнути кнопку, якщо значення <= 1
+                            >
+                                <Remove/>
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                                onClick={onIncrement}
+                                disabled={value >= 1000} // Вимкнути кнопку, якщо значення >= 1000
+                            >
+                                <Add/>
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
             />
-            <Button
-                variant="outlined"
-                onClick={onIncrement}
-                disabled={value >= 1000} // Вимкнути кнопку, якщо значення >= 1000
-            >
-                +
-            </Button>
+
         </Box>
     );
 };

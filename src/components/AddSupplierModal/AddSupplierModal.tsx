@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
+import React, {useState} from 'react';
+import {Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from '@mui/material';
 
 interface INewSupplier {
     name: string;
@@ -12,7 +12,7 @@ interface AddSupplierModalProps {
     handleAddSupplier: (supplier: INewSupplier) => void;
 }
 
-const AddSupplierModal: React.FC<AddSupplierModalProps> = ({ open, handleClose, handleAddSupplier }) => {
+const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, handleAddSupplier}) => {
     const [name, setName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
     const [error, setError] = useState<string | null>(null);
@@ -20,6 +20,9 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({ open, handleClose, 
     const validate = () => {
         if (!name.trim()) {
             setError('Назва постачальника обов\'язкова');
+            return false;
+        } else if (name.trim().length < 10) {
+            setError('Назва постачальника повинна містит не менше 10 символів');
             return false;
         }
         setError(null);
@@ -42,6 +45,8 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({ open, handleClose, 
             <DialogTitle>Додати нового постачальника</DialogTitle>
             <DialogContent>
                 <TextField
+                    minLength={10}
+                    maxLength={100}
                     required={true}
                     autoFocus
                     margin="dense"
@@ -69,7 +74,7 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({ open, handleClose, 
                     onClick={handleSave}
                     color="primary"
                     variant="contained"
-                    disabled={!name.trim()} // Кнопка неактивна, якщо поле порожнє
+                    disabled={!name.trim() } // Кнопка неактивна, якщо поле порожнє
                 >
                     Зберегти постачальника
                 </Button>
