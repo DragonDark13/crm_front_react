@@ -2,8 +2,9 @@ import axios from 'axios';
 import {IEditProduct, INewProduct, IPurchaseData, ISaleData} from "../utils/types";
 
 
-
 // Створення екземпляра axios з правильним типом конфігурації
+
+console.log(import.meta.env.MODE);
 const api = axios.create();
 
 api.defaults.baseURL = 'http://localhost:5000/api'
@@ -339,66 +340,64 @@ const fakeResponseSuppliers = {
         }
     ]
 }
-//
-// api.interceptors.request.use((config) => {
-//     // Перевіряємо URL запиту
-//     if (config.url === '/products') {
-//         // "Фейкові" дані, які будемо повертати
-//
-//         // Перехоплюємо запит і відправляємо фейкову відповідь
-//         return new Promise((resolve) => {
-//             setTimeout(() => {
-//                 // Емуляція асинхронної відповіді з фейковими даними
-//                 config.adapter = () => Promise.resolve({
-//                     data: fakeResponse.data,
-//                     status: 200,
-//                     statusText: 'OK',
-//                     headers: {},
-//                     config: config
-//                 });
-//                 resolve(config);
-//             }, 500); // Затримка у 500 мс для імітації реального запиту
-//         });
-//     }
-//
-//     // Перевіряємо URL запиту для категорій
-//     if (config.url === '/categories') {
-//         return new Promise((resolve) => {
-//             setTimeout(() => {
-//                 config.adapter = () => Promise.resolve({
-//                     data: fakeCategory.data,
-//                     status: 200,
-//                     statusText: 'OK',
-//                     headers: {},
-//                     config: config
-//                 });
-//                 resolve(config);
-//             }, 500); // Затримка у 500 мс для імітації реального запиту
-//         });
-//     }
-//
-//     if (config.url === '/suppliers') {
-//         return new Promise((resolve) => {
-//             setTimeout(() => {
-//                 config.adapter = () => Promise.resolve({
-//                     data: fakeResponseSuppliers.data,
-//                     status: 200,
-//                     statusText: 'OK',
-//                     headers: {},
-//                     config: config
-//                 });
-//                 resolve(config);
-//             }, 500); // Затримка у 500 мс для імітації реального запиту
-//         });
-//     }
-//
-//
-//     // Повертаємо конфігурацію для всіх інших запитів
-//     return config;
-// }, (error) => {
-//     return Promise.reject(error);
-// });
 
+
+api.interceptors.request.use((config) => {
+    // Перевіряємо, чи це production середовище
+    if (import.meta.env.MODE === 'production') {
+        // Перевіряємо URL запиту
+        if (config.url === '/products') {
+            // Фейкові дані, які будемо повертати
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    config.adapter = () => Promise.resolve({
+                        data: fakeResponse.data,
+                        status: 200,
+                        statusText: 'OK',
+                        headers: {},
+                        config: config
+                    });
+                    resolve(config);
+                }, 500); // Затримка у 500 мс для імітації реального запиту
+            });
+        }
+
+        if (config.url === '/categories') {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    config.adapter = () => Promise.resolve({
+                        data: fakeCategory.data,
+                        status: 200,
+                        statusText: 'OK',
+                        headers: {},
+                        config: config
+                    });
+                    resolve(config);
+                }, 500);
+            });
+        }
+
+        if (config.url === '/suppliers') {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    config.adapter = () => Promise.resolve({
+                        data: fakeResponseSuppliers.data,
+                        status: 200,
+                        statusText: 'OK',
+                        headers: {},
+                        config: config
+                    });
+                    resolve(config);
+                }, 500);
+            });
+        }
+    }
+
+    // Повертаємо конфігурацію для всіх інших запитів або у режимі розробки
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
 
 // Функція для отримання списку продуктів
 export const fetchProducts = () => {

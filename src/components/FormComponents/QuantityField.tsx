@@ -1,5 +1,6 @@
 import {ChangeEvent, FC} from "react";
 import {TextField} from "@mui/material";
+//TODO інркремент і дкремент
 
 const QuantityField: FC<{
     value: number;
