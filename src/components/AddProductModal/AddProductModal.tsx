@@ -1,12 +1,7 @@
 import {
-    TextField,
     Button,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
     DialogContent,
-    DialogActions,
-    Grid, FormControl, Select, MenuItem, InputLabel
+    DialogActions, Grid,
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";

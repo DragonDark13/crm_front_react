@@ -1,17 +1,17 @@
-import React from 'react';
 import {Button, Grid} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
+import {ICategory, ISupplier} from "../../utils/types";
 
 
 interface IFilterComponentProps {
     selectedFilterCategories: number[];
     handleCategoryFilterChange: (categoryID: number) => void;
-    categories: any[]; // TODO: create type interface
+    categories: ICategory[]; // TODO: create type interface
 
     selectedFilterSuppliers: number[];
     handleSupplierFilterChange: (supplierID: number) => void;
-    suppliers: any[]; // TODO: create type interface
+    suppliers: ISupplier[]; // TODO: create type interface
 
     applyFilters: (categoryIDs: number[], supplierIDs: number[]) => void;
     setSelectedFilterCategories: (categoryIDs: number[]) => void;

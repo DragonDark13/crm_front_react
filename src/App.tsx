@@ -606,8 +606,8 @@ function App() {
                 />
             )}
 
-            {(modalState.openPurchase && purchaseDetails) && <PurchaseProductModal
-                nameProduct={editProduct?.name} openPurchase={modalState.openPurchase}
+            {(modalState.openPurchase && purchaseDetails && editProduct?.name) && <PurchaseProductModal
+                nameProduct={editProduct.name} openPurchase={modalState.openPurchase}
                 suppliers={suppliers}
                 handleClosePurchase={() => handleModalClose("openPurchase")}
                 purchaseDetails={purchaseDetails}
@@ -616,9 +616,9 @@ function App() {
 
 
             {
-                (modalState.openSale && saleData) &&
+                (modalState.openSale && saleData && editProduct) &&
                 <SaleProductModal
-                    nameProduct={editProduct?.name}
+                    nameProduct={editProduct.name}
                     openSale={modalState.openSale}
                     handleCloseSale={() => handleModalClose("openSale")}
                     saleData={saleData}

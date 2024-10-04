@@ -19,7 +19,7 @@ interface IEditProductModalProps {
     openEdit: boolean;
     handleCloseEdit: () => void;
     editProduct: IEditProduct;
-    setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct>>;
+    setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct | null>>;
     handleEditSave: () => void;
     categories: ICategory[],
     selectedCategories: number[],
@@ -39,6 +39,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 selectedCategories,
                                                                 handleCategoryChange,
                                                             }) => {
+
     const [errors, setErrors] = useState({
         name: '',
         supplier: '',
@@ -102,34 +103,42 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     }, []);
 
     handleCategoryChange = (categoryId: number) => {
+    setEditProduct((prevProduct) => {
+        // Якщо prevProduct = null, повертаємо початковий стан
+        if (!prevProduct) return prevProduct;
 
-        setEditProduct((prevProduct) => {
-            const updatedCategories = prevProduct.category_ids.includes(categoryId)
-                ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
-                : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
+        const updatedCategories = prevProduct.category_ids.includes(categoryId)
+            ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
+            : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
 
-            setIsModified(JSON.stringify(originalProduct.category_ids) !== JSON.stringify(updatedCategories)); // Check if modified
+        // Перевіряємо, чи були зміни в категоріях
+        setIsModified(JSON.stringify(originalProduct.category_ids) !== JSON.stringify(updatedCategories));
 
+        // Повертаємо оновлений продукт
+        return {
+            ...prevProduct,
+            category_ids: updatedCategories // Оновлення категорій
+        };
+    });
+};
 
-            return {
-                ...prevProduct,
-                category_ids: updatedCategories // Оновлення категорій
-            };
-        });
-    };
+const handleFieldChange = (field: keyof IEditProduct, value: any) => {
+    setEditProduct((prevEd) => {
+        // Якщо prevEd = null, повертаємо початковий стан
+        if (!prevEd) return prevEd;
 
+        const updatedProduct: IEditProduct = {
+            ...prevEd, // Spread попереднього стану
+            [field]: value, // Оновлюємо конкретне поле
+        };
 
-    const handleFieldChange = (field: keyof IEditProduct, value: any) => {
-        // Use functional form of setEditProduct
-        setEditProduct((prevEd) => {
-            const updatedProduct: IEditProduct = {
-                ...prevEd, // Spread previous state, correctly typed
-                [field]: value, // Update the specific field
-            };
-            setIsModified(JSON.stringify(originalProduct) !== JSON.stringify(updatedProduct)); // Check if modified
-            return updatedProduct; // Return updated state
-        });
-    };
+        // Перевіряємо, чи був продукт змінений
+        setIsModified(JSON.stringify(originalProduct) !== JSON.stringify(updatedProduct));
+
+        // Повертаємо оновлений продукт
+        return updatedProduct;
+    });
+};
 
     console.log("selectedCategories", selectedCategories);
 

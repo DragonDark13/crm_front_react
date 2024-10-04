@@ -1,6 +1,6 @@
 import React from 'react';
 import {Checkbox, FormControlLabel, FormGroup} from '@mui/material';
-import {ISupplier} from "../../App"; // Імпорт типу постачальника (створи, якщо ще немає)
+import {ISupplier} from "../../utils/types";
 
 interface ISupplierFilterProps {
     selectedFilterSuppliers: number[];

@@ -1,8 +1,9 @@
 import {Checkbox, FormControlLabel, FormGroup} from "@mui/material";
 import {FC} from "react";
+import {ICategory} from "../../utils/types";
 
 interface ICategoriesProps {
-  categories: any[]; // Можна уточнити тип категорій
+  categories: ICategory[]; // Можна уточнити тип категорій
   selectedCategories: number[];
   handleCategoryChange: (id: number) => void;
 }

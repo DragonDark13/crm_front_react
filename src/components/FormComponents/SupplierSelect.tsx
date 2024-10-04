@@ -1,10 +1,11 @@
-import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
-import {ChangeEvent, FC} from "react";
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import { FC} from "react";
+import {ICategory} from "../../utils/types";
 
 interface ISupplierSelectProps {
-    suppliers: any[]; // Можна уточнити тип постачальників
+    suppliers: ICategory[]; // Можна уточнити тип постачальників
     value: number | string;
-    onChange: (e: ChangeEvent<{ value: unknown }>) => void;
+    onChange: (e: SelectChangeEvent<string | number>) => void;
     error?: string;
     disabled?: boolean; // Для заблокованого вибору постачальника (наприклад, при редагуванні замовлення)
 }
@@ -21,7 +22,7 @@ const SupplierSelect: FC<ISupplierSelectProps> = ({
         <Select
             labelId="supplier-select-label"
             value={value}
-            onChange={onChange}
+            onChange={(e) => onChange(e)}
             label="Постачальник"
         >
             {suppliers.map((supplier) => (

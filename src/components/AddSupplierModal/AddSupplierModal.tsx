@@ -1,25 +1,48 @@
-import React, {useState} from "react";
-import {Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
-import {addSupplier} from "../../api/api";
-import {INewSupplier} from "../../utils/types";
+import React, { useState } from 'react';
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button } from '@mui/material';
+
+interface INewSupplier {
+    name: string;
+    contact_info: string;
+}
 
 interface AddSupplierModalProps {
     open: boolean;
     handleClose: () => void;
-    handleAddSupplier: (newSupplier: INewSupplier) => void;
+    handleAddSupplier: (supplier: INewSupplier) => void;
 }
 
-const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, handleAddSupplier}) => {
+const AddSupplierModal: React.FC<AddSupplierModalProps> = ({ open, handleClose, handleAddSupplier }) => {
     const [name, setName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
     const [error, setError] = useState<string | null>(null);
 
+    const validate = () => {
+        if (!name.trim()) {
+            setError('Назва постачальника обов\'язкова');
+            return false;
+        }
+        setError(null);
+        return true;
+    };
+
+    const handleSave = () => {
+        if (!validate()) {
+            return;
+        }
+        const newSupplier: INewSupplier = {
+            name: name,
+            contact_info: contactInfo
+        };
+        handleAddSupplier(newSupplier);
+    };
 
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Додати нового постачальника</DialogTitle>
             <DialogContent>
                 <TextField
+                    required={true}
                     autoFocus
                     margin="dense"
                     label="Назва Постачальника"
@@ -42,14 +65,13 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
                     Відміна
                 </Button>
 
-                <Button onClick={() => {
-                    const newSupplier: INewSupplier = {
-                        name: name,
-                        contact_info: contactInfo
-                    }
-                    handleAddSupplier(newSupplier)
-                }} color="primary" variant="contained">
-                    Зберігти постачальника
+                <Button
+                    onClick={handleSave}
+                    color="primary"
+                    variant="contained"
+                    disabled={!name.trim()} // Кнопка неактивна, якщо поле порожнє
+                >
+                    Зберегти постачальника
                 </Button>
             </DialogActions>
         </Dialog>
