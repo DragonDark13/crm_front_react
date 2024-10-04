@@ -2,7 +2,7 @@ import {Button, Grid} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import {ICategory, ISupplier} from "../../utils/types";
-
+//TODO фільтр по ціні
 
 interface IFilterComponentProps {
     selectedFilterCategories: number[];

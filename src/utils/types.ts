@@ -55,3 +55,35 @@ export interface INewSupplier {
     name: string,
     contact_info: string
 }
+
+export type ModalNames =
+    | 'openAdd'
+    | 'openSale'
+    | 'openEdit'
+    | 'openPurchase'
+    | 'openDrawer'
+    | 'openDelete'
+    | 'openHistory'
+    | 'openCategoryCreate'
+    | 'openAddSupplierOpen'
+    | 'openNotificationDrawer'
+    | 'snackbarNotifyOpen'
+    ;
+
+export const modalNames: ModalNames[] = [
+    'openAdd',
+    'openSale',
+    'openEdit',
+    'openPurchase',
+    'openDrawer',
+    'openDelete',
+    'openHistory',
+    'openCategoryCreate',
+    'openAddSupplierOpen',
+    'openNotificationDrawer',
+    'snackbarNotifyOpen'
+];
+
+export interface INotificationPanel{
+    lowQuantityProducts: IProduct[];
+}

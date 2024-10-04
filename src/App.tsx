@@ -11,8 +11,12 @@ import {
     Grid,
     Container,
     Alert,
-    Snackbar
+    Snackbar, IconButton, Badge
 } from '@mui/material';
+
+
+import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
 import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
@@ -38,7 +42,6 @@ import EditProductModal from "./components/EditProductModal/EditProductModal";
 import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProductModal";
 import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
 import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNewCategoryModal";
-import ProductTable from "./components/ProductTable/ProductTable";
 import AddSupplierModal from "./components/AddSupplierModal/AddSupplierModal";
 import FilterComponent from "./components/FilterComponent/FilterComponent";
 import {
@@ -49,16 +52,19 @@ import {
     IProduct,
     IPurchaseData,
     ISaleData,
-    ISupplier
+    ISupplier, modalNames, ModalNames
 } from "./utils/types";
 import ResponsiveProductView from "./components/ResponsiveProductView/ResponsiveProductView";
+import NotificationPanel from "./components/NotificationPanel/NotificationPanel";
 
 
 function App() {
     const [products, setProducts] = useState<IProduct[]>([]);
+    const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
+
 
     const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
         isLoading: true,
@@ -75,17 +81,9 @@ function App() {
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
 
     // Modal States
-    const [modalState, setModalState] = useState({
-        openEdit: false,
-        openAdd: false,
-        openHistory: false,
-        openPurchase: false,
-        openCategoryCreate: false,
-        openDelete: false,
-        openDrawer: false,
-        openSale: false,
-        openAddSupplierOpen: false
-    });
+    const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
+        Object.fromEntries(modalNames.map(modal => [modal, false])) as Record<ModalNames, boolean>
+    );
 
     const [productId, setProductId] = useState<number | null>(null);
     const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
@@ -165,11 +163,11 @@ function App() {
         }
     };
 
-    const handleModalOpen = (modal: 'openAdd' | 'openSale' | 'openEdit' | 'openPurchase' | 'openDrawer' | 'openDelete' | 'openHistory' | 'openCategoryCreate' | 'openAddSupplierOpen') => {
+    const handleModalOpen = (modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: true}));
     };
 
-    const handleModalClose = (modal: 'openAdd' | 'openSale' | 'openEdit' | 'openPurchase' | 'openDrawer' | 'openDelete' | 'openHistory' | 'openCategoryCreate' | 'openAddSupplierOpen') => {
+    const handleModalClose = (modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: false}));
         // Reset states based on modal closed
         if (modal === 'openAdd') {
@@ -484,6 +482,13 @@ function App() {
             });
     };
 
+    // Use this effect to set low quantity products when data changes
+    useEffect(() => {
+        const lowQuantity = products.filter(product => product.quantity < 5);
+        setLowQuantityProducts(lowQuantity);
+        lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
+    }, [products]);
+
     return (
         <React.Fragment>
 
@@ -674,6 +679,37 @@ function App() {
                     {snackbar.message}
                 </Alert>
             </Snackbar>
+
+            {lowQuantityProducts.length > 0 && (
+                <IconButton onClick={() => handleModalOpen("openNotificationDrawer")}
+                            style={{position: "absolute", top: 16, right: 16}}>
+                    <Badge badgeContent={lowQuantityProducts.length} color="error">
+                        <NotificationImportantIcon/>
+                    </Badge>
+                </IconButton>
+            )}
+
+
+            {/* Drawer Component */}
+            <Drawer anchor="right" open={modalState.openNotificationDrawer}
+                    onClose={() => handleModalClose("openNotificationDrawer")}>
+                <NotificationPanel lowQuantityProducts={lowQuantityProducts}/>
+            </Drawer>
+
+
+            <Snackbar
+                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                open={modalState.snackbarNotifyOpen}
+                autoHideDuration={6000}
+                onClose={() => handleModalClose("snackbarNotifyOpen")}
+                message={`${lowQuantityProducts.length} товарів з низькою кількістю`}
+                action={
+                    <IconButton size="small" aria-label="close" color="inherit"
+                                onClick={() => handleModalClose("snackbarNotifyOpen")}>
+                        <CloseIcon fontSize="small"/>
+                    </IconButton>
+                }
+            />
 
 
         </React.Fragment>
