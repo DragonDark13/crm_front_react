@@ -51,6 +51,7 @@ import {
     ISaleData,
     ISupplier
 } from "./utils/types";
+import ResponsiveProductView from "./components/ResponsiveProductView/ResponsiveProductView";
 
 
 function App() {
@@ -549,7 +550,7 @@ function App() {
                                              setSelectedFilterSuppliers={setSelectedFilterSuppliers}/>
                         </Drawer>
 
-                        <ProductTable
+                        <ResponsiveProductView
                             filteredProducts={filteredProducts}
                             order={order}
                             orderBy={orderBy}
@@ -559,15 +560,17 @@ function App() {
                             handleOpenEdit={handleOpenEdit}
                             handleDelete={handleDeleteModalOpen}
                             handlePurchase={(product) => {
-                                console.log('Purchase product:', product)
-                                handlePurchase(product)
+                                console.log('Purchase product:', product);
+                                handlePurchase(product);
                             }}
                             handleOpenSale={(product) => {
-                                console.log('Open sale for product:', product)
-                                handleOpenSale(product)
+                                console.log('Open sale for product:', product);
+                                handleOpenSale(product);
                             }}
                             handleOpenHistoryModal={handleOpenHistoryModal}
-                        /> {/* Кнопка для відкриття модального вікна для додавання */}
+                        />
+
+                        {/* Кнопка для відкриття модального вікна для додавання */}
 
 
                     </Container></React.Fragment>
