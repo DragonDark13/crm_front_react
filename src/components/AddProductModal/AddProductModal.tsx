@@ -13,6 +13,7 @@ import CategoriesSelect from "../FormComponents/CategoriesSelect";
 import {roundToDecimalPlaces} from "../../utils/function";
 import SupplierSelect from "../FormComponents/SupplierSelect";
 import {ICategory, INewProduct} from "../../utils/types";
+import {addProduct} from "../../api/api";
 //TODO додай постачальників таблиці
 // Повідомлення про успіх
 
@@ -66,12 +67,29 @@ const AddProductModal = ({
         }
     };
 
+    const incrementQuantity = () => {
+        if (newProduct.quantity < 1000) {
+            setNewProduct({
+                ...newProduct,
+                quantity: newProduct.quantity + 1
+            });
+        }
+    };
+
+    const decrementQuantity = () => {
+        if (newProduct.quantity > 1) {
+            setNewProduct({
+                ...newProduct,
+                quantity: newProduct.quantity = 1
+            });
+        }
+    };
 
 
     // Автоматичне оновлення total_price як добутку quantity і price_per_item
     useEffect(() => {
         const totalPrice = newProduct.quantity * newProduct.price_per_item;
-        setNewProduct({...newProduct, total_price: roundToDecimalPlaces(totalPrice,2)});
+        setNewProduct({...newProduct, total_price: roundToDecimalPlaces(totalPrice, 2)});
     }, [newProduct.quantity, newProduct.price_per_item]);
 
     const isAddButtonDisabled = !newProduct.name.trim() || !newProduct.supplier_id || newProduct.quantity <= 0;
@@ -105,6 +123,8 @@ const AddProductModal = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
                         <QuantityField
+                            onIncrement={incrementQuantity}
+                            onDecrement={decrementQuantity}
                             value={newProduct.quantity}
                             onChange={(e) => {
                                 // Видаляємо ведучий 0, якщо такий є
@@ -115,7 +135,7 @@ const AddProductModal = ({
 
                                 if (value.startsWith('0')) {
                                     value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
-                                     setNewProduct({...newProduct, quantity: Number(value)});
+                                    setNewProduct({...newProduct, quantity: Number(value)});
                                 }
                                 if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
                                     setNewProduct({...newProduct, quantity: Number(value)});

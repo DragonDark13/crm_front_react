@@ -5,7 +5,7 @@ import {
     DialogContent, Grid,
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import  {useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import SupplierSelect from "../FormComponents/SupplierSelect";
 import QuantityField from "../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../utils/function";
@@ -66,6 +66,25 @@ const PurchaseProductModal = ({
         const totalPrice = purchaseDetails.quantity * purchaseDetails.price_per_item;
         setPurchaseDetails({...purchaseDetails, total_price: roundToDecimalPlaces(totalPrice, 2)});
     }, [purchaseDetails.quantity, purchaseDetails.price_per_item]);
+
+    const incrementQuantity = () => {
+        if (purchaseDetails.quantity < 1000) {
+            setPurchaseDetails({
+                ...purchaseDetails,
+                quantity: purchaseDetails.quantity + 1
+            });
+        }
+    };
+
+    const decrementQuantity = () => {
+        if (purchaseDetails.quantity > 1) {
+            setPurchaseDetails({
+                ...purchaseDetails,
+                quantity: purchaseDetails.quantity = 1
+            });
+        }
+    };
+
 
     return (
         <CustomDialog
@@ -131,6 +150,8 @@ const PurchaseProductModal = ({
                         {/*    inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000*/}
                         {/*/>*/}
                         <QuantityField
+                            onIncrement={incrementQuantity}
+                            onDecrement={decrementQuantity}
                             value={purchaseDetails.quantity}
                             onChange={(e) => {
                                 // Видаляємо ведучий 0, якщо такий є

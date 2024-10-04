@@ -34,7 +34,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                         handleSort,
                                                         sortProducts,
                                                         getComparator,
-                                                        handleOpenEdit,
+                                                           handleOpenEdit,
                                                         handleDelete,
                                                         handlePurchase,
                                                         handleOpenSale,

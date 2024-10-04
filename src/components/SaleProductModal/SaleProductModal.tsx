@@ -1,6 +1,6 @@
 import {TextField, Button, DialogContent, DialogActions, Grid} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
-import  {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import QuantityField from "../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../utils/function";
 import TotalPriceField from "../FormComponents/TotalPriceField";
@@ -12,7 +12,7 @@ interface ISaleProductModal {
     saleData: ISaleData;
     setSaleData: (data: ISaleData) => void;
     handleSale: () => void;
-    nameProduct: string
+    nameProduct: string;
 }
 
 const SaleProductModal = ({
@@ -57,12 +57,37 @@ const SaleProductModal = ({
         setSaleData({...saleData, total_price: roundToDecimalPlaces(totalPrice, 2)});
     }, [saleData.quantity, saleData.price_per_item]);
 
+    const incrementQuantity = () => {
+        if (saleData.quantity < 1000) {
+            setSaleData({
+                ...saleData,
+                quantity: saleData.quantity + 1
+            });
+        }
+    };
+
+    const decrementQuantity = () => {
+        if (saleData.quantity > 1) {
+            setSaleData({
+                ...saleData,
+                quantity: saleData.quantity - 1 // Виправлено на зменшення значення
+            });
+        }
+    };
+
+    const isSubmitDisabled = () => {
+        return (
+            saleData.customer.trim() === '' ||
+            saleData.price_per_item <= 0 ||
+            saleData.quantity <= 0
+        );
+    };
+
     return (
         <CustomDialog
             open={openSale}
             handleClose={handleCloseSale}
             title={`Продаж ${nameProduct} x ${saleData.quantity}шт`}
-
             maxWidth="md"
         >
             <DialogContent>
@@ -95,26 +120,23 @@ const SaleProductModal = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
                         <QuantityField
+                            onIncrement={incrementQuantity}
+                            onDecrement={decrementQuantity}
                             value={saleData.quantity}
                             onChange={(e) => {
-                                // Видаляємо ведучий 0, якщо такий є
                                 let value = e.target.value;
-
                                 value = value.replace(/[^0-9]/g, '');
-
 
                                 if (value.startsWith('0')) {
                                     value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
-                                    setSaleData({...saleData, quantity: Number(value)});
                                 }
+
                                 if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
                                     setSaleData({...saleData, quantity: Number(value)});
                                 }
                             }}
-
                             error={errors.quantity}
                         />
-
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={4}>
@@ -145,7 +167,12 @@ const SaleProductModal = ({
                 <Button onClick={handleCloseSale} color="primary">
                     Відміна
                 </Button>
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmit}
+                    disabled={isSubmitDisabled()} // Додаємо перевірку для активності кнопки
+                >
                     Підтвердити продаж
                 </Button>
             </DialogActions>

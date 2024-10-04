@@ -103,42 +103,42 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     }, []);
 
     handleCategoryChange = (categoryId: number) => {
-    setEditProduct((prevProduct) => {
-        // Якщо prevProduct = null, повертаємо початковий стан
-        if (!prevProduct) return prevProduct;
+        setEditProduct((prevProduct) => {
+            // Якщо prevProduct = null, повертаємо початковий стан
+            if (!prevProduct) return prevProduct;
 
-        const updatedCategories = prevProduct.category_ids.includes(categoryId)
-            ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
-            : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
+            const updatedCategories = prevProduct.category_ids.includes(categoryId)
+                ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
+                : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
 
-        // Перевіряємо, чи були зміни в категоріях
-        setIsModified(JSON.stringify(originalProduct.category_ids) !== JSON.stringify(updatedCategories));
+            // Перевіряємо, чи були зміни в категоріях
+            setIsModified(JSON.stringify(originalProduct.category_ids) !== JSON.stringify(updatedCategories));
 
-        // Повертаємо оновлений продукт
-        return {
-            ...prevProduct,
-            category_ids: updatedCategories // Оновлення категорій
-        };
-    });
-};
+            // Повертаємо оновлений продукт
+            return {
+                ...prevProduct,
+                category_ids: updatedCategories // Оновлення категорій
+            };
+        });
+    };
 
-const handleFieldChange = (field: keyof IEditProduct, value: any) => {
-    setEditProduct((prevEd) => {
-        // Якщо prevEd = null, повертаємо початковий стан
-        if (!prevEd) return prevEd;
+    const handleFieldChange = (field: keyof IEditProduct, value: any) => {
+        setEditProduct((prevEd) => {
+            // Якщо prevEd = null, повертаємо початковий стан
+            if (!prevEd) return prevEd;
 
-        const updatedProduct: IEditProduct = {
-            ...prevEd, // Spread попереднього стану
-            [field]: value, // Оновлюємо конкретне поле
-        };
+            const updatedProduct: IEditProduct = {
+                ...prevEd, // Spread попереднього стану
+                [field]: value, // Оновлюємо конкретне поле
+            };
 
-        // Перевіряємо, чи був продукт змінений
-        setIsModified(JSON.stringify(originalProduct) !== JSON.stringify(updatedProduct));
+            // Перевіряємо, чи був продукт змінений
+            setIsModified(JSON.stringify(originalProduct) !== JSON.stringify(updatedProduct));
 
-        // Повертаємо оновлений продукт
-        return updatedProduct;
-    });
-};
+            // Повертаємо оновлений продукт
+            return updatedProduct;
+        });
+    };
 
     console.log("selectedCategories", selectedCategories);
 
@@ -148,6 +148,19 @@ const handleFieldChange = (field: keyof IEditProduct, value: any) => {
             handleEditSave();
         }
     };
+    const incrementQuantity = () => {
+        if (editProduct.quantity < 1000) {
+            handleFieldChange("quantity", Number(editProduct.quantity + 1))
+        }
+    };
+
+    const decrementQuantity = () => {
+        if (editProduct.quantity > 1) {
+            handleFieldChange("quantity", Number(editProduct.quantity - 1))
+
+        }
+    };
+
 
     return (
         <CustomDialog
@@ -177,6 +190,8 @@ const handleFieldChange = (field: keyof IEditProduct, value: any) => {
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
                         <QuantityField
+                            onIncrement={incrementQuantity}
+                            onDecrement={decrementQuantity}
                             value={editProduct.quantity}
                             onChange={(e) => {
                                 // Видаляємо ведучий 0, якщо такий є
