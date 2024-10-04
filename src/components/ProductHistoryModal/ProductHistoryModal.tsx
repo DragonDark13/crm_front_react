@@ -99,6 +99,14 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
     // TODO НАзву товару до заголовку
     // TODO Перекласти
 
+    const sortByDate = (history: ProductHistoryRecord[], dateKey: keyof ProductHistoryRecord) => {
+        return history.slice().sort((a, b) => {
+            const dateA = new Date(a[dateKey]!).getTime();
+            const dateB = new Date(b[dateKey]!).getTime();
+            return dateB - dateA; // сортування за спаданням (найновіші записи будуть першими)
+        });
+    };
+
     return (
         <CustomDialog
             open={openHistory}
@@ -123,7 +131,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {(productHistory.stock && productHistory.stock.length > 0) && productHistory.stock.map((record) => (
+                                {(productHistory.stock && productHistory.stock.length > 0) &&
+                                sortByDate(productHistory.stock, 'timestamp').map((record) => (
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.timestamp!).toLocaleString()}</TableCell>
                                         <TableCell>{record.change_type}</TableCell>
@@ -134,6 +143,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                         </Table>
                     </TableContainer>
                 </TabPanel>
+
                 <TabPanel value={tabIndex} index={1}>
                     <TableContainer component={Paper}>
                         <Table>
@@ -147,7 +157,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {(productHistory.purchase && productHistory.purchase.length > 0) && productHistory.purchase.map((record) => (
+                                {(productHistory.purchase && productHistory.purchase.length > 0) &&
+                                sortByDate(productHistory.purchase, 'purchase_date').map((record) => (
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.price_per_item}</TableCell>
@@ -160,6 +171,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                         </Table>
                     </TableContainer>
                 </TabPanel>
+
                 <TabPanel value={tabIndex} index={2}>
                     <TableContainer component={Paper}>
                         <Table>
@@ -173,7 +185,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {(productHistory.sales && productHistory.sales.length > 0) && productHistory.sales.map((record) => (
+                                {(productHistory.sales && productHistory.sales.length > 0) &&
+                                sortByDate(productHistory.sales, 'sale_date').map((record) => (
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.price_per_item}</TableCell>
@@ -188,6 +201,6 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                 </TabPanel>
             </DialogContent>
         </CustomDialog>
-        );
+    );
 };
 export default ProductHistoryModal
