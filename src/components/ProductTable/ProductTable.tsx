@@ -29,8 +29,12 @@ interface IProductTableProps {
     filteredAndSearchedProducts: IProduct[]
     currentPage: number;
     itemsPerPage: number;
+    selectedLowProductId: number,
 
 }
+
+import clsx from 'clsx'; // Бібліотека для зручної роботи з класами
+
 
 const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                    filteredProducts,
@@ -48,6 +52,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                    filteredAndSearchedProducts,
                                                                    itemsPerPage,
                                                                    currentPage,
+                                                                   selectedLowProductId
                                                                }, ref) => {
 
 
@@ -123,13 +128,17 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                       ref.current[index + currentPage * itemsPerPage] = el;
                                                   }
                                               }}
-                                              className={lowQuantity ? 'low-quantity-row' : ''}>
+
+                                              className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                         <TableCell>{product.id}</TableCell>
                                         <TableCell>{product.name}</TableCell>
                                         <TableCell>{product.supplier?.name || 'N/A'}</TableCell>
                                         <TableCell
                                         > <Typography
-                                            className={lowQuantity ? 'low-quantity' : ''}>{product.quantity}</Typography></TableCell>
+                                            className={clsx(
+                                                {'low-quantity': lowQuantity},
+                                            )}>
+                                            {product.quantity}</Typography></TableCell>
                                         <TableCell>
                                             {product.price_per_item}
                                         </TableCell>

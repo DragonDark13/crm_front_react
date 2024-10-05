@@ -5,6 +5,8 @@ import {IProduct} from "../../utils/types";
 import ProductCardView from "../ProductCardView/ProductCardView";
 import ProductTable from "../ProductTable/ProductTable";
 
+// TODO Внизу загальну сумму і кількість
+
 interface IResponsiveProductViewProps {
     filteredProducts: IProduct[];
     order: 'asc' | 'desc';
@@ -24,31 +26,33 @@ interface IResponsiveProductViewProps {
     itemsPerPage: number;
     setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
     filteredAndSearchedProducts: IProduct[];
+    selectedLowProductId: number
 }
 
 const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(({
-                                                                          filteredProducts,
-                                                                          order,
-                                                                          orderBy,
-                                                                          handleSort,
-                                                                          sortProducts,
-                                                                          getComparator,
-                                                                          handleOpenEdit,
-                                                                          handleDelete,
-                                                                          handlePurchase,
-                                                                          handleOpenSale,
-                                                                          handleOpenHistoryModal,
-                                                                          searchTerm,
-                                                                          setSearchTerm,
-                                                                          setCurrentPage,
-                                                                          currentPage,
-                                                                          itemsPerPage,
-                                                                          setItemsPerPage,
-    filteredAndSearchedProducts
-                                                                      },ref) => {
+                                                                                     filteredProducts,
+                                                                                     order,
+                                                                                     orderBy,
+                                                                                     handleSort,
+                                                                                     sortProducts,
+                                                                                     getComparator,
+                                                                                     handleOpenEdit,
+                                                                                     handleDelete,
+                                                                                     handlePurchase,
+                                                                                     handleOpenSale,
+                                                                                     handleOpenHistoryModal,
+                                                                                     searchTerm,
+                                                                                     setSearchTerm,
+                                                                                     setCurrentPage,
+                                                                                     currentPage,
+                                                                                     itemsPerPage,
+                                                                                     setItemsPerPage,
+                                                                                     filteredAndSearchedProducts,
+                                                                                     selectedLowProductId
+
+                                                                                 }, ref) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
 
 
     return (
@@ -88,6 +92,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                 />
             ) : (
                 <ProductTable
+                    selectedLowProductId={selectedLowProductId}
                     ref={ref}
                     itemsPerPage={itemsPerPage}
                     currentPage={currentPage}

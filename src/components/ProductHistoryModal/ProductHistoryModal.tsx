@@ -48,6 +48,7 @@ interface IProductHistoryModal {
     productId: number;
     openHistory: boolean;
     onClose: () => void;
+    productName: string
 }
 
 interface TabPanelProps {
@@ -69,7 +70,7 @@ const TabPanel: React.FC<TabPanelProps> = ({value, index, children}) => {
         </div>
     );
 };
-const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryModal) => {
+const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IProductHistoryModal) => {
     const [productHistory, setProductHistory] = useState<ProductHistory>({stock: [], purchase: [], sales: []});
     const [tabIndex, setTabIndex] = useState<number>(0);
     useEffect(() => {
@@ -111,7 +112,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
         <CustomDialog
             open={openHistory}
             handleClose={onClose}
-            title={"Історія товару"}
+            title={`Історія товару ${productName}`}
             maxWidth={"xl"}
         >
             <DialogContent>
@@ -150,10 +151,10 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Дата</TableCell>
+                                    <TableCell>Постачальник</TableCell>
                                     <TableCell>Ціна за одиницю</TableCell>
                                     <TableCell>Кількість закупівлі</TableCell>
                                     <TableCell>Загальна ціна</TableCell>
-                                    <TableCell>Постачальник</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -161,10 +162,11 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 sortByDate(productHistory.purchase, 'purchase_date').map((record) => (
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
+                                        <TableCell>{record.supplier}</TableCell>
+
                                         <TableCell>{record.price_per_item}</TableCell>
                                         <TableCell>{record.quantity_purchase}</TableCell>
                                         <TableCell>{record.total_price}</TableCell>
-                                        <TableCell>{record.supplier}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -178,10 +180,10 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                             <TableHead>
                                 <TableRow>
                                     <TableCell>Дата</TableCell>
-                                    <TableCell>Ціна</TableCell>
-                                    <TableCell>Загальна ціна</TableCell>
-                                    <TableCell>Кількість проданих одиниць</TableCell>
                                     <TableCell>Клієнт</TableCell>
+                                    <TableCell>Ціна</TableCell>
+                                    <TableCell>Кількість проданих одиниць</TableCell>
+                                    <TableCell>Загальна ціна</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -189,10 +191,12 @@ const ProductHistoryModal = ({productId, openHistory, onClose}: IProductHistoryM
                                 sortByDate(productHistory.sales, 'sale_date').map((record) => (
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
-                                        <TableCell>{record.price_per_item}</TableCell>
-                                        <TableCell>{record.total_price}</TableCell>
-                                        <TableCell>{record.quantity_sold}</TableCell>
                                         <TableCell>{record.customer}</TableCell>
+
+                                        <TableCell>{record.price_per_item}</TableCell>
+                                        <TableCell>{record.quantity_sold}</TableCell>
+                                        <TableCell>{record.total_price}</TableCell>
+
                                     </TableRow>
                                 ))}
                             </TableBody>

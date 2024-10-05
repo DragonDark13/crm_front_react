@@ -15,7 +15,11 @@ import SupplierSelect from "../FormComponents/SupplierSelect";
 import {ICategory, INewProduct} from "../../utils/types";
 import {addProduct} from "../../api/api";
 //TODO додай постачальників таблиці
-// Повідомлення про успіх
+// TODO Повідомлення про успіх
+// TODO Окремі поля для ціни закупівельної і проданої
+
+
+
 
 interface IAddProductModal {
     openAdd: boolean,

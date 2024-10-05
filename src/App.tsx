@@ -64,6 +64,7 @@ function App() {
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
     const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
+    const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
 
 
     const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
@@ -541,6 +542,8 @@ function App() {
         // Спочатку скидаємо фільтри
         // resetFiltersAndOrderAndSearch();
         resetFilters()
+        setSelectedLowProductId(productId);  // Встановлюємо ID обраного продукту
+
         setSearchTerm(''); // Скидання пошуку
         console.log("Фільтри скинуті");
 
@@ -571,6 +574,10 @@ function App() {
                     console.log("Елемент не знайдено для індексу:", rowIndex);
                 }
             }, 100);
+
+            setTimeout(() => {
+                setSelectedLowProductId(null)
+            }, 3000)
         } else {
             console.log("Продукт з ID", productId, "не знайдений");
         }
@@ -642,6 +649,7 @@ function App() {
                         </Drawer>
 
                         <ResponsiveProductView
+                            selectedLowProductId={selectedLowProductId}
                             filteredAndSearchedProducts={filteredAndSearchedProducts}
                             ref={(el, index) => {
                                 tableRowRefs.current[index] = el;
@@ -704,6 +712,7 @@ function App() {
 
             {(modalState.openHistory && productId) && (
                 <ProductHistoryModal
+                    productName={products.find(product => product.id === productId).name}
                     openHistory={modalState.openHistory}
                     onClose={() => handleModalClose("openHistory")}
                     productId={productId} // Передаємо productId
@@ -796,7 +805,7 @@ function App() {
             <Snackbar
                 anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                 open={modalState.snackbarNotifyOpen}
-                autoHideDuration={6000}
+                autoHideDuration={1000}
                 onClose={() => handleModalClose("snackbarNotifyOpen")}
                 message={`${lowQuantityProducts.length} товарів з низькою кількістю`}
                 action={
