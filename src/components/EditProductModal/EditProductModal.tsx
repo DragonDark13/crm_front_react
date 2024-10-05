@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {
     DialogContent,
     Button,
-    DialogActions, Grid,
+    DialogActions, Grid, TextField,
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 
@@ -11,7 +11,7 @@ import PriceField from "../FormComponents/PriceField";
 import TotalPriceField from "../FormComponents/TotalPriceField";
 import QuantityField from "../FormComponents/QuantityField";
 import CategoriesSelect from "../FormComponents/CategoriesSelect";
-import {roundToDecimalPlaces} from "../../utils/function";
+import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../utils/function";
 import SupplierSelect from "../FormComponents/SupplierSelect";
 import {ICategory, IEditProduct, ISupplier} from "../../utils/types";
 
@@ -44,8 +44,12 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         name: '',
         supplier: '',
         quantity: '',
-        price_per_item: ''
+        price_per_item: '',
+        created_date: ""
     });
+
+
+    console.log("editProduct", editProduct);
 
     // Обчислення загальної ціни
     useEffect(() => {
@@ -56,7 +60,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
     // Валідація полів
     const validateFields = () => {
-        let tempErrors = {name: '', supplier: '', quantity: '', price_per_item: ''};
+        let tempErrors = {name: '', supplier: '', quantity: '', price_per_item: '', created_date: ""};
         let isValid = true;
 
         if (!editProduct.name.trim()) {
@@ -88,6 +92,11 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             isValid = false;
         } else if (editProduct.price_per_item > 100000) {
             tempErrors.price_per_item = 'Price per item cannot exceed 100,000';
+            isValid = false;
+        }
+
+        if (!editProduct.created_date.trim()) {
+            tempErrors.name = 'created_date is required';
             isValid = false;
         }
 
@@ -142,7 +151,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             return updatedProduct;
         });
     };
-
 
 
     const handleSave = () => {
@@ -238,6 +246,19 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                     <Grid item xs={12} sm={6} md={4}>
                         <TotalPriceField value={editProduct.total_price}/>
                     </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            required
+                            label="Дата створення"
+                            type="date"
+                            value={editProduct.created_date ? formatDate(editProduct.created_date) : ''}
+                            onChange={(e) => handleFieldChange("created_date", formatDateToBack(e.target.value))}
+                            fullWidth
+                            margin="normal"
+                        />
+
+                    </Grid>
+
                 </Grid>
 
                 <CategoriesSelect

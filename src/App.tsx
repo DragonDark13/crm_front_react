@@ -54,6 +54,7 @@ import {
 } from "./utils/types";
 import ResponsiveProductView from "./components/ResponsiveProductView/ResponsiveProductView";
 import NotificationPanel from "./components/NotificationPanel/NotificationPanel";
+import {formatDate} from "./utils/function";
 
 
 function App() {
@@ -75,7 +76,8 @@ function App() {
         quantity: 1,
         total_price: 0,
         price_per_item: 0,
-        category_ids: []
+        category_ids: [],
+        created_date: new Date().toISOString().slice(0, 10),
     });
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
 
@@ -185,7 +187,15 @@ function App() {
     };
 
     const resetNewProduct = () => {
-        setNewProduct({name: '', supplier_id: '', quantity: 1, total_price: 0, price_per_item: 0, category_ids: []});
+        setNewProduct({
+            name: '',
+            supplier_id: '',
+            quantity: 1,
+            total_price: 0,
+            price_per_item: 0,
+            category_ids: [],
+            created_date: new Date().toISOString().slice(0, 10)
+        });
     };
 
     const resetPurchaseDetails = () => {
@@ -347,6 +357,7 @@ function App() {
         total_price: product.total_price,
         price_per_item: product.price_per_item,
         category_ids: product.category_ids,
+        created_date: formatDate(product.created_date),
     });
 
     const applyFilters = (updatedCategories: number[], updatedSuppliers: number[], callback?) => {
@@ -424,6 +435,7 @@ function App() {
             total_price: product.total_price,
             price_per_item: product.price_per_item,
             category_ids: product.category_ids,
+            created_date: formatDate(product.created_date)
         })
 
         setSaleData({
@@ -529,7 +541,7 @@ function App() {
         // Спочатку скидаємо фільтри
         // resetFiltersAndOrderAndSearch();
         resetFilters()
-         setSearchTerm(''); // Скидання пошуку
+        setSearchTerm(''); // Скидання пошуку
         console.log("Фільтри скинуті");
 
         // Знайти рядок таблиці за ID продукту

@@ -1,7 +1,7 @@
 import {
     Button,
     DialogContent,
-    DialogActions, Grid,
+    DialogActions, Grid, TextField,
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
@@ -93,7 +93,7 @@ const AddProductModal = ({
     }, [newProduct.quantity, newProduct.price_per_item]);
 
     const isAddButtonDisabled = newProduct.name.trim().length < 10 ||
-       !newProduct.supplier_id || newProduct.quantity <= 0;
+        !newProduct.supplier_id || newProduct.quantity <= 0;
 
 
     return (
@@ -179,6 +179,17 @@ const AddProductModal = ({
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                         <TotalPriceField value={newProduct.total_price}/>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            label="Дата створення"
+                            type="date"
+                            value={newProduct.created_date}
+                            onChange={(e) => setNewProduct({...newProduct, created_date: e.target.value})}
+                            fullWidth
+                            margin="normal"
+                        />
+
                     </Grid>
                 </Grid>
                 <CategoriesSelect categories={categories} selectedCategories={selectedCategories}

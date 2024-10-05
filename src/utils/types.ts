@@ -11,6 +11,7 @@ export interface IProduct extends IBaseProduct {
     id: number;
     category_ids: number[]
     supplier: ISupplier | null
+    created_date: string
 }
 
 export interface ISupplierID {
@@ -19,11 +20,14 @@ export interface ISupplierID {
 
 export interface INewProduct extends IBaseProduct, ISupplierID {
     category_ids: number[]
+    created_date: string
 }
 
 export interface IEditProduct extends IBaseProduct, ISupplierID {
     id: number;
     category_ids: number[]
+    created_date: string
+
 }
 
 export interface ICategory {

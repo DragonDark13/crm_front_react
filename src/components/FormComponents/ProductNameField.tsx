@@ -13,7 +13,7 @@ const ProductNameField: FC<{
         fullWidth
         margin="normal"
         error={!!error}
-        helperText={error}
+        helperText={error ? error : "не менше 10 символів"}
         inputProps={{maxLength: 100}}  // Максимальна довжина 100 символів
     />
 );
