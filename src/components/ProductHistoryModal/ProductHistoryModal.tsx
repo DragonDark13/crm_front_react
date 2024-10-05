@@ -11,10 +11,10 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableContainer,
+    TableContainer, TableFooter,
     TableHead,
     TableRow,
-    Tabs
+    Tabs, Typography
 } from "@mui/material";
 
 import CustomDialog from "../CustomDialog/CustomDialog";
@@ -118,8 +118,9 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
             <DialogContent>
                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
                     <Tab label="Історія змін"/>
-                    <Tab label="Історія закупівель"/>
+                    <Tab label="Історія "/>
                     <Tab label="Історія продажів"/>
+                    <Tab label="закупівель && продажів"/>
                 </Tabs>
                 <TabPanel value={tabIndex} index={0}>
                     <TableContainer component={Paper}>
@@ -163,13 +164,30 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.supplier}</TableCell>
-
                                         <TableCell>{record.price_per_item}</TableCell>
                                         <TableCell>{record.quantity_purchase}</TableCell>
                                         <TableCell>{record.total_price}</TableCell>
                                     </TableRow>
-                                ))}
+                                ))
+                                }
                             </TableBody>
+                            {productHistory.purchase && productHistory.purchase.length > 0 && (
+                                <TableFooter>
+                                    <TableRow>
+                                        <TableCell colSpan={3} align="right"><strong>Загальна
+                                            кількість:</strong></TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                variant={"subtitle2"}> {productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant={"subtitle2"}>  {productHistory.purchase
+                                                .reduce((sum, record) => sum + parseFloat(String(record.total_price)) || 0, 0)
+                                                .toFixed(2)}</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableFooter>
+                            )}
                         </Table>
                     </TableContainer>
                 </TabPanel>
@@ -192,17 +210,110 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.customer}</TableCell>
-
                                         <TableCell>{record.price_per_item}</TableCell>
                                         <TableCell>{record.quantity_sold}</TableCell>
                                         <TableCell>{record.total_price}</TableCell>
-
                                     </TableRow>
-                                ))}
+                                ))
+                                }
                             </TableBody>
+                            {productHistory.sales && productHistory.sales.length > 0 && (
+                                <TableFooter>
+                                    <TableRow>
+                                        <TableCell colSpan={3} align="right"><strong>Загальна
+                                            кількість:</strong></TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                variant={"subtitle2"}> {productHistory.sales.reduce((sum, record) => sum + record.total_price, 0).toFixed(2)}</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableFooter>
+                            )}
                         </Table>
                     </TableContainer>
                 </TabPanel>
+                <TabPanel value={tabIndex} index={3}>
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Дата</TableCell>
+                                    <TableCell>Тип</TableCell>
+                                    <TableCell>Контрагент</TableCell>
+                                    <TableCell>Ціна</TableCell>
+                                    <TableCell>Кількість</TableCell>
+                                    <TableCell>Загальна ціна</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {productHistory && productHistory.purchase && productHistory.sales && (
+                                    // Об'єднання та сортування закупівель і продажів
+                                    [...productHistory.purchase.map(record => ({...record, type: 'purchase'})),
+                                        ...productHistory.sales.map(record => ({...record, type: 'sale'}))]
+                                        .sort((a, b) => {
+                                            const dateA = a.purchase_date ? new Date(a.purchase_date).getTime() : 0;
+                                            const dateB = b.purchase_date ? new Date(b.purchase_date).getTime() : 0;
+
+                                            const dateSaleA = a.sale_date ? new Date(a.sale_date).getTime() : 0;
+                                            const dateSaleB = b.sale_date ? new Date(b.sale_date).getTime() : 0;
+
+                                            const finalDateA = dateA || dateSaleA;  // Якщо є дата закупівлі, використовується вона, інакше дата продажу
+                                            const finalDateB = dateB || dateSaleB;  // Те саме для другого запису
+
+                                            return finalDateA - finalDateB;
+                                        }).map((record, index) => (
+                                        <TableRow
+                                            key={index}
+                                            style={{backgroundColor: record.type === 'sale' ? '#d1e7dd' : '#f8d7da'}} // Колір для продажу і закупки
+                                        >
+                                            <TableCell>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
+                                            <TableCell>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
+                                            <TableCell>{record.type === 'sale' ? record.customer : record.supplier}</TableCell>
+                                            <TableCell>{record.price_per_item}</TableCell>
+                                            <TableCell>{record.type === 'sale' ? record.quantity_sold : record.quantity_purchase}</TableCell>
+                                            <TableCell>{record.total_price}</TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                            {productHistory && productHistory.purchase && productHistory.sales && (
+                                <TableFooter>
+                                    <TableRow>
+                                        <TableCell colSpan={4} align="right">
+                                            <strong>Загальна кількість продажів:</strong>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.total_price, 0).toFixed(2)}</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell colSpan={4} align="right">
+                                            <strong>Загальна кількість закупок:</strong>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)}</Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.total_price)) || 0, 0).toFixed(2)}</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableFooter>
+                            )}
+                        </Table>
+                    </TableContainer>
+                </TabPanel>
+
             </DialogContent>
         </CustomDialog>
     );

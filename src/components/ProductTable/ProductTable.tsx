@@ -3,7 +3,7 @@
 import React, {forwardRef, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography,
+    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography, TableFooter,
 } from '@mui/material';
 import {IconButton, Tooltip} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -54,6 +54,10 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                    currentPage,
                                                                    selectedLowProductId
                                                                }, ref) => {
+
+    // Підрахунок загальної кількості та суми
+    const totalQuantity = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
+    const totalSum = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_price, 0);
 
 
     return (
@@ -179,6 +183,14 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                 );
                             })}
                     </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={3} align="right"><strong>Загальна кількість:</strong></TableCell>
+                            <TableCell><Typography variant={"subtitle2"}>{totalQuantity}</Typography></TableCell>
+                            <TableCell colSpan={1} align="right"><strong>Загальна сума:</strong></TableCell>
+                            <TableCell><Typography variant={"subtitle2"}>{totalSum.toFixed(2)}</Typography></TableCell>
+                        </TableRow>
+                    </TableFooter>
                 </Table>
             </TableContainer>
         </React.Fragment>
