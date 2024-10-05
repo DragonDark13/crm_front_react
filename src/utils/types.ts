@@ -1,3 +1,5 @@
+import NotificationPanel from "../components/NotificationPanel/NotificationPanel";
+
 export interface IBaseProduct {
     name: string;
     quantity: number;
@@ -84,6 +86,8 @@ export const modalNames: ModalNames[] = [
     'snackbarNotifyOpen'
 ];
 
-export interface INotificationPanel{
+export interface INotificationPanel {
     lowQuantityProducts: IProduct[];
+    handleListItemClick: (arg: number) => void
 }
+

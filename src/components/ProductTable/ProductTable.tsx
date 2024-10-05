@@ -1,6 +1,6 @@
 // ProductTable.tsx
 
-import React, {useState} from 'react';
+import React, {forwardRef, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
     TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography,
@@ -25,48 +25,34 @@ interface IProductTableProps {
     handleOpenHistoryModal: (productId: number) => void;
     handlePurchase: (product: IProduct) => void;
     handleOpenSale: (product: IProduct) => void;
+    searchTerm: string;
+    filteredAndSearchedProducts: IProduct[]
+    currentPage: number;
+    itemsPerPage: number;
+
 }
 
-const ProductTable: React.FC<IProductTableProps> = ({
-                                                        filteredProducts,
-                                                        order,
-                                                        orderBy,
-                                                        handleSort,
-                                                        sortProducts,
-                                                        getComparator,
-                                                        handleOpenEdit,
-                                                        handleDelete,
-                                                        handlePurchase,
-                                                        handleOpenSale,
-                                                        handleOpenHistoryModal
+const ProductTable: React.FC<IProductTableProps> = forwardRef(({
+                                                                   filteredProducts,
+                                                                   order,
+                                                                   orderBy,
+                                                                   handleSort,
+                                                                   sortProducts,
+                                                                   getComparator,
+                                                                   handleOpenEdit,
+                                                                   handleDelete,
+                                                                   handlePurchase,
+                                                                   handleOpenSale,
+                                                                   handleOpenHistoryModal,
+                                                                   searchTerm,
+                                                                   filteredAndSearchedProducts,
+                                                                   itemsPerPage,
+                                                                   currentPage,
+                                                               }, ref) => {
 
-                                                    }) => {
-
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10); // Додайте цей рядок
-
-
-    const filteredAndSearchedProducts = filteredProducts.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     return (
         <React.Fragment>
-            <Grid container justifyContent={"flex-end"}>
-
-                <Grid item xs={12} md={6}>
-                    <TextField
-                        label="Пошук товару"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </Grid>
-
-            </Grid>
 
             <TableContainer component={Paper}>
                 <Table>
@@ -130,6 +116,13 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                 const lowQuantity = product.quantity < 5; // умова для низької кількості
                                 return (
                                     <TableRow key={`${product.id}${index}${product.total_price}`}
+                                              ref={el => {
+                                                  if (ref && typeof ref === 'function') {
+                                                      ref(el, index + currentPage * itemsPerPage);
+                                                  } else if (ref && ref.current) {
+                                                      ref.current[index + currentPage * itemsPerPage] = el;
+                                                  }
+                                              }}
                                               className={lowQuantity ? 'low-quantity-row' : ''}>
                                         <TableCell>{product.id}</TableCell>
                                         <TableCell>{product.name}</TableCell>
@@ -179,20 +172,8 @@ const ProductTable: React.FC<IProductTableProps> = ({
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={filteredAndSearchedProducts.length}
-                rowsPerPage={itemsPerPage}
-                page={currentPage}
-                onPageChange={(event, newPage) => setCurrentPage(newPage)}
-                onRowsPerPageChange={(event) => {
-                    setItemsPerPage(parseInt(event.target.value, 10));
-                    setCurrentPage(0); // Скидаємо на першу сторінку
-                }}
-            />
         </React.Fragment>
     );
-};
+});
 
 export default ProductTable;

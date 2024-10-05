@@ -4,11 +4,11 @@ import NotificationImportantIcon from "@mui/icons-material/NotificationImportant
 import {INotificationPanel} from "../../utils/types";
 //TODO ерехід до товару
 
-const NotificationPanel = ({lowQuantityProducts}: INotificationPanel) => {
+const NotificationPanel = ({lowQuantityProducts,handleListItemClick}: INotificationPanel) => {
     return (
         <List>
             {lowQuantityProducts.map(product => (
-                <ListItem key={product.id}>
+                <ListItem key={product.id+product.name} onClick={() => handleListItemClick(product.id)}>
                     <ListItemIcon>
                         <NotificationImportantIcon/>
                     </ListItemIcon>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     Button,
     Box,
@@ -21,8 +21,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
 import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
 
-//TODO Create dialog components
-//TODO add type interface
 //TODO add handle error
 
 
@@ -64,6 +62,7 @@ function App() {
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
+    const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
 
 
     const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
@@ -108,6 +107,10 @@ function App() {
     });
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10); // Додайте цей рядок
+    const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = useState<IProduct[]>([])
 
 
     // Load products and suppliers
@@ -346,7 +349,7 @@ function App() {
         category_ids: product.category_ids,
     });
 
-    const applyFilters = (updatedCategories: number[], updatedSuppliers: number[]) => {
+    const applyFilters = (updatedCategories: number[], updatedSuppliers: number[], callback?) => {
         let filtered = products;
 
         // Filter by categories
@@ -360,8 +363,9 @@ function App() {
         if (updatedSuppliers.length > 0) {
             filtered = filtered.filter(product => product.supplier && updatedSuppliers.includes(product.supplier.id));
         }
-
+        console.log(filtered);
         setFilteredProducts(filtered);
+        if (callback) callback();
     };
 
     const handleCategoryFilterChange = (categoryID: number) => {
@@ -489,6 +493,77 @@ function App() {
         lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
     }, [products]);
 
+    const resetFiltersAndOrderAndSearch = () => {
+        // Скидання фільтрів
+        setOrderBy('name'); // Скидання сортування за ім'ям
+        setOrder('asc'); // Скидання сортування
+        setSearchTerm(''); // Скидання пошуку
+        setSelectedFilterCategories([]);
+        setSelectedFilterSuppliers([]);
+        applyFilters([], []);
+    };
+
+    const resetFilters = () => {
+        setSelectedFilterCategories([]);
+        setSelectedFilterSuppliers([]);
+        applyFilters([], []);
+    }
+
+    useEffect(() => {
+        if (filteredProducts.length > 0) {
+            const array = filteredProducts.filter(product =>
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredAndSearchedProducts(array)
+        }
+
+    }, [filteredProducts, searchTerm]);
+
+    // const filteredAndSearchedProducts = filteredProducts.filter(product =>
+    //     product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    // );
+
+    const handleListItemClick = (productId: number) => {
+        console.log("Натиснули на товар з ID:", productId);
+
+        // Спочатку скидаємо фільтри
+        // resetFiltersAndOrderAndSearch();
+        resetFilters()
+         setSearchTerm(''); // Скидання пошуку
+        console.log("Фільтри скинуті");
+
+        // Знайти рядок таблиці за ID продукту
+        console.log(filteredAndSearchedProducts);
+        const sortedProducts = sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy));
+        const rowIndex = sortedProducts.findIndex(product => product.id === productId);
+        console.log("Знайдений індекс продукту:", rowIndex);
+
+        if (rowIndex !== -1) {
+            // Обчислити, на якій сторінці знаходиться цей продукт
+            const targetPage = Math.floor(rowIndex / itemsPerPage);
+            console.log("Продукт знаходиться на сторінці:", targetPage);
+
+            // Змінюємо сторінку
+            setCurrentPage(targetPage);
+
+            // Використати setTimeout для прокрутки, щоб дати час на оновлення сторінки
+            setTimeout(() => {
+                const rowElement = tableRowRefs.current[rowIndex];
+                console.log("Елемент рядка таблиці:", rowElement);
+
+                if (rowElement) {
+                    handleModalClose("openNotificationDrawer")
+                    console.log("Прокрутка до елемента:", rowElement);
+                    rowElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+                } else {
+                    console.log("Елемент не знайдено для індексу:", rowIndex);
+                }
+            }, 100);
+        } else {
+            console.log("Продукт з ID", productId, "не знайдений");
+        }
+    };
+
     return (
         <React.Fragment>
 
@@ -520,21 +595,21 @@ function App() {
                                         <Button variant={"outlined"}
                                                 color={"primary"}
                                                 onClick={handleOpenAdd}>
-                                            Додати Товар
+                                            Створити Товар
                                         </Button>
                                     </Grid>
                                     <Grid>
                                         <Button variant={"outlined"} color={"primary"}
                                                 onClick={() => handleModalOpen("openCategoryCreate")}
                                         >
-                                            Додати Категорію
+                                            Створити Категорію
                                         </Button>
                                     </Grid>
                                     <Grid>
 
                                         <Button variant={"outlined"} color={"primary"}
                                                 onClick={() => handleModalOpen("openAddSupplierOpen")}>
-                                            Додати Постачальника
+                                            Створити Постачальника
                                         </Button>
                                     </Grid>
                                 </Grid>
@@ -544,18 +619,27 @@ function App() {
                             <Button variant={"outlined"} onClick={() => handleModalClose("openDrawer")}>
                                 Закрити
                             </Button>
-                            <FilterComponent selectedFilterCategories={selectedFilterCategories}
-                                             handleCategoryFilterChange={handleCategoryFilterChange}
-                                             categories={categories}
-                                             selectedFilterSuppliers={selectedFilterSuppliers}
-                                             handleSupplierFilterChange={handleSupplierFilterChange}
-                                             suppliers={suppliers}
-                                             applyFilters={applyFilters}
-                                             setSelectedFilterCategories={setSelectedFilterCategories}
-                                             setSelectedFilterSuppliers={setSelectedFilterSuppliers}/>
+                            <FilterComponent
+                                selectedFilterCategories={selectedFilterCategories}
+                                handleCategoryFilterChange={handleCategoryFilterChange}
+                                categories={categories}
+                                selectedFilterSuppliers={selectedFilterSuppliers}
+                                handleSupplierFilterChange={handleSupplierFilterChange}
+                                suppliers={suppliers}
+                                resetFilters={resetFilters}/>
                         </Drawer>
 
                         <ResponsiveProductView
+                            filteredAndSearchedProducts={filteredAndSearchedProducts}
+                            ref={(el, index) => {
+                                tableRowRefs.current[index] = el;
+                            }}
+                            currentPage={currentPage}
+                            itemsPerPage={itemsPerPage}
+                            setCurrentPage={setCurrentPage}
+                            setItemsPerPage={setItemsPerPage}
+                            searchTerm={searchTerm}
+                            setSearchTerm={setSearchTerm}
                             filteredProducts={filteredProducts}
                             order={order}
                             orderBy={orderBy}
@@ -693,7 +777,7 @@ function App() {
             {/* Drawer Component */}
             <Drawer anchor="right" open={modalState.openNotificationDrawer}
                     onClose={() => handleModalClose("openNotificationDrawer")}>
-                <NotificationPanel lowQuantityProducts={lowQuantityProducts}/>
+                <NotificationPanel handleListItemClick={handleListItemClick} lowQuantityProducts={lowQuantityProducts}/>
             </Drawer>
 
 

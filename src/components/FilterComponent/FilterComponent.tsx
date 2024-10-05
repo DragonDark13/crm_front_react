@@ -2,6 +2,7 @@ import {Button, Grid} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import {ICategory, ISupplier} from "../../utils/types";
+
 //TODO фільтр по ціні
 
 interface IFilterComponentProps {
@@ -12,22 +13,18 @@ interface IFilterComponentProps {
     selectedFilterSuppliers: number[];
     handleSupplierFilterChange: (supplierID: number) => void;
     suppliers: ISupplier[]; // TODO: create type interface
-
-    applyFilters: (categoryIDs: number[], supplierIDs: number[]) => void;
-    setSelectedFilterCategories: (categoryIDs: number[]) => void;
-    setSelectedFilterSuppliers: (supplierIDs: number[]) => void;
+    resetFilters: () => void;
 }
 
 const FilterComponent = ({
-                             applyFilters,
+
                              handleCategoryFilterChange,
                              categories,
                              handleSupplierFilterChange,
                              selectedFilterCategories,
                              selectedFilterSuppliers,
                              suppliers,
-                             setSelectedFilterCategories,
-                             setSelectedFilterSuppliers
+                             resetFilters
                          }: IFilterComponentProps) => {
     return (
         <Grid container>
@@ -52,11 +49,7 @@ const FilterComponent = ({
                     </div>
 
                 </div>
-                <Button variant={"contained"} onClick={() => {
-                    setSelectedFilterCategories([]);
-                    setSelectedFilterSuppliers([]);
-                    applyFilters([], []);
-                }}>
+                <Button variant={"contained"} onClick={resetFilters}>
                     Очистити
                 </Button>
             </Grid>

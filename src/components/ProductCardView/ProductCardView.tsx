@@ -21,6 +21,10 @@ interface IProductTableProps {
     handleOpenHistoryModal: (productId: number) => void;
     handlePurchase: (product: IProduct) => void;
     handleOpenSale: (product: IProduct) => void;
+    searchTerm: string;
+    filteredAndSearchedProducts: IProduct[]
+    currentPage: number;
+    itemsPerPage: number;
 }
 
 const ProductCardView: React.FC<IProductTableProps> = ({
@@ -34,30 +38,16 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                                            handleDelete,
                                                            handlePurchase,
                                                            handleOpenSale,
-                                                           handleOpenHistoryModal
+                                                           handleOpenHistoryModal,
+                                                           searchTerm,
+                                                           filteredAndSearchedProducts,
+                                                           currentPage,
+                                                           itemsPerPage
                                                        }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
 
-    const filteredAndSearchedProducts = filteredProducts.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     return (
         <React.Fragment>
-            <Grid container justifyContent={"flex-end"} spacing={2}>
-                <Grid item xs={12} md={6}>
-                    <TextField
-                        label="Пошук товару"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </Grid>
-            </Grid>
 
             <Grid container spacing={2}>
                 {filteredAndSearchedProducts.length > 0 &&
@@ -102,7 +92,7 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title="Видалити">
-                                            <IconButton  color="error" onClick={() => handleDelete(product.id)}>
+                                            <IconButton color="error" onClick={() => handleDelete(product.id)}>
                                                 <DeleteIcon fontSize="small"/>
                                             </IconButton>
                                         </Tooltip>
@@ -128,18 +118,6 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                     ))}
             </Grid>
 
-            <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={filteredAndSearchedProducts.length}
-                rowsPerPage={itemsPerPage}
-                page={currentPage}
-                onPageChange={(event, newPage) => setCurrentPage(newPage)}
-                onRowsPerPageChange={(event) => {
-                    setItemsPerPage(parseInt(event.target.value, 10));
-                    setCurrentPage(0); // Скидаємо на першу сторінку
-                }}
-            />
         </React.Fragment>
     );
 };
