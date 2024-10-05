@@ -118,7 +118,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
             <DialogContent>
                 <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
                     <Tab label="Історія змін"/>
-                    <Tab label="Історія "/>
+                    <Tab label="Історія закупівель"/>
                     <Tab label="Історія продажів"/>
                     <Tab label="закупівель && продажів"/>
                 </Tabs>
