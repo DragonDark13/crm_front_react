@@ -43,8 +43,8 @@ const PurchaseProductModal = ({
     const validateFields = () => {
         const newErrors = {
             quantity: purchaseDetails.quantity <= 0 ? 'Quantity must be greater than 0' : '',
-            price_per_item: purchaseDetails.price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
-            total_price: purchaseDetails.total_price <= 0 ? 'Total price must be greater than 0' : '',
+            price_per_item: purchaseDetails.purchase_price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
+            total_price: purchaseDetails.purchase_total_price <= 0 ? 'Total price must be greater than 0' : '',
             supplier: purchaseDetails.supplier_id === '' ? 'Supplier is required' : '',
             purchase_date: purchaseDetails.purchase_date === '' ? 'Purchase date is required' : ''
         };
@@ -63,9 +63,9 @@ const PurchaseProductModal = ({
 
     // Автоматичний розрахунок total_price
     useEffect(() => {
-        const totalPrice = purchaseDetails.quantity * purchaseDetails.price_per_item;
-        setPurchaseDetails({...purchaseDetails, total_price: roundToDecimalPlaces(totalPrice, 2)});
-    }, [purchaseDetails.quantity, purchaseDetails.price_per_item]);
+        const totalPrice = purchaseDetails.quantity * purchaseDetails.purchase_price_per_item;
+        setPurchaseDetails({...purchaseDetails, purchase_total_price: roundToDecimalPlaces(totalPrice, 2)});
+    }, [purchaseDetails.quantity, purchaseDetails.purchase_price_per_item]);
 
     const incrementQuantity = () => {
         if (purchaseDetails.quantity < 1000) {
@@ -177,10 +177,10 @@ const PurchaseProductModal = ({
                         <TextField
                             label="Ціна за 1шт"
                             type="number"
-                            value={purchaseDetails.price_per_item}
+                            value={purchaseDetails.purchase_price_per_item}
                             onChange={(e) => setPurchaseDetails({
                                 ...purchaseDetails,
-                                price_per_item: Number(e.target.value)
+                                purchase_price_per_item: Number(e.target.value)
                             })}
                             fullWidth
                             margin="normal"
@@ -190,7 +190,7 @@ const PurchaseProductModal = ({
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TotalPriceField value={purchaseDetails.total_price}/>
+                        <TotalPriceField value={purchaseDetails.purchase_total_price}/>
                     </Grid>
 
                 </Grid>

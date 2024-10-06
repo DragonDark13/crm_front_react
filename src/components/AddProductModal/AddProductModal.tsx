@@ -1,7 +1,7 @@
 import {
     Button,
     DialogContent,
-    DialogActions, Grid, TextField,
+    DialogActions, Grid, TextField, Typography,
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
@@ -17,8 +17,6 @@ import {addProduct} from "../../api/api";
 //TODO додай постачальників таблиці
 // TODO Повідомлення про успіх
 // TODO Окремі поля для ціни закупівельної і проданої
-
-
 
 
 interface IAddProductModal {
@@ -52,12 +50,14 @@ const AddProductModal = ({
         price_per_item: ''
     });
 
+    const [diffWithPrice, setDiffWithPrice] = useState(0)
+
     const validateFields = () => {
         const newErrors = {
             name: newProduct.name.trim().length < 10 ? 'Name must be at least 10 characters long' : '',
             supplier: newProduct.supplier_id === '' ? 'Supplier is required' : '',
             quantity: newProduct.quantity < 0 ? 'Quantity must be greater than or equal to 0' : '',
-            price_per_item: newProduct.price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
+            price_per_item: newProduct.purchase_price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
         };
         setErrors(newErrors);
 
@@ -81,10 +81,10 @@ const AddProductModal = ({
     };
 
     const decrementQuantity = () => {
-        if (newProduct.quantity > 1) {
+        if (newProduct.quantity > 0) {
             setNewProduct({
                 ...newProduct,
-                quantity: newProduct.quantity = 1
+                quantity: newProduct.quantity = 0
             });
         }
     };
@@ -92,12 +92,18 @@ const AddProductModal = ({
 
     // Автоматичне оновлення total_price як добутку quantity і price_per_item
     useEffect(() => {
-        const totalPrice = newProduct.quantity * newProduct.price_per_item;
-        setNewProduct({...newProduct, total_price: roundToDecimalPlaces(totalPrice, 2)});
-    }, [newProduct.quantity, newProduct.price_per_item]);
+        const totalPrice = newProduct.quantity * newProduct.purchase_price_per_item;
+        setNewProduct({...newProduct, purchase_total_price: roundToDecimalPlaces(totalPrice, 2)});
+    }, [newProduct.quantity, newProduct.purchase_price_per_item]);
 
     const isAddButtonDisabled = newProduct.name.trim().length < 10 ||
-        !newProduct.supplier_id || newProduct.quantity <= 0;
+        !newProduct.supplier_id || newProduct.quantity < 0;
+
+    useEffect(() => {
+        if (newProduct.purchase_price_per_item && newProduct.selling_price_per_item) {
+            setDiffWithPrice(newProduct.selling_price_per_item - newProduct.purchase_price_per_item);
+        }
+    }, [newProduct.selling_price_per_item, newProduct.purchase_price_per_item])
 
 
     return (
@@ -126,7 +132,7 @@ const AddProductModal = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <QuantityField
                             onIncrement={incrementQuantity}
                             onDecrement={decrementQuantity}
@@ -151,9 +157,9 @@ const AddProductModal = ({
                         />
 
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <PriceField
-                            value={newProduct.price_per_item}
+                            value={newProduct.purchase_price_per_item}
                             onChange={(e) => {
                                 let value = e.target.value;
 
@@ -168,7 +174,7 @@ const AddProductModal = ({
 
                                     setNewProduct({
                                         ...newProduct,
-                                        price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо
+                                        purchase_price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо
                                         // значення або
                                         // ставимо 0
                                     });
@@ -181,9 +187,46 @@ const AddProductModal = ({
 
 
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TotalPriceField value={newProduct.total_price}/>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <TotalPriceField value={newProduct.purchase_total_price}/>
                     </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <PriceField
+                            label="ціна за 1шт (продаж)"
+                            value={newProduct.selling_price_per_item}
+                            onChange={(e) => {
+                                let value = e.target.value;
+
+
+                                // Заміна коми на крапку для введення десяткових чисел
+
+                                // Регулярний вираз для числа з двома знаками після крапки
+                                const regex = /^\d*\.?\d{0,2}$/;
+
+                                // Якщо введення відповідає регулярному виразу, оновлюємо state
+                                if (regex.test(value) || value.endsWith('.')) {
+
+                                    setNewProduct({
+                                        ...newProduct,
+                                        selling_price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо
+                                        // значення або
+                                        // ставимо 0
+                                    });
+                                }
+
+                            }}
+
+                            error={errors.price_per_item}
+                        />
+
+                    </Grid>
+
+                    <Grid item xs={12} md={4}>
+                        <Typography>
+                            Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.
+                        </Typography>
+                    </Grid>
+
                     <Grid item xs={12} sm={6} md={4}>
                         <TextField
                             label="Дата створення"
@@ -196,6 +239,8 @@ const AddProductModal = ({
 
                     </Grid>
                 </Grid>
+
+
                 <CategoriesSelect categories={categories} selectedCategories={selectedCategories}
                                   handleCategoryChange={handleCategoryChange}/>
 

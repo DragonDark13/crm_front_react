@@ -1,13 +1,22 @@
 import {ChangeEvent, FC} from "react";
 import {TextField} from "@mui/material";
 
+
+export interface IPriceField {
+    value: number;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    error: string;
+    label?: string,
+}
+
+
 const PriceField: FC<{
     value: number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     error: string;
-}> = ({value, onChange, error}) => (
+}> = ({value, onChange, error,label='"Ціна за 1шт (Закупівельна)"'}: IPriceField) => (
     <TextField
-        label="Ціна за 1шт"
+        label={label}
         type="number"
         value={value}
         onChange={onChange}

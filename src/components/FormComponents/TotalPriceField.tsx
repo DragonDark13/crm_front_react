@@ -1,9 +1,14 @@
 import {TextField} from "@mui/material";
 import {FC} from "react";
 
-const TotalPriceField: FC<{ value: number }> = ({value}) => (
+export interface ITotalPriceField {
+    value: number;
+    label?: string;
+}
+
+const TotalPriceField: FC<{ value: number }> = ({value, label = "Загальна сума (Закупівельна)"}: ITotalPriceField) => (
     <TextField
-        label="Загальна сума"
+        label={label}
         type="number"
         value={value}
         fullWidth

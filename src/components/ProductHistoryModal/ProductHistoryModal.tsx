@@ -29,8 +29,10 @@ interface ProductHistoryRecord {
     change_amount?: number;
     quantity_purchase?: number;
     purchase_date?: string; // for purchase history
-    price_per_item?: number;
-    total_price?: number;
+    selling_price_per_item?: number;
+    selling_total_price?: number;
+    purchase_price_per_item?: number;
+    purchase_total_price?: number;
     supplier?: string;
     sale_date?: string; // for sales history
     price?: number;
@@ -164,9 +166,9 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.supplier}</TableCell>
-                                        <TableCell>{record.price_per_item}</TableCell>
+                                        <TableCell>{record.purchase_price_per_item}</TableCell>
                                         <TableCell>{record.quantity_purchase}</TableCell>
-                                        <TableCell>{record.total_price}</TableCell>
+                                        <TableCell>{record.purchase_total_price}</TableCell>
                                     </TableRow>
                                 ))
                                 }
@@ -182,7 +184,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                         </TableCell>
                                         <TableCell>
                                             <Typography variant={"subtitle2"}>  {productHistory.purchase
-                                                .reduce((sum, record) => sum + parseFloat(String(record.total_price)) || 0, 0)
+                                                .reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0)
                                                 .toFixed(2)}</Typography>
                                         </TableCell>
                                     </TableRow>
@@ -210,9 +212,9 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                     <TableRow key={record.id}>
                                         <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.customer}</TableCell>
-                                        <TableCell>{record.price_per_item}</TableCell>
+                                        <TableCell>{record.selling_price_per_item}</TableCell>
                                         <TableCell>{record.quantity_sold}</TableCell>
-                                        <TableCell>{record.total_price}</TableCell>
+                                        <TableCell>{record.selling_total_price}</TableCell>
                                     </TableRow>
                                 ))
                                 }
@@ -228,7 +230,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                         </TableCell>
                                         <TableCell>
                                             <Typography
-                                                variant={"subtitle2"}> {productHistory.sales.reduce((sum, record) => sum + record.total_price, 0).toFixed(2)}</Typography>
+                                                variant={"subtitle2"}> {productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
                                         </TableCell>
                                     </TableRow>
                                 </TableFooter>
@@ -273,9 +275,9 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                             <TableCell>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
                                             <TableCell>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
                                             <TableCell>{record.type === 'sale' ? record.customer : record.supplier}</TableCell>
-                                            <TableCell>{record.price_per_item}</TableCell>
+                                            <TableCell>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_price_per_item}</TableCell>
                                             <TableCell>{record.type === 'sale' ? record.quantity_sold : record.quantity_purchase}</TableCell>
-                                            <TableCell>{record.total_price}</TableCell>
+                                            <TableCell>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_total_price}</TableCell>
                                         </TableRow>
                                     ))
                                 )}
@@ -292,7 +294,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                         </TableCell>
                                         <TableCell>
                                             <Typography
-                                                variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.total_price, 0).toFixed(2)}</Typography>
+                                                variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
@@ -305,7 +307,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                         </TableCell>
                                         <TableCell>
                                             <Typography
-                                                variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.total_price)) || 0, 0).toFixed(2)}</Typography>
+                                                variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)}</Typography>
                                         </TableCell>
                                     </TableRow>
                                 </TableFooter>

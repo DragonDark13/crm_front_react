@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {
     DialogContent,
     Button,
-    DialogActions, Grid, TextField,
+    DialogActions, Grid, TextField, Typography,
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 
@@ -48,15 +48,15 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         created_date: ""
     });
 
-
+    const [diffWithPrice, setDiffWithPrice] = useState(0)
     console.log("editProduct", editProduct);
 
     // Обчислення загальної ціни
     useEffect(() => {
-        const totalPrice = editProduct.quantity * editProduct.price_per_item;
+        const totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
         // setEditProduct({...editProduct, total_price: roundToDecimalPlaces(totalPrice, 2)});
-        handleFieldChange('total_price', roundToDecimalPlaces(totalPrice, 2))
-    }, [editProduct.quantity, editProduct.price_per_item]);
+        handleFieldChange('purchase_total_price', roundToDecimalPlaces(totalPrice, 2))
+    }, [editProduct.quantity, editProduct.purchase_price_per_item]);
 
     // Валідація полів
     const validateFields = () => {
@@ -87,10 +87,10 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             isValid = false;
         }
 
-        if (editProduct.price_per_item < 0) {
+        if (editProduct.purchase_price_per_item < 0) {
             tempErrors.price_per_item = 'Price per item cannot be less than 0';
             isValid = false;
-        } else if (editProduct.price_per_item > 100000) {
+        } else if (editProduct.purchase_price_per_item > 100000) {
             tempErrors.price_per_item = 'Price per item cannot exceed 100,000';
             isValid = false;
         }
@@ -171,6 +171,12 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         }
     };
 
+    useEffect(() => {
+        if (editProduct.purchase_price_per_item && editProduct.selling_price_per_item) {
+            setDiffWithPrice(editProduct.selling_price_per_item - editProduct.purchase_price_per_item);
+        }
+    }, [editProduct.selling_price_per_item, editProduct.purchase_price_per_item])
+
 
     return (
         <CustomDialog
@@ -198,7 +204,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <QuantityField
                             onIncrement={incrementQuantity}
                             onDecrement={decrementQuantity}
@@ -221,9 +227,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             error={errors.quantity}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <PriceField
-                            value={editProduct.price_per_item}
+                            value={editProduct.purchase_price_per_item}
                             onChange={(e) => {
                                 let value = e.target.value;
 
@@ -234,7 +240,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
                                 // Якщо введення відповідає регулярному виразу, оновлюємо state
                                 if (regex.test(value) || value.endsWith('.')) {
-                                    handleFieldChange('price_per_item', value === '' ? 0 : parseFloat(value));
+                                    handleFieldChange('purchase_price_per_item', value === '' ? 0 : parseFloat(value));
 
 
                                 }
@@ -243,9 +249,40 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             error={errors.price_per_item}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TotalPriceField value={editProduct.total_price}/>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <TotalPriceField value={editProduct.purchase_total_price}/>
                     </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <PriceField
+                            label="ціна за 1шт (продаж)"
+                            value={editProduct.selling_price_per_item}
+                            onChange={(e) => {
+                                let value = e.target.value;
+
+
+                                // Заміна коми на крапку для введення десяткових чисел
+
+                                // Регулярний вираз для числа з двома знаками після крапки
+                                const regex = /^\d*\.?\d{0,2}$/;
+
+                                // Якщо введення відповідає регулярному виразу, оновлюємо state
+                                if (regex.test(value) || value.endsWith('.')) {
+
+                                                                       handleFieldChange('selling_price_per_item', value === '' ? 0 : parseFloat(value));
+                                }
+
+                            }}
+
+                            error={errors.price_per_item}
+                        />
+
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                        <Typography>
+                            Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.
+                        </Typography>
+                    </Grid>
+
                     <Grid item xs={12} sm={6} md={4}>
                         <TextField
                             required

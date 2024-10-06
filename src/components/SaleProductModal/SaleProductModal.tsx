@@ -1,4 +1,4 @@
-import {TextField, Button, DialogContent, DialogActions, Grid} from '@mui/material';
+import {TextField, Button, DialogContent, DialogActions, Grid, Typography} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
 import QuantityField from "../FormComponents/QuantityField";
@@ -13,6 +13,8 @@ interface ISaleProductModal {
     setSaleData: (data: ISaleData) => void;
     handleSale: () => void;
     nameProduct: string;
+    purchasePricePerItem: number
+    quantityOnStock: number,
 }
 
 const SaleProductModal = ({
@@ -21,7 +23,9 @@ const SaleProductModal = ({
                               saleData,
                               setSaleData,
                               handleSale,
-                              nameProduct
+                              nameProduct,
+                              purchasePricePerItem,
+                              quantityOnStock
                           }: ISaleProductModal) => {
     const [errors, setErrors] = useState({
         customer: '',
@@ -35,8 +39,8 @@ const SaleProductModal = ({
         const newErrors = {
             customer: saleData.customer.trim() === '' ? 'Customer name is required' : '',
             sale_date: saleData.sale_date === '' ? 'Sale date is required' : '',
-            price_per_item: saleData.price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
-            quantity: saleData.quantity <= 0 ? 'Quantity must be greater than 0' : '',
+            price_per_item: saleData.selling_price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
+            quantity: saleData.quantity <= 0 || saleData.quantity > quantityOnStock ? 'Quantity must be greater than 0' : '',
         };
 
         setErrors(newErrors);
@@ -53,12 +57,12 @@ const SaleProductModal = ({
     };
 
     useEffect(() => {
-        const totalPrice = saleData.quantity * saleData.price_per_item;
-        setSaleData({...saleData, total_price: roundToDecimalPlaces(totalPrice, 2)});
-    }, [saleData.quantity, saleData.price_per_item]);
+        const totalPrice = saleData.quantity * saleData.selling_price_per_item;
+        setSaleData({...saleData, selling_total_price: roundToDecimalPlaces(totalPrice, 2)});
+    }, [saleData.quantity, saleData.selling_price_per_item]);
 
     const incrementQuantity = () => {
-        if (saleData.quantity < 1000) {
+        if (saleData.quantity < quantityOnStock) {
             setSaleData({
                 ...saleData,
                 quantity: saleData.quantity + 1
@@ -78,8 +82,8 @@ const SaleProductModal = ({
     const isSubmitDisabled = () => {
         return (
             saleData.customer.trim() === '' ||
-            saleData.price_per_item <= 0 ||
-            saleData.quantity <= 0
+            saleData.selling_price_per_item <= 0 ||
+            saleData.quantity <= 0 || saleData.quantity > quantityOnStock
         );
     };
 
@@ -118,7 +122,8 @@ const SaleProductModal = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <Typography> Максимальна кількість {quantityOnStock}шт</Typography>
                         <QuantityField
                             onIncrement={incrementQuantity}
                             onDecrement={decrementQuantity}
@@ -139,16 +144,16 @@ const SaleProductModal = ({
                         />
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <TextField
-                            label="Ціна за 1шт"
+                            label="Ціна за 1шт (Продаж)"
                             type="number"
-                            value={saleData.price_per_item}
+                            value={saleData.selling_price_per_item}
                             onChange={(e) => {
                                 const pricePerItem = Number(e.target.value);
                                 setSaleData({
                                     ...saleData,
-                                    price_per_item: pricePerItem,
+                                    selling_price_per_item: pricePerItem,
                                 });
                             }}
                             fullWidth
@@ -158,9 +163,17 @@ const SaleProductModal = ({
                             inputProps={{min: 1, max: 100000}}  // Обмеження значень
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TotalPriceField value={saleData.total_price}/>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <TotalPriceField label={"Загальна сума (Продаж)"} value={saleData.selling_total_price}/>
                     </Grid>
+                    <Grid item xs={12}>
+                        <Typography>
+                            Загальна Чиста Вигода з
+                            продажу: {(saleData.selling_total_price) - (saleData.quantity * purchasePricePerItem)} грн.
+                            (з урахуванням знижки)
+                        </Typography>
+                    </Grid>
+
                 </Grid>
             </DialogContent>
             <DialogActions>

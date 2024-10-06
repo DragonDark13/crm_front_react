@@ -3,8 +3,11 @@ import NotificationPanel from "../components/NotificationPanel/NotificationPanel
 export interface IBaseProduct {
     name: string;
     quantity: number;
-    total_price: number;
-    price_per_item: number;
+    purchase_total_price: number;
+    purchase_price_per_item: number;
+    selling_total_price: number;
+    selling_price_per_item: number;
+    selling_quantity: number
 }
 
 export interface IProduct extends IBaseProduct {
@@ -37,16 +40,16 @@ export interface ICategory {
 
 export interface IPurchaseData extends ISupplierID {
     quantity: number
-    price_per_item: number,
-    total_price: number,
+    purchase_price_per_item: number,
+    purchase_total_price: number,
     purchase_date: string,
 }
 
 export interface ISaleData {
     customer: string,
     quantity: number,
-    price_per_item: number,
-    total_price: number,
+    selling_price_per_item: number,
+    selling_total_price: number,
     sale_date: string
     productId: number
 }

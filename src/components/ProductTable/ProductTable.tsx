@@ -56,8 +56,11 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                }, ref) => {
 
     // Підрахунок загальної кількості та суми
-    const totalQuantity = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
-    const totalSum = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_price, 0);
+    const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
+    const totalSumPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.purchase_total_price, 0);
+
+    const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_quantity, 0);
+    const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_total_price, 0);
 
 
     return (
@@ -97,20 +100,36 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                             </TableCell>
                             <TableCell>
                                 <TableSortLabel
-                                    active={orderBy === 'price_per_item'}
-                                    direction={orderBy === 'price_per_item' ? order : 'asc'}
-                                    onClick={() => handleSort('price_per_item')}
+                                    active={orderBy === 'purchase_price_per_item'}
+                                    direction={orderBy === 'purchase_price_per_item' ? order : 'asc'}
+                                    onClick={() => handleSort('purchase_price_per_item')}
                                 >
-                                    Ціна за 1шт
+                                    <div>
+                                        <Typography> Ціна за 1шт
+                                        </Typography>
+                                        <Typography color={"secondary"}>
+                                            Закупка
+                                        </Typography>
+                                        <Typography color={"primary"}>
+                                            Продаж
+                                        </Typography></div>
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>
                                 <TableSortLabel
-                                    active={orderBy === 'total_price'}
-                                    direction={orderBy === 'total_price' ? order : 'asc'}
-                                    onClick={() => handleSort('total_price')}
+                                    active={orderBy === 'purchase_total_price'}
+                                    direction={orderBy === 'purchase_total_price' ? order : 'asc'}
+                                    onClick={() => handleSort('purchase_total_price')}
                                 >
-                                    Сумма
+                                    <div>
+                                        Сумма
+                                        <Typography color={"secondary"}>
+                                            Закупка
+                                        </Typography>
+                                        <Typography color={"primary"}>
+                                            Продаж
+                                        </Typography>
+                                    </div>
                                 </TableSortLabel>
                             </TableCell>
 
@@ -124,7 +143,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                             .map((product: IProduct, index) => {
                                 const lowQuantity = product.quantity < 5; // умова для низької кількості
                                 return (
-                                    <TableRow key={`${product.id}${index}${product.total_price}`}
+                                    <TableRow key={`${product.id}${index}${product.purchase_total_price}`}
                                               ref={el => {
                                                   if (ref && typeof ref === 'function') {
                                                       ref(el, index + currentPage * itemsPerPage);
@@ -142,11 +161,29 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                             className={clsx(
                                                 {'low-quantity': lowQuantity},
                                             )}>
-                                            {product.quantity}</Typography></TableCell>
-                                        <TableCell>
-                                            {product.price_per_item}
+                                            {product.quantity}</Typography>
+
+                                            <Typography color={"primary"}>
+                                                {product.selling_quantity}
+                                            </Typography>
                                         </TableCell>
-                                        <TableCell>{product.total_price}</TableCell>
+                                        <TableCell>
+                                            <Typography color={"secondary"}>
+                                                {product.purchase_price_per_item.toFixed(2)}
+                                            </Typography>
+                                            <Typography color={"primary"}>
+                                                {product.selling_price_per_item.toFixed(2)}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+
+                                            <Typography color={"secondary"}>
+                                                {product.purchase_total_price.toFixed(2)}
+                                            </Typography>
+                                            <Typography color={"primary"}>
+                                                {product.selling_total_price.toFixed(2)}
+                                            </Typography>
+                                        </TableCell>
                                         <TableCell>
                                             <Box display={"flex"}>
                                                 <Tooltip title="Редагувати">
@@ -186,9 +223,26 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                     <TableFooter>
                         <TableRow>
                             <TableCell colSpan={3} align="right"><strong>Загальна кількість:</strong></TableCell>
-                            <TableCell><Typography variant={"subtitle2"}>{totalQuantity}</Typography></TableCell>
+                            <TableCell>
+                                <Typography variant={"subtitle2"} color={"secondary"}>
+                                    {totalQuantityPurchase}
+                                </Typography>
+                                <Typography variant={"subtitle2"} color={"primary"}>
+                                    {totalQuantitySelling}
+                                </Typography>
+                            </TableCell>
                             <TableCell colSpan={1} align="right"><strong>Загальна сума:</strong></TableCell>
-                            <TableCell><Typography variant={"subtitle2"}>{totalSum.toFixed(2)}</Typography></TableCell>
+                            <TableCell>
+                                <Typography
+                                    color={"secondary"}
+                                    variant={"subtitle2"}>{totalSumPurchase.toFixed(2)}
+                                </Typography>
+                                <Typography
+                                    color={"primary"}
+                                    variant={"subtitle2"}>{totalSumSelling.toFixed(2)}
+                                </Typography>
+
+                            </TableCell>
                         </TableRow>
                     </TableFooter>
                 </Table>

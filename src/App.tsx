@@ -75,10 +75,13 @@ function App() {
         name: '',
         supplier_id: '',
         quantity: 1,
-        total_price: 0,
-        price_per_item: 0,
+        purchase_total_price: 0.00,
+        purchase_price_per_item: 0.00,
         category_ids: [],
         created_date: new Date().toISOString().slice(0, 10),
+        selling_price_per_item: 0.00,
+        selling_total_price: 0.00,
+        selling_quantity:0,
     });
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
 
@@ -90,8 +93,8 @@ function App() {
     const [productId, setProductId] = useState<number | null>(null);
     const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
         quantity: 1,
-        price_per_item: 0,
-        total_price: 0,
+        purchase_price_per_item: 0,
+        purchase_total_price: 0,
         supplier_id: '',
         purchase_date: new Date().toISOString().slice(0, 10)
     });
@@ -192,18 +195,22 @@ function App() {
             name: '',
             supplier_id: '',
             quantity: 1,
-            total_price: 0,
-            price_per_item: 0,
+            purchase_total_price: 0.00,
+            purchase_price_per_item: 0.00,
             category_ids: [],
-            created_date: new Date().toISOString().slice(0, 10)
+            created_date: new Date().toISOString().slice(0, 10),
+            selling_total_price: 0.00,
+            selling_price_per_item: 0.00,
+            selling_quantity:0,
+
         });
     };
 
     const resetPurchaseDetails = () => {
         setPurchaseDetails({
             quantity: 1,
-            price_per_item: 0,
-            total_price: 0,
+            purchase_price_per_item: 0,
+            purchase_total_price: 0,
             supplier_id: '',
             purchase_date: new Date().toISOString().slice(0, 10)
         });
@@ -280,8 +287,8 @@ function App() {
         setPurchaseDetails(prevDetails => ({
             ...prevDetails,
             supplier_id: product.supplier ? product.supplier.id : '',
-            price_per_item: product.price_per_item,
-            total_price: product.price_per_item
+            purchase_price_per_item: product.purchase_price_per_item,
+            purchase_total_price: product.purchase_price_per_item
         }));
         handleModalOpen('openPurchase');
     };
@@ -290,8 +297,8 @@ function App() {
         if (!editProduct) return;
         const purchaseData: IPurchaseData = {
             quantity: purchaseDetails.quantity,
-            price_per_item: purchaseDetails.price_per_item,
-            total_price: purchaseDetails.total_price,
+            purchase_price_per_item: purchaseDetails.purchase_price_per_item,
+            purchase_total_price: purchaseDetails.purchase_total_price,
             supplier_id: purchaseDetails.supplier_id,
             purchase_date: purchaseDetails.purchase_date,
         };
@@ -355,10 +362,13 @@ function App() {
         name: product.name,
         supplier_id: product.supplier ? product.supplier.id : '',
         quantity: product.quantity,
-        total_price: product.total_price,
-        price_per_item: product.price_per_item,
+        purchase_total_price: product.purchase_total_price,
+        purchase_price_per_item: product.purchase_price_per_item,
         category_ids: product.category_ids,
         created_date: formatDate(product.created_date),
+        selling_price_per_item: product.selling_price_per_item,
+        selling_total_price: product.selling_total_price,
+        selling_quantity: product.selling_quantity,
     });
 
     const applyFilters = (updatedCategories: number[], updatedSuppliers: number[], callback?) => {
@@ -433,17 +443,20 @@ function App() {
             name: product.name,
             supplier_id: product.supplier ? product.supplier.id : '',
             quantity: product.quantity,
-            total_price: product.total_price,
-            price_per_item: product.price_per_item,
+            purchase_total_price: product.purchase_total_price,
+            purchase_price_per_item: product.purchase_price_per_item,
             category_ids: product.category_ids,
-            created_date: formatDate(product.created_date)
+            created_date: formatDate(product.created_date),
+            selling_price_per_item: product.selling_price_per_item,
+            selling_total_price: product.selling_total_price,
+            selling_quantity: product.selling_quantity
         })
 
         setSaleData({
             customer: '',
             quantity: 1,
-            price_per_item: product.price_per_item,
-            total_price: product.price_per_item,
+            selling_price_per_item: product.selling_price_per_item,
+            selling_total_price: product.selling_total_price,
             sale_date: new Date().toISOString().split('T')[0],
             productId: product.id, // Зберігаємо ID продукту для відправки на сервер
         });
@@ -732,6 +745,8 @@ function App() {
                 (modalState.openSale && saleData && editProduct) &&
                 <SaleProductModal
                     nameProduct={editProduct.name}
+                    purchasePricePerItem={editProduct.purchase_price_per_item}
+                    quantityOnStock={editProduct.quantity}
                     openSale={modalState.openSale}
                     handleCloseSale={() => handleModalClose("openSale")}
                     saleData={saleData}

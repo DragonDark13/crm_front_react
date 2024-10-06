@@ -54,7 +54,7 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                 sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
                     .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
                     .map((product: IProduct, index) => (
-                        <Grid item xs={12} sm={6} md={4} key={`${product.id}${index}${product.total_price}`}>
+                        <Grid item xs={12} sm={6} md={4} key={`${product.id}${index}${product.purchase_total_price}`}>
                             <Card>
                                 <CardContent>
                                     {/* Заголовок товару */}
@@ -77,11 +77,11 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                     </Typography>
                                     <Typography variant="subtitle1" color="textSecondary" gutterBottom>
                                         Ціна за 1 шт: <Typography component="span" variant="body1"
-                                                                  color="textPrimary">{product.price_per_item}</Typography>
+                                                                  color="textPrimary">{product.purchase_price_per_item}</Typography>
                                     </Typography>
                                     <Typography variant="subtitle1" color="textSecondary" gutterBottom>
                                         Сума: <Typography component="span" variant="body1"
-                                                          color="textPrimary">{product.total_price}</Typography>
+                                                          color="textPrimary">{product.purchase_total_price}</Typography>
                                     </Typography>
 
                                     {/* Блок з кнопками */}
