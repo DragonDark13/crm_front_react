@@ -22498,149 +22498,91 @@ const List = /* @__PURE__ */ reactExports.forwardRef(function List2(inProps, ref
     })
   });
 });
-function getListItemUtilityClass(slot) {
-  return generateUtilityClass("MuiListItem", slot);
+function getListItemButtonUtilityClass(slot) {
+  return generateUtilityClass("MuiListItemButton", slot);
 }
-generateUtilityClasses("MuiListItem", ["root", "container", "dense", "alignItemsFlexStart", "divider", "gutters", "padding", "secondaryAction"]);
 const listItemButtonClasses = generateUtilityClasses("MuiListItemButton", ["root", "focusVisible", "dense", "alignItemsFlexStart", "disabled", "divider", "gutters", "selected"]);
-function getListItemSecondaryActionClassesUtilityClass(slot) {
-  return generateUtilityClass("MuiListItemSecondaryAction", slot);
-}
-generateUtilityClasses("MuiListItemSecondaryAction", ["root", "disableGutters"]);
-const useUtilityClasses$q = (ownerState) => {
-  const {
-    disableGutters,
-    classes
-  } = ownerState;
-  const slots = {
-    root: ["root", disableGutters && "disableGutters"]
-  };
-  return composeClasses(slots, getListItemSecondaryActionClassesUtilityClass, classes);
-};
-const ListItemSecondaryActionRoot = styled("div", {
-  name: "MuiListItemSecondaryAction",
-  slot: "Root",
-  overridesResolver: (props, styles2) => {
-    const {
-      ownerState
-    } = props;
-    return [styles2.root, ownerState.disableGutters && styles2.disableGutters];
-  }
-})({
-  position: "absolute",
-  right: 16,
-  top: "50%",
-  transform: "translateY(-50%)",
-  variants: [{
-    props: ({
-      ownerState
-    }) => ownerState.disableGutters,
-    style: {
-      right: 0
-    }
-  }]
-});
-const ListItemSecondaryAction = /* @__PURE__ */ reactExports.forwardRef(function ListItemSecondaryAction2(inProps, ref) {
-  const props = useDefaultProps({
-    props: inProps,
-    name: "MuiListItemSecondaryAction"
-  });
-  const {
-    className,
-    ...other
-  } = props;
-  const context = reactExports.useContext(ListContext);
-  const ownerState = {
-    ...props,
-    disableGutters: context.disableGutters
-  };
-  const classes = useUtilityClasses$q(ownerState);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemSecondaryActionRoot, {
-    className: clsx(classes.root, className),
-    ownerState,
-    ref,
-    ...other
-  });
-});
-ListItemSecondaryAction.muiName = "ListItemSecondaryAction";
 const overridesResolver$1 = (props, styles2) => {
   const {
     ownerState
   } = props;
-  return [styles2.root, ownerState.dense && styles2.dense, ownerState.alignItems === "flex-start" && styles2.alignItemsFlexStart, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters, !ownerState.disablePadding && styles2.padding, ownerState.hasSecondaryAction && styles2.secondaryAction];
+  return [styles2.root, ownerState.dense && styles2.dense, ownerState.alignItems === "flex-start" && styles2.alignItemsFlexStart, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters];
 };
-const useUtilityClasses$p = (ownerState) => {
+const useUtilityClasses$q = (ownerState) => {
   const {
     alignItems,
     classes,
     dense,
+    disabled,
     disableGutters,
-    disablePadding,
     divider,
-    hasSecondaryAction
+    selected
   } = ownerState;
   const slots = {
-    root: ["root", dense && "dense", !disableGutters && "gutters", !disablePadding && "padding", divider && "divider", alignItems === "flex-start" && "alignItemsFlexStart", hasSecondaryAction && "secondaryAction"],
-    container: ["container"]
+    root: ["root", dense && "dense", !disableGutters && "gutters", divider && "divider", disabled && "disabled", alignItems === "flex-start" && "alignItemsFlexStart", selected && "selected"]
   };
-  return composeClasses(slots, getListItemUtilityClass, classes);
+  const composedClasses = composeClasses(slots, getListItemButtonUtilityClass, classes);
+  return {
+    ...classes,
+    ...composedClasses
+  };
 };
-const ListItemRoot = styled("div", {
-  name: "MuiListItem",
+const ListItemButtonRoot = styled(ButtonBase, {
+  shouldForwardProp: (prop) => rootShouldForwardProp(prop) || prop === "classes",
+  name: "MuiListItemButton",
   slot: "Root",
   overridesResolver: overridesResolver$1
 })(memoTheme(({
   theme
 }) => ({
   display: "flex",
+  flexGrow: 1,
   justifyContent: "flex-start",
   alignItems: "center",
   position: "relative",
   textDecoration: "none",
-  width: "100%",
+  minWidth: 0,
   boxSizing: "border-box",
   textAlign: "left",
+  paddingTop: 8,
+  paddingBottom: 8,
+  transition: theme.transitions.create("background-color", {
+    duration: theme.transitions.duration.shortest
+  }),
+  "&:hover": {
+    textDecoration: "none",
+    backgroundColor: (theme.vars || theme).palette.action.hover,
+    // Reset on touch devices, it doesn't add specificity
+    "@media (hover: none)": {
+      backgroundColor: "transparent"
+    }
+  },
+  [`&.${listItemButtonClasses.selected}`]: {
+    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    [`&.${listItemButtonClasses.focusVisible}`]: {
+      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
+    }
+  },
+  [`&.${listItemButtonClasses.selected}:hover`]: {
+    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity),
+    // Reset on touch devices, it doesn't add specificity
+    "@media (hover: none)": {
+      backgroundColor: theme.vars ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})` : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)
+    }
+  },
+  [`&.${listItemButtonClasses.focusVisible}`]: {
+    backgroundColor: (theme.vars || theme).palette.action.focus
+  },
+  [`&.${listItemButtonClasses.disabled}`]: {
+    opacity: (theme.vars || theme).palette.action.disabledOpacity
+  },
   variants: [{
     props: ({
       ownerState
-    }) => !ownerState.disablePadding,
+    }) => ownerState.divider,
     style: {
-      paddingTop: 8,
-      paddingBottom: 8
-    }
-  }, {
-    props: ({
-      ownerState
-    }) => !ownerState.disablePadding && ownerState.dense,
-    style: {
-      paddingTop: 4,
-      paddingBottom: 4
-    }
-  }, {
-    props: ({
-      ownerState
-    }) => !ownerState.disablePadding && !ownerState.disableGutters,
-    style: {
-      paddingLeft: 16,
-      paddingRight: 16
-    }
-  }, {
-    props: ({
-      ownerState
-    }) => !ownerState.disablePadding && !!ownerState.secondaryAction,
-    style: {
-      // Add some space to avoid collision as `ListItemSecondaryAction`
-      // is absolutely positioned.
-      paddingRight: 48
-    }
-  }, {
-    props: ({
-      ownerState
-    }) => !!ownerState.secondaryAction,
-    style: {
-      [`& > .${listItemButtonClasses.root}`]: {
-        paddingRight: 48
-      }
+      borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
+      backgroundClip: "padding-box"
     }
   }, {
     props: {
@@ -22652,70 +22594,37 @@ const ListItemRoot = styled("div", {
   }, {
     props: ({
       ownerState
-    }) => ownerState.divider,
+    }) => !ownerState.disableGutters,
     style: {
-      borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
-      backgroundClip: "padding-box"
+      paddingLeft: 16,
+      paddingRight: 16
     }
   }, {
     props: ({
       ownerState
-    }) => ownerState.button,
+    }) => ownerState.dense,
     style: {
-      transition: theme.transitions.create("background-color", {
-        duration: theme.transitions.duration.shortest
-      }),
-      "&:hover": {
-        textDecoration: "none",
-        backgroundColor: (theme.vars || theme).palette.action.hover,
-        // Reset on touch devices, it doesn't add specificity
-        "@media (hover: none)": {
-          backgroundColor: "transparent"
-        }
-      }
-    }
-  }, {
-    props: ({
-      ownerState
-    }) => ownerState.hasSecondaryAction,
-    style: {
-      // Add some space to avoid collision as `ListItemSecondaryAction`
-      // is absolutely positioned.
-      paddingRight: 48
+      paddingTop: 4,
+      paddingBottom: 4
     }
   }]
 })));
-const ListItemContainer = styled("li", {
-  name: "MuiListItem",
-  slot: "Container",
-  overridesResolver: (props, styles2) => styles2.container
-})({
-  position: "relative"
-});
-const ListItem = /* @__PURE__ */ reactExports.forwardRef(function ListItem2(inProps, ref) {
+const ListItemButton = /* @__PURE__ */ reactExports.forwardRef(function ListItemButton2(inProps, ref) {
   const props = useDefaultProps({
     props: inProps,
-    name: "MuiListItem"
+    name: "MuiListItemButton"
   });
   const {
     alignItems = "center",
-    children: childrenProp,
-    className,
-    component: componentProp,
-    components = {},
-    componentsProps = {},
-    ContainerComponent = "li",
-    ContainerProps: {
-      className: ContainerClassName,
-      ...ContainerProps
-    } = {},
+    autoFocus = false,
+    component = "div",
+    children,
     dense = false,
     disableGutters = false,
-    disablePadding = false,
     divider = false,
-    secondaryAction,
-    slotProps = {},
-    slots = {},
+    focusVisibleClassName,
+    selected = false,
+    className,
     ...other
   } = props;
   const context = reactExports.useContext(ListContext);
@@ -22725,74 +22634,35 @@ const ListItem = /* @__PURE__ */ reactExports.forwardRef(function ListItem2(inPr
     disableGutters
   }), [alignItems, context.dense, dense, disableGutters]);
   const listItemRef = reactExports.useRef(null);
-  const children = reactExports.Children.toArray(childrenProp);
-  const hasSecondaryAction = children.length && isMuiElement(children[children.length - 1], ["ListItemSecondaryAction"]);
+  useEnhancedEffect(() => {
+    if (autoFocus) {
+      if (listItemRef.current) {
+        listItemRef.current.focus();
+      }
+    }
+  }, [autoFocus]);
   const ownerState = {
     ...props,
     alignItems,
     dense: childContext.dense,
     disableGutters,
-    disablePadding,
     divider,
-    hasSecondaryAction
+    selected
   };
-  const classes = useUtilityClasses$p(ownerState);
+  const classes = useUtilityClasses$q(ownerState);
   const handleRef = useForkRef(listItemRef, ref);
-  const Root = slots.root || components.Root || ListItemRoot;
-  const rootProps = slotProps.root || componentsProps.root || {};
-  const componentProps = {
-    className: clsx(classes.root, rootProps.className, className),
-    ...other
-  };
-  let Component = componentProp || "li";
-  if (hasSecondaryAction) {
-    Component = !componentProps.component && !componentProp ? "div" : Component;
-    if (ContainerComponent === "li") {
-      if (Component === "li") {
-        Component = "div";
-      } else if (componentProps.component === "li") {
-        componentProps.component = "div";
-      }
-    }
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
-      value: childContext,
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ListItemContainer, {
-        as: ContainerComponent,
-        className: clsx(classes.container, ContainerClassName),
-        ref: handleRef,
-        ownerState,
-        ...ContainerProps,
-        children: [/* @__PURE__ */ jsxRuntimeExports.jsx(Root, {
-          ...rootProps,
-          ...!isHostComponent(Root) && {
-            as: Component,
-            ownerState: {
-              ...ownerState,
-              ...rootProps.ownerState
-            }
-          },
-          ...componentProps,
-          children
-        }), children.pop()]
-      })
-    });
-  }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
     value: childContext,
-    children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Root, {
-      ...rootProps,
-      as: Component,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemButtonRoot, {
       ref: handleRef,
-      ...!isHostComponent(Root) && {
-        ownerState: {
-          ...ownerState,
-          ...rootProps.ownerState
-        }
-      },
-      ...componentProps,
-      children: [children, secondaryAction && /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemSecondaryAction, {
-        children: secondaryAction
-      })]
+      href: other.href || other.to,
+      component: (other.href || other.to) && component === "div" ? "button" : component,
+      focusVisibleClassName: clsx(classes.focusVisible, focusVisibleClassName),
+      ownerState,
+      className: clsx(classes.root, className),
+      ...other,
+      classes,
+      children
     })
   });
 });
@@ -22800,7 +22670,7 @@ function getListItemIconUtilityClass(slot) {
   return generateUtilityClass("MuiListItemIcon", slot);
 }
 const listItemIconClasses = generateUtilityClasses("MuiListItemIcon", ["root", "alignItemsFlexStart"]);
-const useUtilityClasses$o = (ownerState) => {
+const useUtilityClasses$p = (ownerState) => {
   const {
     alignItems,
     classes
@@ -22849,7 +22719,7 @@ const ListItemIcon = /* @__PURE__ */ reactExports.forwardRef(function ListItemIc
     ...props,
     alignItems: context.alignItems
   };
-  const classes = useUtilityClasses$o(ownerState);
+  const classes = useUtilityClasses$p(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemIconRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -22861,7 +22731,7 @@ function getListItemTextUtilityClass(slot) {
   return generateUtilityClass("MuiListItemText", slot);
 }
 const listItemTextClasses = generateUtilityClasses("MuiListItemText", ["root", "multiline", "dense", "inset", "primary", "secondary"]);
-const useUtilityClasses$n = (ownerState) => {
+const useUtilityClasses$o = (ownerState) => {
   const {
     classes,
     inset,
@@ -22946,7 +22816,7 @@ const ListItemText = /* @__PURE__ */ reactExports.forwardRef(function ListItemTe
     secondary: !!secondary,
     dense
   };
-  const classes = useUtilityClasses$n(ownerState);
+  const classes = useUtilityClasses$o(ownerState);
   if (primary != null && primary.type !== Typography && !disableTypography) {
     primary = /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, {
       variant: dense ? "body2" : "body1",
@@ -23198,7 +23068,7 @@ function getTransformOriginValue(transformOrigin) {
 function resolveAnchorEl(anchorEl) {
   return typeof anchorEl === "function" ? anchorEl() : anchorEl;
 }
-const useUtilityClasses$m = (ownerState) => {
+const useUtilityClasses$n = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -23280,7 +23150,7 @@ const Popover = /* @__PURE__ */ reactExports.forwardRef(function Popover2(inProp
     transitionDuration: transitionDurationProp,
     TransitionProps
   };
-  const classes = useUtilityClasses$m(ownerState);
+  const classes = useUtilityClasses$n(ownerState);
   const getAnchorOffset = reactExports.useCallback(() => {
     if (anchorReference === "anchorPosition") {
       return anchorPosition;
@@ -23478,7 +23348,7 @@ const LTR_ORIGIN = {
   vertical: "top",
   horizontal: "left"
 };
-const useUtilityClasses$l = (ownerState) => {
+const useUtilityClasses$m = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -23552,7 +23422,7 @@ const Menu = /* @__PURE__ */ reactExports.forwardRef(function Menu2(inProps, ref
     TransitionProps,
     variant
   };
-  const classes = useUtilityClasses$l(ownerState);
+  const classes = useUtilityClasses$m(ownerState);
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
   const menuListActionsRef = reactExports.useRef(null);
   const handleEntering = (element, isAppearing) => {
@@ -23647,7 +23517,7 @@ const overridesResolver = (props, styles2) => {
   } = props;
   return [styles2.root, ownerState.dense && styles2.dense, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters];
 };
-const useUtilityClasses$k = (ownerState) => {
+const useUtilityClasses$l = (ownerState) => {
   const {
     disabled,
     dense,
@@ -23805,7 +23675,7 @@ const MenuItem = /* @__PURE__ */ reactExports.forwardRef(function MenuItem2(inPr
     divider,
     disableGutters
   };
-  const classes = useUtilityClasses$k(props);
+  const classes = useUtilityClasses$l(props);
   const handleRef = useForkRef(menuItemRef, ref);
   let tabIndex;
   if (!props.disabled) {
@@ -23830,7 +23700,7 @@ function getNativeSelectUtilityClasses(slot) {
   return generateUtilityClass("MuiNativeSelect", slot);
 }
 const nativeSelectClasses = generateUtilityClasses("MuiNativeSelect", ["root", "select", "multiple", "filled", "outlined", "standard", "disabled", "icon", "iconOpen", "iconFilled", "iconOutlined", "iconStandard", "nativeInput", "error"]);
-const useUtilityClasses$j = (ownerState) => {
+const useUtilityClasses$k = (ownerState) => {
   const {
     classes,
     variant,
@@ -23985,7 +23855,7 @@ const NativeSelectInput = /* @__PURE__ */ reactExports.forwardRef(function Nativ
     variant,
     error
   };
-  const classes = useUtilityClasses$j(ownerState);
+  const classes = useUtilityClasses$k(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
     children: [/* @__PURE__ */ jsxRuntimeExports.jsx(NativeSelectSelect, {
       ownerState,
@@ -24117,7 +23987,7 @@ function NotchedOutline(props) {
     })
   });
 }
-const useUtilityClasses$i = (ownerState) => {
+const useUtilityClasses$j = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -24296,7 +24166,7 @@ const OutlinedInput = /* @__PURE__ */ reactExports.forwardRef(function OutlinedI
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$i(props);
+  const classes = useUtilityClasses$j(props);
   const muiFormControl = useFormControl();
   const fcs = formControlState({
     props,
@@ -24425,7 +24295,7 @@ function areEqualValues(a, b2) {
 function isEmpty(display) {
   return display == null || typeof display === "string" && !display.trim();
 }
-const useUtilityClasses$h = (ownerState) => {
+const useUtilityClasses$i = (ownerState) => {
   const {
     classes,
     variant,
@@ -24727,7 +24597,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     open,
     error
   };
-  const classes = useUtilityClasses$h(ownerState);
+  const classes = useUtilityClasses$i(ownerState);
   const paperProps = {
     ...MenuProps.PaperProps,
     ...(_a = MenuProps.slotProps) == null ? void 0 : _a.paper
@@ -24814,7 +24684,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     })]
   });
 });
-const useUtilityClasses$g = (ownerState) => {
+const useUtilityClasses$h = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -24871,7 +24741,7 @@ const Select = /* @__PURE__ */ reactExports.forwardRef(function Select2(inProps,
     variant,
     classes: classesProp
   };
-  const classes = useUtilityClasses$g(ownerState);
+  const classes = useUtilityClasses$h(ownerState);
   const {
     root,
     ...restOfClasses
@@ -25045,7 +24915,7 @@ function getSnackbarContentUtilityClass(slot) {
   return generateUtilityClass("MuiSnackbarContent", slot);
 }
 generateUtilityClasses("MuiSnackbarContent", ["root", "message", "action"]);
-const useUtilityClasses$f = (ownerState) => {
+const useUtilityClasses$g = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -25112,7 +24982,7 @@ const SnackbarContent = /* @__PURE__ */ reactExports.forwardRef(function Snackba
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$f(ownerState);
+  const classes = useUtilityClasses$g(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SnackbarContentRoot, {
     role,
     square: true,
@@ -25136,7 +25006,7 @@ function getSnackbarUtilityClass(slot) {
   return generateUtilityClass("MuiSnackbar", slot);
 }
 generateUtilityClasses("MuiSnackbar", ["root", "anchorOriginTopCenter", "anchorOriginBottomCenter", "anchorOriginTopRight", "anchorOriginBottomRight", "anchorOriginTopLeft", "anchorOriginBottomLeft"]);
-const useUtilityClasses$e = (ownerState) => {
+const useUtilityClasses$f = (ownerState) => {
   const {
     classes,
     anchorOrigin
@@ -25273,7 +25143,7 @@ const Snackbar = /* @__PURE__ */ reactExports.forwardRef(function Snackbar2(inPr
     TransitionComponent,
     transitionDuration
   };
-  const classes = useUtilityClasses$e(ownerState);
+  const classes = useUtilityClasses$f(ownerState);
   const {
     getRootProps,
     onClickAway
@@ -25335,7 +25205,7 @@ const tooltipClasses = generateUtilityClasses("MuiTooltip", ["popper", "popperIn
 function round(value) {
   return Math.round(value * 1e5) / 1e5;
 }
-const useUtilityClasses$d = (ownerState) => {
+const useUtilityClasses$e = (ownerState) => {
   const {
     classes,
     disableInteractive,
@@ -25872,7 +25742,7 @@ const Tooltip = /* @__PURE__ */ reactExports.forwardRef(function Tooltip2(inProp
     PopperComponentProp,
     touch: ignoreNonTouchEvents.current
   };
-  const classes = useUtilityClasses$d(ownerState);
+  const classes = useUtilityClasses$e(ownerState);
   const PopperComponent = slots.popper ?? components.Popper ?? TooltipPopper;
   const TransitionComponent = slots.transition ?? components.Transition ?? TransitionComponentProp ?? Grow;
   const TooltipComponent = slots.tooltip ?? components.Tooltip ?? TooltipTooltip;
@@ -25936,7 +25806,7 @@ function getTabUtilityClass(slot) {
   return generateUtilityClass("MuiTab", slot);
 }
 const tabClasses = generateUtilityClasses("MuiTab", ["root", "labelIcon", "textColorInherit", "textColorPrimary", "textColorSecondary", "selected", "disabled", "fullWidth", "wrapped", "iconWrapper", "icon"]);
-const useUtilityClasses$c = (ownerState) => {
+const useUtilityClasses$d = (ownerState) => {
   const {
     classes,
     textColor,
@@ -26144,7 +26014,7 @@ const Tab = /* @__PURE__ */ reactExports.forwardRef(function Tab2(inProps, ref) 
     textColor,
     wrapped
   };
-  const classes = useUtilityClasses$c(ownerState);
+  const classes = useUtilityClasses$d(ownerState);
   const icon = iconProp && label && /* @__PURE__ */ reactExports.isValidElement(iconProp) ? /* @__PURE__ */ reactExports.cloneElement(iconProp, {
     className: clsx(classes.icon, iconProp.props.className)
   }) : iconProp;
@@ -26188,7 +26058,7 @@ function getTableUtilityClass(slot) {
   return generateUtilityClass("MuiTable", slot);
 }
 generateUtilityClasses("MuiTable", ["root", "stickyHeader"]);
-const useUtilityClasses$b = (ownerState) => {
+const useUtilityClasses$c = (ownerState) => {
   const {
     classes,
     stickyHeader
@@ -26230,7 +26100,7 @@ const TableRoot = styled("table", {
     }
   }]
 })));
-const defaultComponent$3 = "table";
+const defaultComponent$4 = "table";
 const Table = /* @__PURE__ */ reactExports.forwardRef(function Table2(inProps, ref) {
   const props = useDefaultProps({
     props: inProps,
@@ -26238,7 +26108,7 @@ const Table = /* @__PURE__ */ reactExports.forwardRef(function Table2(inProps, r
   });
   const {
     className,
-    component = defaultComponent$3,
+    component = defaultComponent$4,
     padding: padding2 = "normal",
     size = "medium",
     stickyHeader = false,
@@ -26251,7 +26121,7 @@ const Table = /* @__PURE__ */ reactExports.forwardRef(function Table2(inProps, r
     size,
     stickyHeader
   };
-  const classes = useUtilityClasses$b(ownerState);
+  const classes = useUtilityClasses$c(ownerState);
   const table = reactExports.useMemo(() => ({
     padding: padding2,
     size,
@@ -26261,7 +26131,7 @@ const Table = /* @__PURE__ */ reactExports.forwardRef(function Table2(inProps, r
     value: table,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableRoot, {
       as: component,
-      role: component === defaultComponent$3 ? null : "table",
+      role: component === defaultComponent$4 ? null : "table",
       ref,
       className: clsx(classes.root, className),
       ownerState,
@@ -26274,7 +26144,7 @@ function getTableBodyUtilityClass(slot) {
   return generateUtilityClass("MuiTableBody", slot);
 }
 generateUtilityClasses("MuiTableBody", ["root"]);
-const useUtilityClasses$a = (ownerState) => {
+const useUtilityClasses$b = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -26290,10 +26160,10 @@ const TableBodyRoot = styled("tbody", {
 })({
   display: "table-row-group"
 });
-const tablelvl2$1 = {
+const tablelvl2$2 = {
   variant: "body"
 };
-const defaultComponent$2 = "tbody";
+const defaultComponent$3 = "tbody";
 const TableBody = /* @__PURE__ */ reactExports.forwardRef(function TableBody2(inProps, ref) {
   const props = useDefaultProps({
     props: inProps,
@@ -26301,21 +26171,21 @@ const TableBody = /* @__PURE__ */ reactExports.forwardRef(function TableBody2(in
   });
   const {
     className,
-    component = defaultComponent$2,
+    component = defaultComponent$3,
     ...other
   } = props;
   const ownerState = {
     ...props,
     component
   };
-  const classes = useUtilityClasses$a(ownerState);
+  const classes = useUtilityClasses$b(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Tablelvl2Context.Provider, {
-    value: tablelvl2$1,
+    value: tablelvl2$2,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableBodyRoot, {
       className: clsx(classes.root, className),
       as: component,
       ref,
-      role: component === defaultComponent$2 ? null : "rowgroup",
+      role: component === defaultComponent$3 ? null : "rowgroup",
       ownerState,
       ...other
     })
@@ -26325,7 +26195,7 @@ function getTableCellUtilityClass(slot) {
   return generateUtilityClass("MuiTableCell", slot);
 }
 const tableCellClasses = generateUtilityClasses("MuiTableCell", ["root", "head", "body", "footer", "sizeSmall", "sizeMedium", "paddingCheckbox", "paddingNone", "alignLeft", "alignCenter", "alignRight", "alignJustify", "stickyHeader"]);
-const useUtilityClasses$9 = (ownerState) => {
+const useUtilityClasses$a = (ownerState) => {
   const {
     classes,
     variant,
@@ -26499,7 +26369,7 @@ const TableCell = /* @__PURE__ */ reactExports.forwardRef(function TableCell2(in
     stickyHeader: variant === "head" && table && table.stickyHeader,
     variant
   };
-  const classes = useUtilityClasses$9(ownerState);
+  const classes = useUtilityClasses$a(ownerState);
   let ariaSort = null;
   if (sortDirection) {
     ariaSort = sortDirection === "asc" ? "ascending" : "descending";
@@ -26518,7 +26388,7 @@ function getTableContainerUtilityClass(slot) {
   return generateUtilityClass("MuiTableContainer", slot);
 }
 generateUtilityClasses("MuiTableContainer", ["root"]);
-const useUtilityClasses$8 = (ownerState) => {
+const useUtilityClasses$9 = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -26549,13 +26419,64 @@ const TableContainer = /* @__PURE__ */ reactExports.forwardRef(function TableCon
     ...props,
     component
   };
-  const classes = useUtilityClasses$8(ownerState);
+  const classes = useUtilityClasses$9(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainerRoot, {
     ref,
     as: component,
     className: clsx(classes.root, className),
     ownerState,
     ...other
+  });
+});
+function getTableFooterUtilityClass(slot) {
+  return generateUtilityClass("MuiTableFooter", slot);
+}
+generateUtilityClasses("MuiTableFooter", ["root"]);
+const useUtilityClasses$8 = (ownerState) => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root"]
+  };
+  return composeClasses(slots, getTableFooterUtilityClass, classes);
+};
+const TableFooterRoot = styled("tfoot", {
+  name: "MuiTableFooter",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})({
+  display: "table-footer-group"
+});
+const tablelvl2$1 = {
+  variant: "footer"
+};
+const defaultComponent$2 = "tfoot";
+const TableFooter = /* @__PURE__ */ reactExports.forwardRef(function TableFooter2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiTableFooter"
+  });
+  const {
+    className,
+    component = defaultComponent$2,
+    ...other
+  } = props;
+  const ownerState = {
+    ...props,
+    component
+  };
+  const classes = useUtilityClasses$8(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Tablelvl2Context.Provider, {
+    value: tablelvl2$1,
+    children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooterRoot, {
+      as: component,
+      className: clsx(classes.root, className),
+      ref,
+      role: component === defaultComponent$2 ? null : "rowgroup",
+      ownerState,
+      ...other
+    })
   });
 });
 function getTableHeadUtilityClass(slot) {
@@ -30706,7 +30627,7 @@ const CustomDialog = ({
 const TabPanel = ({ value, index, children }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { role: "tabpanel", hidden: value !== index, children: value === index && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children }) });
 };
-const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
+const ProductHistoryModal = ({ productId, openHistory, onClose, productName }) => {
   const [productHistory, setProductHistory] = reactExports.useState({ stock: [], purchase: [], sales: [] });
   const [tabIndex, setTabIndex] = reactExports.useState(0);
   reactExports.useEffect(() => {
@@ -30740,13 +30661,14 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
     {
       open: openHistory,
       handleClose: onClose,
-      title: "Історія товару",
+      title: `Історія товару ${productName}`,
       maxWidth: "xl",
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { value: tabIndex, onChange: handleTabChange, indicatorColor: "primary", textColor: "primary", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія змін" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія закупівель" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія продажів" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія продажів" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "закупівель && продажів" })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 0, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
@@ -30763,34 +30685,144 @@ const ProductHistoryModal = ({ productId, openHistory, onClose }) => {
         /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 1, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість закупівлі" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
           ] }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.purchase && productHistory.purchase.length > 0 && sortByDate(productHistory.purchase, "purchase_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price_per_item }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.supplier }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_price_per_item }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_purchase }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.total_price }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.supplier })
-          ] }, record.id)) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_total_price })
+          ] }, record.id)) }),
+          productHistory.purchase && productHistory.purchase.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Typography,
+              {
+                variant: "subtitle2",
+                children: [
+                  " ",
+                  productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)
+                ]
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle2", children: [
+              "  ",
+              productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
+            ] }) })
+          ] }) })
         ] }) }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Клієнт" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість проданих одиниць" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Клієнт" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
           ] }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.sales && productHistory.sales.length > 0 && sortByDate(productHistory.sales, "sale_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.sale_date).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price_per_item }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.total_price }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.customer }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_price_per_item }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_sold }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.customer })
-          ] }, record.id)) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_total_price })
+          ] }, record.id)) }),
+          productHistory.sales && productHistory.sales.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                variant: "subtitle2",
+                children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Typography,
+              {
+                variant: "subtitle2",
+                children: [
+                  " ",
+                  productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
+                ]
+              }
+            ) })
+          ] }) })
+        ] }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Контрагент" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory && productHistory.purchase && productHistory.sales && // Об'єднання та сортування закупівель і продажів
+          [
+            ...productHistory.purchase.map((record) => ({ ...record, type: "purchase" })),
+            ...productHistory.sales.map((record) => ({ ...record, type: "sale" }))
+          ].sort((a, b2) => {
+            const dateA = a.purchase_date ? new Date(a.purchase_date).getTime() : 0;
+            const dateB = b2.purchase_date ? new Date(b2.purchase_date).getTime() : 0;
+            const dateSaleA = a.sale_date ? new Date(a.sale_date).getTime() : 0;
+            const dateSaleB = b2.sale_date ? new Date(b2.sale_date).getTime() : 0;
+            const finalDateA = dateA || dateSaleA;
+            const finalDateB = dateB || dateSaleB;
+            return finalDateA - finalDateB;
+          }).map((record, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            TableRow,
+            {
+              style: { backgroundColor: record.type === "sale" ? "#d1e7dd" : "#f8d7da" },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date || record.sale_date).toLocaleString() }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? "Продаж" : "Закупка" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.customer : record.supplier }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_price_per_item }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.quantity_sold : record.quantity_purchase }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_total_price })
+              ]
+            },
+            index
+          )) }),
+          productHistory && productHistory.purchase && productHistory.sales && /* @__PURE__ */ jsxRuntimeExports.jsxs(TableFooter, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість продажів:" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
+                }
+              ) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість закупок:" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
+                }
+              ) })
+            ] })
+          ] })
         ] }) }) })
       ] })
     }
@@ -30804,276 +30836,360 @@ const fakeResponse = {
   data: [
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 1,
       "name": "Палочка Воландеморта",
-      "price_per_item": "507.6",
-      "quantity": 1,
+      "purchase_price_per_item": 507.6,
+      "purchase_total_price": 507.6,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 1,
         "name": "skladoptom.com.ua"
-      },
-      "total_price": "507.6"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 2,
       "name": "Палочка Грюма",
-      "price_per_item": "507.6",
-      "quantity": 1,
+      "purchase_price_per_item": 507.6,
+      "purchase_total_price": 507.6,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 1,
         "name": "skladoptom.com.ua"
-      },
-      "total_price": "507.6"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 3,
       "name": "Брелок с гербом Пуффендуя",
-      "price_per_item": "65.49",
-      "quantity": 1,
+      "purchase_price_per_item": 65.49,
+      "purchase_total_price": 65.49,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 1,
         "name": "skladoptom.com.ua"
-      },
-      "total_price": "65.49"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 4,
       "name": "Брелок с гербом Когтевран",
-      "price_per_item": "86",
-      "quantity": 1,
+      "purchase_price_per_item": 86,
+      "purchase_total_price": 86,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "86"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 5,
       "name": "Брелок Дары Смерти",
-      "price_per_item": "81",
-      "quantity": 1,
+      "purchase_price_per_item": 81,
+      "purchase_total_price": 81,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "81"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 6,
       "name": "Брелок Грифиндор круглый",
-      "price_per_item": "60",
-      "quantity": 1,
+      "purchase_price_per_item": 333.33333333333337,
+      "purchase_total_price": 1e3,
+      "quantity": 0,
+      "selling_price_per_item": 500,
+      "selling_quantity": 3,
+      "selling_total_price": 500,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "60"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 7,
       "name": "Брелок Слизерин круглый",
-      "price_per_item": "60",
-      "quantity": 1,
+      "purchase_price_per_item": 60,
+      "purchase_total_price": 60,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "60"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 8,
       "name": "Брелок Когтевран круглый",
-      "price_per_item": "60",
-      "quantity": 1,
+      "purchase_price_per_item": 60,
+      "purchase_total_price": 60,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "60"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 9,
       "name": "Брелок Пуфендуй круглый",
-      "price_per_item": "60",
-      "quantity": 1,
+      "purchase_price_per_item": 60,
+      "purchase_total_price": 60,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "60"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 10,
       "name": "Брелок Хогвартс круглый",
-      "price_per_item": "0",
-      "quantity": 1,
+      "purchase_price_per_item": 0,
+      "purchase_total_price": 0,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "0"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 11,
       "name": "Светильник Сова",
-      "price_per_item": "390",
-      "quantity": 1,
+      "purchase_price_per_item": 390,
+      "purchase_total_price": 390,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 2,
         "name": "misteria.prom.ua"
-      },
-      "total_price": "390"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 12,
       "name": "Сервиз чайный Хогвартс",
-      "price_per_item": "3800",
-      "quantity": 1,
+      "purchase_price_per_item": 3800,
+      "purchase_total_price": 3800,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 3,
         "name": "Настя @tykkinykki"
-      },
-      "total_price": "3800"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 13,
       "name": "Шарф Гриффиндор",
-      "price_per_item": "900",
-      "quantity": 1,
+      "purchase_price_per_item": 900,
+      "purchase_total_price": 900,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 4,
         "name": "Татьяна Явтуховская"
-      },
-      "total_price": "900"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 14,
       "name": "Чашка с молнией",
-      "price_per_item": "165",
-      "quantity": 1,
+      "purchase_price_per_item": 165,
+      "purchase_total_price": 165,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 5,
         "name": "starsandsky.com.ua"
-      },
-      "total_price": "165"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 15,
       "name": "Чашка с гербом Хогвартса",
-      "price_per_item": "165",
-      "quantity": 1,
+      "purchase_price_per_item": 165,
+      "purchase_total_price": 165,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 5,
         "name": "starsandsky.com.ua"
-      },
-      "total_price": "165"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 16,
       "name": "Чашка с оленем",
-      "price_per_item": "165",
-      "quantity": 1,
+      "purchase_price_per_item": 165,
+      "purchase_total_price": 165,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 5,
         "name": "starsandsky.com.ua"
-      },
-      "total_price": "165"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 17,
       "name": "Чашка с совой",
-      "price_per_item": "135",
-      "quantity": 1,
+      "purchase_price_per_item": 135,
+      "purchase_total_price": 135,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 5,
         "name": "starsandsky.com.ua"
-      },
-      "total_price": "135"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 18,
       "name": "Чашка с башней",
-      "price_per_item": "135",
-      "quantity": 1,
+      "purchase_price_per_item": 135,
+      "purchase_total_price": 135,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 5,
         "name": "starsandsky.com.ua"
-      },
-      "total_price": "135"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 19,
       "name": "Мешочки тканевые 23х17",
-      "price_per_item": "23",
-      "quantity": 4,
+      "purchase_price_per_item": 23,
+      "purchase_total_price": 92,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 6,
         "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-      },
-      "total_price": "92"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 20,
       "name": "Мешочки тканевые 13х10",
-      "price_per_item": "10",
-      "quantity": 10,
+      "purchase_price_per_item": 10,
+      "purchase_total_price": 100,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 6,
         "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-      },
-      "total_price": "100"
+      }
     },
     {
       "category_ids": [],
+      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
       "id": 21,
       "name": "Мешочки тканевые 10х8",
-      "price_per_item": "8",
-      "quantity": 15,
+      "purchase_price_per_item": 8,
+      "purchase_total_price": 120,
+      "quantity": 0,
+      "selling_price_per_item": 0,
+      "selling_quantity": 0,
+      "selling_total_price": 0,
       "supplier": {
         "contact_info": null,
         "id": 6,
         "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-      },
-      "total_price": "120"
+      }
     }
   ]
 };
@@ -31246,14 +31362,14 @@ const ProductNameField = ({ value, onChange, error }) => /* @__PURE__ */ jsxRunt
     fullWidth: true,
     margin: "normal",
     error: !!error,
-    helperText: error,
+    helperText: error ? error : "не менше 10 символів",
     inputProps: { maxLength: 100 }
   }
 );
-const PriceField = ({ value, onChange, error }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+const PriceField = ({ value, onChange, error, label = '"Ціна за 1шт (Закупівельна)"' }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
   TextField,
   {
-    label: "Ціна за 1шт",
+    label,
     type: "number",
     value,
     onChange,
@@ -31264,10 +31380,10 @@ const PriceField = ({ value, onChange, error }) => /* @__PURE__ */ jsxRuntimeExp
     inputProps: { inputMode: "decimal", pattern: "[0-9]*[.,]?[0-9]{0,2}", step: 0.01 }
   }
 );
-const TotalPriceField = ({ value }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+const TotalPriceField = ({ value, label = "Загальна сума (Закупівельна)" }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
   TextField,
   {
-    label: "Загальна сума",
+    label,
     type: "number",
     value,
     fullWidth: true,
@@ -31357,6 +31473,24 @@ function roundToDecimalPlaces(num, decimalPlaces) {
   const factor = Math.pow(10, decimalPlaces);
   return Math.round(num * factor) / factor;
 }
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+const formatDateToBack = (dateString) => {
+  const createdDate = new Date(dateString);
+  if (!isNaN(createdDate.getTime())) {
+    const formattedDate = createdDate.toISOString().slice(0, 10);
+    console.log(formattedDate);
+    return formattedDate;
+  } else {
+    console.log("Неправильний формат дати.");
+    return false;
+  }
+};
 const SupplierSelect = ({
   disabled = false,
   suppliers,
@@ -31394,12 +31528,13 @@ const AddProductModal = ({
     quantity: "",
     price_per_item: ""
   });
+  const [diffWithPrice, setDiffWithPrice] = reactExports.useState(0);
   const validateFields = () => {
     const newErrors = {
       name: newProduct.name.trim().length < 10 ? "Name must be at least 10 characters long" : "",
       supplier: newProduct.supplier_id === "" ? "Supplier is required" : "",
       quantity: newProduct.quantity < 0 ? "Quantity must be greater than or equal to 0" : "",
-      price_per_item: newProduct.price_per_item < 0 ? "Price per item must be greater than or equal to 0" : ""
+      price_per_item: newProduct.purchase_price_per_item < 0 ? "Price per item must be greater than or equal to 0" : ""
     };
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
@@ -31418,18 +31553,23 @@ const AddProductModal = ({
     }
   };
   const decrementQuantity = () => {
-    if (newProduct.quantity > 1) {
+    if (newProduct.quantity > 0) {
       setNewProduct({
         ...newProduct,
-        quantity: newProduct.quantity = 1
+        quantity: newProduct.quantity = 0
       });
     }
   };
   reactExports.useEffect(() => {
-    const totalPrice = newProduct.quantity * newProduct.price_per_item;
-    setNewProduct({ ...newProduct, total_price: roundToDecimalPlaces(totalPrice, 2) });
-  }, [newProduct.quantity, newProduct.price_per_item]);
-  const isAddButtonDisabled = newProduct.name.trim().length < 10 || !newProduct.supplier_id || newProduct.quantity <= 0;
+    const totalPrice = newProduct.quantity * newProduct.purchase_price_per_item;
+    setNewProduct({ ...newProduct, purchase_total_price: roundToDecimalPlaces(totalPrice, 2) });
+  }, [newProduct.quantity, newProduct.purchase_price_per_item]);
+  const isAddButtonDisabled = newProduct.name.trim().length < 10 || !newProduct.supplier_id || newProduct.quantity < 0;
+  reactExports.useEffect(() => {
+    if (newProduct.purchase_price_per_item && newProduct.selling_price_per_item) {
+      setDiffWithPrice(newProduct.selling_price_per_item - newProduct.purchase_price_per_item);
+    }
+  }, [newProduct.selling_price_per_item, newProduct.purchase_price_per_item]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -31459,7 +31599,7 @@ const AddProductModal = ({
             ) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               QuantityField,
               {
                 onIncrement: incrementQuantity,
@@ -31479,17 +31619,17 @@ const AddProductModal = ({
                 error: errors.quantity
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               PriceField,
               {
-                value: newProduct.price_per_item,
+                value: newProduct.purchase_price_per_item,
                 onChange: (e2) => {
                   let value = e2.target.value;
                   const regex = /^\d*\.?\d{0,2}$/;
                   if (regex.test(value) || value.endsWith(".")) {
                     setNewProduct({
                       ...newProduct,
-                      price_per_item: value === "" ? 0 : parseFloat(value)
+                      purchase_price_per_item: value === "" ? 0 : parseFloat(value)
                       // Оновлюємо
                       // значення або
                       // ставимо 0
@@ -31499,7 +31639,44 @@ const AddProductModal = ({
                 error: errors.price_per_item
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: newProduct.total_price }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: newProduct.purchase_total_price }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PriceField,
+              {
+                label: "ціна за 1шт (продаж)",
+                value: newProduct.selling_price_per_item,
+                onChange: (e2) => {
+                  let value = e2.target.value;
+                  const regex = /^\d*\.?\d{0,2}$/;
+                  if (regex.test(value) || value.endsWith(".")) {
+                    setNewProduct({
+                      ...newProduct,
+                      selling_price_per_item: value === "" ? 0 : parseFloat(value)
+                      // Оновлюємо
+                      // значення або
+                      // ставимо 0
+                    });
+                  }
+                },
+                error: errors.price_per_item
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+              "Різниця в цінах за 1шт: ",
+              diffWithPrice.toFixed(2),
+              " грн."
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              TextField,
+              {
+                label: "Дата створення",
+                type: "date",
+                value: newProduct.created_date,
+                onChange: (e2) => setNewProduct({ ...newProduct, created_date: e2.target.value }),
+                fullWidth: true,
+                margin: "normal"
+              }
+            ) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             CategoriesSelect,
@@ -31533,14 +31710,17 @@ const EditProductModal = ({
     name: "",
     supplier: "",
     quantity: "",
-    price_per_item: ""
+    price_per_item: "",
+    created_date: ""
   });
+  const [diffWithPrice, setDiffWithPrice] = reactExports.useState(0);
+  console.log("editProduct", editProduct);
   reactExports.useEffect(() => {
-    const totalPrice = editProduct.quantity * editProduct.price_per_item;
-    handleFieldChange("total_price", roundToDecimalPlaces(totalPrice, 2));
-  }, [editProduct.quantity, editProduct.price_per_item]);
+    const totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+    handleFieldChange("purchase_total_price", roundToDecimalPlaces(totalPrice, 2));
+  }, [editProduct.quantity, editProduct.purchase_price_per_item]);
   const validateFields = () => {
-    let tempErrors = { name: "", supplier: "", quantity: "", price_per_item: "" };
+    let tempErrors = { name: "", supplier: "", quantity: "", price_per_item: "", created_date: "" };
     let isValid = true;
     if (!editProduct.name.trim()) {
       tempErrors.name = "Name is required";
@@ -31559,11 +31739,15 @@ const EditProductModal = ({
       tempErrors.quantity = "Quantity cannot exceed 100,000";
       isValid = false;
     }
-    if (editProduct.price_per_item < 0) {
+    if (editProduct.purchase_price_per_item < 0) {
       tempErrors.price_per_item = "Price per item cannot be less than 0";
       isValid = false;
-    } else if (editProduct.price_per_item > 1e5) {
+    } else if (editProduct.purchase_price_per_item > 1e5) {
       tempErrors.price_per_item = "Price per item cannot exceed 100,000";
+      isValid = false;
+    }
+    if (!editProduct.created_date.trim()) {
+      tempErrors.name = "created_date is required";
       isValid = false;
     }
     setErrors(tempErrors);
@@ -31615,6 +31799,11 @@ const EditProductModal = ({
       handleFieldChange("quantity", Number(editProduct.quantity - 1));
     }
   };
+  reactExports.useEffect(() => {
+    if (editProduct.purchase_price_per_item && editProduct.selling_price_per_item) {
+      setDiffWithPrice(editProduct.selling_price_per_item - editProduct.purchase_price_per_item);
+    }
+  }, [editProduct.selling_price_per_item, editProduct.purchase_price_per_item]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -31644,7 +31833,7 @@ const EditProductModal = ({
             ) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               QuantityField,
               {
                 onIncrement: incrementQuantity,
@@ -31663,21 +31852,53 @@ const EditProductModal = ({
                 error: errors.quantity
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               PriceField,
               {
-                value: editProduct.price_per_item,
+                value: editProduct.purchase_price_per_item,
                 onChange: (e2) => {
                   let value = e2.target.value;
                   const regex = /^\d*\.?\d{0,2}$/;
                   if (regex.test(value) || value.endsWith(".")) {
-                    handleFieldChange("price_per_item", value === "" ? 0 : parseFloat(value));
+                    handleFieldChange("purchase_price_per_item", value === "" ? 0 : parseFloat(value));
                   }
                 },
                 error: errors.price_per_item
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: editProduct.total_price }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: editProduct.purchase_total_price }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PriceField,
+              {
+                label: "ціна за 1шт (продаж)",
+                value: editProduct.selling_price_per_item,
+                onChange: (e2) => {
+                  let value = e2.target.value;
+                  const regex = /^\d*\.?\d{0,2}$/;
+                  if (regex.test(value) || value.endsWith(".")) {
+                    handleFieldChange("selling_price_per_item", value === "" ? 0 : parseFloat(value));
+                  }
+                },
+                error: errors.price_per_item
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+              "Різниця в цінах за 1шт: ",
+              diffWithPrice.toFixed(2),
+              " грн."
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              TextField,
+              {
+                required: true,
+                label: "Дата створення",
+                type: "date",
+                value: editProduct.created_date ? formatDate(editProduct.created_date) : "",
+                onChange: (e2) => handleFieldChange("created_date", formatDateToBack(e2.target.value)),
+                fullWidth: true,
+                margin: "normal"
+              }
+            ) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             CategoriesSelect,
@@ -31715,8 +31936,8 @@ const PurchaseProductModal = ({
   const validateFields = () => {
     const newErrors = {
       quantity: purchaseDetails.quantity <= 0 ? "Quantity must be greater than 0" : "",
-      price_per_item: purchaseDetails.price_per_item <= 0 ? "Price per item must be greater than 0" : "",
-      total_price: purchaseDetails.total_price <= 0 ? "Total price must be greater than 0" : "",
+      price_per_item: purchaseDetails.purchase_price_per_item <= 0 ? "Price per item must be greater than 0" : "",
+      total_price: purchaseDetails.purchase_total_price <= 0 ? "Total price must be greater than 0" : "",
       supplier: purchaseDetails.supplier_id === "" ? "Supplier is required" : "",
       purchase_date: purchaseDetails.purchase_date === "" ? "Purchase date is required" : ""
     };
@@ -31729,9 +31950,9 @@ const PurchaseProductModal = ({
     }
   };
   reactExports.useEffect(() => {
-    const totalPrice = purchaseDetails.quantity * purchaseDetails.price_per_item;
-    setPurchaseDetails({ ...purchaseDetails, total_price: roundToDecimalPlaces(totalPrice, 2) });
-  }, [purchaseDetails.quantity, purchaseDetails.price_per_item]);
+    const totalPrice = purchaseDetails.quantity * purchaseDetails.purchase_price_per_item;
+    setPurchaseDetails({ ...purchaseDetails, purchase_total_price: roundToDecimalPlaces(totalPrice, 2) });
+  }, [purchaseDetails.quantity, purchaseDetails.purchase_price_per_item]);
   const incrementQuantity = () => {
     if (purchaseDetails.quantity < 1e3) {
       setPurchaseDetails({
@@ -31809,10 +32030,10 @@ const PurchaseProductModal = ({
               {
                 label: "Ціна за 1шт",
                 type: "number",
-                value: purchaseDetails.price_per_item,
+                value: purchaseDetails.purchase_price_per_item,
                 onChange: (e2) => setPurchaseDetails({
                   ...purchaseDetails,
-                  price_per_item: Number(e2.target.value)
+                  purchase_price_per_item: Number(e2.target.value)
                 }),
                 fullWidth: true,
                 margin: "normal",
@@ -31821,7 +32042,7 @@ const PurchaseProductModal = ({
                 inputProps: { min: 0, max: 1e5 }
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: purchaseDetails.total_price }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: purchaseDetails.purchase_total_price }) })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
@@ -31838,7 +32059,9 @@ const SaleProductModal = ({
   saleData,
   setSaleData,
   handleSale,
-  nameProduct
+  nameProduct,
+  purchasePricePerItem,
+  quantityOnStock
 }) => {
   const [errors, setErrors] = reactExports.useState({
     customer: "",
@@ -31850,8 +32073,8 @@ const SaleProductModal = ({
     const newErrors = {
       customer: saleData.customer.trim() === "" ? "Customer name is required" : "",
       sale_date: saleData.sale_date === "" ? "Sale date is required" : "",
-      price_per_item: saleData.price_per_item <= 0 ? "Price per item must be greater than 0" : "",
-      quantity: saleData.quantity <= 0 ? "Quantity must be greater than 0" : ""
+      price_per_item: saleData.selling_price_per_item <= 0 ? "Price per item must be greater than 0" : "",
+      quantity: saleData.quantity <= 0 || saleData.quantity > quantityOnStock ? "Quantity must be greater than 0" : ""
     };
     setErrors(newErrors);
     return Object.values(newErrors).every((error) => error === "");
@@ -31862,11 +32085,11 @@ const SaleProductModal = ({
     }
   };
   reactExports.useEffect(() => {
-    const totalPrice = saleData.quantity * saleData.price_per_item;
-    setSaleData({ ...saleData, total_price: roundToDecimalPlaces(totalPrice, 2) });
-  }, [saleData.quantity, saleData.price_per_item]);
+    const totalPrice = saleData.quantity * saleData.selling_price_per_item;
+    setSaleData({ ...saleData, selling_total_price: roundToDecimalPlaces(totalPrice, 2) });
+  }, [saleData.quantity, saleData.selling_price_per_item]);
   const incrementQuantity = () => {
-    if (saleData.quantity < 1e3) {
+    if (saleData.quantity < quantityOnStock) {
       setSaleData({
         ...saleData,
         quantity: saleData.quantity + 1
@@ -31883,7 +32106,7 @@ const SaleProductModal = ({
     }
   };
   const isSubmitDisabled = () => {
-    return saleData.customer.trim() === "" || saleData.price_per_item <= 0 || saleData.quantity <= 0;
+    return saleData.customer.trim() === "" || saleData.selling_price_per_item <= 0 || saleData.quantity <= 0 || saleData.quantity > quantityOnStock;
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
@@ -31923,36 +32146,43 @@ const SaleProductModal = ({
             ) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              QuantityField,
-              {
-                onIncrement: incrementQuantity,
-                onDecrement: decrementQuantity,
-                value: saleData.quantity,
-                onChange: (e2) => {
-                  let value = e2.target.value;
-                  value = value.replace(/[^0-9]/g, "");
-                  if (value.startsWith("0")) {
-                    value = value.replace(/^0+/, "");
-                  }
-                  if (/^\d+$/.test(value)) {
-                    setSaleData({ ...saleData, quantity: Number(value) });
-                  }
-                },
-                error: errors.quantity
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, sm: 6, md: 3, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+                " Максимальна кількість ",
+                quantityOnStock,
+                "шт"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                QuantityField,
+                {
+                  onIncrement: incrementQuantity,
+                  onDecrement: decrementQuantity,
+                  value: saleData.quantity,
+                  onChange: (e2) => {
+                    let value = e2.target.value;
+                    value = value.replace(/[^0-9]/g, "");
+                    if (value.startsWith("0")) {
+                      value = value.replace(/^0+/, "");
+                    }
+                    if (/^\d+$/.test(value)) {
+                      setSaleData({ ...saleData, quantity: Number(value) });
+                    }
+                  },
+                  error: errors.quantity
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               TextField,
               {
-                label: "Ціна за 1шт",
+                label: "Ціна за 1шт (Продаж)",
                 type: "number",
-                value: saleData.price_per_item,
+                value: saleData.selling_price_per_item,
                 onChange: (e2) => {
                   const pricePerItem = Number(e2.target.value);
                   setSaleData({
                     ...saleData,
-                    price_per_item: pricePerItem
+                    selling_price_per_item: pricePerItem
                   });
                 },
                 fullWidth: true,
@@ -31962,7 +32192,12 @@ const SaleProductModal = ({
                 inputProps: { min: 1, max: 1e5 }
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: saleData.total_price }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { label: "Загальна сума (Продаж)", value: saleData.selling_total_price }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+              "Загальна Чиста Вигода з продажу: ",
+              saleData.selling_total_price - saleData.quantity * purchasePricePerItem,
+              " грн. (з урахуванням знижки)"
+            ] }) })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
@@ -32124,15 +32359,13 @@ const SupplierFilter = ({
   )) });
 };
 const FilterComponent = ({
-  applyFilters,
   handleCategoryFilterChange,
   categories,
   handleSupplierFilterChange,
   selectedFilterCategories,
   selectedFilterSuppliers,
   suppliers,
-  setSelectedFilterCategories,
-  setSelectedFilterSuppliers
+  resetFilters
 }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
@@ -32160,11 +32393,7 @@ const FilterComponent = ({
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: () => {
-      setSelectedFilterCategories([]);
-      setSelectedFilterSuppliers([]);
-      applyFilters([], []);
-    }, children: "Очистити" })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: resetFilters, children: "Очистити" })
   ] }) });
 };
 const modalNames = [
@@ -32191,117 +32420,87 @@ const ProductCardView = ({
   handleDelete,
   handlePurchase,
   handleOpenSale,
-  handleOpenHistoryModal
+  handleOpenHistoryModal,
+  searchTerm,
+  filteredAndSearchedProducts,
+  currentPage,
+  itemsPerPage
 }) => {
-  const [searchTerm, setSearchTerm] = reactExports.useState("");
-  const [currentPage, setCurrentPage] = reactExports.useState(0);
-  const [itemsPerPage, setItemsPerPage] = reactExports.useState(10);
-  const filteredAndSearchedProducts = filteredProducts.filter(
-    (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "flex-end", spacing: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TextField,
-      {
-        label: "Пошук товару",
-        variant: "outlined",
-        fullWidth: true,
-        margin: "normal",
-        value: searchTerm,
-        onChange: (e2) => setSearchTerm(e2.target.value)
-      }
-    ) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 2, children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
-      var _a;
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-          "ID: ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Typography,
-            {
-              component: "span",
-              variant: "body1",
-              color: "textPrimary",
-              children: product.id
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-          "Постачальник: ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Typography,
-            {
-              component: "span",
-              variant: "body1",
-              color: "textPrimary",
-              children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A"
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-          "Кількість: ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Typography,
-            {
-              component: "span",
-              variant: "body1",
-              color: "textPrimary",
-              children: product.quantity
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-          "Ціна за 1 шт: ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Typography,
-            {
-              component: "span",
-              variant: "body1",
-              color: "textPrimary",
-              children: product.price_per_item
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-          "Сума: ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Typography,
-            {
-              component: "span",
-              variant: "body1",
-              color: "textPrimary",
-              children: product.total_price
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "error", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "success", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "warning", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "info", onClick: () => handleOpenHistoryModal(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
-        ] })
-      ] }) }) }, `${product.id}${index}${product.total_price}`);
-    }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TablePagination,
-      {
-        rowsPerPageOptions: [5, 10, 25],
-        component: "div",
-        count: filteredAndSearchedProducts.length,
-        rowsPerPage: itemsPerPage,
-        page: currentPage,
-        onPageChange: (event, newPage) => setCurrentPage(newPage),
-        onRowsPerPageChange: (event) => {
-          setItemsPerPage(parseInt(event.target.value, 10));
-          setCurrentPage(0);
-        }
-      }
-    )
-  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 2, children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
+    var _a;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "ID: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.id
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Постачальник: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Кількість: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.quantity
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Ціна за 1 шт: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.purchase_price_per_item
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Сума: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.purchase_total_price
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "error", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "success", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "warning", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "info", onClick: () => handleOpenHistoryModal(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
+      ] })
+    ] }) }) }, `${product.id}${index}${product.purchase_total_price}`);
+  }) }) });
 };
-const ProductTable = ({
+const ProductTable = reactExports.forwardRef(({
   filteredProducts,
   order: order2,
   orderBy,
@@ -32312,14 +32511,191 @@ const ProductTable = ({
   handleDelete,
   handlePurchase,
   handleOpenSale,
-  handleOpenHistoryModal
-}) => {
-  const [searchTerm, setSearchTerm] = reactExports.useState("");
-  const [currentPage, setCurrentPage] = reactExports.useState(0);
-  const [itemsPerPage, setItemsPerPage] = reactExports.useState(10);
-  const filteredAndSearchedProducts = filteredProducts.filter(
-    (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  handleOpenHistoryModal,
+  searchTerm,
+  filteredAndSearchedProducts,
+  itemsPerPage,
+  currentPage,
+  selectedLowProductId
+}, ref) => {
+  const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
+  const totalSumPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.purchase_total_price, 0);
+  const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_quantity, 0);
+  const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_total_price, 0);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "name",
+          direction: orderBy === "name" ? order2 : "asc",
+          onClick: () => handleSort("name"),
+          children: "Назва"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "supplier",
+          direction: orderBy === "supplier" ? order2 : "asc",
+          onClick: () => handleSort("supplier"),
+          children: "Постачальник"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "quantity",
+          direction: orderBy === "quantity" ? order2 : "asc",
+          onClick: () => handleSort("quantity"),
+          children: "Кількість"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "purchase_price_per_item",
+          direction: orderBy === "purchase_price_per_item" ? order2 : "asc",
+          onClick: () => handleSort("purchase_price_per_item"),
+          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: " Ціна за 1шт" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: "Закупка" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: "Продаж" })
+          ] })
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "purchase_total_price",
+          direction: orderBy === "purchase_total_price" ? order2 : "asc",
+          onClick: () => handleSort("purchase_total_price"),
+          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Сумма",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: "Закупка" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: "Продаж" })
+          ] })
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дія" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
+      var _a;
+      const lowQuantity = product.quantity < 5;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        TableRow,
+        {
+          ref: (el2) => {
+            if (ref && typeof ref === "function") {
+              ref(el2, index + currentPage * itemsPerPage);
+            } else if (ref && ref.current) {
+              ref.current[index + currentPage * itemsPerPage] = el2;
+            }
+          },
+          className: clsx({ "low-quantity-row": lowQuantity }, { "selected-row": selectedLowProductId === product.id }),
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              TableCell,
+              {
+                children: [
+                  " ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Typography,
+                    {
+                      className: clsx(
+                        { "low-quantity": lowQuantity }
+                      ),
+                      children: product.quantity
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_quantity })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: product.purchase_price_per_item.toFixed(2) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_price_per_item.toFixed(2) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: product.purchase_total_price.toFixed(2) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_total_price.toFixed(2) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                IconButton,
+                {
+                  color: "secondary",
+                  onClick: () => handleDelete(product.id),
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", onClick: () => {
+                handleOpenHistoryModal(product.id);
+              }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
+            ] }) })
+          ]
+        },
+        `${product.id}${index}${product.purchase_total_price}`
+      );
+    }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", color: "secondary", children: totalQuantityPurchase }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", color: "primary", children: totalQuantitySelling })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 1, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна сума:" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            color: "secondary",
+            variant: "subtitle2",
+            children: totalSumPurchase.toFixed(2)
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            color: "primary",
+            variant: "subtitle2",
+            children: totalSumSelling.toFixed(2)
+          }
+        )
+      ] })
+    ] }) })
+  ] }) }) });
+});
+const ResponsiveProductView = reactExports.forwardRef(({
+  filteredProducts,
+  order: order2,
+  orderBy,
+  handleSort,
+  sortProducts,
+  getComparator,
+  handleOpenEdit,
+  handleDelete,
+  handlePurchase,
+  handleOpenSale,
+  handleOpenHistoryModal,
+  searchTerm,
+  setSearchTerm,
+  setCurrentPage,
+  currentPage,
+  itemsPerPage,
+  setItemsPerPage,
+  filteredAndSearchedProducts,
+  selectedLowProductId
+}, ref) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "flex-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       TextField,
@@ -32332,106 +32708,47 @@ const ProductTable = ({
         onChange: (e2) => setSearchTerm(e2.target.value)
       }
     ) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "name",
-            direction: orderBy === "name" ? order2 : "asc",
-            onClick: () => handleSort("name"),
-            children: "Назва"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "supplier",
-            direction: orderBy === "supplier" ? order2 : "asc",
-            onClick: () => handleSort("supplier"),
-            children: "Постачальник"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "quantity",
-            direction: orderBy === "quantity" ? order2 : "asc",
-            onClick: () => handleSort("quantity"),
-            children: "Кількість"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "price_per_item",
-            direction: orderBy === "price_per_item" ? order2 : "asc",
-            onClick: () => handleSort("price_per_item"),
-            children: "Ціна за 1шт"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TableSortLabel,
-          {
-            active: orderBy === "total_price",
-            direction: orderBy === "total_price" ? order2 : "asc",
-            onClick: () => handleSort("total_price"),
-            children: "Сумма"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дія" })
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
-        var _a;
-        const lowQuantity = product.quantity < 5;
-        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          TableRow,
-          {
-            className: lowQuantity ? "low-quantity-row" : "",
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                TableCell,
-                {
-                  children: [
-                    " ",
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(
-                      Typography,
-                      {
-                        className: lowQuantity ? "low-quantity" : "",
-                        children: product.quantity
-                      }
-                    )
-                  ]
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.price_per_item }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.total_price }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  IconButton,
-                  {
-                    color: "secondary",
-                    onClick: () => handleDelete(product.id),
-                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
-                  }
-                ) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", onClick: () => {
-                  handleOpenHistoryModal(product.id);
-                }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
-              ] }) })
-            ]
-          },
-          `${product.id}${index}${product.total_price}`
-        );
-      }) })
-    ] }) }),
+    isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ProductCardView,
+      {
+        itemsPerPage,
+        currentPage,
+        searchTerm,
+        filteredAndSearchedProducts,
+        filteredProducts,
+        order: order2,
+        orderBy,
+        handleSort,
+        sortProducts,
+        getComparator,
+        handleOpenEdit,
+        handleDelete,
+        handlePurchase,
+        handleOpenSale,
+        handleOpenHistoryModal
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ProductTable,
+      {
+        selectedLowProductId,
+        ref,
+        itemsPerPage,
+        currentPage,
+        searchTerm,
+        filteredAndSearchedProducts,
+        filteredProducts,
+        order: order2,
+        orderBy,
+        handleSort,
+        sortProducts,
+        getComparator,
+        handleOpenEdit,
+        handleDelete,
+        handlePurchase,
+        handleOpenSale,
+        handleOpenHistoryModal
+      }
+    ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       TablePagination,
       {
@@ -32448,59 +32765,12 @@ const ProductTable = ({
       }
     )
   ] });
-};
-const ResponsiveProductView = ({
-  filteredProducts,
-  order: order2,
-  orderBy,
-  handleSort,
-  sortProducts,
-  getComparator,
-  handleOpenEdit,
-  handleDelete,
-  handlePurchase,
-  handleOpenSale,
-  handleOpenHistoryModal
-}) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-    ProductCardView,
-    {
-      filteredProducts,
-      order: order2,
-      orderBy,
-      handleSort,
-      sortProducts,
-      getComparator,
-      handleOpenEdit,
-      handleDelete,
-      handlePurchase,
-      handleOpenSale,
-      handleOpenHistoryModal
-    }
-  ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
-    ProductTable,
-    {
-      filteredProducts,
-      order: order2,
-      orderBy,
-      handleSort,
-      sortProducts,
-      getComparator,
-      handleOpenEdit,
-      handleDelete,
-      handlePurchase,
-      handleOpenSale,
-      handleOpenHistoryModal
-    }
-  ) });
-};
-const NotificationPanel = ({ lowQuantityProducts }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(List, { children: lowQuantityProducts.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ListItem, { children: [
+});
+const NotificationPanel = ({ lowQuantityProducts, handleListItemClick }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(List, { children: lowQuantityProducts.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ListItemButton, { onClick: () => handleListItemClick(product.id), children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemIcon, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationImportantIcon, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemText, { primary: product.name, secondary: `Кількість: ${product.quantity}` })
-  ] }, product.id)) });
+  ] }, product.id + product.name)) });
 };
 function App() {
   const [products, setProducts] = reactExports.useState([]);
@@ -32508,6 +32778,8 @@ function App() {
   const [filteredProducts, setFilteredProducts] = reactExports.useState([]);
   const [suppliers, setSuppliers] = reactExports.useState([]);
   const [categories, setCategories] = reactExports.useState([]);
+  const tableRowRefs = reactExports.useRef([]);
+  const [selectedLowProductId, setSelectedLowProductId] = reactExports.useState(null);
   const [loadingState, setLoadingState] = reactExports.useState({
     isLoading: true,
     error: null
@@ -32516,9 +32788,13 @@ function App() {
     name: "",
     supplier_id: "",
     quantity: 1,
-    total_price: 0,
-    price_per_item: 0,
-    category_ids: []
+    purchase_total_price: 0,
+    purchase_price_per_item: 0,
+    category_ids: [],
+    created_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+    selling_price_per_item: 0,
+    selling_total_price: 0,
+    selling_quantity: 0
   });
   const [editProduct, setEditProduct] = reactExports.useState(null);
   const [modalState, setModalState] = reactExports.useState(
@@ -32527,8 +32803,8 @@ function App() {
   const [productId, setProductId] = reactExports.useState(null);
   const [purchaseDetails, setPurchaseDetails] = reactExports.useState({
     quantity: 1,
-    price_per_item: 0,
-    total_price: 0,
+    purchase_price_per_item: 0,
+    purchase_total_price: 0,
     supplier_id: "",
     purchase_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10)
   });
@@ -32544,6 +32820,10 @@ function App() {
     severity: void 0
   });
   const [openSnackbar, setOpenSnackbar] = reactExports.useState(false);
+  const [searchTerm, setSearchTerm] = reactExports.useState("");
+  const [currentPage, setCurrentPage] = reactExports.useState(0);
+  const [itemsPerPage, setItemsPerPage] = reactExports.useState(10);
+  const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = reactExports.useState([]);
   reactExports.useEffect(() => {
     fetchProductsFunc();
     fetchSuppliersFunc();
@@ -32608,13 +32888,24 @@ function App() {
     }
   };
   const resetNewProduct = () => {
-    setNewProduct({ name: "", supplier_id: "", quantity: 1, total_price: 0, price_per_item: 0, category_ids: [] });
+    setNewProduct({
+      name: "",
+      supplier_id: "",
+      quantity: 1,
+      purchase_total_price: 0,
+      purchase_price_per_item: 0,
+      category_ids: [],
+      created_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+      selling_total_price: 0,
+      selling_price_per_item: 0,
+      selling_quantity: 0
+    });
   };
   const resetPurchaseDetails = () => {
     setPurchaseDetails({
       quantity: 1,
-      price_per_item: 0,
-      total_price: 0,
+      purchase_price_per_item: 0,
+      purchase_total_price: 0,
       supplier_id: "",
       purchase_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10)
     });
@@ -32680,8 +32971,8 @@ function App() {
     setPurchaseDetails((prevDetails) => ({
       ...prevDetails,
       supplier_id: product.supplier ? product.supplier.id : "",
-      price_per_item: product.price_per_item,
-      total_price: product.price_per_item
+      purchase_price_per_item: product.purchase_price_per_item,
+      purchase_total_price: product.purchase_price_per_item
     }));
     handleModalOpen("openPurchase");
   };
@@ -32689,8 +32980,8 @@ function App() {
     if (!editProduct) return;
     const purchaseData = {
       quantity: purchaseDetails.quantity,
-      price_per_item: purchaseDetails.price_per_item,
-      total_price: purchaseDetails.total_price,
+      purchase_price_per_item: purchaseDetails.purchase_price_per_item,
+      purchase_total_price: purchaseDetails.purchase_total_price,
       supplier_id: purchaseDetails.supplier_id,
       purchase_date: purchaseDetails.purchase_date
     };
@@ -32745,11 +33036,15 @@ function App() {
     name: product.name,
     supplier_id: product.supplier ? product.supplier.id : "",
     quantity: product.quantity,
-    total_price: product.total_price,
-    price_per_item: product.price_per_item,
-    category_ids: product.category_ids
+    purchase_total_price: product.purchase_total_price,
+    purchase_price_per_item: product.purchase_price_per_item,
+    category_ids: product.category_ids,
+    created_date: formatDate(product.created_date),
+    selling_price_per_item: product.selling_price_per_item,
+    selling_total_price: product.selling_total_price,
+    selling_quantity: product.selling_quantity
   });
-  const applyFilters = (updatedCategories, updatedSuppliers) => {
+  const applyFilters = (updatedCategories, updatedSuppliers, callback) => {
     let filtered = products;
     if (updatedCategories.length > 0) {
       filtered = filtered.filter(
@@ -32759,6 +33054,7 @@ function App() {
     if (updatedSuppliers.length > 0) {
       filtered = filtered.filter((product) => product.supplier && updatedSuppliers.includes(product.supplier.id));
     }
+    console.log(filtered);
     setFilteredProducts(filtered);
   };
   const handleCategoryFilterChange = (categoryID) => {
@@ -32804,15 +33100,19 @@ function App() {
       name: product.name,
       supplier_id: product.supplier ? product.supplier.id : "",
       quantity: product.quantity,
-      total_price: product.total_price,
-      price_per_item: product.price_per_item,
-      category_ids: product.category_ids
+      purchase_total_price: product.purchase_total_price,
+      purchase_price_per_item: product.purchase_price_per_item,
+      category_ids: product.category_ids,
+      created_date: formatDate(product.created_date),
+      selling_price_per_item: product.selling_price_per_item,
+      selling_total_price: product.selling_total_price,
+      selling_quantity: product.selling_quantity
     });
     setSaleData({
       customer: "",
       quantity: 1,
-      price_per_item: product.price_per_item,
-      total_price: product.price_per_item,
+      selling_price_per_item: product.selling_price_per_item,
+      selling_total_price: product.selling_total_price,
       sale_date: (/* @__PURE__ */ new Date()).toISOString().split("T")[0],
       productId: product.id
       // Зберігаємо ID продукту для відправки на сервер
@@ -32860,6 +33160,51 @@ function App() {
     setLowQuantityProducts(lowQuantity);
     lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen");
   }, [products]);
+  const resetFilters = () => {
+    setSelectedFilterCategories([]);
+    setSelectedFilterSuppliers([]);
+    applyFilters([], []);
+  };
+  reactExports.useEffect(() => {
+    if (filteredProducts.length > 0) {
+      const array = filteredProducts.filter(
+        (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredAndSearchedProducts(array);
+    }
+  }, [filteredProducts, searchTerm]);
+  const handleListItemClick = (productId2) => {
+    console.log("Натиснули на товар з ID:", productId2);
+    resetFilters();
+    setSelectedLowProductId(productId2);
+    setSearchTerm("");
+    console.log("Фільтри скинуті");
+    console.log(filteredAndSearchedProducts);
+    const sortedProducts = sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy));
+    const rowIndex = sortedProducts.findIndex((product) => product.id === productId2);
+    console.log("Знайдений індекс продукту:", rowIndex);
+    if (rowIndex !== -1) {
+      const targetPage = Math.floor(rowIndex / itemsPerPage);
+      console.log("Продукт знаходиться на сторінці:", targetPage);
+      setCurrentPage(targetPage);
+      setTimeout(() => {
+        const rowElement = tableRowRefs.current[rowIndex];
+        console.log("Елемент рядка таблиці:", rowElement);
+        if (rowElement) {
+          handleModalClose("openNotificationDrawer");
+          console.log("Прокрутка до елемента:", rowElement);
+          rowElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        } else {
+          console.log("Елемент не знайдено для індексу:", rowIndex);
+        }
+      }, 100);
+      setTimeout(() => {
+        setSelectedLowProductId(null);
+      }, 3e3);
+    } else {
+      console.log("Продукт з ID", productId2, "не знайдений");
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     loadingState.isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       Box,
@@ -32893,7 +33238,7 @@ function App() {
               variant: "outlined",
               color: "primary",
               onClick: handleOpenAdd,
-              children: "Додати Товар"
+              children: "Створити Товар"
             }
           ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -32902,7 +33247,7 @@ function App() {
               variant: "outlined",
               color: "primary",
               onClick: () => handleModalOpen("openCategoryCreate"),
-              children: "Додати Категорію"
+              children: "Створити Категорію"
             }
           ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -32911,7 +33256,7 @@ function App() {
               variant: "outlined",
               color: "primary",
               onClick: () => handleModalOpen("openAddSupplierOpen"),
-              children: "Додати Постачальника"
+              children: "Створити Постачальника"
             }
           ) })
         ] }) })
@@ -32927,15 +33272,24 @@ function App() {
             selectedFilterSuppliers,
             handleSupplierFilterChange,
             suppliers,
-            applyFilters,
-            setSelectedFilterCategories,
-            setSelectedFilterSuppliers
+            resetFilters
           }
         )
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         ResponsiveProductView,
         {
+          selectedLowProductId,
+          filteredAndSearchedProducts,
+          ref: (el2, index) => {
+            tableRowRefs.current[index] = el2;
+          },
+          currentPage,
+          itemsPerPage,
+          setCurrentPage,
+          setItemsPerPage,
+          searchTerm,
+          setSearchTerm,
           filteredProducts,
           order: order2,
           orderBy,
@@ -32987,6 +33341,7 @@ function App() {
     modalState.openHistory && productId && /* @__PURE__ */ jsxRuntimeExports.jsx(
       ProductHistoryModal,
       {
+        productName: products.find((product) => product.id === productId).name,
         openHistory: modalState.openHistory,
         onClose: () => handleModalClose("openHistory"),
         productId
@@ -33008,6 +33363,8 @@ function App() {
       SaleProductModal,
       {
         nameProduct: editProduct.name,
+        purchasePricePerItem: editProduct.purchase_price_per_item,
+        quantityOnStock: editProduct.quantity,
         openSale: modalState.openSale,
         handleCloseSale: () => handleModalClose("openSale"),
         saleData,
@@ -33065,7 +33422,7 @@ function App() {
         anchor: "right",
         open: modalState.openNotificationDrawer,
         onClose: () => handleModalClose("openNotificationDrawer"),
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationPanel, { lowQuantityProducts })
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationPanel, { handleListItemClick, lowQuantityProducts })
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -33073,7 +33430,7 @@ function App() {
       {
         anchorOrigin: { vertical: "top", horizontal: "right" },
         open: modalState.snackbarNotifyOpen,
-        autoHideDuration: 6e3,
+        autoHideDuration: 1e3,
         onClose: () => handleModalClose("snackbarNotifyOpen"),
         message: `${lowQuantityProducts.length} товарів з низькою кількістю`,
         action: /* @__PURE__ */ jsxRuntimeExports.jsx(
