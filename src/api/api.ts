@@ -14,276 +14,360 @@ const fakeResponse = {
     data: [
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 1,
             "name": "Палочка Воландеморта",
-            "price_per_item": "507.6",
-            "quantity": 1,
+            "purchase_price_per_item": 507.6,
+            "purchase_total_price": 507.6,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 1,
                 "name": "skladoptom.com.ua"
-            },
-            "total_price": "507.6"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 2,
             "name": "Палочка Грюма",
-            "price_per_item": "507.6",
-            "quantity": 1,
+            "purchase_price_per_item": 507.6,
+            "purchase_total_price": 507.6,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 1,
                 "name": "skladoptom.com.ua"
-            },
-            "total_price": "507.6"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 3,
             "name": "Брелок с гербом Пуффендуя",
-            "price_per_item": "65.49",
-            "quantity": 1,
+            "purchase_price_per_item": 65.49,
+            "purchase_total_price": 65.49,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 1,
                 "name": "skladoptom.com.ua"
-            },
-            "total_price": "65.49"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 4,
             "name": "Брелок с гербом Когтевран",
-            "price_per_item": "86",
-            "quantity": 1,
+            "purchase_price_per_item": 86,
+            "purchase_total_price": 86,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "86"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 5,
             "name": "Брелок Дары Смерти",
-            "price_per_item": "81",
-            "quantity": 1,
+            "purchase_price_per_item": 81,
+            "purchase_total_price": 81,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "81"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 6,
             "name": "Брелок Грифиндор круглый",
-            "price_per_item": "60",
-            "quantity": 1,
+            "purchase_price_per_item": 333.33333333333337,
+            "purchase_total_price": 1000,
+            "quantity": 0,
+            "selling_price_per_item": 500,
+            "selling_quantity": 3,
+            "selling_total_price": 500,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "60"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 7,
             "name": "Брелок Слизерин круглый",
-            "price_per_item": "60",
-            "quantity": 1,
+            "purchase_price_per_item": 60,
+            "purchase_total_price": 60,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "60"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 8,
             "name": "Брелок Когтевран круглый",
-            "price_per_item": "60",
-            "quantity": 1,
+            "purchase_price_per_item": 60,
+            "purchase_total_price": 60,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "60"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 9,
             "name": "Брелок Пуфендуй круглый",
-            "price_per_item": "60",
-            "quantity": 1,
+            "purchase_price_per_item": 60,
+            "purchase_total_price": 60,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "60"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 10,
             "name": "Брелок Хогвартс круглый",
-            "price_per_item": "0",
-            "quantity": 1,
+            "purchase_price_per_item": 0,
+            "purchase_total_price": 0,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "0"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 11,
             "name": "Светильник Сова",
-            "price_per_item": "390",
-            "quantity": 1,
+            "purchase_price_per_item": 390,
+            "purchase_total_price": 390,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 2,
                 "name": "misteria.prom.ua"
-            },
-            "total_price": "390"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 12,
             "name": "Сервиз чайный Хогвартс",
-            "price_per_item": "3800",
-            "quantity": 1,
+            "purchase_price_per_item": 3800,
+            "purchase_total_price": 3800,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 3,
                 "name": "Настя @tykkinykki"
-            },
-            "total_price": "3800"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 13,
             "name": "Шарф Гриффиндор",
-            "price_per_item": "900",
-            "quantity": 1,
+            "purchase_price_per_item": 900,
+            "purchase_total_price": 900,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 4,
                 "name": "Татьяна Явтуховская"
-            },
-            "total_price": "900"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 14,
             "name": "Чашка с молнией",
-            "price_per_item": "165",
-            "quantity": 1,
+            "purchase_price_per_item": 165,
+            "purchase_total_price": 165,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 5,
                 "name": "starsandsky.com.ua"
-            },
-            "total_price": "165"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 15,
             "name": "Чашка с гербом Хогвартса",
-            "price_per_item": "165",
-            "quantity": 1,
+            "purchase_price_per_item": 165,
+            "purchase_total_price": 165,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 5,
                 "name": "starsandsky.com.ua"
-            },
-            "total_price": "165"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 16,
             "name": "Чашка с оленем",
-            "price_per_item": "165",
-            "quantity": 1,
+            "purchase_price_per_item": 165,
+            "purchase_total_price": 165,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 5,
                 "name": "starsandsky.com.ua"
-            },
-            "total_price": "165"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 17,
             "name": "Чашка с совой",
-            "price_per_item": "135",
-            "quantity": 1,
+            "purchase_price_per_item": 135,
+            "purchase_total_price": 135,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 5,
                 "name": "starsandsky.com.ua"
-            },
-            "total_price": "135"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 18,
             "name": "Чашка с башней",
-            "price_per_item": "135",
-            "quantity": 1,
+            "purchase_price_per_item": 135,
+            "purchase_total_price": 135,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 5,
                 "name": "starsandsky.com.ua"
-            },
-            "total_price": "135"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 19,
             "name": "Мешочки тканевые 23х17",
-            "price_per_item": "23",
-            "quantity": 4,
+            "purchase_price_per_item": 23,
+            "purchase_total_price": 92,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 6,
                 "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-            },
-            "total_price": "92"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 20,
             "name": "Мешочки тканевые 13х10",
-            "price_per_item": "10",
-            "quantity": 10,
+            "purchase_price_per_item": 10,
+            "purchase_total_price": 100,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 6,
                 "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-            },
-            "total_price": "100"
+            }
         },
         {
             "category_ids": [],
+            "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
             "id": 21,
             "name": "Мешочки тканевые 10х8",
-            "price_per_item": "8",
-            "quantity": 15,
+            "purchase_price_per_item": 8,
+            "purchase_total_price": 120,
+            "quantity": 0,
+            "selling_price_per_item": 0,
+            "selling_quantity": 0,
+            "selling_total_price": 0,
             "supplier": {
                 "contact_info": null,
                 "id": 6,
                 "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-            },
-            "total_price": "120"
+            }
         }
     ]
 };
