@@ -557,10 +557,12 @@ function App() {
     }, [products]);
 
     const resetFilters = () => {
-        setSelectedFilterCategories([]);
-        setSelectedFilterSuppliers([]);
-        setPriceRange([0, Math.max(...products.map(product => product.selling_price_per_item)) || 1000]); // Скидаємо діапазон цін
-        applyFilters([], [], [0, Math.max(...products.map(product => product.selling_price_per_item)) || 1000]); // Викликаємо фільтрацію з порожніми фільтрами
+        setFilters({
+            categories: [],
+            suppliers: [],
+            priceRange: [0, Math.max(...products.map(product => product.selling_price_per_item)) || 1000]
+        })
+        // Скидаємо діапазон цін
     }
 
     useEffect(() => {
@@ -634,7 +636,9 @@ function App() {
             const prices = products.map(product => product.selling_price_per_item);
             const minPrice = Math.min(...prices);
             const maxPrice = Math.max(...prices);
-            setPriceRange([minPrice, maxPrice]); // Встановлюємо діапазон
+            setFilters(prevState => (
+                {...prevState, priceRange: [minPrice, maxPrice]}
+            ))
 
             const max = Math.max(...products.map(product => product.selling_price_per_item))
             setPriceMax(max);
