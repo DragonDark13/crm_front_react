@@ -137,7 +137,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredAndSearchedProducts.length > 0 &&
+                        {filteredAndSearchedProducts.length >= 0 &&
                         sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
                             .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
                             .map((product: IProduct, index) => {

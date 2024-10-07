@@ -65,6 +65,7 @@ function App() {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
+    const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
 
 
     const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
@@ -81,7 +82,7 @@ function App() {
         created_date: new Date().toISOString().slice(0, 10),
         selling_price_per_item: 0.00,
         selling_total_price: 0.00,
-        selling_quantity:0,
+        selling_quantity: 0,
     });
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
 
@@ -201,12 +202,13 @@ function App() {
             created_date: new Date().toISOString().slice(0, 10),
             selling_total_price: 0.00,
             selling_price_per_item: 0.00,
-            selling_quantity:0,
+            selling_quantity: 0,
 
         });
     };
 
     const resetPurchaseDetails = () => {
+        setEditProduct(null)
         setPurchaseDetails({
             quantity: 1,
             purchase_price_per_item: 0,
@@ -222,6 +224,7 @@ function App() {
     };
 
     const resetSaleData = () => {
+        setEditProduct(null)
         setSaleData(null);
     };
 
@@ -371,42 +374,76 @@ function App() {
         selling_quantity: product.selling_quantity,
     });
 
-    const applyFilters = (updatedCategories: number[], updatedSuppliers: number[], callback?) => {
+    // Стейт для фільтрів
+    const [filters, setFilters] = useState({
+        categories: [] as number[],
+        suppliers: [] as number[],
+        priceRange: [0, 1000] as [number, number],
+    });
+
+// Функція для застосування фільтрів
+    const applyFilters = (callback?) => {
         let filtered = products;
 
-        // Filter by categories
-        if (updatedCategories.length > 0) {
+        const {categories, suppliers, priceRange} = filters;
+
+        // Фільтр за категоріями
+        if (categories.length > 0) {
             filtered = filtered.filter(product =>
-                product.category_ids.some(categoryId => updatedCategories.includes(categoryId))
+                product.category_ids.some(categoryId => categories.includes(categoryId))
             );
         }
 
-        // Filter by suppliers
-        if (updatedSuppliers.length > 0) {
-            filtered = filtered.filter(product => product.supplier && updatedSuppliers.includes(product.supplier.id));
+        // Фільтр за постачальниками
+        if (suppliers.length > 0) {
+            filtered = filtered.filter(product => product.supplier && suppliers.includes(product.supplier.id));
         }
-        console.log(filtered);
-        setFilteredProducts(filtered);
-        if (callback) callback();
+
+        // Фільтр за ціновим діапазоном
+        filtered = filtered.filter(product =>
+            product.selling_price_per_item >= priceRange[0] && product.selling_price_per_item <= priceRange[1]
+        );
+
+        setFilteredProducts(filtered); // Оновлюємо відфільтровані продукти
+        if (callback) callback(); // Викликаємо callback, якщо він переданий
     };
 
+// Загальний обробник змін фільтрів
+    const handleFilterChange = (filterType: 'categories' | 'suppliers' | 'priceRange', newValue) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [filterType]: newValue,
+        }));
+    };
+
+// Обробник зміни категорій
     const handleCategoryFilterChange = (categoryID: number) => {
-        const updatedCategories = toggleFilter(selectedFilterCategories, categoryID);
-        setSelectedFilterCategories(updatedCategories);
-        applyFilters(updatedCategories, selectedFilterSuppliers);
+        const updatedCategories = toggleFilter(filters.categories, categoryID);
+        handleFilterChange('categories', updatedCategories);
     };
 
+// Обробник зміни постачальників
     const handleSupplierFilterChange = (supplierID: number) => {
-        const updatedSuppliers = toggleFilter(selectedFilterSuppliers, supplierID);
-        setSelectedFilterSuppliers(updatedSuppliers);
-        applyFilters(selectedFilterCategories, updatedSuppliers);
+        const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
+        handleFilterChange('suppliers', updatedSuppliers);
     };
 
+// Обробник зміни діапазону цін
+    const handlePriceRangeChange = (event, newValue: [number, number]) => {
+        handleFilterChange('priceRange', newValue);
+    };
+
+// Функція для toggle категорій і постачальників
     const toggleFilter = (currentFilters: number[], id: number) => {
         return currentFilters.includes(id)
             ? currentFilters.filter(filterId => filterId !== id)
             : [...currentFilters, id];
     };
+
+// Використовуємо useEffect, щоб автоматично застосовувати фільтри при зміні стейту
+    useEffect(() => {
+        applyFilters();
+    }, [filters]);
 
     const handleSort = (property: keyof IProduct) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -519,20 +556,11 @@ function App() {
         lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
     }, [products]);
 
-    const resetFiltersAndOrderAndSearch = () => {
-        // Скидання фільтрів
-        setOrderBy('name'); // Скидання сортування за ім'ям
-        setOrder('asc'); // Скидання сортування
-        setSearchTerm(''); // Скидання пошуку
-        setSelectedFilterCategories([]);
-        setSelectedFilterSuppliers([]);
-        applyFilters([], []);
-    };
-
     const resetFilters = () => {
         setSelectedFilterCategories([]);
         setSelectedFilterSuppliers([]);
-        applyFilters([], []);
+        setPriceRange([0, Math.max(...products.map(product => product.selling_price_per_item)) || 1000]); // Скидаємо діапазон цін
+        applyFilters([], [], [0, Math.max(...products.map(product => product.selling_price_per_item)) || 1000]); // Викликаємо фільтрацію з порожніми фільтрами
     }
 
     useEffect(() => {
@@ -541,6 +569,8 @@ function App() {
                 product.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setFilteredAndSearchedProducts(array)
+        } else {
+            setFilteredAndSearchedProducts([])
         }
 
     }, [filteredProducts, searchTerm]);
@@ -595,6 +625,26 @@ function App() {
             console.log("Продукт з ID", productId, "не знайдений");
         }
     };
+    const [priceMax, setPriceMax] = useState(0)
+
+
+    // Коли завантажуються продукти, обчислімо мінімальну і максимальну ціну
+    useEffect(() => {
+        if (products.length > 0) {
+            const prices = products.map(product => product.selling_price_per_item);
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            setPriceRange([minPrice, maxPrice]); // Встановлюємо діапазон
+
+            const max = Math.max(...products.map(product => product.selling_price_per_item))
+            setPriceMax(max);
+
+        }
+
+    }, [products]);
+
+// Обробник для зміни слайдера
+
 
     return (
         <React.Fragment>
@@ -627,7 +677,7 @@ function App() {
                                         <Button variant={"outlined"}
                                                 color={"primary"}
                                                 onClick={handleOpenAdd}>
-                                            Створити Товар
+                                            Купити Новий Товар
                                         </Button>
                                     </Grid>
                                     <Grid>
@@ -652,10 +702,14 @@ function App() {
                                 Закрити
                             </Button>
                             <FilterComponent
-                                selectedFilterCategories={selectedFilterCategories}
+                                filterArrayLength={filteredProducts.length}
+                                handlePriceRangeChange={handlePriceRangeChange}
+                                priceRange={filters.priceRange}
+                                priceMax={priceMax}
+                                selectedFilterCategories={filters.categories}
                                 handleCategoryFilterChange={handleCategoryFilterChange}
                                 categories={categories}
-                                selectedFilterSuppliers={selectedFilterSuppliers}
+                                selectedFilterSuppliers={filters.suppliers}
                                 handleSupplierFilterChange={handleSupplierFilterChange}
                                 suppliers={suppliers}
                                 resetFilters={resetFilters}/>

@@ -1,7 +1,8 @@
-import {Button, Grid} from "@mui/material";
+import {Button, Grid, Slider, Typography} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import {ICategory, ISupplier} from "../../utils/types";
+import {ChangeEvent} from "react";
 
 //TODO фільтр по ціні
 
@@ -14,6 +15,11 @@ interface IFilterComponentProps {
     handleSupplierFilterChange: (supplierID: number) => void;
     suppliers: ISupplier[]; // TODO: create type interface
     resetFilters: () => void;
+    priceRange: number[];
+    handlePriceRangeChange: (event: ChangeEvent<unknown>, newValue: number[]) => void;
+    priceMax: number
+    filterArrayLength: number;
+
 }
 
 const FilterComponent = ({
@@ -24,7 +30,11 @@ const FilterComponent = ({
                              selectedFilterCategories,
                              selectedFilterSuppliers,
                              suppliers,
-                             resetFilters
+                             resetFilters,
+                             handlePriceRangeChange,
+                             priceRange,
+                             priceMax,
+                             filterArrayLength
                          }: IFilterComponentProps) => {
     return (
         <Grid container>
@@ -48,7 +58,21 @@ const FilterComponent = ({
                         />
                     </div>
 
+                    <Typography gutterBottom>Фільтрувати по ціні</Typography>
+                    <Slider
+                        value={priceRange}
+                        onChange={handlePriceRangeChange}
+                        valueLabelDisplay="auto"
+                        min={0}
+                        max={priceMax} // Максимальна ціна
+                        step={10} // Крок
+                    />
+
                 </div>
+                <Typography>
+
+                    Знайдено {filterArrayLength}
+                </Typography>
                 <Button variant={"contained"} onClick={resetFilters}>
                     Очистити
                 </Button>
