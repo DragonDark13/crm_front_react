@@ -4,11 +4,10 @@ import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import {ICategory, IProduct, IStateFilters, ISupplier} from "../../../utils/types";
 import React, {ChangeEvent, useEffect, useState} from "react";
 
-//TODO фільтр по ціні
 
 interface IFilterComponentProps {
-    categories: ICategory[]; // TODO: create type interface
-    suppliers: ISupplier[]; // TODO: create type interface
+    categories: ICategory[];
+    suppliers: ISupplier[];
     resetFilters: () => void;
     filterArrayLength: number;
     products: IProduct[];
