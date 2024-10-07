@@ -6,14 +6,14 @@ import {
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 
-import ProductNameField from "../FormComponents/ProductNameField";
-import PriceField from "../FormComponents/PriceField";
-import TotalPriceField from "../FormComponents/TotalPriceField";
-import QuantityField from "../FormComponents/QuantityField";
-import CategoriesSelect from "../FormComponents/CategoriesSelect";
-import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../utils/function";
-import SupplierSelect from "../FormComponents/SupplierSelect";
-import {ICategory, IEditProduct, ISupplier} from "../../utils/types";
+import ProductNameField from "../../FormComponents/ProductNameField";
+import PriceField from "../../FormComponents/PriceField";
+import TotalPriceField from "../../FormComponents/TotalPriceField";
+import QuantityField from "../../FormComponents/QuantityField";
+import CategoriesSelect from "../../FormComponents/CategoriesSelect";
+import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../utils/function";
+import SupplierSelect from "../../FormComponents/SupplierSelect";
+import {ICategory, IEditProduct, ISupplier} from "../../../utils/types";
 
 interface IEditProductModalProps {
     openEdit: boolean;

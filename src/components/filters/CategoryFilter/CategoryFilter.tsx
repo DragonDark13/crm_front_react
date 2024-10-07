@@ -1,6 +1,6 @@
 import React from 'react';
 import {Checkbox, FormControlLabel, FormGroup} from '@mui/material';
-import {ICategory} from "../../utils/types";
+import {ICategory} from "../../../utils/types";
 //TODO Зробити фільтр сбоку
 
 interface ICategoryFilterProps {

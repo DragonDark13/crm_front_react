@@ -98,3 +98,9 @@ export interface INotificationPanel {
     handleListItemClick: (arg: number) => void
 }
 
+export interface IConfirmDeleteModal {
+    openConfirmDeleteModal: boolean;
+    handleCloseDeleteModal: () => void;
+    selectedDeleteModalProductId: number;
+    handleDelete: () => void;
+}

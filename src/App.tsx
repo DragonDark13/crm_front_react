@@ -18,7 +18,7 @@ import {
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 import CloseIcon from '@mui/icons-material/Close';
 
-import ProductHistoryModal from "./components/ProductHistoryModal/ProductHistoryModal";
+import ProductHistoryModal from "./components/dialogs/ProductHistoryModal/ProductHistoryModal";
 import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
 
 //TODO add handle error
@@ -35,13 +35,13 @@ import {
     fetchProducts,
     updateProduct
 } from "./api/api";
-import AddProductModal from "./components/AddProductModal/AddProductModal";
-import EditProductModal from "./components/EditProductModal/EditProductModal";
-import PurchaseProductModal from "./components/PurchaseProductModal/PurchaseProductModal";
-import SaleProductModal from "./components/SaleProductModal/SaleProductModal";
-import CreateNewCategoryModal from "./components/CreateNewCategoryModal/CreateNewCategoryModal";
-import AddSupplierModal from "./components/AddSupplierModal/AddSupplierModal";
-import FilterComponent from "./components/FilterComponent/FilterComponent";
+import AddProductModal from "./components/dialogs/AddProductModal/AddProductModal";
+import EditProductModal from "./components/dialogs/EditProductModal/EditProductModal";
+import PurchaseProductModal from "./components/dialogs/PurchaseProductModal/PurchaseProductModal";
+import SaleProductModal from "./components/dialogs/SaleProductModal/SaleProductModal";
+import CreateNewCategoryModal from "./components/dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
+import AddSupplierModal from "./components/dialogs/AddSupplierModal/AddSupplierModal";
+import FilterComponent from "./components/filters/FilterComponent/FilterComponent";
 import {
     ICategory,
     IEditProduct,
@@ -55,6 +55,7 @@ import {
 import ResponsiveProductView from "./components/ResponsiveProductView/ResponsiveProductView";
 import NotificationPanel from "./components/NotificationPanel/NotificationPanel";
 import {formatDate} from "./utils/function";
+import ConfirmDeleteModal from "./components/dialogs/ConfirmDeleteModal/ConfirmDeleteModal";
 
 
 function App() {
@@ -753,7 +754,8 @@ function App() {
                         {/* Кнопка для відкриття модального вікна для додавання */}
 
 
-                    </Container></React.Fragment>
+                    </Container>
+                </React.Fragment>
             )}
 
 
@@ -822,24 +824,29 @@ function App() {
                 />
             }
 
-            <Dialog open={modalState.openDelete} onClose={handleCloseDeleteModal}>
-                <DialogTitle>Confirm Delete</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Are you sure you want to delete this product?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDeleteModal} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={() => {
-                        selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId!)
-                    }} color="secondary">
-                        Delete
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <ConfirmDeleteModal openConfirmDeleteModal={modalState.openDelete}
+                                handleCloseDeleteModal={handleCloseDeleteModal}
+                                selectedDeleteModalProductId={selectedDeleteModalProductId}
+                                handleDelete={handleDelete}/>
+
+            {/*<Dialog open={modalState.openDelete} onClose={handleCloseDeleteModal}>*/}
+            {/*    <DialogTitle>Confirm Delete</DialogTitle>*/}
+            {/*    <DialogContent>*/}
+            {/*        <DialogContentText>*/}
+            {/*            Are you sure you want to delete this product?*/}
+            {/*        </DialogContentText>*/}
+            {/*    </DialogContent>*/}
+            {/*    <DialogActions>*/}
+            {/*        <Button onClick={handleCloseDeleteModal} color="primary">*/}
+            {/*            Cancel*/}
+            {/*        </Button>*/}
+            {/*        <Button onClick={() => {*/}
+            {/*            selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId!)*/}
+            {/*        }} color="secondary">*/}
+            {/*            Delete*/}
+            {/*        </Button>*/}
+            {/*    </DialogActions>*/}
+            {/*</Dialog>*/}
 
             <AddSupplierModal
                 handleAddSupplier={handleAddSupplier}

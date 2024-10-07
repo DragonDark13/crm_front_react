@@ -1,7 +1,7 @@
 import {Button, Grid, Slider, Typography} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
-import {ICategory, ISupplier} from "../../utils/types";
+import {ICategory, ISupplier} from "../../../utils/types";
 import {ChangeEvent} from "react";
 
 //TODO фільтр по ціні

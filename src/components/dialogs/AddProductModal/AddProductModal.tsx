@@ -5,15 +5,15 @@ import {
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
-import ProductNameField from "../FormComponents/ProductNameField";
-import PriceField from "../FormComponents/PriceField";
-import TotalPriceField from "../FormComponents/TotalPriceField";
-import QuantityField from "../FormComponents/QuantityField";
-import CategoriesSelect from "../FormComponents/CategoriesSelect";
-import {roundToDecimalPlaces} from "../../utils/function";
-import SupplierSelect from "../FormComponents/SupplierSelect";
-import {ICategory, INewProduct} from "../../utils/types";
-import {addProduct} from "../../api/api";
+import ProductNameField from "../../FormComponents/ProductNameField";
+import PriceField from "../../FormComponents/PriceField";
+import TotalPriceField from "../../FormComponents/TotalPriceField";
+import QuantityField from "../../FormComponents/QuantityField";
+import CategoriesSelect from "../../FormComponents/CategoriesSelect";
+import {roundToDecimalPlaces} from "../../../utils/function";
+import SupplierSelect from "../../FormComponents/SupplierSelect";
+import {ICategory, INewProduct} from "../../../utils/types";
+import {addProduct} from "../../../api/api";
 //TODO додай постачальників таблиці
 // TODO Повідомлення про успіх
 // TODO Окремі поля для ціни закупівельної і проданої

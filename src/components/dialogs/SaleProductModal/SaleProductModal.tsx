@@ -1,10 +1,10 @@
 import {TextField, Button, DialogContent, DialogActions, Grid, Typography} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
-import QuantityField from "../FormComponents/QuantityField";
-import {roundToDecimalPlaces} from "../../utils/function";
-import TotalPriceField from "../FormComponents/TotalPriceField";
-import {ISaleData} from "../../utils/types";
+import QuantityField from "../../FormComponents/QuantityField";
+import {roundToDecimalPlaces} from "../../../utils/function";
+import TotalPriceField from "../../FormComponents/TotalPriceField";
+import {ISaleData} from "../../../utils/types";
 
 interface ISaleProductModal {
     openSale: boolean;

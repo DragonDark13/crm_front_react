@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dialog, DialogTitle, IconButton, DialogProps} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Transition from "../../utils/Transition";
+import Transition from "../../../utils/Transition";
 import {Breakpoint} from "@mui/system";
 
 interface ICustomDialogProps extends DialogProps {

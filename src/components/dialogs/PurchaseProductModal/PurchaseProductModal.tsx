@@ -6,11 +6,11 @@ import {
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useState, useEffect} from "react";
-import SupplierSelect from "../FormComponents/SupplierSelect";
-import QuantityField from "../FormComponents/QuantityField";
-import {roundToDecimalPlaces} from "../../utils/function";
-import TotalPriceField from "../FormComponents/TotalPriceField";
-import {IPurchaseData, ISupplier} from "../../utils/types";
+import SupplierSelect from "../../FormComponents/SupplierSelect";
+import QuantityField from "../../FormComponents/QuantityField";
+import {roundToDecimalPlaces} from "../../../utils/function";
+import TotalPriceField from "../../FormComponents/TotalPriceField";
+import {IPurchaseData, ISupplier} from "../../../utils/types";
 
 interface IPurchaseProductModal {
     openPurchase: boolean;
