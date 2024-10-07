@@ -104,3 +104,11 @@ export interface IConfirmDeleteModal {
     selectedDeleteModalProductId: number;
     handleDelete: () => void;
 }
+
+export interface IStateFilters {
+    categories: number[]
+    suppliers: number[]
+    priceRange: [number, number]
+
+
+}

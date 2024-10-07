@@ -49,7 +49,7 @@ import {
     INewSupplier,
     IProduct,
     IPurchaseData,
-    ISaleData,
+    ISaleData, IStateFilters,
     ISupplier, modalNames, ModalNames
 } from "./utils/types";
 import ResponsiveProductView from "./components/ResponsiveProductView/ResponsiveProductView";
@@ -103,8 +103,7 @@ function App() {
     const [saleData, setSaleData] = useState<ISaleData | null>(null);
 
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-    const [selectedFilterCategories, setSelectedFilterCategories] = useState<number[]>([]);
-    const [selectedFilterSuppliers, setSelectedFilterSuppliers] = useState<number[]>([]);
+
     const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = useState<number | null>(null);
 
     const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
@@ -119,6 +118,13 @@ function App() {
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10); // Додайте цей рядок
     const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = useState<IProduct[]>([])
+
+    // Стейт для фільтрів
+    const [filters, setFilters] = useState<IStateFilters>({
+        categories: [] as number[],
+        suppliers: [] as number[],
+        priceRange: [0, 1000] as [number, number],
+    });
 
 
     // Load products and suppliers
@@ -178,19 +184,6 @@ function App() {
         setModalState(prevState => ({...prevState, [modal]: true}));
     };
 
-    const handleModalClose = (modal: ModalNames) => {
-        setModalState(prevState => ({...prevState, [modal]: false}));
-        // Reset states based on modal closed
-        if (modal === 'openAdd') {
-            resetNewProduct();
-        } else if (modal === 'openPurchase') {
-            resetPurchaseDetails();
-        } else if (modal === 'openEdit') {
-            resetEditProduct();
-        } else if (modal === 'openSale') {
-            resetSaleData();
-        }
-    };
 
     const resetNewProduct = () => {
         setNewProduct({
@@ -227,6 +220,18 @@ function App() {
     const resetSaleData = () => {
         setEditProduct(null)
         setSaleData(null);
+    };
+
+    const resetStatesMap = {
+        openAdd: resetNewProduct,
+        openPurchase: resetPurchaseDetails,
+        openEdit: resetEditProduct,
+        openSale: resetSaleData,
+    };
+
+    const handleModalClose = (modal: ModalNames) => {
+        setModalState(prevState => ({...prevState, [modal]: false}));
+        resetStatesMap[modal]?.(); // Виклик відповідної функції скидання
     };
 
     const handleDeleteModalOpen = (productId: number) => {
@@ -375,76 +380,6 @@ function App() {
         selling_quantity: product.selling_quantity,
     });
 
-    // Стейт для фільтрів
-    const [filters, setFilters] = useState({
-        categories: [] as number[],
-        suppliers: [] as number[],
-        priceRange: [0, 1000] as [number, number],
-    });
-
-// Функція для застосування фільтрів
-    const applyFilters = (callback?) => {
-        let filtered = products;
-
-        const {categories, suppliers, priceRange} = filters;
-
-        // Фільтр за категоріями
-        if (categories.length > 0) {
-            filtered = filtered.filter(product =>
-                product.category_ids.some(categoryId => categories.includes(categoryId))
-            );
-        }
-
-        // Фільтр за постачальниками
-        if (suppliers.length > 0) {
-            filtered = filtered.filter(product => product.supplier && suppliers.includes(product.supplier.id));
-        }
-
-        // Фільтр за ціновим діапазоном
-        filtered = filtered.filter(product =>
-            product.selling_price_per_item >= priceRange[0] && product.selling_price_per_item <= priceRange[1]
-        );
-
-        setFilteredProducts(filtered); // Оновлюємо відфільтровані продукти
-        if (callback) callback(); // Викликаємо callback, якщо він переданий
-    };
-
-// Загальний обробник змін фільтрів
-    const handleFilterChange = (filterType: 'categories' | 'suppliers' | 'priceRange', newValue) => {
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [filterType]: newValue,
-        }));
-    };
-
-// Обробник зміни категорій
-    const handleCategoryFilterChange = (categoryID: number) => {
-        const updatedCategories = toggleFilter(filters.categories, categoryID);
-        handleFilterChange('categories', updatedCategories);
-    };
-
-// Обробник зміни постачальників
-    const handleSupplierFilterChange = (supplierID: number) => {
-        const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
-        handleFilterChange('suppliers', updatedSuppliers);
-    };
-
-// Обробник зміни діапазону цін
-    const handlePriceRangeChange = (event, newValue: [number, number]) => {
-        handleFilterChange('priceRange', newValue);
-    };
-
-// Функція для toggle категорій і постачальників
-    const toggleFilter = (currentFilters: number[], id: number) => {
-        return currentFilters.includes(id)
-            ? currentFilters.filter(filterId => filterId !== id)
-            : [...currentFilters, id];
-    };
-
-// Використовуємо useEffect, щоб автоматично застосовувати фільтри при зміні стейту
-    useEffect(() => {
-        applyFilters();
-    }, [filters]);
 
     const handleSort = (property: keyof IProduct) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -628,25 +563,7 @@ function App() {
             console.log("Продукт з ID", productId, "не знайдений");
         }
     };
-    const [priceMax, setPriceMax] = useState(0)
 
-
-    // Коли завантажуються продукти, обчислімо мінімальну і максимальну ціну
-    useEffect(() => {
-        if (products.length > 0) {
-            const prices = products.map(product => product.selling_price_per_item);
-            const minPrice = Math.min(...prices);
-            const maxPrice = Math.max(...prices);
-            setFilters(prevState => (
-                {...prevState, priceRange: [minPrice, maxPrice]}
-            ))
-
-            const max = Math.max(...products.map(product => product.selling_price_per_item))
-            setPriceMax(max);
-
-        }
-
-    }, [products]);
 
 // Обробник для зміни слайдера
 
@@ -707,15 +624,12 @@ function App() {
                                 Закрити
                             </Button>
                             <FilterComponent
+                                products={products}
+                                setFilteredProducts={setFilteredProducts}
+                                filters={filters}
+                                setFilters={setFilters}
                                 filterArrayLength={filteredProducts.length}
-                                handlePriceRangeChange={handlePriceRangeChange}
-                                priceRange={filters.priceRange}
-                                priceMax={priceMax}
-                                selectedFilterCategories={filters.categories}
-                                handleCategoryFilterChange={handleCategoryFilterChange}
                                 categories={categories}
-                                selectedFilterSuppliers={filters.suppliers}
-                                handleSupplierFilterChange={handleSupplierFilterChange}
                                 suppliers={suppliers}
                                 resetFilters={resetFilters}/>
                         </Drawer>
@@ -828,25 +742,6 @@ function App() {
                                 handleCloseDeleteModal={handleCloseDeleteModal}
                                 selectedDeleteModalProductId={selectedDeleteModalProductId}
                                 handleDelete={handleDelete}/>
-
-            {/*<Dialog open={modalState.openDelete} onClose={handleCloseDeleteModal}>*/}
-            {/*    <DialogTitle>Confirm Delete</DialogTitle>*/}
-            {/*    <DialogContent>*/}
-            {/*        <DialogContentText>*/}
-            {/*            Are you sure you want to delete this product?*/}
-            {/*        </DialogContentText>*/}
-            {/*    </DialogContent>*/}
-            {/*    <DialogActions>*/}
-            {/*        <Button onClick={handleCloseDeleteModal} color="primary">*/}
-            {/*            Cancel*/}
-            {/*        </Button>*/}
-            {/*        <Button onClick={() => {*/}
-            {/*            selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId!)*/}
-            {/*        }} color="secondary">*/}
-            {/*            Delete*/}
-            {/*        </Button>*/}
-            {/*    </DialogActions>*/}
-            {/*</Dialog>*/}
 
             <AddSupplierModal
                 handleAddSupplier={handleAddSupplier}
