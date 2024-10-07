@@ -10820,6 +10820,17 @@ const usePreviousProps = (value) => {
   });
   return ref.current;
 };
+const visuallyHidden = {
+  border: 0,
+  clip: "rect(0 0 0 0)",
+  height: "1px",
+  margin: "-1px",
+  overflow: "hidden",
+  padding: 0,
+  position: "absolute",
+  whiteSpace: "nowrap",
+  width: "1px"
+};
 function composeClasses(slots, getUtilityClass, classes = void 0) {
   const output = {};
   for (const slotName in slots) {
@@ -11290,7 +11301,7 @@ const useThemePropsDefault = (inProps) => useThemeProps$1({
   name: "MuiContainer",
   defaultTheme: defaultTheme$2
 });
-const useUtilityClasses$Z = (ownerState, componentName) => {
+const useUtilityClasses$_ = (ownerState, componentName) => {
   const getContainerUtilityClass = (slot) => {
     return generateUtilityClass(componentName, slot);
   };
@@ -11380,7 +11391,7 @@ function createContainer(options = {}) {
       fixed,
       maxWidth: maxWidth2
     };
-    const classes = useUtilityClasses$Z(ownerState, componentName);
+    const classes = useUtilityClasses$_(ownerState, componentName);
     return (
       // @ts-ignore theme is injected by the styled util
       /* @__PURE__ */ jsxRuntimeExports.jsx(ContainerRoot, {
@@ -12529,7 +12540,7 @@ function getSvgIconUtilityClass(slot) {
   return generateUtilityClass("MuiSvgIcon", slot);
 }
 generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
-const useUtilityClasses$Y = (ownerState) => {
+const useUtilityClasses$Z = (ownerState) => {
   const {
     color: color2,
     fontSize,
@@ -12674,7 +12685,7 @@ const SvgIcon = /* @__PURE__ */ reactExports.forwardRef(function SvgIcon2(inProp
   if (!inheritViewBox) {
     more.viewBox = viewBox;
   }
-  const classes = useUtilityClasses$Y(ownerState);
+  const classes = useUtilityClasses$Z(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SvgIconRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -13178,7 +13189,7 @@ function getPaperUtilityClass(slot) {
   return generateUtilityClass("MuiPaper", slot);
 }
 generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
-const useUtilityClasses$X = (ownerState) => {
+const useUtilityClasses$Y = (ownerState) => {
   const {
     square,
     elevation,
@@ -13251,7 +13262,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     square,
     variant
   };
-  const classes = useUtilityClasses$X(ownerState);
+  const classes = useUtilityClasses$Y(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(PaperRoot, {
     as: component,
     ownerState,
@@ -13717,7 +13728,7 @@ function getButtonBaseUtilityClass(slot) {
   return generateUtilityClass("MuiButtonBase", slot);
 }
 const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]);
-const useUtilityClasses$W = (ownerState) => {
+const useUtilityClasses$X = (ownerState) => {
   const {
     disabled,
     focusVisible,
@@ -13946,7 +13957,7 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
     tabIndex,
     focusVisible
   };
-  const classes = useUtilityClasses$W(ownerState);
+  const classes = useUtilityClasses$X(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonBaseRoot, {
     as: ComponentProp,
     className: clsx(classes.root, className),
@@ -14001,7 +14012,7 @@ function getIconButtonUtilityClass(slot) {
   return generateUtilityClass("MuiIconButton", slot);
 }
 const iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge"]);
-const useUtilityClasses$V = (ownerState) => {
+const useUtilityClasses$W = (ownerState) => {
   const {
     classes,
     disabled,
@@ -14157,7 +14168,7 @@ const IconButton = /* @__PURE__ */ reactExports.forwardRef(function IconButton2(
     disableRipple,
     size
   };
-  const classes = useUtilityClasses$V(ownerState);
+  const classes = useUtilityClasses$W(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(IconButtonRoot, {
     className: clsx(classes.root, className),
     centerRipple: true,
@@ -14185,7 +14196,7 @@ const InfoOutlinedIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("pa
 const ClearIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 }), "Close");
-const useUtilityClasses$U = (ownerState) => {
+const useUtilityClasses$V = (ownerState) => {
   const {
     variant,
     color: color2,
@@ -14340,7 +14351,7 @@ const Alert = /* @__PURE__ */ reactExports.forwardRef(function Alert2(inProps, r
     variant,
     colorSeverity: color2 || severity
   };
-  const classes = useUtilityClasses$U(ownerState);
+  const classes = useUtilityClasses$V(ownerState);
   const externalForwardedProps = {
     slots: {
       closeButton: components.CloseButton,
@@ -14415,7 +14426,7 @@ const v6Colors = {
   textDisabled: true
 };
 const extendSxProp = internal_createExtendSxProp();
-const useUtilityClasses$T = (ownerState) => {
+const useUtilityClasses$U = (ownerState) => {
   const {
     align,
     gutterBottom,
@@ -14558,7 +14569,7 @@ const Typography = /* @__PURE__ */ reactExports.forwardRef(function Typography2(
     variantMapping
   };
   const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
-  const classes = useUtilityClasses$T(ownerState);
+  const classes = useUtilityClasses$U(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TypographyRoot, {
     as: Component,
     ref,
@@ -15988,7 +15999,7 @@ function resolveAnchorEl$1(anchorEl) {
 function isHTMLElement(element) {
   return element.nodeType !== void 0;
 }
-const useUtilityClasses$S = (ownerState) => {
+const useUtilityClasses$T = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -16089,7 +16100,7 @@ const PopperTooltip = /* @__PURE__ */ reactExports.forwardRef(function PopperToo
   if (TransitionProps !== null) {
     childProps.TransitionProps = TransitionProps;
   }
-  const classes = useUtilityClasses$S(props);
+  const classes = useUtilityClasses$T(props);
   const Root = slots.root ?? "div";
   const rootProps = useSlotProps({
     elementType: Root,
@@ -16425,7 +16436,7 @@ const inputOverridesResolver = (props, styles2) => {
   } = props;
   return [styles2.input, ownerState.size === "small" && styles2.inputSizeSmall, ownerState.multiline && styles2.inputMultiline, ownerState.type === "search" && styles2.inputTypeSearch, ownerState.startAdornment && styles2.inputAdornedStart, ownerState.endAdornment && styles2.inputAdornedEnd, ownerState.hiddenLabel && styles2.inputHiddenLabel];
 };
-const useUtilityClasses$R = (ownerState) => {
+const useUtilityClasses$S = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -16811,7 +16822,7 @@ const InputBase = /* @__PURE__ */ reactExports.forwardRef(function InputBase2(in
     startAdornment,
     type
   };
-  const classes = useUtilityClasses$R(ownerState);
+  const classes = useUtilityClasses$S(ownerState);
   const Root = slots.root || components.Root || InputBaseRoot;
   const rootProps = slotProps.root || componentsProps.root || {};
   const Input3 = slots.input || components.Input || InputBaseInput;
@@ -17020,7 +17031,7 @@ const removeOwnerState = (props) => {
   } = props;
   return rest;
 };
-const useUtilityClasses$Q = (ownerState) => {
+const useUtilityClasses$R = (ownerState) => {
   const {
     classes,
     invisible
@@ -17083,7 +17094,7 @@ const Backdrop = /* @__PURE__ */ reactExports.forwardRef(function Backdrop2(inPr
     component,
     invisible
   };
-  const classes = useUtilityClasses$Q(ownerState);
+  const classes = useUtilityClasses$R(ownerState);
   const backwardCompatibleSlots = {
     transition: TransitionComponentProp,
     root: components.Root,
@@ -17183,7 +17194,7 @@ const badgeClasses = generateUtilityClasses("MuiBadge", [
 ]);
 const RADIUS_STANDARD = 10;
 const RADIUS_DOT = 4;
-const useUtilityClasses$P = (ownerState) => {
+const useUtilityClasses$Q = (ownerState) => {
   const {
     color: color2,
     anchorOrigin,
@@ -17442,7 +17453,7 @@ const Badge = /* @__PURE__ */ reactExports.forwardRef(function Badge2(inProps, r
     overlap,
     variant
   };
-  const classes = useUtilityClasses$P(ownerState);
+  const classes = useUtilityClasses$Q(ownerState);
   const RootSlot = (slots == null ? void 0 : slots.root) ?? components.Root ?? BadgeRoot;
   const BadgeSlot = (slots == null ? void 0 : slots.badge) ?? components.Badge ?? BadgeBadge;
   const rootSlotProps = (slotProps == null ? void 0 : slotProps.root) ?? componentsProps.root;
@@ -17486,7 +17497,7 @@ function getButtonUtilityClass(slot) {
 const buttonClasses = generateUtilityClasses("MuiButton", ["root", "text", "textInherit", "textPrimary", "textSecondary", "textSuccess", "textError", "textInfo", "textWarning", "outlined", "outlinedInherit", "outlinedPrimary", "outlinedSecondary", "outlinedSuccess", "outlinedError", "outlinedInfo", "outlinedWarning", "contained", "containedInherit", "containedPrimary", "containedSecondary", "containedSuccess", "containedError", "containedInfo", "containedWarning", "disableElevation", "focusVisible", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorSuccess", "colorError", "colorInfo", "colorWarning", "textSizeSmall", "textSizeMedium", "textSizeLarge", "outlinedSizeSmall", "outlinedSizeMedium", "outlinedSizeLarge", "containedSizeSmall", "containedSizeMedium", "containedSizeLarge", "sizeMedium", "sizeSmall", "sizeLarge", "fullWidth", "startIcon", "endIcon", "icon", "iconSizeSmall", "iconSizeMedium", "iconSizeLarge"]);
 const ButtonGroupContext = /* @__PURE__ */ reactExports.createContext({});
 const ButtonGroupButtonContext = /* @__PURE__ */ reactExports.createContext(void 0);
-const useUtilityClasses$O = (ownerState) => {
+const useUtilityClasses$P = (ownerState) => {
   const {
     color: color2,
     disableElevation,
@@ -17815,7 +17826,7 @@ const Button = /* @__PURE__ */ reactExports.forwardRef(function Button2(inProps,
     type,
     variant
   };
-  const classes = useUtilityClasses$O(ownerState);
+  const classes = useUtilityClasses$P(ownerState);
   const startIcon = startIconProp && /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonStartIcon, {
     className: classes.startIcon,
     ownerState,
@@ -17845,7 +17856,7 @@ function getCardUtilityClass(slot) {
   return generateUtilityClass("MuiCard", slot);
 }
 generateUtilityClasses("MuiCard", ["root"]);
-const useUtilityClasses$N = (ownerState) => {
+const useUtilityClasses$O = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -17875,7 +17886,7 @@ const Card = /* @__PURE__ */ reactExports.forwardRef(function Card2(inProps, ref
     ...props,
     raised
   };
-  const classes = useUtilityClasses$N(ownerState);
+  const classes = useUtilityClasses$O(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CardRoot, {
     className: clsx(classes.root, className),
     elevation: raised ? 8 : void 0,
@@ -17888,7 +17899,7 @@ function getCardContentUtilityClass(slot) {
   return generateUtilityClass("MuiCardContent", slot);
 }
 generateUtilityClasses("MuiCardContent", ["root"]);
-const useUtilityClasses$M = (ownerState) => {
+const useUtilityClasses$N = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -17921,7 +17932,7 @@ const CardContent = /* @__PURE__ */ reactExports.forwardRef(function CardContent
     ...props,
     component
   };
-  const classes = useUtilityClasses$M(ownerState);
+  const classes = useUtilityClasses$N(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CardContentRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -17934,7 +17945,7 @@ function getSwitchBaseUtilityClass(slot) {
   return generateUtilityClass("PrivateSwitchBase", slot);
 }
 generateUtilityClasses("PrivateSwitchBase", ["root", "checked", "disabled", "input", "edgeStart", "edgeEnd"]);
-const useUtilityClasses$L = (ownerState) => {
+const useUtilityClasses$M = (ownerState) => {
   const {
     classes,
     checked,
@@ -18070,7 +18081,7 @@ const SwitchBase = /* @__PURE__ */ reactExports.forwardRef(function SwitchBase2(
     disableFocusRipple,
     edge
   };
-  const classes = useUtilityClasses$L(ownerState);
+  const classes = useUtilityClasses$M(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SwitchBaseRoot, {
     component: "span",
     className: clsx(classes.root, className),
@@ -18119,7 +18130,7 @@ function getCheckboxUtilityClass(slot) {
   return generateUtilityClass("MuiCheckbox", slot);
 }
 const checkboxClasses = generateUtilityClasses("MuiCheckbox", ["root", "checked", "disabled", "indeterminate", "colorPrimary", "colorSecondary", "sizeSmall", "sizeMedium"]);
-const useUtilityClasses$K = (ownerState) => {
+const useUtilityClasses$L = (ownerState) => {
   const {
     classes,
     indeterminate,
@@ -18226,7 +18237,7 @@ const Checkbox = /* @__PURE__ */ reactExports.forwardRef(function Checkbox2(inPr
     indeterminate,
     size
   };
-  const classes = useUtilityClasses$K(ownerState);
+  const classes = useUtilityClasses$L(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CheckboxRoot, {
     type: "checkbox",
     inputProps: {
@@ -18282,7 +18293,7 @@ const rotateAnimation = typeof circularRotateKeyframe !== "string" ? css`
 const dashAnimation = typeof circularDashKeyframe !== "string" ? css`
         animation: ${circularDashKeyframe} 1.4s ease-in-out infinite;
       ` : null;
-const useUtilityClasses$J = (ownerState) => {
+const useUtilityClasses$K = (ownerState) => {
   const {
     classes,
     variant,
@@ -18405,7 +18416,7 @@ const CircularProgress = /* @__PURE__ */ reactExports.forwardRef(function Circul
     value,
     variant
   };
-  const classes = useUtilityClasses$J(ownerState);
+  const classes = useUtilityClasses$K(ownerState);
   const circleStyle = {};
   const rootStyle = {};
   const rootProps = {};
@@ -19241,7 +19252,7 @@ function getModalUtilityClass(slot) {
   return generateUtilityClass("MuiModal", slot);
 }
 generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
-const useUtilityClasses$I = (ownerState) => {
+const useUtilityClasses$J = (ownerState) => {
   const {
     open,
     exited,
@@ -19352,7 +19363,7 @@ const Modal = /* @__PURE__ */ reactExports.forwardRef(function Modal2(inProps, r
     ...propsWithDefaults,
     exited
   };
-  const classes = useUtilityClasses$I(ownerState);
+  const classes = useUtilityClasses$J(ownerState);
   const childProps = {};
   if (children.props.tabIndex === void 0) {
     childProps.tabIndex = "-1";
@@ -19445,7 +19456,7 @@ const DialogBackdrop = styled(Backdrop, {
   // Improve scrollable dialog support.
   zIndex: -1
 });
-const useUtilityClasses$H = (ownerState) => {
+const useUtilityClasses$I = (ownerState) => {
   const {
     classes,
     scroll,
@@ -19647,7 +19658,7 @@ const Dialog = /* @__PURE__ */ reactExports.forwardRef(function Dialog2(inProps,
     maxWidth: maxWidth2,
     scroll
   };
-  const classes = useUtilityClasses$H(ownerState);
+  const classes = useUtilityClasses$I(ownerState);
   const backdropClick = reactExports.useRef();
   const handleMouseDown = (event) => {
     backdropClick.current = event.target === event.currentTarget;
@@ -19725,7 +19736,7 @@ function getDialogActionsUtilityClass(slot) {
   return generateUtilityClass("MuiDialogActions", slot);
 }
 generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
-const useUtilityClasses$G = (ownerState) => {
+const useUtilityClasses$H = (ownerState) => {
   const {
     classes,
     disableSpacing
@@ -19775,7 +19786,7 @@ const DialogActions = /* @__PURE__ */ reactExports.forwardRef(function DialogAct
     ...props,
     disableSpacing
   };
-  const classes = useUtilityClasses$G(ownerState);
+  const classes = useUtilityClasses$H(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActionsRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -19791,7 +19802,7 @@ function getDialogTitleUtilityClass(slot) {
   return generateUtilityClass("MuiDialogTitle", slot);
 }
 const dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]);
-const useUtilityClasses$F = (ownerState) => {
+const useUtilityClasses$G = (ownerState) => {
   const {
     classes,
     dividers
@@ -19852,7 +19863,7 @@ const DialogContent = /* @__PURE__ */ reactExports.forwardRef(function DialogCon
     ...props,
     dividers
   };
-  const classes = useUtilityClasses$F(ownerState);
+  const classes = useUtilityClasses$G(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -19864,7 +19875,7 @@ function getDialogContentTextUtilityClass(slot) {
   return generateUtilityClass("MuiDialogContentText", slot);
 }
 generateUtilityClasses("MuiDialogContentText", ["root"]);
-const useUtilityClasses$E = (ownerState) => {
+const useUtilityClasses$F = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -19894,7 +19905,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     className,
     ...ownerState
   } = props;
-  const classes = useUtilityClasses$E(ownerState);
+  const classes = useUtilityClasses$F(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentTextRoot, {
     component: "p",
     variant: "body1",
@@ -19906,7 +19917,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     classes
   });
 });
-const useUtilityClasses$D = (ownerState) => {
+const useUtilityClasses$E = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -19934,7 +19945,7 @@ const DialogTitle = /* @__PURE__ */ reactExports.forwardRef(function DialogTitle
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$D(ownerState);
+  const classes = useUtilityClasses$E(ownerState);
   const {
     titleId = idProp
   } = reactExports.useContext(DialogContext);
@@ -20160,7 +20171,7 @@ const overridesResolver$3 = (props, styles2) => {
   } = props;
   return [styles2.root, (ownerState.variant === "permanent" || ownerState.variant === "persistent") && styles2.docked, styles2.modal];
 };
-const useUtilityClasses$C = (ownerState) => {
+const useUtilityClasses$D = (ownerState) => {
   const {
     classes,
     anchor,
@@ -20348,7 +20359,7 @@ const Drawer = /* @__PURE__ */ reactExports.forwardRef(function Drawer2(inProps,
     variant,
     ...other
   };
-  const classes = useUtilityClasses$C(ownerState);
+  const classes = useUtilityClasses$D(ownerState);
   const drawer = /* @__PURE__ */ jsxRuntimeExports.jsx(DrawerPaper, {
     elevation: variant === "temporary" ? elevation : 0,
     square: true,
@@ -20400,7 +20411,7 @@ const Drawer = /* @__PURE__ */ reactExports.forwardRef(function Drawer2(inProps,
     children: slidingDrawer
   });
 });
-const useUtilityClasses$B = (ownerState) => {
+const useUtilityClasses$C = (ownerState) => {
   const {
     classes,
     disableUnderline,
@@ -20682,7 +20693,7 @@ const FilledInput = /* @__PURE__ */ reactExports.forwardRef(function FilledInput
     multiline,
     type
   };
-  const classes = useUtilityClasses$B(props);
+  const classes = useUtilityClasses$C(props);
   const filledInputComponentsProps = {
     root: {
       ownerState
@@ -20716,7 +20727,7 @@ function getFormControlUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControl", slot);
 }
 generateUtilityClasses("MuiFormControl", ["root", "marginNone", "marginNormal", "marginDense", "fullWidth", "disabled"]);
-const useUtilityClasses$A = (ownerState) => {
+const useUtilityClasses$B = (ownerState) => {
   const {
     classes,
     margin: margin2,
@@ -20809,7 +20820,7 @@ const FormControl = /* @__PURE__ */ reactExports.forwardRef(function FormControl
     size,
     variant
   };
-  const classes = useUtilityClasses$A(ownerState);
+  const classes = useUtilityClasses$B(ownerState);
   const [adornedStart, setAdornedStart] = reactExports.useState(() => {
     let initialAdornedStart = false;
     if (children) {
@@ -20891,7 +20902,7 @@ function getFormControlLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControlLabel", slot);
 }
 const formControlLabelClasses = generateUtilityClasses("MuiFormControlLabel", ["root", "labelPlacementStart", "labelPlacementTop", "labelPlacementBottom", "disabled", "label", "error", "required", "asterisk"]);
-const useUtilityClasses$z = (ownerState) => {
+const useUtilityClasses$A = (ownerState) => {
   const {
     classes,
     disabled,
@@ -21027,7 +21038,7 @@ const FormControlLabel = /* @__PURE__ */ reactExports.forwardRef(function FormCo
     required,
     error: fcs.error
   };
-  const classes = useUtilityClasses$z(ownerState);
+  const classes = useUtilityClasses$A(ownerState);
   const externalForwardedProps = {
     slots,
     slotProps: {
@@ -21068,7 +21079,7 @@ function getFormGroupUtilityClass(slot) {
   return generateUtilityClass("MuiFormGroup", slot);
 }
 generateUtilityClasses("MuiFormGroup", ["root", "row", "error"]);
-const useUtilityClasses$y = (ownerState) => {
+const useUtilityClasses$z = (ownerState) => {
   const {
     classes,
     row,
@@ -21122,7 +21133,7 @@ const FormGroup = /* @__PURE__ */ reactExports.forwardRef(function FormGroup2(in
     row,
     error: fcs.error
   };
-  const classes = useUtilityClasses$y(ownerState);
+  const classes = useUtilityClasses$z(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroupRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -21135,7 +21146,7 @@ function getFormHelperTextUtilityClasses(slot) {
 }
 const formHelperTextClasses = generateUtilityClasses("MuiFormHelperText", ["root", "error", "disabled", "sizeSmall", "sizeMedium", "contained", "focused", "filled", "required"]);
 var _span$3;
-const useUtilityClasses$x = (ownerState) => {
+const useUtilityClasses$y = (ownerState) => {
   const {
     classes,
     contained,
@@ -21230,7 +21241,7 @@ const FormHelperText = /* @__PURE__ */ reactExports.forwardRef(function FormHelp
     required: fcs.required
   };
   delete ownerState.ownerState;
-  const classes = useUtilityClasses$x(ownerState);
+  const classes = useUtilityClasses$y(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormHelperTextRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -21250,7 +21261,7 @@ function getFormLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormLabel", slot);
 }
 const formLabelClasses = generateUtilityClasses("MuiFormLabel", ["root", "colorSecondary", "focused", "disabled", "error", "filled", "required", "asterisk"]);
-const useUtilityClasses$w = (ownerState) => {
+const useUtilityClasses$x = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -21351,7 +21362,7 @@ const FormLabel = /* @__PURE__ */ reactExports.forwardRef(function FormLabel2(in
     focused: fcs.focused,
     required: fcs.required
   };
-  const classes = useUtilityClasses$w(ownerState);
+  const classes = useUtilityClasses$x(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(FormLabelRoot, {
     as: component,
     ownerState,
@@ -21679,7 +21690,7 @@ function resolveSpacingClasses(spacing, breakpoints) {
   });
   return classes;
 }
-const useUtilityClasses$v = (ownerState) => {
+const useUtilityClasses$w = (ownerState) => {
   const {
     classes,
     container,
@@ -21757,7 +21768,7 @@ const Grid = /* @__PURE__ */ reactExports.forwardRef(function Grid2(inProps, ref
     ...breakpointsValues,
     breakpoints: breakpoints.keys
   };
-  const classes = useUtilityClasses$v(ownerState);
+  const classes = useUtilityClasses$w(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(GridContext.Provider, {
     value: columns,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(GridRoot, {
@@ -21926,7 +21937,7 @@ const Grow = /* @__PURE__ */ reactExports.forwardRef(function Grow2(props, ref) 
 if (Grow) {
   Grow.muiSupportAuto = true;
 }
-const useUtilityClasses$u = (ownerState) => {
+const useUtilityClasses$v = (ownerState) => {
   const {
     classes,
     disableUnderline
@@ -22059,7 +22070,7 @@ const Input = /* @__PURE__ */ reactExports.forwardRef(function Input2(inProps, r
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$u(props);
+  const classes = useUtilityClasses$v(props);
   const ownerState = {
     disableUnderline
   };
@@ -22100,7 +22111,7 @@ const overridesResolver$2 = (props, styles2) => {
   } = props;
   return [styles2.root, styles2[`position${capitalize(ownerState.position)}`], ownerState.disablePointerEvents === true && styles2.disablePointerEvents, styles2[ownerState.variant]];
 };
-const useUtilityClasses$t = (ownerState) => {
+const useUtilityClasses$u = (ownerState) => {
   const {
     classes,
     disablePointerEvents,
@@ -22187,7 +22198,7 @@ const InputAdornment = /* @__PURE__ */ reactExports.forwardRef(function InputAdo
     position: position2,
     variant
   };
-  const classes = useUtilityClasses$t(ownerState);
+  const classes = useUtilityClasses$u(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormControlContext.Provider, {
     value: null,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornmentRoot, {
@@ -22215,7 +22226,7 @@ function getInputLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiInputLabel", slot);
 }
 generateUtilityClasses("MuiInputLabel", ["root", "focused", "disabled", "error", "required", "asterisk", "formControl", "sizeSmall", "shrink", "animated", "standard", "filled", "outlined"]);
-const useUtilityClasses$s = (ownerState) => {
+const useUtilityClasses$t = (ownerState) => {
   const {
     classes,
     formControl,
@@ -22404,7 +22415,7 @@ const InputLabel = /* @__PURE__ */ reactExports.forwardRef(function InputLabel2(
     required: fcs.required,
     focused: fcs.focused
   };
-  const classes = useUtilityClasses$s(ownerState);
+  const classes = useUtilityClasses$t(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabelRoot, {
     "data-shrink": shrink,
     ref,
@@ -22419,7 +22430,7 @@ function getListUtilityClass(slot) {
   return generateUtilityClass("MuiList", slot);
 }
 generateUtilityClasses("MuiList", ["root", "padding", "dense", "subheader"]);
-const useUtilityClasses$r = (ownerState) => {
+const useUtilityClasses$s = (ownerState) => {
   const {
     classes,
     disablePadding,
@@ -22485,7 +22496,7 @@ const List = /* @__PURE__ */ reactExports.forwardRef(function List2(inProps, ref
     dense,
     disablePadding
   };
-  const classes = useUtilityClasses$r(ownerState);
+  const classes = useUtilityClasses$s(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
     value: context,
     children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ListRoot, {
@@ -22508,7 +22519,7 @@ const overridesResolver$1 = (props, styles2) => {
   } = props;
   return [styles2.root, ownerState.dense && styles2.dense, ownerState.alignItems === "flex-start" && styles2.alignItemsFlexStart, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters];
 };
-const useUtilityClasses$q = (ownerState) => {
+const useUtilityClasses$r = (ownerState) => {
   const {
     alignItems,
     classes,
@@ -22649,7 +22660,7 @@ const ListItemButton = /* @__PURE__ */ reactExports.forwardRef(function ListItem
     divider,
     selected
   };
-  const classes = useUtilityClasses$q(ownerState);
+  const classes = useUtilityClasses$r(ownerState);
   const handleRef = useForkRef(listItemRef, ref);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
     value: childContext,
@@ -22670,7 +22681,7 @@ function getListItemIconUtilityClass(slot) {
   return generateUtilityClass("MuiListItemIcon", slot);
 }
 const listItemIconClasses = generateUtilityClasses("MuiListItemIcon", ["root", "alignItemsFlexStart"]);
-const useUtilityClasses$p = (ownerState) => {
+const useUtilityClasses$q = (ownerState) => {
   const {
     alignItems,
     classes
@@ -22719,7 +22730,7 @@ const ListItemIcon = /* @__PURE__ */ reactExports.forwardRef(function ListItemIc
     ...props,
     alignItems: context.alignItems
   };
-  const classes = useUtilityClasses$p(ownerState);
+  const classes = useUtilityClasses$q(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemIconRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -22731,7 +22742,7 @@ function getListItemTextUtilityClass(slot) {
   return generateUtilityClass("MuiListItemText", slot);
 }
 const listItemTextClasses = generateUtilityClasses("MuiListItemText", ["root", "multiline", "dense", "inset", "primary", "secondary"]);
-const useUtilityClasses$o = (ownerState) => {
+const useUtilityClasses$p = (ownerState) => {
   const {
     classes,
     inset,
@@ -22816,7 +22827,7 @@ const ListItemText = /* @__PURE__ */ reactExports.forwardRef(function ListItemTe
     secondary: !!secondary,
     dense
   };
-  const classes = useUtilityClasses$o(ownerState);
+  const classes = useUtilityClasses$p(ownerState);
   if (primary != null && primary.type !== Typography && !disableTypography) {
     primary = /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, {
       variant: dense ? "body2" : "body1",
@@ -23068,7 +23079,7 @@ function getTransformOriginValue(transformOrigin) {
 function resolveAnchorEl(anchorEl) {
   return typeof anchorEl === "function" ? anchorEl() : anchorEl;
 }
-const useUtilityClasses$n = (ownerState) => {
+const useUtilityClasses$o = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -23150,7 +23161,7 @@ const Popover = /* @__PURE__ */ reactExports.forwardRef(function Popover2(inProp
     transitionDuration: transitionDurationProp,
     TransitionProps
   };
-  const classes = useUtilityClasses$n(ownerState);
+  const classes = useUtilityClasses$o(ownerState);
   const getAnchorOffset = reactExports.useCallback(() => {
     if (anchorReference === "anchorPosition") {
       return anchorPosition;
@@ -23348,7 +23359,7 @@ const LTR_ORIGIN = {
   vertical: "top",
   horizontal: "left"
 };
-const useUtilityClasses$m = (ownerState) => {
+const useUtilityClasses$n = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -23422,7 +23433,7 @@ const Menu = /* @__PURE__ */ reactExports.forwardRef(function Menu2(inProps, ref
     TransitionProps,
     variant
   };
-  const classes = useUtilityClasses$m(ownerState);
+  const classes = useUtilityClasses$n(ownerState);
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
   const menuListActionsRef = reactExports.useRef(null);
   const handleEntering = (element, isAppearing) => {
@@ -23517,7 +23528,7 @@ const overridesResolver = (props, styles2) => {
   } = props;
   return [styles2.root, ownerState.dense && styles2.dense, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters];
 };
-const useUtilityClasses$l = (ownerState) => {
+const useUtilityClasses$m = (ownerState) => {
   const {
     disabled,
     dense,
@@ -23675,7 +23686,7 @@ const MenuItem = /* @__PURE__ */ reactExports.forwardRef(function MenuItem2(inPr
     divider,
     disableGutters
   };
-  const classes = useUtilityClasses$l(props);
+  const classes = useUtilityClasses$m(props);
   const handleRef = useForkRef(menuItemRef, ref);
   let tabIndex;
   if (!props.disabled) {
@@ -23700,7 +23711,7 @@ function getNativeSelectUtilityClasses(slot) {
   return generateUtilityClass("MuiNativeSelect", slot);
 }
 const nativeSelectClasses = generateUtilityClasses("MuiNativeSelect", ["root", "select", "multiple", "filled", "outlined", "standard", "disabled", "icon", "iconOpen", "iconFilled", "iconOutlined", "iconStandard", "nativeInput", "error"]);
-const useUtilityClasses$k = (ownerState) => {
+const useUtilityClasses$l = (ownerState) => {
   const {
     classes,
     variant,
@@ -23855,7 +23866,7 @@ const NativeSelectInput = /* @__PURE__ */ reactExports.forwardRef(function Nativ
     variant,
     error
   };
-  const classes = useUtilityClasses$k(ownerState);
+  const classes = useUtilityClasses$l(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
     children: [/* @__PURE__ */ jsxRuntimeExports.jsx(NativeSelectSelect, {
       ownerState,
@@ -23987,7 +23998,7 @@ function NotchedOutline(props) {
     })
   });
 }
-const useUtilityClasses$j = (ownerState) => {
+const useUtilityClasses$k = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -24166,7 +24177,7 @@ const OutlinedInput = /* @__PURE__ */ reactExports.forwardRef(function OutlinedI
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$j(props);
+  const classes = useUtilityClasses$k(props);
   const muiFormControl = useFormControl();
   const fcs = formControlState({
     props,
@@ -24295,7 +24306,7 @@ function areEqualValues(a, b2) {
 function isEmpty(display) {
   return display == null || typeof display === "string" && !display.trim();
 }
-const useUtilityClasses$i = (ownerState) => {
+const useUtilityClasses$j = (ownerState) => {
   const {
     classes,
     variant,
@@ -24597,7 +24608,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     open,
     error
   };
-  const classes = useUtilityClasses$i(ownerState);
+  const classes = useUtilityClasses$j(ownerState);
   const paperProps = {
     ...MenuProps.PaperProps,
     ...(_a = MenuProps.slotProps) == null ? void 0 : _a.paper
@@ -24684,7 +24695,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     })]
   });
 });
-const useUtilityClasses$h = (ownerState) => {
+const useUtilityClasses$i = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -24741,7 +24752,7 @@ const Select = /* @__PURE__ */ reactExports.forwardRef(function Select2(inProps,
     variant,
     classes: classesProp
   };
-  const classes = useUtilityClasses$h(ownerState);
+  const classes = useUtilityClasses$i(ownerState);
   const {
     root,
     ...restOfClasses
@@ -24807,6 +24818,1416 @@ const Select = /* @__PURE__ */ reactExports.forwardRef(function Select2(inProps,
   });
 });
 Select.muiName = "Select";
+function areArraysEqual(array1, array2, itemComparer = (a, b2) => a === b2) {
+  return array1.length === array2.length && array1.every((value, index) => itemComparer(value, array2[index]));
+}
+const INTENTIONAL_DRAG_COUNT_THRESHOLD = 2;
+function asc(a, b2) {
+  return a - b2;
+}
+function findClosest(values2, currentValue) {
+  const {
+    index: closestIndex
+  } = values2.reduce((acc, value, index) => {
+    const distance = Math.abs(currentValue - value);
+    if (acc === null || distance < acc.distance || distance === acc.distance) {
+      return {
+        distance,
+        index
+      };
+    }
+    return acc;
+  }, null) ?? {};
+  return closestIndex;
+}
+function trackFinger(event, touchId) {
+  if (touchId.current !== void 0 && event.changedTouches) {
+    const touchEvent = event;
+    for (let i = 0; i < touchEvent.changedTouches.length; i += 1) {
+      const touch = touchEvent.changedTouches[i];
+      if (touch.identifier === touchId.current) {
+        return {
+          x: touch.clientX,
+          y: touch.clientY
+        };
+      }
+    }
+    return false;
+  }
+  return {
+    x: event.clientX,
+    y: event.clientY
+  };
+}
+function valueToPercent(value, min2, max2) {
+  return (value - min2) * 100 / (max2 - min2);
+}
+function percentToValue(percent, min2, max2) {
+  return (max2 - min2) * percent + min2;
+}
+function getDecimalPrecision(num) {
+  if (Math.abs(num) < 1) {
+    const parts = num.toExponential().split("e-");
+    const matissaDecimalPart = parts[0].split(".")[1];
+    return (matissaDecimalPart ? matissaDecimalPart.length : 0) + parseInt(parts[1], 10);
+  }
+  const decimalPart = num.toString().split(".")[1];
+  return decimalPart ? decimalPart.length : 0;
+}
+function roundValueToStep(value, step, min2) {
+  const nearest = Math.round((value - min2) / step) * step + min2;
+  return Number(nearest.toFixed(getDecimalPrecision(step)));
+}
+function setValueIndex({
+  values: values2,
+  newValue,
+  index
+}) {
+  const output = values2.slice();
+  output[index] = newValue;
+  return output.sort(asc);
+}
+function focusThumb({
+  sliderRef,
+  activeIndex,
+  setActive
+}) {
+  var _a, _b, _c;
+  const doc = ownerDocument(sliderRef.current);
+  if (!((_a = sliderRef.current) == null ? void 0 : _a.contains(doc.activeElement)) || Number((_b = doc == null ? void 0 : doc.activeElement) == null ? void 0 : _b.getAttribute("data-index")) !== activeIndex) {
+    (_c = sliderRef.current) == null ? void 0 : _c.querySelector(`[type="range"][data-index="${activeIndex}"]`).focus();
+  }
+  if (setActive) {
+    setActive(activeIndex);
+  }
+}
+function areValuesEqual(newValue, oldValue) {
+  if (typeof newValue === "number" && typeof oldValue === "number") {
+    return newValue === oldValue;
+  }
+  if (typeof newValue === "object" && typeof oldValue === "object") {
+    return areArraysEqual(newValue, oldValue);
+  }
+  return false;
+}
+const axisProps = {
+  horizontal: {
+    offset: (percent) => ({
+      left: `${percent}%`
+    }),
+    leap: (percent) => ({
+      width: `${percent}%`
+    })
+  },
+  "horizontal-reverse": {
+    offset: (percent) => ({
+      right: `${percent}%`
+    }),
+    leap: (percent) => ({
+      width: `${percent}%`
+    })
+  },
+  vertical: {
+    offset: (percent) => ({
+      bottom: `${percent}%`
+    }),
+    leap: (percent) => ({
+      height: `${percent}%`
+    })
+  }
+};
+const Identity$1 = (x2) => x2;
+let cachedSupportsTouchActionNone;
+function doesSupportTouchActionNone() {
+  if (cachedSupportsTouchActionNone === void 0) {
+    if (typeof CSS !== "undefined" && typeof CSS.supports === "function") {
+      cachedSupportsTouchActionNone = CSS.supports("touch-action", "none");
+    } else {
+      cachedSupportsTouchActionNone = true;
+    }
+  }
+  return cachedSupportsTouchActionNone;
+}
+function useSlider(parameters) {
+  const {
+    "aria-labelledby": ariaLabelledby,
+    defaultValue,
+    disabled = false,
+    disableSwap = false,
+    isRtl = false,
+    marks: marksProp = false,
+    max: max2 = 100,
+    min: min2 = 0,
+    name,
+    onChange,
+    onChangeCommitted,
+    orientation = "horizontal",
+    rootRef: ref,
+    scale = Identity$1,
+    step = 1,
+    shiftStep = 10,
+    tabIndex,
+    value: valueProp
+  } = parameters;
+  const touchId = reactExports.useRef(void 0);
+  const [active, setActive] = reactExports.useState(-1);
+  const [open, setOpen] = reactExports.useState(-1);
+  const [dragging, setDragging] = reactExports.useState(false);
+  const moveCount = reactExports.useRef(0);
+  const [valueDerived, setValueState] = useControlled({
+    controlled: valueProp,
+    default: defaultValue ?? min2,
+    name: "Slider"
+  });
+  const handleChange = onChange && ((event, value, thumbIndex) => {
+    const nativeEvent = event.nativeEvent || event;
+    const clonedEvent = new nativeEvent.constructor(nativeEvent.type, nativeEvent);
+    Object.defineProperty(clonedEvent, "target", {
+      writable: true,
+      value: {
+        value,
+        name
+      }
+    });
+    onChange(clonedEvent, value, thumbIndex);
+  });
+  const range = Array.isArray(valueDerived);
+  let values2 = range ? valueDerived.slice().sort(asc) : [valueDerived];
+  values2 = values2.map((value) => value == null ? min2 : clamp(value, min2, max2));
+  const marks = marksProp === true && step !== null ? [...Array(Math.floor((max2 - min2) / step) + 1)].map((_, index) => ({
+    value: min2 + step * index
+  })) : marksProp || [];
+  const marksValues = marks.map((mark) => mark.value);
+  const [focusedThumbIndex, setFocusedThumbIndex] = reactExports.useState(-1);
+  const sliderRef = reactExports.useRef(null);
+  const handleRef = useForkRef(ref, sliderRef);
+  const createHandleHiddenInputFocus = (otherHandlers) => (event) => {
+    var _a;
+    const index = Number(event.currentTarget.getAttribute("data-index"));
+    if (isFocusVisible(event.target)) {
+      setFocusedThumbIndex(index);
+    }
+    setOpen(index);
+    (_a = otherHandlers == null ? void 0 : otherHandlers.onFocus) == null ? void 0 : _a.call(otherHandlers, event);
+  };
+  const createHandleHiddenInputBlur = (otherHandlers) => (event) => {
+    var _a;
+    if (!isFocusVisible(event.target)) {
+      setFocusedThumbIndex(-1);
+    }
+    setOpen(-1);
+    (_a = otherHandlers == null ? void 0 : otherHandlers.onBlur) == null ? void 0 : _a.call(otherHandlers, event);
+  };
+  const changeValue = (event, valueInput) => {
+    const index = Number(event.currentTarget.getAttribute("data-index"));
+    const value = values2[index];
+    const marksIndex = marksValues.indexOf(value);
+    let newValue = valueInput;
+    if (marks && step == null) {
+      const maxMarksValue = marksValues[marksValues.length - 1];
+      if (newValue > maxMarksValue) {
+        newValue = maxMarksValue;
+      } else if (newValue < marksValues[0]) {
+        newValue = marksValues[0];
+      } else {
+        newValue = newValue < value ? marksValues[marksIndex - 1] : marksValues[marksIndex + 1];
+      }
+    }
+    newValue = clamp(newValue, min2, max2);
+    if (range) {
+      if (disableSwap) {
+        newValue = clamp(newValue, values2[index - 1] || -Infinity, values2[index + 1] || Infinity);
+      }
+      const previousValue = newValue;
+      newValue = setValueIndex({
+        values: values2,
+        newValue,
+        index
+      });
+      let activeIndex = index;
+      if (!disableSwap) {
+        activeIndex = newValue.indexOf(previousValue);
+      }
+      focusThumb({
+        sliderRef,
+        activeIndex
+      });
+    }
+    setValueState(newValue);
+    setFocusedThumbIndex(index);
+    if (handleChange && !areValuesEqual(newValue, valueDerived)) {
+      handleChange(event, newValue, index);
+    }
+    if (onChangeCommitted) {
+      onChangeCommitted(event, newValue);
+    }
+  };
+  const createHandleHiddenInputKeyDown = (otherHandlers) => (event) => {
+    var _a;
+    if (step !== null) {
+      const index = Number(event.currentTarget.getAttribute("data-index"));
+      const value = values2[index];
+      let newValue = null;
+      if ((event.key === "ArrowLeft" || event.key === "ArrowDown") && event.shiftKey || event.key === "PageDown") {
+        newValue = Math.max(value - shiftStep, min2);
+      } else if ((event.key === "ArrowRight" || event.key === "ArrowUp") && event.shiftKey || event.key === "PageUp") {
+        newValue = Math.min(value + shiftStep, max2);
+      }
+      if (newValue !== null) {
+        changeValue(event, newValue);
+        event.preventDefault();
+      }
+    }
+    (_a = otherHandlers == null ? void 0 : otherHandlers.onKeyDown) == null ? void 0 : _a.call(otherHandlers, event);
+  };
+  useEnhancedEffect(() => {
+    var _a;
+    if (disabled && sliderRef.current.contains(document.activeElement)) {
+      (_a = document.activeElement) == null ? void 0 : _a.blur();
+    }
+  }, [disabled]);
+  if (disabled && active !== -1) {
+    setActive(-1);
+  }
+  if (disabled && focusedThumbIndex !== -1) {
+    setFocusedThumbIndex(-1);
+  }
+  const createHandleHiddenInputChange = (otherHandlers) => (event) => {
+    var _a;
+    (_a = otherHandlers.onChange) == null ? void 0 : _a.call(otherHandlers, event);
+    changeValue(event, event.target.valueAsNumber);
+  };
+  const previousIndex = reactExports.useRef(void 0);
+  let axis = orientation;
+  if (isRtl && orientation === "horizontal") {
+    axis += "-reverse";
+  }
+  const getFingerNewValue = ({
+    finger,
+    move = false
+  }) => {
+    const {
+      current: slider
+    } = sliderRef;
+    const {
+      width: width2,
+      height: height2,
+      bottom: bottom2,
+      left: left2
+    } = slider.getBoundingClientRect();
+    let percent;
+    if (axis.startsWith("vertical")) {
+      percent = (bottom2 - finger.y) / height2;
+    } else {
+      percent = (finger.x - left2) / width2;
+    }
+    if (axis.includes("-reverse")) {
+      percent = 1 - percent;
+    }
+    let newValue;
+    newValue = percentToValue(percent, min2, max2);
+    if (step) {
+      newValue = roundValueToStep(newValue, step, min2);
+    } else {
+      const closestIndex = findClosest(marksValues, newValue);
+      newValue = marksValues[closestIndex];
+    }
+    newValue = clamp(newValue, min2, max2);
+    let activeIndex = 0;
+    if (range) {
+      if (!move) {
+        activeIndex = findClosest(values2, newValue);
+      } else {
+        activeIndex = previousIndex.current;
+      }
+      if (disableSwap) {
+        newValue = clamp(newValue, values2[activeIndex - 1] || -Infinity, values2[activeIndex + 1] || Infinity);
+      }
+      const previousValue = newValue;
+      newValue = setValueIndex({
+        values: values2,
+        newValue,
+        index: activeIndex
+      });
+      if (!(disableSwap && move)) {
+        activeIndex = newValue.indexOf(previousValue);
+        previousIndex.current = activeIndex;
+      }
+    }
+    return {
+      newValue,
+      activeIndex
+    };
+  };
+  const handleTouchMove = useEventCallback((nativeEvent) => {
+    const finger = trackFinger(nativeEvent, touchId);
+    if (!finger) {
+      return;
+    }
+    moveCount.current += 1;
+    if (nativeEvent.type === "mousemove" && nativeEvent.buttons === 0) {
+      handleTouchEnd(nativeEvent);
+      return;
+    }
+    const {
+      newValue,
+      activeIndex
+    } = getFingerNewValue({
+      finger,
+      move: true
+    });
+    focusThumb({
+      sliderRef,
+      activeIndex,
+      setActive
+    });
+    setValueState(newValue);
+    if (!dragging && moveCount.current > INTENTIONAL_DRAG_COUNT_THRESHOLD) {
+      setDragging(true);
+    }
+    if (handleChange && !areValuesEqual(newValue, valueDerived)) {
+      handleChange(nativeEvent, newValue, activeIndex);
+    }
+  });
+  const handleTouchEnd = useEventCallback((nativeEvent) => {
+    const finger = trackFinger(nativeEvent, touchId);
+    setDragging(false);
+    if (!finger) {
+      return;
+    }
+    const {
+      newValue
+    } = getFingerNewValue({
+      finger,
+      move: true
+    });
+    setActive(-1);
+    if (nativeEvent.type === "touchend") {
+      setOpen(-1);
+    }
+    if (onChangeCommitted) {
+      onChangeCommitted(nativeEvent, newValue);
+    }
+    touchId.current = void 0;
+    stopListening();
+  });
+  const handleTouchStart = useEventCallback((nativeEvent) => {
+    if (disabled) {
+      return;
+    }
+    if (!doesSupportTouchActionNone()) {
+      nativeEvent.preventDefault();
+    }
+    const touch = nativeEvent.changedTouches[0];
+    if (touch != null) {
+      touchId.current = touch.identifier;
+    }
+    const finger = trackFinger(nativeEvent, touchId);
+    if (finger !== false) {
+      const {
+        newValue,
+        activeIndex
+      } = getFingerNewValue({
+        finger
+      });
+      focusThumb({
+        sliderRef,
+        activeIndex,
+        setActive
+      });
+      setValueState(newValue);
+      if (handleChange && !areValuesEqual(newValue, valueDerived)) {
+        handleChange(nativeEvent, newValue, activeIndex);
+      }
+    }
+    moveCount.current = 0;
+    const doc = ownerDocument(sliderRef.current);
+    doc.addEventListener("touchmove", handleTouchMove, {
+      passive: true
+    });
+    doc.addEventListener("touchend", handleTouchEnd, {
+      passive: true
+    });
+  });
+  const stopListening = reactExports.useCallback(() => {
+    const doc = ownerDocument(sliderRef.current);
+    doc.removeEventListener("mousemove", handleTouchMove);
+    doc.removeEventListener("mouseup", handleTouchEnd);
+    doc.removeEventListener("touchmove", handleTouchMove);
+    doc.removeEventListener("touchend", handleTouchEnd);
+  }, [handleTouchEnd, handleTouchMove]);
+  reactExports.useEffect(() => {
+    const {
+      current: slider
+    } = sliderRef;
+    slider.addEventListener("touchstart", handleTouchStart, {
+      passive: doesSupportTouchActionNone()
+    });
+    return () => {
+      slider.removeEventListener("touchstart", handleTouchStart);
+      stopListening();
+    };
+  }, [stopListening, handleTouchStart]);
+  reactExports.useEffect(() => {
+    if (disabled) {
+      stopListening();
+    }
+  }, [disabled, stopListening]);
+  const createHandleMouseDown = (otherHandlers) => (event) => {
+    var _a;
+    (_a = otherHandlers.onMouseDown) == null ? void 0 : _a.call(otherHandlers, event);
+    if (disabled) {
+      return;
+    }
+    if (event.defaultPrevented) {
+      return;
+    }
+    if (event.button !== 0) {
+      return;
+    }
+    event.preventDefault();
+    const finger = trackFinger(event, touchId);
+    if (finger !== false) {
+      const {
+        newValue,
+        activeIndex
+      } = getFingerNewValue({
+        finger
+      });
+      focusThumb({
+        sliderRef,
+        activeIndex,
+        setActive
+      });
+      setValueState(newValue);
+      if (handleChange && !areValuesEqual(newValue, valueDerived)) {
+        handleChange(event, newValue, activeIndex);
+      }
+    }
+    moveCount.current = 0;
+    const doc = ownerDocument(sliderRef.current);
+    doc.addEventListener("mousemove", handleTouchMove, {
+      passive: true
+    });
+    doc.addEventListener("mouseup", handleTouchEnd);
+  };
+  const trackOffset = valueToPercent(range ? values2[0] : min2, min2, max2);
+  const trackLeap = valueToPercent(values2[values2.length - 1], min2, max2) - trackOffset;
+  const getRootProps = (externalProps = {}) => {
+    const externalHandlers = extractEventHandlers(externalProps);
+    const ownEventHandlers = {
+      onMouseDown: createHandleMouseDown(externalHandlers || {})
+    };
+    const mergedEventHandlers = {
+      ...externalHandlers,
+      ...ownEventHandlers
+    };
+    return {
+      ...externalProps,
+      ref: handleRef,
+      ...mergedEventHandlers
+    };
+  };
+  const createHandleMouseOver = (otherHandlers) => (event) => {
+    var _a;
+    (_a = otherHandlers.onMouseOver) == null ? void 0 : _a.call(otherHandlers, event);
+    const index = Number(event.currentTarget.getAttribute("data-index"));
+    setOpen(index);
+  };
+  const createHandleMouseLeave = (otherHandlers) => (event) => {
+    var _a;
+    (_a = otherHandlers.onMouseLeave) == null ? void 0 : _a.call(otherHandlers, event);
+    setOpen(-1);
+  };
+  const getThumbProps = (externalProps = {}) => {
+    const externalHandlers = extractEventHandlers(externalProps);
+    const ownEventHandlers = {
+      onMouseOver: createHandleMouseOver(externalHandlers || {}),
+      onMouseLeave: createHandleMouseLeave(externalHandlers || {})
+    };
+    return {
+      ...externalProps,
+      ...externalHandlers,
+      ...ownEventHandlers
+    };
+  };
+  const getThumbStyle = (index) => {
+    return {
+      // So the non active thumb doesn't show its label on hover.
+      pointerEvents: active !== -1 && active !== index ? "none" : void 0
+    };
+  };
+  const getHiddenInputProps = (externalProps = {}) => {
+    const externalHandlers = extractEventHandlers(externalProps);
+    const ownEventHandlers = {
+      onChange: createHandleHiddenInputChange(externalHandlers || {}),
+      onFocus: createHandleHiddenInputFocus(externalHandlers || {}),
+      onBlur: createHandleHiddenInputBlur(externalHandlers || {}),
+      onKeyDown: createHandleHiddenInputKeyDown(externalHandlers || {})
+    };
+    const mergedEventHandlers = {
+      ...externalHandlers,
+      ...ownEventHandlers
+    };
+    return {
+      tabIndex,
+      "aria-labelledby": ariaLabelledby,
+      "aria-orientation": orientation,
+      "aria-valuemax": scale(max2),
+      "aria-valuemin": scale(min2),
+      name,
+      type: "range",
+      min: parameters.min,
+      max: parameters.max,
+      step: parameters.step === null && parameters.marks ? "any" : parameters.step ?? void 0,
+      disabled,
+      ...externalProps,
+      ...mergedEventHandlers,
+      style: {
+        ...visuallyHidden,
+        direction: isRtl ? "rtl" : "ltr",
+        // So that VoiceOver's focus indicator matches the thumb's dimensions
+        width: "100%",
+        height: "100%"
+      }
+    };
+  };
+  return {
+    active,
+    axis,
+    axisProps,
+    dragging,
+    focusedThumbIndex,
+    getHiddenInputProps,
+    getRootProps,
+    getThumbProps,
+    marks,
+    open,
+    range,
+    rootRef: handleRef,
+    trackLeap,
+    trackOffset,
+    values: values2,
+    getThumbStyle
+  };
+}
+const shouldSpreadAdditionalProps = (Slot) => {
+  return !Slot || !isHostComponent(Slot);
+};
+function getSliderUtilityClass(slot) {
+  return generateUtilityClass("MuiSlider", slot);
+}
+const sliderClasses = generateUtilityClasses("MuiSlider", ["root", "active", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "disabled", "dragging", "focusVisible", "mark", "markActive", "marked", "markLabel", "markLabelActive", "rail", "sizeSmall", "thumb", "thumbColorPrimary", "thumbColorSecondary", "thumbColorError", "thumbColorSuccess", "thumbColorInfo", "thumbColorWarning", "track", "trackInverted", "trackFalse", "thumbSizeSmall", "valueLabel", "valueLabelOpen", "valueLabelCircle", "valueLabelLabel", "vertical"]);
+const useValueLabelClasses = (props) => {
+  const {
+    open
+  } = props;
+  const utilityClasses = {
+    offset: clsx(open && sliderClasses.valueLabelOpen),
+    circle: sliderClasses.valueLabelCircle,
+    label: sliderClasses.valueLabelLabel
+  };
+  return utilityClasses;
+};
+function SliderValueLabel$1(props) {
+  const {
+    children,
+    className,
+    value
+  } = props;
+  const classes = useValueLabelClasses(props);
+  if (!children) {
+    return null;
+  }
+  return /* @__PURE__ */ reactExports.cloneElement(children, {
+    className: clsx(children.props.className)
+  }, /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
+    children: [children.props.children, /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
+      className: clsx(classes.offset, className),
+      "aria-hidden": true,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
+        className: classes.circle,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
+          className: classes.label,
+          children: value
+        })
+      })
+    })]
+  }));
+}
+function Identity(x2) {
+  return x2;
+}
+const SliderRoot = styled("span", {
+  name: "MuiSlider",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.root, styles2[`color${capitalize(ownerState.color)}`], ownerState.size !== "medium" && styles2[`size${capitalize(ownerState.size)}`], ownerState.marked && styles2.marked, ownerState.orientation === "vertical" && styles2.vertical, ownerState.track === "inverted" && styles2.trackInverted, ownerState.track === false && styles2.trackFalse];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  borderRadius: 12,
+  boxSizing: "content-box",
+  display: "inline-block",
+  position: "relative",
+  cursor: "pointer",
+  touchAction: "none",
+  WebkitTapHighlightColor: "transparent",
+  "@media print": {
+    colorAdjust: "exact"
+  },
+  [`&.${sliderClasses.disabled}`]: {
+    pointerEvents: "none",
+    cursor: "default",
+    color: (theme.vars || theme).palette.grey[400]
+  },
+  [`&.${sliderClasses.dragging}`]: {
+    [`& .${sliderClasses.thumb}, & .${sliderClasses.track}`]: {
+      transition: "none"
+    }
+  },
+  variants: [...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+    props: {
+      color: color2
+    },
+    style: {
+      color: (theme.vars || theme).palette[color2].main
+    }
+  })), {
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      height: 4,
+      width: "100%",
+      padding: "13px 0",
+      // The primary input mechanism of the device includes a pointing device of limited accuracy.
+      "@media (pointer: coarse)": {
+        // Reach 42px touch target, about ~8mm on screen.
+        padding: "20px 0"
+      }
+    }
+  }, {
+    props: {
+      orientation: "horizontal",
+      size: "small"
+    },
+    style: {
+      height: 2
+    }
+  }, {
+    props: {
+      orientation: "horizontal",
+      marked: true
+    },
+    style: {
+      marginBottom: 20
+    }
+  }, {
+    props: {
+      orientation: "vertical"
+    },
+    style: {
+      height: "100%",
+      width: 4,
+      padding: "0 13px",
+      // The primary input mechanism of the device includes a pointing device of limited accuracy.
+      "@media (pointer: coarse)": {
+        // Reach 42px touch target, about ~8mm on screen.
+        padding: "0 20px"
+      }
+    }
+  }, {
+    props: {
+      orientation: "vertical",
+      size: "small"
+    },
+    style: {
+      width: 2
+    }
+  }, {
+    props: {
+      orientation: "vertical",
+      marked: true
+    },
+    style: {
+      marginRight: 44
+    }
+  }]
+})));
+const SliderRail = styled("span", {
+  name: "MuiSlider",
+  slot: "Rail",
+  overridesResolver: (props, styles2) => styles2.rail
+})({
+  display: "block",
+  position: "absolute",
+  borderRadius: "inherit",
+  backgroundColor: "currentColor",
+  opacity: 0.38,
+  variants: [{
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      width: "100%",
+      height: "inherit",
+      top: "50%",
+      transform: "translateY(-50%)"
+    }
+  }, {
+    props: {
+      orientation: "vertical"
+    },
+    style: {
+      height: "100%",
+      width: "inherit",
+      left: "50%",
+      transform: "translateX(-50%)"
+    }
+  }, {
+    props: {
+      track: "inverted"
+    },
+    style: {
+      opacity: 1
+    }
+  }]
+});
+const SliderTrack = styled("span", {
+  name: "MuiSlider",
+  slot: "Track",
+  overridesResolver: (props, styles2) => styles2.track
+})(memoTheme(({
+  theme
+}) => {
+  return {
+    display: "block",
+    position: "absolute",
+    borderRadius: "inherit",
+    border: "1px solid currentColor",
+    backgroundColor: "currentColor",
+    transition: theme.transitions.create(["left", "width", "bottom", "height"], {
+      duration: theme.transitions.duration.shortest
+    }),
+    variants: [{
+      props: {
+        size: "small"
+      },
+      style: {
+        border: "none"
+      }
+    }, {
+      props: {
+        orientation: "horizontal"
+      },
+      style: {
+        height: "inherit",
+        top: "50%",
+        transform: "translateY(-50%)"
+      }
+    }, {
+      props: {
+        orientation: "vertical"
+      },
+      style: {
+        width: "inherit",
+        left: "50%",
+        transform: "translateX(-50%)"
+      }
+    }, {
+      props: {
+        track: false
+      },
+      style: {
+        display: "none"
+      }
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+      props: {
+        color: color2,
+        track: "inverted"
+      },
+      style: {
+        ...theme.vars ? {
+          backgroundColor: theme.vars.palette.Slider[`${color2}Track`],
+          borderColor: theme.vars.palette.Slider[`${color2}Track`]
+        } : {
+          backgroundColor: lighten(theme.palette[color2].main, 0.62),
+          borderColor: lighten(theme.palette[color2].main, 0.62),
+          ...theme.applyStyles("dark", {
+            backgroundColor: darken(theme.palette[color2].main, 0.5)
+          }),
+          ...theme.applyStyles("dark", {
+            borderColor: darken(theme.palette[color2].main, 0.5)
+          })
+        }
+      }
+    }))]
+  };
+}));
+const SliderThumb = styled("span", {
+  name: "MuiSlider",
+  slot: "Thumb",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.thumb, styles2[`thumbColor${capitalize(ownerState.color)}`], ownerState.size !== "medium" && styles2[`thumbSize${capitalize(ownerState.size)}`]];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  position: "absolute",
+  width: 20,
+  height: 20,
+  boxSizing: "border-box",
+  borderRadius: "50%",
+  outline: 0,
+  backgroundColor: "currentColor",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  transition: theme.transitions.create(["box-shadow", "left", "bottom"], {
+    duration: theme.transitions.duration.shortest
+  }),
+  "&::before": {
+    position: "absolute",
+    content: '""',
+    borderRadius: "inherit",
+    width: "100%",
+    height: "100%",
+    boxShadow: (theme.vars || theme).shadows[2]
+  },
+  "&::after": {
+    position: "absolute",
+    content: '""',
+    borderRadius: "50%",
+    // 42px is the hit target
+    width: 42,
+    height: 42,
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)"
+  },
+  [`&.${sliderClasses.disabled}`]: {
+    "&:hover": {
+      boxShadow: "none"
+    }
+  },
+  variants: [{
+    props: {
+      size: "small"
+    },
+    style: {
+      width: 12,
+      height: 12,
+      "&::before": {
+        boxShadow: "none"
+      }
+    }
+  }, {
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      top: "50%",
+      transform: "translate(-50%, -50%)"
+    }
+  }, {
+    props: {
+      orientation: "vertical"
+    },
+    style: {
+      left: "50%",
+      transform: "translate(-50%, 50%)"
+    }
+  }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+    props: {
+      color: color2
+    },
+    style: {
+      [`&:hover, &.${sliderClasses.focusVisible}`]: {
+        ...theme.vars ? {
+          boxShadow: `0px 0px 0px 8px rgba(${theme.vars.palette[color2].mainChannel} / 0.16)`
+        } : {
+          boxShadow: `0px 0px 0px 8px ${alpha(theme.palette[color2].main, 0.16)}`
+        },
+        "@media (hover: none)": {
+          boxShadow: "none"
+        }
+      },
+      [`&.${sliderClasses.active}`]: {
+        ...theme.vars ? {
+          boxShadow: `0px 0px 0px 14px rgba(${theme.vars.palette[color2].mainChannel} / 0.16)`
+        } : {
+          boxShadow: `0px 0px 0px 14px ${alpha(theme.palette[color2].main, 0.16)}`
+        }
+      }
+    }
+  }))]
+})));
+const SliderValueLabel = styled(SliderValueLabel$1, {
+  name: "MuiSlider",
+  slot: "ValueLabel",
+  overridesResolver: (props, styles2) => styles2.valueLabel
+})(memoTheme(({
+  theme
+}) => ({
+  zIndex: 1,
+  whiteSpace: "nowrap",
+  ...theme.typography.body2,
+  fontWeight: 500,
+  transition: theme.transitions.create(["transform"], {
+    duration: theme.transitions.duration.shortest
+  }),
+  position: "absolute",
+  backgroundColor: (theme.vars || theme).palette.grey[600],
+  borderRadius: 2,
+  color: (theme.vars || theme).palette.common.white,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "0.25rem 0.75rem",
+  variants: [{
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      transform: "translateY(-100%) scale(0)",
+      top: "-10px",
+      transformOrigin: "bottom center",
+      "&::before": {
+        position: "absolute",
+        content: '""',
+        width: 8,
+        height: 8,
+        transform: "translate(-50%, 50%) rotate(45deg)",
+        backgroundColor: "inherit",
+        bottom: 0,
+        left: "50%"
+      },
+      [`&.${sliderClasses.valueLabelOpen}`]: {
+        transform: "translateY(-100%) scale(1)"
+      }
+    }
+  }, {
+    props: {
+      orientation: "vertical"
+    },
+    style: {
+      transform: "translateY(-50%) scale(0)",
+      right: "30px",
+      top: "50%",
+      transformOrigin: "right center",
+      "&::before": {
+        position: "absolute",
+        content: '""',
+        width: 8,
+        height: 8,
+        transform: "translate(-50%, -50%) rotate(45deg)",
+        backgroundColor: "inherit",
+        right: -8,
+        top: "50%"
+      },
+      [`&.${sliderClasses.valueLabelOpen}`]: {
+        transform: "translateY(-50%) scale(1)"
+      }
+    }
+  }, {
+    props: {
+      size: "small"
+    },
+    style: {
+      fontSize: theme.typography.pxToRem(12),
+      padding: "0.25rem 0.5rem"
+    }
+  }, {
+    props: {
+      orientation: "vertical",
+      size: "small"
+    },
+    style: {
+      right: "20px"
+    }
+  }]
+})));
+const SliderMark = styled("span", {
+  name: "MuiSlider",
+  slot: "Mark",
+  shouldForwardProp: (prop) => slotShouldForwardProp(prop) && prop !== "markActive",
+  overridesResolver: (props, styles2) => {
+    const {
+      markActive
+    } = props;
+    return [styles2.mark, markActive && styles2.markActive];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  position: "absolute",
+  width: 2,
+  height: 2,
+  borderRadius: 1,
+  backgroundColor: "currentColor",
+  variants: [{
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      top: "50%",
+      transform: "translate(-1px, -50%)"
+    }
+  }, {
+    props: {
+      orientation: "vertical"
+    },
+    style: {
+      left: "50%",
+      transform: "translate(-50%, 1px)"
+    }
+  }, {
+    props: {
+      markActive: true
+    },
+    style: {
+      backgroundColor: (theme.vars || theme).palette.background.paper,
+      opacity: 0.8
+    }
+  }]
+})));
+const SliderMarkLabel = styled("span", {
+  name: "MuiSlider",
+  slot: "MarkLabel",
+  shouldForwardProp: (prop) => slotShouldForwardProp(prop) && prop !== "markLabelActive",
+  overridesResolver: (props, styles2) => styles2.markLabel
+})(memoTheme(({
+  theme
+}) => ({
+  ...theme.typography.body2,
+  color: (theme.vars || theme).palette.text.secondary,
+  position: "absolute",
+  whiteSpace: "nowrap",
+  variants: [{
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      top: 30,
+      transform: "translateX(-50%)",
+      "@media (pointer: coarse)": {
+        top: 40
+      }
+    }
+  }, {
+    props: {
+      orientation: "vertical"
+    },
+    style: {
+      left: 36,
+      transform: "translateY(50%)",
+      "@media (pointer: coarse)": {
+        left: 44
+      }
+    }
+  }, {
+    props: {
+      markLabelActive: true
+    },
+    style: {
+      color: (theme.vars || theme).palette.text.primary
+    }
+  }]
+})));
+const useUtilityClasses$h = (ownerState) => {
+  const {
+    disabled,
+    dragging,
+    marked,
+    orientation,
+    track,
+    classes,
+    color: color2,
+    size
+  } = ownerState;
+  const slots = {
+    root: ["root", disabled && "disabled", dragging && "dragging", marked && "marked", orientation === "vertical" && "vertical", track === "inverted" && "trackInverted", track === false && "trackFalse", color2 && `color${capitalize(color2)}`, size && `size${capitalize(size)}`],
+    rail: ["rail"],
+    track: ["track"],
+    mark: ["mark"],
+    markActive: ["markActive"],
+    markLabel: ["markLabel"],
+    markLabelActive: ["markLabelActive"],
+    valueLabel: ["valueLabel"],
+    thumb: ["thumb", disabled && "disabled", size && `thumbSize${capitalize(size)}`, color2 && `thumbColor${capitalize(color2)}`],
+    active: ["active"],
+    disabled: ["disabled"],
+    focusVisible: ["focusVisible"]
+  };
+  return composeClasses(slots, getSliderUtilityClass, classes);
+};
+const Forward = ({
+  children
+}) => children;
+const Slider = /* @__PURE__ */ reactExports.forwardRef(function Slider2(inputProps, ref) {
+  const props = useDefaultProps({
+    props: inputProps,
+    name: "MuiSlider"
+  });
+  const isRtl = useRtl();
+  const {
+    "aria-label": ariaLabel,
+    "aria-valuetext": ariaValuetext,
+    "aria-labelledby": ariaLabelledby,
+    // eslint-disable-next-line react/prop-types
+    component = "span",
+    components = {},
+    componentsProps = {},
+    color: color2 = "primary",
+    classes: classesProp,
+    className,
+    disableSwap = false,
+    disabled = false,
+    getAriaLabel,
+    getAriaValueText,
+    marks: marksProp = false,
+    max: max2 = 100,
+    min: min2 = 0,
+    name,
+    onChange,
+    onChangeCommitted,
+    orientation = "horizontal",
+    shiftStep = 10,
+    size = "medium",
+    step = 1,
+    scale = Identity,
+    slotProps,
+    slots,
+    tabIndex,
+    track = "normal",
+    value: valueProp,
+    valueLabelDisplay = "off",
+    valueLabelFormat = Identity,
+    ...other
+  } = props;
+  const ownerState = {
+    ...props,
+    isRtl,
+    max: max2,
+    min: min2,
+    classes: classesProp,
+    disabled,
+    disableSwap,
+    orientation,
+    marks: marksProp,
+    color: color2,
+    size,
+    step,
+    shiftStep,
+    scale,
+    track,
+    valueLabelDisplay,
+    valueLabelFormat
+  };
+  const {
+    axisProps: axisProps2,
+    getRootProps,
+    getHiddenInputProps,
+    getThumbProps,
+    open,
+    active,
+    axis,
+    focusedThumbIndex,
+    range,
+    dragging,
+    marks,
+    values: values2,
+    trackOffset,
+    trackLeap,
+    getThumbStyle
+  } = useSlider({
+    ...ownerState,
+    rootRef: ref
+  });
+  ownerState.marked = marks.length > 0 && marks.some((mark) => mark.label);
+  ownerState.dragging = dragging;
+  ownerState.focusedThumbIndex = focusedThumbIndex;
+  const classes = useUtilityClasses$h(ownerState);
+  const RootSlot = (slots == null ? void 0 : slots.root) ?? components.Root ?? SliderRoot;
+  const RailSlot = (slots == null ? void 0 : slots.rail) ?? components.Rail ?? SliderRail;
+  const TrackSlot = (slots == null ? void 0 : slots.track) ?? components.Track ?? SliderTrack;
+  const ThumbSlot = (slots == null ? void 0 : slots.thumb) ?? components.Thumb ?? SliderThumb;
+  const ValueLabelSlot = (slots == null ? void 0 : slots.valueLabel) ?? components.ValueLabel ?? SliderValueLabel;
+  const MarkSlot = (slots == null ? void 0 : slots.mark) ?? components.Mark ?? SliderMark;
+  const MarkLabelSlot = (slots == null ? void 0 : slots.markLabel) ?? components.MarkLabel ?? SliderMarkLabel;
+  const InputSlot = (slots == null ? void 0 : slots.input) ?? components.Input ?? "input";
+  const rootSlotProps = (slotProps == null ? void 0 : slotProps.root) ?? componentsProps.root;
+  const railSlotProps = (slotProps == null ? void 0 : slotProps.rail) ?? componentsProps.rail;
+  const trackSlotProps = (slotProps == null ? void 0 : slotProps.track) ?? componentsProps.track;
+  const thumbSlotProps = (slotProps == null ? void 0 : slotProps.thumb) ?? componentsProps.thumb;
+  const valueLabelSlotProps = (slotProps == null ? void 0 : slotProps.valueLabel) ?? componentsProps.valueLabel;
+  const markSlotProps = (slotProps == null ? void 0 : slotProps.mark) ?? componentsProps.mark;
+  const markLabelSlotProps = (slotProps == null ? void 0 : slotProps.markLabel) ?? componentsProps.markLabel;
+  const inputSlotProps = (slotProps == null ? void 0 : slotProps.input) ?? componentsProps.input;
+  const rootProps = useSlotProps({
+    elementType: RootSlot,
+    getSlotProps: getRootProps,
+    externalSlotProps: rootSlotProps,
+    externalForwardedProps: other,
+    additionalProps: {
+      ...shouldSpreadAdditionalProps(RootSlot) && {
+        as: component
+      }
+    },
+    ownerState: {
+      ...ownerState,
+      ...rootSlotProps == null ? void 0 : rootSlotProps.ownerState
+    },
+    className: [classes.root, className]
+  });
+  const railProps = useSlotProps({
+    elementType: RailSlot,
+    externalSlotProps: railSlotProps,
+    ownerState,
+    className: classes.rail
+  });
+  const trackProps = useSlotProps({
+    elementType: TrackSlot,
+    externalSlotProps: trackSlotProps,
+    additionalProps: {
+      style: {
+        ...axisProps2[axis].offset(trackOffset),
+        ...axisProps2[axis].leap(trackLeap)
+      }
+    },
+    ownerState: {
+      ...ownerState,
+      ...trackSlotProps == null ? void 0 : trackSlotProps.ownerState
+    },
+    className: classes.track
+  });
+  const thumbProps = useSlotProps({
+    elementType: ThumbSlot,
+    getSlotProps: getThumbProps,
+    externalSlotProps: thumbSlotProps,
+    ownerState: {
+      ...ownerState,
+      ...thumbSlotProps == null ? void 0 : thumbSlotProps.ownerState
+    },
+    className: classes.thumb
+  });
+  const valueLabelProps = useSlotProps({
+    elementType: ValueLabelSlot,
+    externalSlotProps: valueLabelSlotProps,
+    ownerState: {
+      ...ownerState,
+      ...valueLabelSlotProps == null ? void 0 : valueLabelSlotProps.ownerState
+    },
+    className: classes.valueLabel
+  });
+  const markProps = useSlotProps({
+    elementType: MarkSlot,
+    externalSlotProps: markSlotProps,
+    ownerState,
+    className: classes.mark
+  });
+  const markLabelProps = useSlotProps({
+    elementType: MarkLabelSlot,
+    externalSlotProps: markLabelSlotProps,
+    ownerState,
+    className: classes.markLabel
+  });
+  const inputSliderProps = useSlotProps({
+    elementType: InputSlot,
+    getSlotProps: getHiddenInputProps,
+    externalSlotProps: inputSlotProps,
+    ownerState
+  });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(RootSlot, {
+    ...rootProps,
+    children: [/* @__PURE__ */ jsxRuntimeExports.jsx(RailSlot, {
+      ...railProps
+    }), /* @__PURE__ */ jsxRuntimeExports.jsx(TrackSlot, {
+      ...trackProps
+    }), marks.filter((mark) => mark.value >= min2 && mark.value <= max2).map((mark, index) => {
+      const percent = valueToPercent(mark.value, min2, max2);
+      const style2 = axisProps2[axis].offset(percent);
+      let markActive;
+      if (track === false) {
+        markActive = values2.includes(mark.value);
+      } else {
+        markActive = track === "normal" && (range ? mark.value >= values2[0] && mark.value <= values2[values2.length - 1] : mark.value <= values2[0]) || track === "inverted" && (range ? mark.value <= values2[0] || mark.value >= values2[values2.length - 1] : mark.value >= values2[0]);
+      }
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
+        children: [/* @__PURE__ */ jsxRuntimeExports.jsx(MarkSlot, {
+          "data-index": index,
+          ...markProps,
+          ...!isHostComponent(MarkSlot) && {
+            markActive
+          },
+          style: {
+            ...style2,
+            ...markProps.style
+          },
+          className: clsx(markProps.className, markActive && classes.markActive)
+        }), mark.label != null ? /* @__PURE__ */ jsxRuntimeExports.jsx(MarkLabelSlot, {
+          "aria-hidden": true,
+          "data-index": index,
+          ...markLabelProps,
+          ...!isHostComponent(MarkLabelSlot) && {
+            markLabelActive: markActive
+          },
+          style: {
+            ...style2,
+            ...markLabelProps.style
+          },
+          className: clsx(classes.markLabel, markLabelProps.className, markActive && classes.markLabelActive),
+          children: mark.label
+        }) : null]
+      }, index);
+    }), values2.map((value, index) => {
+      const percent = valueToPercent(value, min2, max2);
+      const style2 = axisProps2[axis].offset(percent);
+      const ValueLabelComponent = valueLabelDisplay === "off" ? Forward : ValueLabelSlot;
+      return (
+        /* TODO v6: Change component structure. It will help in avoiding the complicated React.cloneElement API added in SliderValueLabel component. Should be: Thumb -> Input, ValueLabel. Follow Joy UI's Slider structure. */
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ValueLabelComponent, {
+          ...!isHostComponent(ValueLabelComponent) && {
+            valueLabelFormat,
+            valueLabelDisplay,
+            value: typeof valueLabelFormat === "function" ? valueLabelFormat(scale(value), index) : valueLabelFormat,
+            index,
+            open: open === index || active === index || valueLabelDisplay === "on",
+            disabled
+          },
+          ...valueLabelProps,
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(ThumbSlot, {
+            "data-index": index,
+            ...thumbProps,
+            className: clsx(classes.thumb, thumbProps.className, active === index && classes.active, focusedThumbIndex === index && classes.focusVisible),
+            style: {
+              ...style2,
+              ...getThumbStyle(index),
+              ...thumbProps.style
+            },
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(InputSlot, {
+              "data-index": index,
+              "aria-label": getAriaLabel ? getAriaLabel(index) : ariaLabel,
+              "aria-valuenow": scale(value),
+              "aria-labelledby": ariaLabelledby,
+              "aria-valuetext": getAriaValueText ? getAriaValueText(scale(value), index) : ariaValuetext,
+              value: values2[index],
+              ...inputSliderProps
+            })
+          })
+        }, index)
+      );
+    })]
+  });
+});
 function useSnackbar(parameters = {}) {
   const {
     autoHideDuration = null,
@@ -32359,15 +33780,69 @@ const SupplierFilter = ({
   )) });
 };
 const FilterComponent = ({
-  handleCategoryFilterChange,
   categories,
-  handleSupplierFilterChange,
-  selectedFilterCategories,
-  selectedFilterSuppliers,
   suppliers,
-  resetFilters
+  resetFilters,
+  filterArrayLength,
+  products,
+  setFilteredProducts,
+  filters,
+  setFilters
 }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
+  const [priceMax, setPriceMax] = reactExports.useState(0);
+  const applyFilters = (callback) => {
+    let filtered = products;
+    const { categories: categories2, suppliers: suppliers2, priceRange } = filters;
+    if (categories2.length > 0) {
+      filtered = filtered.filter(
+        (product) => product.category_ids.some((categoryId) => categories2.includes(categoryId))
+      );
+    }
+    if (suppliers2.length > 0) {
+      filtered = filtered.filter((product) => product.supplier && suppliers2.includes(product.supplier.id));
+    }
+    filtered = filtered.filter(
+      (product) => product.selling_price_per_item >= priceRange[0] && product.selling_price_per_item <= priceRange[1]
+    );
+    setFilteredProducts(filtered);
+  };
+  reactExports.useEffect(() => {
+    if (products.length > 0) {
+      const prices = products.map((product) => product.selling_price_per_item);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      setFilters((prevState) => ({
+        ...prevState,
+        priceRange: [minPrice, maxPrice]
+      }));
+      const max2 = Math.max(...products.map((product) => product.selling_price_per_item));
+      setPriceMax(max2);
+    }
+  }, [products]);
+  const handleFilterChange = (filterType, newValue) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: newValue
+    }));
+  };
+  const handleCategoryFilterChange = (categoryID) => {
+    const updatedCategories = toggleFilter(filters.categories, categoryID);
+    handleFilterChange("categories", updatedCategories);
+  };
+  const handleSupplierFilterChange = (supplierID) => {
+    const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
+    handleFilterChange("suppliers", updatedSuppliers);
+  };
+  const handlePriceRangeChange = (event, newValue) => {
+    handleFilterChange("priceRange", newValue);
+  };
+  const toggleFilter = (currentFilters, id2) => {
+    return currentFilters.includes(id2) ? currentFilters.filter((filterId) => filterId !== id2) : [...currentFilters, id2];
+  };
+  reactExports.useEffect(() => {
+    applyFilters();
+  }, [filters]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, px: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -32375,7 +33850,7 @@ const FilterComponent = ({
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           CategoryFilter,
           {
-            selectedFilterCategories,
+            selectedFilterCategories: filters.categories,
             handleCategoryFilterChange,
             categories
           }
@@ -32386,12 +33861,35 @@ const FilterComponent = ({
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           SupplierFilter,
           {
-            selectedFilterSuppliers,
+            selectedFilterSuppliers: filters.suppliers,
             handleSupplierFilterChange,
             suppliers
           }
         )
-      ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { gutterBottom: true, children: "Фільтрувати по ціні" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", gutterBottom: true, children: [
+        "Діапазон ціни: ",
+        filters.priceRange[0],
+        " - ",
+        filters.priceRange[1],
+        " грн"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Slider,
+        {
+          value: filters.priceRange,
+          onChange: handlePriceRangeChange,
+          valueLabelDisplay: "auto",
+          min: 0,
+          max: priceMax,
+          step: 10
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+      "Знайдено ",
+      filterArrayLength
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: resetFilters, children: "Очистити" })
   ] }) });
@@ -32580,7 +34078,7 @@ const ProductTable = reactExports.forwardRef(({
       ) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дія" })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length >= 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
       var _a;
       const lowQuantity = product.quantity < 5;
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -32772,6 +34270,23 @@ const NotificationPanel = ({ lowQuantityProducts, handleListItemClick }) => {
     /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemText, { primary: product.name, secondary: `Кількість: ${product.quantity}` })
   ] }, product.id + product.name)) });
 };
+const ConfirmDeleteModal = ({
+  openConfirmDeleteModal,
+  handleCloseDeleteModal,
+  selectedDeleteModalProductId,
+  handleDelete
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: openConfirmDeleteModal, onClose: handleCloseDeleteModal, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Confirm Delete" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Are you sure you want to delete this product?" }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseDeleteModal, color: "primary", children: "Cancel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => {
+        selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId);
+      }, color: "secondary", children: "Delete" })
+    ] })
+  ] });
+};
 function App() {
   const [products, setProducts] = reactExports.useState([]);
   const [lowQuantityProducts, setLowQuantityProducts] = reactExports.useState([]);
@@ -32810,8 +34325,6 @@ function App() {
   });
   const [saleData, setSaleData] = reactExports.useState(null);
   const [selectedCategories, setSelectedCategories] = reactExports.useState([]);
-  const [selectedFilterCategories, setSelectedFilterCategories] = reactExports.useState([]);
-  const [selectedFilterSuppliers, setSelectedFilterSuppliers] = reactExports.useState([]);
   const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = reactExports.useState(null);
   const [order2, setOrder] = reactExports.useState("asc");
   const [orderBy, setOrderBy] = reactExports.useState("name");
@@ -32824,6 +34337,11 @@ function App() {
   const [currentPage, setCurrentPage] = reactExports.useState(0);
   const [itemsPerPage, setItemsPerPage] = reactExports.useState(10);
   const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = reactExports.useState([]);
+  const [filters, setFilters] = reactExports.useState({
+    categories: [],
+    suppliers: [],
+    priceRange: [0, 1e3]
+  });
   reactExports.useEffect(() => {
     fetchProductsFunc();
     fetchSuppliersFunc();
@@ -32875,18 +34393,6 @@ function App() {
   const handleModalOpen = (modal) => {
     setModalState((prevState) => ({ ...prevState, [modal]: true }));
   };
-  const handleModalClose = (modal) => {
-    setModalState((prevState) => ({ ...prevState, [modal]: false }));
-    if (modal === "openAdd") {
-      resetNewProduct();
-    } else if (modal === "openPurchase") {
-      resetPurchaseDetails();
-    } else if (modal === "openEdit") {
-      resetEditProduct();
-    } else if (modal === "openSale") {
-      resetSaleData();
-    }
-  };
   const resetNewProduct = () => {
     setNewProduct({
       name: "",
@@ -32902,6 +34408,7 @@ function App() {
     });
   };
   const resetPurchaseDetails = () => {
+    setEditProduct(null);
     setPurchaseDetails({
       quantity: 1,
       purchase_price_per_item: 0,
@@ -32915,7 +34422,19 @@ function App() {
     setSelectedCategories([]);
   };
   const resetSaleData = () => {
+    setEditProduct(null);
     setSaleData(null);
+  };
+  const resetStatesMap = {
+    openAdd: resetNewProduct,
+    openPurchase: resetPurchaseDetails,
+    openEdit: resetEditProduct,
+    openSale: resetSaleData
+  };
+  const handleModalClose = (modal) => {
+    var _a;
+    setModalState((prevState) => ({ ...prevState, [modal]: false }));
+    (_a = resetStatesMap[modal]) == null ? void 0 : _a.call(resetStatesMap);
   };
   const handleDeleteModalOpen = (productId2) => {
     setSelectedDeleteModalProductId(productId2);
@@ -33044,32 +34563,6 @@ function App() {
     selling_total_price: product.selling_total_price,
     selling_quantity: product.selling_quantity
   });
-  const applyFilters = (updatedCategories, updatedSuppliers, callback) => {
-    let filtered = products;
-    if (updatedCategories.length > 0) {
-      filtered = filtered.filter(
-        (product) => product.category_ids.some((categoryId) => updatedCategories.includes(categoryId))
-      );
-    }
-    if (updatedSuppliers.length > 0) {
-      filtered = filtered.filter((product) => product.supplier && updatedSuppliers.includes(product.supplier.id));
-    }
-    console.log(filtered);
-    setFilteredProducts(filtered);
-  };
-  const handleCategoryFilterChange = (categoryID) => {
-    const updatedCategories = toggleFilter(selectedFilterCategories, categoryID);
-    setSelectedFilterCategories(updatedCategories);
-    applyFilters(updatedCategories, selectedFilterSuppliers);
-  };
-  const handleSupplierFilterChange = (supplierID) => {
-    const updatedSuppliers = toggleFilter(selectedFilterSuppliers, supplierID);
-    setSelectedFilterSuppliers(updatedSuppliers);
-    applyFilters(selectedFilterCategories, updatedSuppliers);
-  };
-  const toggleFilter = (currentFilters, id2) => {
-    return currentFilters.includes(id2) ? currentFilters.filter((filterId) => filterId !== id2) : [...currentFilters, id2];
-  };
   const handleSort = (property) => {
     const isAsc = orderBy === property && order2 === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -33161,9 +34654,11 @@ function App() {
     lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen");
   }, [products]);
   const resetFilters = () => {
-    setSelectedFilterCategories([]);
-    setSelectedFilterSuppliers([]);
-    applyFilters([], []);
+    setFilters({
+      categories: [],
+      suppliers: [],
+      priceRange: [0, Math.max(...products.map((product) => product.selling_price_per_item)) || 1e3]
+    });
   };
   reactExports.useEffect(() => {
     if (filteredProducts.length > 0) {
@@ -33171,6 +34666,8 @@ function App() {
         (product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredAndSearchedProducts(array);
+    } else {
+      setFilteredAndSearchedProducts([]);
     }
   }, [filteredProducts, searchTerm]);
   const handleListItemClick = (productId2) => {
@@ -33238,7 +34735,7 @@ function App() {
               variant: "outlined",
               color: "primary",
               onClick: handleOpenAdd,
-              children: "Створити Товар"
+              children: "Купити Новий Товар"
             }
           ) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -33266,11 +34763,12 @@ function App() {
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           FilterComponent,
           {
-            selectedFilterCategories,
-            handleCategoryFilterChange,
+            products,
+            setFilteredProducts,
+            filters,
+            setFilters,
+            filterArrayLength: filteredProducts.length,
             categories,
-            selectedFilterSuppliers,
-            handleSupplierFilterChange,
             suppliers,
             resetFilters
           }
@@ -33380,16 +34878,15 @@ function App() {
         handleCloseCategoryModal: () => handleModalClose("openCategoryCreate")
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: modalState.openDelete, onClose: handleCloseDeleteModal, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Confirm Delete" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Are you sure you want to delete this product?" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseDeleteModal, color: "primary", children: "Cancel" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => {
-          selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId);
-        }, color: "secondary", children: "Delete" })
-      ] })
-    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ConfirmDeleteModal,
+      {
+        openConfirmDeleteModal: modalState.openDelete,
+        handleCloseDeleteModal,
+        selectedDeleteModalProductId,
+        handleDelete
+      }
+    ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddSupplierModal,
       {
