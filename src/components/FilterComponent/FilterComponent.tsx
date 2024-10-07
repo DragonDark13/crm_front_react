@@ -37,7 +37,7 @@ const FilterComponent = ({
                              filterArrayLength
                          }: IFilterComponentProps) => {
     return (
-        <Grid container>
+        <Grid container px={2} >
             <Grid item xs={12}>
                 <h2>Фільтри</h2>
                 <div>
@@ -59,6 +59,10 @@ const FilterComponent = ({
                     </div>
 
                     <Typography gutterBottom>Фільтрувати по ціні</Typography>
+
+                    <Typography variant="subtitle1" gutterBottom>
+  Діапазон ціни: {priceRange[0]} - {priceRange[1]} грн
+</Typography>
                     <Slider
                         value={priceRange}
                         onChange={handlePriceRangeChange}
