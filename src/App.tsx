@@ -2,11 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
     Button,
     Box,
-    DialogContent,
-    DialogTitle,
-    Dialog,
-    DialogContentText,
-    DialogActions,
     Drawer,
     Grid,
     Container,
@@ -66,8 +61,6 @@ function App() {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
-    const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
-
 
     const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
         isLoading: true,
