@@ -574,4 +574,30 @@ export const fetchGetAllSuppliers = () => {
         });
 };
 
+// Функція для отримання історії закупівель постачальника
+export const fetchGetSupplierPurchaseHistory = (supplierId) => {
+    return api.get(`/supplier/${supplierId}/purchase-history`)
+        .then(response => response.data)
+        .catch(error => {
+            console.error(`Error fetching purchase history for supplier ${supplierId}:`, error);
+            return {
+                purchase_history: [],
+                products: []
+            };
+        });
+};
+
+
+// Функція для отримання списку продуктів постачальника
+export const fetchGetSupplierProducts = (supplierId) => {
+    return api.get(`/supplier/${supplierId}/products`)
+        .then(response => response.data)
+        .catch(error => {
+            console.error(`Error fetching products for supplier ${supplierId}:`, error);
+            return {
+                products: []
+            };
+        });
+};
+
 

@@ -51,6 +51,7 @@ import ResponsiveProductView from "./components/ResponsiveProductView/Responsive
 import NotificationPanel from "./components/NotificationPanel/NotificationPanel";
 import {formatDate} from "./utils/function";
 import ConfirmDeleteModal from "./components/dialogs/ConfirmDeleteModal/ConfirmDeleteModal";
+import SupplierDetails from "./components/SupplierDetails/SupplierDetails";
 
 
 function App() {
@@ -783,6 +784,8 @@ function App() {
                     </IconButton>
                 }
             />
+
+            <SupplierDetails supplierId={1}/>
 
 
         </React.Fragment>
