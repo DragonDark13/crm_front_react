@@ -2,7 +2,7 @@ import {Button, Grid, Slider, Typography} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import {ICategory, IProduct, IStateFilters, ISupplier} from "../../../utils/types";
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 
 
 interface IFilterComponentProps {
