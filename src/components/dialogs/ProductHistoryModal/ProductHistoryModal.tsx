@@ -163,9 +163,9 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                             <TableBody>
                                 {(productHistory.purchase && productHistory.purchase.length > 0) &&
                                 sortByDate(productHistory.purchase, 'purchase_date').map((record) => (
-                                    <TableRow key={record.id}>
+                                    <TableRow key={record.id + record.purchase_date}>
                                         <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
-                                        <TableCell>{record.supplier}</TableCell>
+                                        <TableCell>{record.supplier.name}</TableCell>
                                         <TableCell>{record.purchase_price_per_item}</TableCell>
                                         <TableCell>{record.quantity_purchase}</TableCell>
                                         <TableCell>{record.purchase_total_price}</TableCell>
@@ -209,7 +209,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                             <TableBody>
                                 {(productHistory.sales && productHistory.sales.length > 0) &&
                                 sortByDate(productHistory.sales, 'sale_date').map((record) => (
-                                    <TableRow key={record.id}>
+                                    <TableRow key={record.id + record.sale_date}>
                                         <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
                                         <TableCell>{record.customer}</TableCell>
                                         <TableCell>{record.selling_price_per_item}</TableCell>
@@ -222,8 +222,12 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                             {productHistory.sales && productHistory.sales.length > 0 && (
                                 <TableFooter>
                                     <TableRow>
-                                        <TableCell colSpan={3} align="right"><strong>Загальна
-                                            кількість:</strong></TableCell>
+                                        <TableCell colSpan={3} align="right">
+                                            <Typography>
+                                                Загальна
+                                                кількість:
+                                            </Typography>
+                                        </TableCell>
                                         <TableCell>
                                             <Typography
                                                 variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
@@ -269,7 +273,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                             return finalDateA - finalDateB;
                                         }).map((record, index) => (
                                         <TableRow
-                                            key={index}
+                                            key={record.id}
                                             style={{backgroundColor: record.type === 'sale' ? '#d1e7dd' : '#f8d7da'}} // Колір для продажу і закупки
                                         >
                                             <TableCell>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
