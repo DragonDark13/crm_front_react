@@ -5,6 +5,8 @@ import QuantityField from "../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../utils/function";
 import TotalPriceField from "../../FormComponents/TotalPriceField";
 import {ISaleData} from "../../../utils/types";
+import {useProducts} from "../../Provider/ProductContext";
+import {useCustomers} from "../../Provider/CustomerContext";
 
 interface ISaleProductModal {
     openSale: boolean;
@@ -27,6 +29,11 @@ const SaleProductModal = ({
                               purchasePricePerItem,
                               quantityOnStock
                           }: ISaleProductModal) => {
+
+
+    const {customers} = useCustomers();
+
+
     const [errors, setErrors] = useState({
         customer: '',
         sale_date: '',

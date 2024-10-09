@@ -58,7 +58,7 @@ import {useProducts} from "./components/Provider/ProductContext";
 
 
 function App() {
-    const { products, loadingState,fetchProductsFunc,setLoadingState } = useProducts();
+    const {products, loadingState, fetchProductsFunc} = useProducts();
     // const [products, setProducts] = useState<IProduct[]>([]);
     const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
@@ -130,6 +130,10 @@ function App() {
         fetchSuppliersFunc();
         fetchCategoriesFunc();
     }, []);
+
+    useEffect(() => {
+        setFilteredProducts(products)
+    }, [products])
 
     // const fetchProductsFunc = async () => {
     //     try {
@@ -787,8 +791,6 @@ function App() {
                     </IconButton>
                 }
             />
-
-            <SupplierDetails supplierId={1}/>
 
 
             <CustomerPage/>
