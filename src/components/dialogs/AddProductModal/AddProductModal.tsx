@@ -14,6 +14,8 @@ import {roundToDecimalPlaces} from "../../../utils/function";
 import SupplierSelect from "../../FormComponents/SupplierSelect";
 import {ICategory, INewProduct} from "../../../utils/types";
 import {addProduct} from "../../../api/api";
+import {useCategories} from "../../Provider/CategoryContext";
+import {useSuppliers} from "../../Provider/SupplierContext";
 //TODO додай постачальників таблиці
 // TODO Повідомлення про успіх
 // TODO Окремі поля для ціни закупівельної і проданої
@@ -24,12 +26,9 @@ interface IAddProductModal {
     handleCloseAdd: () => void,
     newProduct: INewProduct,
     setNewProduct: (product: INewProduct) => void,
-    categories: ICategory[],
     selectedCategories: number[],
     handleCategoryChange: (categoryID: number) => void,
     handleAdd: () => void
-    suppliers: { id: number; name: string }[];  // Додано
-
 }
 
 const AddProductModal = ({
@@ -37,11 +36,9 @@ const AddProductModal = ({
                              handleCloseAdd,
                              newProduct,
                              setNewProduct,
-                             categories,
                              selectedCategories,
                              handleCategoryChange,
                              handleAdd,
-                             suppliers
                          }: IAddProductModal) => {
     const [errors, setErrors] = useState({
         name: '',
@@ -49,6 +46,10 @@ const AddProductModal = ({
         quantity: '',
         price_per_item: ''
     });
+
+    const {categories} = useCategories();
+    const {suppliers} = useSuppliers()
+
 
     const [diffWithPrice, setDiffWithPrice] = useState(0)
 

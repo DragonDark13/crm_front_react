@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {fetchGetSupplierProducts, fetchGetSupplierPurchaseHistory} from "../../api/api";
 
-const SupplierDetails = ({ supplierId }) => {
+const SupplierDetails = ({supplierId}) => {
     const [purchaseHistory, setPurchaseHistory] = useState([]);
     const [products, setProducts] = useState([]);
 
@@ -39,4 +39,4 @@ const SupplierDetails = ({ supplierId }) => {
     );
 };
 
-export default  SupplierDetails
+export default SupplierDetails

@@ -54,7 +54,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-
+    console.log("filteredAndSearchedProducts",filteredAndSearchedProducts);
     return (
         <React.Fragment>
             <Grid container justifyContent={"flex-end"}>

@@ -17,6 +17,7 @@ import ProductHistoryModal from "./components/dialogs/ProductHistoryModal/Produc
 import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
 
 //TODO add handle error
+//TODO сторінкі Товари Продажі Упаковки
 
 
 import './App.css'
@@ -52,10 +53,13 @@ import NotificationPanel from "./components/NotificationPanel/NotificationPanel"
 import {formatDate} from "./utils/function";
 import ConfirmDeleteModal from "./components/dialogs/ConfirmDeleteModal/ConfirmDeleteModal";
 import SupplierDetails from "./components/SupplierDetails/SupplierDetails";
+import CustomerPage from "./components/CustomerPage/CustomerPage";
+import {useProducts} from "./components/Provider/ProductContext";
 
 
 function App() {
-    const [products, setProducts] = useState<IProduct[]>([]);
+    const { products, loadingState,fetchProductsFunc,setLoadingState } = useProducts();
+    // const [products, setProducts] = useState<IProduct[]>([]);
     const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
@@ -63,10 +67,10 @@ function App() {
     const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
 
-    const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
-        isLoading: true,
-        error: null
-    });
+    // const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
+    //     isLoading: true,
+    //     error: null
+    // });
     const [newProduct, setNewProduct] = useState<INewProduct>({
         name: '',
         supplier_id: '',
@@ -123,30 +127,29 @@ function App() {
 
     // Load products and suppliers
     useEffect(() => {
-        fetchProductsFunc();
         fetchSuppliersFunc();
         fetchCategoriesFunc();
     }, []);
 
-    const fetchProductsFunc = async () => {
-        try {
-            setLoadingState({isLoading: true, error: null});
-            const data = await fetchProducts(); // Assuming fetchProducts() returns a Promise
-            if (Array.isArray(data)) {
-                setProducts(data);
-                setFilteredProducts(data);
-            } else {
-                throw new Error('Fetched data is not an array');
-            }
-        } catch (error) {
-            console.error('There was an error fetching the products!', error);
-            setLoadingState({isLoading: false, error: 'There was an error fetching the products!'});
-            setProducts([]);
-            setFilteredProducts([]);
-        } finally {
-            setLoadingState(prev => ({...prev, isLoading: false}));
-        }
-    };
+    // const fetchProductsFunc = async () => {
+    //     try {
+    //         setLoadingState({isLoading: true, error: null});
+    //         const data = await fetchProducts(); // Assuming fetchProducts() returns a Promise
+    //         if (Array.isArray(data)) {
+    //             setProducts(data);
+    //             setFilteredProducts(data);
+    //         } else {
+    //             throw new Error('Fetched data is not an array');
+    //         }
+    //     } catch (error) {
+    //         console.error('There was an error fetching the products!', error);
+    //         setLoadingState({isLoading: false, error: 'There was an error fetching the products!'});
+    //         setProducts([]);
+    //         setFilteredProducts([]);
+    //     } finally {
+    //         setLoadingState(prev => ({...prev, isLoading: false}));
+    //     }
+    // };
 
     const fetchSuppliersFunc = async () => {
         try {
@@ -788,6 +791,7 @@ function App() {
             <SupplierDetails supplierId={1}/>
 
 
+            <CustomerPage/>
         </React.Fragment>
     );
 }

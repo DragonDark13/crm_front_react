@@ -2,32 +2,33 @@ import {Button, Grid, Slider, Typography} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import {ICategory, IProduct, IStateFilters, ISupplier} from "../../../utils/types";
-import React, { useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import {useProducts} from "../../Provider/ProductContext";
+import {useCategories} from "../../Provider/CategoryContext";
+import {useSuppliers} from "../../Provider/SupplierContext";
 
 
 interface IFilterComponentProps {
-    categories: ICategory[];
-    suppliers: ISupplier[];
     resetFilters: () => void;
     filterArrayLength: number;
-    products: IProduct[];
     setFilteredProducts: (filteredProducts: IProduct[]) => void;
     filters: IStateFilters;
     setFilters: React.Dispatch<React.SetStateAction<IStateFilters>>;
 }
 
 const FilterComponent = ({
-                             categories,
-                             suppliers,
                              resetFilters,
                              filterArrayLength,
-                             products,
                              setFilteredProducts,
                              filters,
                              setFilters
                          }: IFilterComponentProps) => {
 
     const [priceMax, setPriceMax] = useState(0)
+
+    const {products} = useProducts();
+    const {categories} = useCategories();
+    const {suppliers} = useSuppliers()
 
 // Функція для застосування фільтрів
     const applyFilters = (callback?) => {
@@ -62,7 +63,7 @@ const FilterComponent = ({
             const prices = products.map(product => product.selling_price_per_item);
             const minPrice = Math.min(...prices);
             const maxPrice = Math.max(...prices);
-             // Update filters without specifying the type
+            // Update filters without specifying the type
             setFilters(prevState => ({
                 ...prevState,
                 priceRange: [minPrice, maxPrice],

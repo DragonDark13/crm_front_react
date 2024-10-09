@@ -601,3 +601,33 @@ export const fetchGetSupplierProducts = (supplierId) => {
 };
 
 
+// Запит для створення нового покупця
+export const createCustomer = (customerData) => {
+    return api.post('/customers', customerData)
+        .then(response => response.data)
+        .catch(error => {
+            console.error('Error creating customer:', error);
+            throw error;
+        });
+};
+
+// Запит для отримання списку всіх покупців
+export const fetchAllCustomers = () => {
+    return api.get('/customers')
+        .then(response => response.data)
+        .catch(error => {
+            console.error('Error fetching customers:', error);
+            return [];
+        });
+};
+
+// Запит для отримання інформації про конкретного покупця
+export const fetchCustomerDetails = (customerId) => {
+    return api.get(`/customers/${customerId}`)
+        .then(response => response.data)
+        .catch(error => {
+            console.error('Error fetching customer details:', error);
+            throw error;
+        });
+};
+

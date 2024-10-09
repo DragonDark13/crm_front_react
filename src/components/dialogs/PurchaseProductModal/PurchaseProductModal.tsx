@@ -11,6 +11,7 @@ import QuantityField from "../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../utils/function";
 import TotalPriceField from "../../FormComponents/TotalPriceField";
 import {IPurchaseData, ISupplier} from "../../../utils/types";
+import {useSuppliers} from "../../Provider/SupplierContext";
 
 interface IPurchaseProductModal {
     openPurchase: boolean;
@@ -18,12 +19,10 @@ interface IPurchaseProductModal {
     purchaseDetails: IPurchaseData;
     setPurchaseDetails: (details: IPurchaseData) => void;
     handleSubmitPurchase: () => void;
-    suppliers: ISupplier[];  // Додано
     nameProduct: string
 }
 
 const PurchaseProductModal = ({
-                                  suppliers,
                                   openPurchase,
                                   handleClosePurchase,
                                   purchaseDetails,
@@ -38,6 +37,8 @@ const PurchaseProductModal = ({
         supplier: '',
         purchase_date: ''
     });
+
+    const {suppliers} = useSuppliers()
 
     // Функція валідації полів
     const validateFields = () => {

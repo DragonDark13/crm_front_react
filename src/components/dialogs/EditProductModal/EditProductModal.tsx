@@ -14,6 +14,8 @@ import CategoriesSelect from "../../FormComponents/CategoriesSelect";
 import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../utils/function";
 import SupplierSelect from "../../FormComponents/SupplierSelect";
 import {ICategory, IEditProduct, ISupplier} from "../../../utils/types";
+import {useCategories} from "../../Provider/CategoryContext";
+import {useSuppliers} from "../../Provider/SupplierContext";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -21,21 +23,17 @@ interface IEditProductModalProps {
     editProduct: IEditProduct;
     setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct | null>>;
     handleEditSave: () => void;
-    categories: ICategory[],
     selectedCategories: number[],
     handleCategoryChange: (categoryID: number) => void,
-    suppliers: ISupplier[];  // Додано
 
 }
 
 const EditProductModal: React.FC<IEditProductModalProps> = ({
-                                                                suppliers,
                                                                 openEdit,
                                                                 handleCloseEdit,
                                                                 editProduct,
                                                                 setEditProduct,
                                                                 handleEditSave,
-                                                                categories,
                                                                 selectedCategories,
                                                                 handleCategoryChange,
                                                             }) => {
@@ -47,6 +45,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         price_per_item: '',
         created_date: ""
     });
+    const {categories} = useCategories();
+    const {suppliers} = useSuppliers()
 
     const [diffWithPrice, setDiffWithPrice] = useState(0)
     console.log("editProduct", editProduct);
@@ -268,7 +268,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                 // Якщо введення відповідає регулярному виразу, оновлюємо state
                                 if (regex.test(value) || value.endsWith('.')) {
 
-                                                                       handleFieldChange('selling_price_per_item', value === '' ? 0 : parseFloat(value));
+                                    handleFieldChange('selling_price_per_item', value === '' ? 0 : parseFloat(value));
                                 }
 
                             }}
