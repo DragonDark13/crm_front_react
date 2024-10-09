@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 
 import CustomDialog from "../CustomDialog/CustomDialog";
+import {ICustomer, ISupplier} from "../../../utils/types";
 
 
 //TODO Type interfaces
@@ -33,11 +34,11 @@ interface ProductHistoryRecord {
     selling_total_price?: number;
     purchase_price_per_item?: number;
     purchase_total_price?: number;
-    supplier?: string;
+    supplier?: ISupplier;
     sale_date?: string; // for sales history
     price?: number;
     quantity_sold?: number;
-    customer?: string;
+    customer?: ICustomer;
 }
 
 interface ProductHistory {
@@ -211,7 +212,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                 sortByDate(productHistory.sales, 'sale_date').map((record) => (
                                     <TableRow key={record.id + record.sale_date}>
                                         <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
-                                        <TableCell>{record.customer}</TableCell>
+                                        <TableCell>{record.customer.name}</TableCell>
                                         <TableCell>{record.selling_price_per_item}</TableCell>
                                         <TableCell>{record.quantity_sold}</TableCell>
                                         <TableCell>{record.selling_total_price}</TableCell>
@@ -278,7 +279,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                                         >
                                             <TableCell>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
                                             <TableCell>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
-                                            <TableCell>{record.type === 'sale' ? record.customer : record.supplier}</TableCell>
+                                            <TableCell>{record.type === 'sale' ? record.customer.name : record.supplier.name}</TableCell>
                                             <TableCell>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_price_per_item}</TableCell>
                                             <TableCell>{record.type === 'sale' ? record.quantity_sold : record.quantity_purchase}</TableCell>
                                             <TableCell>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_total_price}</TableCell>

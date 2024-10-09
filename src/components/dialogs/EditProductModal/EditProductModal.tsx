@@ -38,6 +38,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 handleCategoryChange,
                                                             }) => {
 
+
     const [errors, setErrors] = useState({
         name: '',
         supplier: '',
@@ -53,8 +54,16 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
     // Обчислення загальної ціни
     useEffect(() => {
-        const totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+        let totalPrice= 0
+
+        if (editProduct.quantity > 0) {
+            totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+        } else {
+            totalPrice = editProduct.purchase_price_per_item;
+        }
+
         // setEditProduct({...editProduct, total_price: roundToDecimalPlaces(totalPrice, 2)});
+        debugger
         handleFieldChange('purchase_total_price', roundToDecimalPlaces(totalPrice, 2))
     }, [editProduct.quantity, editProduct.purchase_price_per_item]);
 
@@ -114,6 +123,31 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
     }, []);
 
+    const compareCategories = (originalCategories: number[], updatedCategories: number[]) => {
+        const differences: number[] = [];
+
+        // Якщо довжина масивів відрізняється, то однозначно є зміни
+        if (originalCategories.length !== updatedCategories.length) {
+            return true; // Значить, є зміни
+        }
+
+        // Порівнюємо кожен елемент масиву
+        for (let i = 0; i < originalCategories.length; i++) {
+            if (!updatedCategories.includes(originalCategories[i])) {
+                differences.push(originalCategories[i]); // Додаємо до списку відмінностей
+            }
+        }
+
+        // Виводимо список відмінностей
+        if (differences.length > 0) {
+            console.log('Категорії, які відрізняються:', differences);
+            return true; // Якщо є відмінності
+        }
+
+        return false; // Якщо всі категорії однакові
+    };
+
+
     handleCategoryChange = (categoryId: number) => {
         setEditProduct((prevProduct) => {
             // Якщо prevProduct = null, повертаємо початковий стан
@@ -124,7 +158,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                 : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
 
             // Перевіряємо, чи були зміни в категоріях
-            setIsModified(JSON.stringify(originalProduct.category_ids) !== JSON.stringify(updatedCategories));
+            const isModified = compareCategories(originalProduct.category_ids, updatedCategories);
+            setIsModified(isModified);
 
             // Повертаємо оновлений продукт
             return {
@@ -133,6 +168,31 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             };
         });
     };
+
+    const compareObjects = (originalProduct: Record<string, any>, updatedProduct: Record<string, any>) => {
+        const differences: Record<string, any> = {};
+
+        // Об'єднуємо ключі обох об'єктів (щоб не пропустити жодної властивості)
+        const allKeys = new Set([...Object.keys(originalProduct), ...Object.keys(updatedProduct)]);
+
+        // Порівнюємо кожну властивість
+        allKeys.forEach(key => {
+            if (originalProduct[key] !== updatedProduct[key]) {
+                differences[key] = {
+                    original: originalProduct[key],
+                    updated: updatedProduct[key]
+                };
+            }
+        });
+
+        if (Object.keys(differences).length > 0) {
+            console.log('Знайдені відмінності:', differences);
+            return true; // Відмінності знайдені
+        }
+
+        return false; // Об'єкти однакові
+    };
+
 
     const handleFieldChange = (field: keyof IEditProduct, value: any) => {
         setEditProduct((prevEd) => {
@@ -145,7 +205,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             };
 
             // Перевіряємо, чи був продукт змінений
-            setIsModified(JSON.stringify(originalProduct) !== JSON.stringify(updatedProduct));
+
+            const isModified = compareObjects(originalProduct, updatedProduct);
+            setIsModified(isModified);
 
             // Повертаємо оновлений продукт
             return updatedProduct;

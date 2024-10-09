@@ -1,12 +1,23 @@
-import {TextField, Button, DialogContent, DialogActions, Grid, Typography} from '@mui/material';
+import {
+    TextField,
+    Button,
+    DialogContent,
+    DialogActions,
+    Grid,
+    Typography,
+    Select,
+    MenuItem,
+    InputLabel, FormControl
+} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
 import QuantityField from "../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../utils/function";
 import TotalPriceField from "../../FormComponents/TotalPriceField";
 import {ISaleData} from "../../../utils/types";
-import {useProducts} from "../../Provider/ProductContext";
 import {useCustomers} from "../../Provider/CustomerContext";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 interface ISaleProductModal {
     openSale: boolean;
@@ -44,7 +55,7 @@ const SaleProductModal = ({
     // Валідація полів
     const validateFields = () => {
         const newErrors = {
-            customer: saleData.customer.trim() === '' ? 'Customer name is required' : '',
+            customer: saleData.customer === '' ? 'Customer name is required' : '',
             sale_date: saleData.sale_date === '' ? 'Sale date is required' : '',
             price_per_item: saleData.selling_price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
             quantity: saleData.quantity <= 0 || saleData.quantity > quantityOnStock ? 'Quantity must be greater than 0' : '',
@@ -88,7 +99,7 @@ const SaleProductModal = ({
 
     const isSubmitDisabled = () => {
         return (
-            saleData.customer.trim() === '' ||
+            saleData.customer=== '' ||
             saleData.selling_price_per_item <= 0 ||
             saleData.quantity <= 0 || saleData.quantity > quantityOnStock
         );
@@ -104,16 +115,22 @@ const SaleProductModal = ({
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={8}>
-                        <TextField
-                            label="Покупець"
-                            value={saleData.customer}
-                            onChange={(e) => setSaleData({...saleData, customer: e.target.value})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.customer}
-                            helperText={errors.customer}
-                            inputProps={{maxLength: 100}}  // Обмеження на довжину тексту
-                        />
+                        <FormControl fullWidth margin="normal" error={!!errors.customer}>
+                            <InputLabel id="supplier-select-label">Покупець</InputLabel>
+                            <Select
+                                label="Покупець"
+                                value={saleData.customer}
+                                onChange={(e) => setSaleData({...saleData, customer: e.target.value})}
+                                fullWidth
+                            >
+                                {customers.map((customer) => (
+                                    <MenuItem key={customer.id} value={customer.id}>
+                                        {customer.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.customer && <span className="error">{errors.customer}</span>}
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField

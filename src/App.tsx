@@ -293,6 +293,7 @@ function App() {
         }
     };
     const handlePurchase = (product: IProduct) => {
+        setEditProduct(null);
         setEditProduct(mapProductToEditProduct(product));
         setPurchaseDetails(prevDetails => ({
             ...prevDetails,
@@ -353,6 +354,7 @@ function App() {
     };
 
     const handleOpenEdit = (product: IProduct) => {
+        setEditProduct(null);
         setEditProduct(mapProductToEditProduct(product));
         setSelectedCategories(product.category_ids);
         handleModalOpen('openEdit');

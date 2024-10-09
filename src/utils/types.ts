@@ -109,6 +109,22 @@ export interface IStateFilters {
     categories: number[]
     suppliers: number[]
     priceRange: [number, number]
+}
 
+export interface ICustomer {
+    id: number;              // Унікальний ідентифікатор покупця
+    name: string;            // Ім'я покупця, обов'язкове поле
+    contact_info?: string;   // Контактна інформація (може бути відсутня)
+    address?: string;        // Адреса (може бути відсутня)
+    email?: string;          // Email, унікальний, може бути відсутній
+    phone_number?: string;   // Номер телефону, може бути відсутній
+}
 
+export  interface ISupplier {
+    id: number;              // Унікальний ідентифікатор постачальника
+    name: string;            // Ім'я постачальника, унікальне, обов'язкове
+    contact_info?: string;   // Контактна інформація, може бути відсутня
+    email?: string;          // Email, може бути відсутнім
+    phone_number?: string;   // Номер телефону, може бути відсутнім
+    address?: string;        // Адреса, може бути відсутня
 }

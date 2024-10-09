@@ -163,9 +163,9 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                             )}>
                                             {product.quantity}</Typography>
 
-                                            <Typography color={"primary"}>
-                                                {product.selling_quantity}
-                                            </Typography>
+                                            {/*<Typography color={"primary"}>*/}
+                                            {/*    {product.selling_quantity}*/}
+                                            {/*</Typography>*/}
                                         </TableCell>
                                         <TableCell>
                                             <Typography color={"secondary"}>
