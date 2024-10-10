@@ -45,10 +45,11 @@ import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 import NotificationPanel from "../NotificationPanel/NotificationPanel";
 import CloseIcon from "@mui/icons-material/Close";
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 const ProductsCatalog = () => {
 
-     const {products, loadingState, fetchProductsFunc} = useProducts();
+    const {products, loadingState, fetchProductsFunc} = useProducts();
     // const [products, setProducts] = useState<IProduct[]>([]);
     const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
@@ -560,7 +561,7 @@ const ProductsCatalog = () => {
 
 // Обробник для зміни слайдера
     return (
-               <React.Fragment>
+        <React.Fragment>
 
 
             {loadingState.isLoading ? (
@@ -577,85 +578,87 @@ const ProductsCatalog = () => {
                 <div>{loadingState.error}</div> // Відображення помилки
             ) : (
                 <React.Fragment>
-                        <h1>Список товарів</h1>
-                        <Grid container justifyContent={"space-between"}>
-                            <Grid item>
-                                <Button variant={"contained"}
-                                        onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
-                            </Grid>
-                            {/*<Grid item>*/}
-                            {/*    <Grid container gap={1}>*/}
-                            {/*        <Grid>*/}
-                            {/*            <Button variant={"outlined"}*/}
-                            {/*                    color={"primary"}*/}
-                            {/*                    onClick={handleOpenAdd}>*/}
-                            {/*                Купити Новий Товар*/}
-                            {/*            </Button>*/}
-                            {/*        </Grid>*/}
-                            {/*        <Grid>*/}
-                            {/*            <Button variant={"outlined"} color={"primary"}*/}
-                            {/*                    onClick={() => handleModalOpen("openCategoryCreate")}*/}
-                            {/*            >*/}
-                            {/*                Створити Категорію*/}
-                            {/*            </Button>*/}
-                            {/*        </Grid>*/}
-                            {/*        <Grid>*/}
-
-                            {/*            <Button variant={"outlined"} color={"primary"}*/}
-                            {/*                    onClick={() => handleModalOpen("openAddSupplierOpen")}>*/}
-                            {/*                Створити Постачальника*/}
-                            {/*            </Button>*/}
-                            {/*        </Grid>*/}
-                            {/*    </Grid>*/}
-                            {/*</Grid>*/}
+                    <h1>Список товарів</h1>
+                    <Grid container justifyContent={"space-between"}>
+                        <Grid item>
+                            <Button
+                                startIcon={<FilterListIcon/>}
+                                variant={"contained"}
+                                onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
                         </Grid>
-                        <Drawer open={modalState.openDrawer} onClose={() => handleModalClose("openDrawer")}>
-                            <Button variant={"outlined"} onClick={() => handleModalClose("openDrawer")}>
-                                Закрити
-                            </Button>
-                            <FilterComponent
-                                products={products}
-                                setFilteredProducts={setFilteredProducts}
-                                filters={filters}
-                                setFilters={setFilters}
-                                filterArrayLength={filteredProducts.length}
-                                categories={categories}
-                                suppliers={suppliers}
-                                resetFilters={resetFilters}/>
-                        </Drawer>
+                        {/*<Grid item>*/}
+                        {/*    <Grid container gap={1}>*/}
+                        {/*        <Grid>*/}
+                        {/*            <Button variant={"outlined"}*/}
+                        {/*                    color={"primary"}*/}
+                        {/*                    onClick={handleOpenAdd}>*/}
+                        {/*                Купити Новий Товар*/}
+                        {/*            </Button>*/}
+                        {/*        </Grid>*/}
+                        {/*        <Grid>*/}
+                        {/*            <Button variant={"outlined"} color={"primary"}*/}
+                        {/*                    onClick={() => handleModalOpen("openCategoryCreate")}*/}
+                        {/*            >*/}
+                        {/*                Створити Категорію*/}
+                        {/*            </Button>*/}
+                        {/*        </Grid>*/}
+                        {/*        <Grid>*/}
 
-                        <ResponsiveProductView
-                            selectedLowProductId={selectedLowProductId}
-                            filteredAndSearchedProducts={filteredAndSearchedProducts}
-                            ref={(el, index) => {
-                                tableRowRefs.current[index] = el;
-                            }}
-                            currentPage={currentPage}
-                            itemsPerPage={itemsPerPage}
-                            setCurrentPage={setCurrentPage}
-                            setItemsPerPage={setItemsPerPage}
-                            searchTerm={searchTerm}
-                            setSearchTerm={setSearchTerm}
-                            filteredProducts={filteredProducts}
-                            order={order}
-                            orderBy={orderBy}
-                            handleSort={handleSort}
-                            sortProducts={sortProducts}
-                            getComparator={getComparator}
-                            handleOpenEdit={handleOpenEdit}
-                            handleDelete={handleDeleteModalOpen}
-                            handlePurchase={(product) => {
-                                console.log('Purchase product:', product);
-                                handlePurchase(product);
-                            }}
-                            handleOpenSale={(product) => {
-                                console.log('Open sale for product:', product);
-                                handleOpenSale(product);
-                            }}
-                            handleOpenHistoryModal={handleOpenHistoryModal}
-                        />
+                        {/*            <Button variant={"outlined"} color={"primary"}*/}
+                        {/*                    onClick={() => handleModalOpen("openAddSupplierOpen")}>*/}
+                        {/*                Створити Постачальника*/}
+                        {/*            </Button>*/}
+                        {/*        </Grid>*/}
+                        {/*    </Grid>*/}
+                        {/*</Grid>*/}
+                    </Grid>
+                    <Drawer open={modalState.openDrawer} onClose={() => handleModalClose("openDrawer")}>
+                        <Button variant={"outlined"} onClick={() => handleModalClose("openDrawer")}>
+                            Закрити
+                        </Button>
+                        <FilterComponent
+                            products={products}
+                            setFilteredProducts={setFilteredProducts}
+                            filters={filters}
+                            setFilters={setFilters}
+                            filterArrayLength={filteredProducts.length}
+                            categories={categories}
+                            suppliers={suppliers}
+                            resetFilters={resetFilters}/>
+                    </Drawer>
 
-                        {/* Кнопка для відкриття модального вікна для додавання */}
+                    <ResponsiveProductView
+                        selectedLowProductId={selectedLowProductId}
+                        filteredAndSearchedProducts={filteredAndSearchedProducts}
+                        ref={(el, index) => {
+                            tableRowRefs.current[index] = el;
+                        }}
+                        currentPage={currentPage}
+                        itemsPerPage={itemsPerPage}
+                        setCurrentPage={setCurrentPage}
+                        setItemsPerPage={setItemsPerPage}
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        filteredProducts={filteredProducts}
+                        order={order}
+                        orderBy={orderBy}
+                        handleSort={handleSort}
+                        sortProducts={sortProducts}
+                        getComparator={getComparator}
+                        handleOpenEdit={handleOpenEdit}
+                        handleDelete={handleDeleteModalOpen}
+                        handlePurchase={(product) => {
+                            console.log('Purchase product:', product);
+                            handlePurchase(product);
+                        }}
+                        handleOpenSale={(product) => {
+                            console.log('Open sale for product:', product);
+                            handleOpenSale(product);
+                        }}
+                        handleOpenHistoryModal={handleOpenHistoryModal}
+                    />
+
+                    {/* Кнопка для відкриття модального вікна для додавання */}
 
 
                 </React.Fragment>
