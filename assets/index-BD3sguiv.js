@@ -73,49 +73,49 @@ var react_production_min = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var l$3 = Symbol.for("react.element"), n$3 = Symbol.for("react.portal"), p$4 = Symbol.for("react.fragment"), q$3 = Symbol.for("react.strict_mode"), r$2 = Symbol.for("react.profiler"), t$2 = Symbol.for("react.provider"), u$1 = Symbol.for("react.context"), v$3 = Symbol.for("react.forward_ref"), w$1 = Symbol.for("react.suspense"), x$1 = Symbol.for("react.memo"), y$1 = Symbol.for("react.lazy"), z$2 = Symbol.iterator;
-function A$2(a) {
+var l$4 = Symbol.for("react.element"), n$4 = Symbol.for("react.portal"), p$5 = Symbol.for("react.fragment"), q$4 = Symbol.for("react.strict_mode"), r$3 = Symbol.for("react.profiler"), t$3 = Symbol.for("react.provider"), u$2 = Symbol.for("react.context"), v$4 = Symbol.for("react.forward_ref"), w$2 = Symbol.for("react.suspense"), x$2 = Symbol.for("react.memo"), y$2 = Symbol.for("react.lazy"), z$3 = Symbol.iterator;
+function A$3(a) {
   if (null === a || "object" !== typeof a) return null;
-  a = z$2 && a[z$2] || a["@@iterator"];
+  a = z$3 && a[z$3] || a["@@iterator"];
   return "function" === typeof a ? a : null;
 }
-var B$1 = { isMounted: function() {
+var B$2 = { isMounted: function() {
   return false;
 }, enqueueForceUpdate: function() {
 }, enqueueReplaceState: function() {
 }, enqueueSetState: function() {
-} }, C$1 = Object.assign, D$1 = {};
-function E$1(a, b2, e2) {
+} }, C$2 = Object.assign, D$2 = {};
+function E$2(a, b2, e2) {
   this.props = a;
   this.context = b2;
-  this.refs = D$1;
-  this.updater = e2 || B$1;
+  this.refs = D$2;
+  this.updater = e2 || B$2;
 }
-E$1.prototype.isReactComponent = {};
-E$1.prototype.setState = function(a, b2) {
+E$2.prototype.isReactComponent = {};
+E$2.prototype.setState = function(a, b2) {
   if ("object" !== typeof a && "function" !== typeof a && null != a) throw Error("setState(...): takes an object of state variables to update or a function which returns an object of state variables.");
   this.updater.enqueueSetState(this, a, b2, "setState");
 };
-E$1.prototype.forceUpdate = function(a) {
+E$2.prototype.forceUpdate = function(a) {
   this.updater.enqueueForceUpdate(this, a, "forceUpdate");
 };
-function F() {
+function F$1() {
 }
-F.prototype = E$1.prototype;
+F$1.prototype = E$2.prototype;
 function G$1(a, b2, e2) {
   this.props = a;
   this.context = b2;
-  this.refs = D$1;
-  this.updater = e2 || B$1;
+  this.refs = D$2;
+  this.updater = e2 || B$2;
 }
-var H$1 = G$1.prototype = new F();
-H$1.constructor = G$1;
-C$1(H$1, E$1.prototype);
-H$1.isPureReactComponent = true;
-var I$1 = Array.isArray, J = Object.prototype.hasOwnProperty, K$1 = { current: null }, L$1 = { key: true, ref: true, __self: true, __source: true };
-function M$1(a, b2, e2) {
+var H$2 = G$1.prototype = new F$1();
+H$2.constructor = G$1;
+C$2(H$2, E$2.prototype);
+H$2.isPureReactComponent = true;
+var I$2 = Array.isArray, J$1 = Object.prototype.hasOwnProperty, K$2 = { current: null }, L$2 = { key: true, ref: true, __self: true, __source: true };
+function M$2(a, b2, e2) {
   var d2, c2 = {}, k2 = null, h2 = null;
-  if (null != b2) for (d2 in void 0 !== b2.ref && (h2 = b2.ref), void 0 !== b2.key && (k2 = "" + b2.key), b2) J.call(b2, d2) && !L$1.hasOwnProperty(d2) && (c2[d2] = b2[d2]);
+  if (null != b2) for (d2 in void 0 !== b2.ref && (h2 = b2.ref), void 0 !== b2.key && (k2 = "" + b2.key), b2) J$1.call(b2, d2) && !L$2.hasOwnProperty(d2) && (c2[d2] = b2[d2]);
   var g2 = arguments.length - 2;
   if (1 === g2) c2.children = e2;
   else if (1 < g2) {
@@ -123,13 +123,13 @@ function M$1(a, b2, e2) {
     c2.children = f2;
   }
   if (a && a.defaultProps) for (d2 in g2 = a.defaultProps, g2) void 0 === c2[d2] && (c2[d2] = g2[d2]);
-  return { $$typeof: l$3, type: a, key: k2, ref: h2, props: c2, _owner: K$1.current };
+  return { $$typeof: l$4, type: a, key: k2, ref: h2, props: c2, _owner: K$2.current };
 }
 function N$1(a, b2) {
-  return { $$typeof: l$3, type: a.type, key: b2, ref: a.ref, props: a.props, _owner: a._owner };
+  return { $$typeof: l$4, type: a.type, key: b2, ref: a.ref, props: a.props, _owner: a._owner };
 }
-function O$1(a) {
-  return "object" === typeof a && null !== a && a.$$typeof === l$3;
+function O$2(a) {
+  return "object" === typeof a && null !== a && a.$$typeof === l$4;
 }
 function escape(a) {
   var b2 = { "=": "=0", ":": "=2" };
@@ -137,11 +137,11 @@ function escape(a) {
     return b2[a2];
   });
 }
-var P$1 = /\/+/g;
-function Q$1(a, b2) {
+var P$2 = /\/+/g;
+function Q$2(a, b2) {
   return "object" === typeof a && null !== a && null != a.key ? escape("" + a.key) : b2.toString(36);
 }
-function R$1(a, b2, e2, d2, c2) {
+function R$2(a, b2, e2, d2, c2) {
   var k2 = typeof a;
   if ("undefined" === k2 || "boolean" === k2) a = null;
   var h2 = false;
@@ -153,34 +153,34 @@ function R$1(a, b2, e2, d2, c2) {
       break;
     case "object":
       switch (a.$$typeof) {
-        case l$3:
-        case n$3:
+        case l$4:
+        case n$4:
           h2 = true;
       }
   }
-  if (h2) return h2 = a, c2 = c2(h2), a = "" === d2 ? "." + Q$1(h2, 0) : d2, I$1(c2) ? (e2 = "", null != a && (e2 = a.replace(P$1, "$&/") + "/"), R$1(c2, b2, e2, "", function(a2) {
+  if (h2) return h2 = a, c2 = c2(h2), a = "" === d2 ? "." + Q$2(h2, 0) : d2, I$2(c2) ? (e2 = "", null != a && (e2 = a.replace(P$2, "$&/") + "/"), R$2(c2, b2, e2, "", function(a2) {
     return a2;
-  })) : null != c2 && (O$1(c2) && (c2 = N$1(c2, e2 + (!c2.key || h2 && h2.key === c2.key ? "" : ("" + c2.key).replace(P$1, "$&/") + "/") + a)), b2.push(c2)), 1;
+  })) : null != c2 && (O$2(c2) && (c2 = N$1(c2, e2 + (!c2.key || h2 && h2.key === c2.key ? "" : ("" + c2.key).replace(P$2, "$&/") + "/") + a)), b2.push(c2)), 1;
   h2 = 0;
   d2 = "" === d2 ? "." : d2 + ":";
-  if (I$1(a)) for (var g2 = 0; g2 < a.length; g2++) {
+  if (I$2(a)) for (var g2 = 0; g2 < a.length; g2++) {
     k2 = a[g2];
-    var f2 = d2 + Q$1(k2, g2);
-    h2 += R$1(k2, b2, e2, f2, c2);
+    var f2 = d2 + Q$2(k2, g2);
+    h2 += R$2(k2, b2, e2, f2, c2);
   }
-  else if (f2 = A$2(a), "function" === typeof f2) for (a = f2.call(a), g2 = 0; !(k2 = a.next()).done; ) k2 = k2.value, f2 = d2 + Q$1(k2, g2++), h2 += R$1(k2, b2, e2, f2, c2);
+  else if (f2 = A$3(a), "function" === typeof f2) for (a = f2.call(a), g2 = 0; !(k2 = a.next()).done; ) k2 = k2.value, f2 = d2 + Q$2(k2, g2++), h2 += R$2(k2, b2, e2, f2, c2);
   else if ("object" === k2) throw b2 = String(a), Error("Objects are not valid as a React child (found: " + ("[object Object]" === b2 ? "object with keys {" + Object.keys(a).join(", ") + "}" : b2) + "). If you meant to render a collection of children, use an array instead.");
   return h2;
 }
-function S$1(a, b2, e2) {
+function S$2(a, b2, e2) {
   if (null == a) return a;
   var d2 = [], c2 = 0;
-  R$1(a, d2, "", "", function(a2) {
+  R$2(a, d2, "", "", function(a2) {
     return b2.call(e2, a2, c2++);
   });
   return d2;
 }
-function T$1(a) {
+function T$2(a) {
   if (-1 === a._status) {
     var b2 = a._result;
     b2 = b2();
@@ -194,44 +194,44 @@ function T$1(a) {
   if (1 === a._status) return a._result.default;
   throw a._result;
 }
-var U$1 = { current: null }, V$1 = { transition: null }, W$1 = { ReactCurrentDispatcher: U$1, ReactCurrentBatchConfig: V$1, ReactCurrentOwner: K$1 };
-function X$1() {
+var U$2 = { current: null }, V$2 = { transition: null }, W$2 = { ReactCurrentDispatcher: U$2, ReactCurrentBatchConfig: V$2, ReactCurrentOwner: K$2 };
+function X$2() {
   throw Error("act(...) is not supported in production builds of React.");
 }
-react_production_min.Children = { map: S$1, forEach: function(a, b2, e2) {
-  S$1(a, function() {
+react_production_min.Children = { map: S$2, forEach: function(a, b2, e2) {
+  S$2(a, function() {
     b2.apply(this, arguments);
   }, e2);
 }, count: function(a) {
   var b2 = 0;
-  S$1(a, function() {
+  S$2(a, function() {
     b2++;
   });
   return b2;
 }, toArray: function(a) {
-  return S$1(a, function(a2) {
+  return S$2(a, function(a2) {
     return a2;
   }) || [];
 }, only: function(a) {
-  if (!O$1(a)) throw Error("React.Children.only expected to receive a single React element child.");
+  if (!O$2(a)) throw Error("React.Children.only expected to receive a single React element child.");
   return a;
 } };
-react_production_min.Component = E$1;
-react_production_min.Fragment = p$4;
-react_production_min.Profiler = r$2;
+react_production_min.Component = E$2;
+react_production_min.Fragment = p$5;
+react_production_min.Profiler = r$3;
 react_production_min.PureComponent = G$1;
-react_production_min.StrictMode = q$3;
-react_production_min.Suspense = w$1;
-react_production_min.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = W$1;
-react_production_min.act = X$1;
+react_production_min.StrictMode = q$4;
+react_production_min.Suspense = w$2;
+react_production_min.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = W$2;
+react_production_min.act = X$2;
 react_production_min.cloneElement = function(a, b2, e2) {
   if (null === a || void 0 === a) throw Error("React.cloneElement(...): The argument must be a React element, but you passed " + a + ".");
-  var d2 = C$1({}, a.props), c2 = a.key, k2 = a.ref, h2 = a._owner;
+  var d2 = C$2({}, a.props), c2 = a.key, k2 = a.ref, h2 = a._owner;
   if (null != b2) {
-    void 0 !== b2.ref && (k2 = b2.ref, h2 = K$1.current);
+    void 0 !== b2.ref && (k2 = b2.ref, h2 = K$2.current);
     void 0 !== b2.key && (c2 = "" + b2.key);
     if (a.type && a.type.defaultProps) var g2 = a.type.defaultProps;
-    for (f2 in b2) J.call(b2, f2) && !L$1.hasOwnProperty(f2) && (d2[f2] = void 0 === b2[f2] && void 0 !== g2 ? g2[f2] : b2[f2]);
+    for (f2 in b2) J$1.call(b2, f2) && !L$2.hasOwnProperty(f2) && (d2[f2] = void 0 === b2[f2] && void 0 !== g2 ? g2[f2] : b2[f2]);
   }
   var f2 = arguments.length - 2;
   if (1 === f2) d2.children = e2;
@@ -240,16 +240,16 @@ react_production_min.cloneElement = function(a, b2, e2) {
     for (var m2 = 0; m2 < f2; m2++) g2[m2] = arguments[m2 + 2];
     d2.children = g2;
   }
-  return { $$typeof: l$3, type: a.type, key: c2, ref: k2, props: d2, _owner: h2 };
+  return { $$typeof: l$4, type: a.type, key: c2, ref: k2, props: d2, _owner: h2 };
 };
 react_production_min.createContext = function(a) {
-  a = { $$typeof: u$1, _currentValue: a, _currentValue2: a, _threadCount: 0, Provider: null, Consumer: null, _defaultValue: null, _globalName: null };
-  a.Provider = { $$typeof: t$2, _context: a };
+  a = { $$typeof: u$2, _currentValue: a, _currentValue2: a, _threadCount: 0, Provider: null, Consumer: null, _defaultValue: null, _globalName: null };
+  a.Provider = { $$typeof: t$3, _context: a };
   return a.Consumer = a;
 };
-react_production_min.createElement = M$1;
+react_production_min.createElement = M$2;
 react_production_min.createFactory = function(a) {
-  var b2 = M$1.bind(null, a);
+  var b2 = M$2.bind(null, a);
   b2.type = a;
   return b2;
 };
@@ -257,68 +257,68 @@ react_production_min.createRef = function() {
   return { current: null };
 };
 react_production_min.forwardRef = function(a) {
-  return { $$typeof: v$3, render: a };
+  return { $$typeof: v$4, render: a };
 };
-react_production_min.isValidElement = O$1;
+react_production_min.isValidElement = O$2;
 react_production_min.lazy = function(a) {
-  return { $$typeof: y$1, _payload: { _status: -1, _result: a }, _init: T$1 };
+  return { $$typeof: y$2, _payload: { _status: -1, _result: a }, _init: T$2 };
 };
 react_production_min.memo = function(a, b2) {
-  return { $$typeof: x$1, type: a, compare: void 0 === b2 ? null : b2 };
+  return { $$typeof: x$2, type: a, compare: void 0 === b2 ? null : b2 };
 };
 react_production_min.startTransition = function(a) {
-  var b2 = V$1.transition;
-  V$1.transition = {};
+  var b2 = V$2.transition;
+  V$2.transition = {};
   try {
     a();
   } finally {
-    V$1.transition = b2;
+    V$2.transition = b2;
   }
 };
-react_production_min.unstable_act = X$1;
+react_production_min.unstable_act = X$2;
 react_production_min.useCallback = function(a, b2) {
-  return U$1.current.useCallback(a, b2);
+  return U$2.current.useCallback(a, b2);
 };
 react_production_min.useContext = function(a) {
-  return U$1.current.useContext(a);
+  return U$2.current.useContext(a);
 };
 react_production_min.useDebugValue = function() {
 };
 react_production_min.useDeferredValue = function(a) {
-  return U$1.current.useDeferredValue(a);
+  return U$2.current.useDeferredValue(a);
 };
 react_production_min.useEffect = function(a, b2) {
-  return U$1.current.useEffect(a, b2);
+  return U$2.current.useEffect(a, b2);
 };
 react_production_min.useId = function() {
-  return U$1.current.useId();
+  return U$2.current.useId();
 };
 react_production_min.useImperativeHandle = function(a, b2, e2) {
-  return U$1.current.useImperativeHandle(a, b2, e2);
+  return U$2.current.useImperativeHandle(a, b2, e2);
 };
 react_production_min.useInsertionEffect = function(a, b2) {
-  return U$1.current.useInsertionEffect(a, b2);
+  return U$2.current.useInsertionEffect(a, b2);
 };
 react_production_min.useLayoutEffect = function(a, b2) {
-  return U$1.current.useLayoutEffect(a, b2);
+  return U$2.current.useLayoutEffect(a, b2);
 };
 react_production_min.useMemo = function(a, b2) {
-  return U$1.current.useMemo(a, b2);
+  return U$2.current.useMemo(a, b2);
 };
 react_production_min.useReducer = function(a, b2, e2) {
-  return U$1.current.useReducer(a, b2, e2);
+  return U$2.current.useReducer(a, b2, e2);
 };
 react_production_min.useRef = function(a) {
-  return U$1.current.useRef(a);
+  return U$2.current.useRef(a);
 };
 react_production_min.useState = function(a) {
-  return U$1.current.useState(a);
+  return U$2.current.useState(a);
 };
 react_production_min.useSyncExternalStore = function(a, b2, e2) {
-  return U$1.current.useSyncExternalStore(a, b2, e2);
+  return U$2.current.useSyncExternalStore(a, b2, e2);
 };
 react_production_min.useTransition = function() {
-  return U$1.current.useTransition();
+  return U$2.current.useTransition();
 };
 react_production_min.version = "18.3.1";
 {
@@ -339,19 +339,19 @@ const React$1 = /* @__PURE__ */ _mergeNamespaces({
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var f$2 = reactExports, k$2 = Symbol.for("react.element"), l$2 = Symbol.for("react.fragment"), m$3 = Object.prototype.hasOwnProperty, n$2 = f$2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, p$3 = { key: true, ref: true, __self: true, __source: true };
-function q$2(c2, a, g2) {
+var f$2 = reactExports, k$3 = Symbol.for("react.element"), l$3 = Symbol.for("react.fragment"), m$4 = Object.prototype.hasOwnProperty, n$3 = f$2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, p$4 = { key: true, ref: true, __self: true, __source: true };
+function q$3(c2, a, g2) {
   var b2, d2 = {}, e2 = null, h2 = null;
   void 0 !== g2 && (e2 = "" + g2);
   void 0 !== a.key && (e2 = "" + a.key);
   void 0 !== a.ref && (h2 = a.ref);
-  for (b2 in a) m$3.call(a, b2) && !p$3.hasOwnProperty(b2) && (d2[b2] = a[b2]);
+  for (b2 in a) m$4.call(a, b2) && !p$4.hasOwnProperty(b2) && (d2[b2] = a[b2]);
   if (c2 && c2.defaultProps) for (b2 in a = c2.defaultProps, a) void 0 === d2[b2] && (d2[b2] = a[b2]);
-  return { $$typeof: k$2, type: c2, key: e2, ref: h2, props: d2, _owner: n$2.current };
+  return { $$typeof: k$3, type: c2, key: e2, ref: h2, props: d2, _owner: n$3.current };
 }
-reactJsxRuntime_production_min.Fragment = l$2;
-reactJsxRuntime_production_min.jsx = q$2;
-reactJsxRuntime_production_min.jsxs = q$2;
+reactJsxRuntime_production_min.Fragment = l$3;
+reactJsxRuntime_production_min.jsx = q$3;
+reactJsxRuntime_production_min.jsxs = q$3;
 {
   jsxRuntime.exports = reactJsxRuntime_production_min;
 }
@@ -612,29 +612,29 @@ var schedulerExports = scheduler.exports;
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var aa = reactExports, ca = schedulerExports;
-function p$2(a) {
+var aa$1 = reactExports, ca$1 = schedulerExports;
+function p$3(a) {
   for (var b2 = "https://reactjs.org/docs/error-decoder.html?invariant=" + a, c2 = 1; c2 < arguments.length; c2++) b2 += "&args[]=" + encodeURIComponent(arguments[c2]);
   return "Minified React error #" + a + "; visit " + b2 + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
 }
-var da = /* @__PURE__ */ new Set(), ea = {};
-function fa(a, b2) {
-  ha(a, b2);
-  ha(a + "Capture", b2);
+var da$1 = /* @__PURE__ */ new Set(), ea$1 = {};
+function fa$1(a, b2) {
+  ha$1(a, b2);
+  ha$1(a + "Capture", b2);
 }
-function ha(a, b2) {
-  ea[a] = b2;
-  for (a = 0; a < b2.length; a++) da.add(b2[a]);
+function ha$1(a, b2) {
+  ea$1[a] = b2;
+  for (a = 0; a < b2.length; a++) da$1.add(b2[a]);
 }
-var ia = !("undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement), ja = Object.prototype.hasOwnProperty, ka = /^[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\-.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$/, la = {}, ma = {};
+var ia$1 = !("undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement), ja$1 = Object.prototype.hasOwnProperty, ka$1 = /^[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\-.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$/, la$1 = {}, ma$1 = {};
 function oa(a) {
-  if (ja.call(ma, a)) return true;
-  if (ja.call(la, a)) return false;
-  if (ka.test(a)) return ma[a] = true;
-  la[a] = true;
+  if (ja$1.call(ma$1, a)) return true;
+  if (ja$1.call(la$1, a)) return false;
+  if (ka$1.test(a)) return ma$1[a] = true;
+  la$1[a] = true;
   return false;
 }
-function pa(a, b2, c2, d2) {
+function pa$1(a, b2, c2, d2) {
   if (null !== c2 && 0 === c2.type) return false;
   switch (typeof b2) {
     case "function":
@@ -649,8 +649,8 @@ function pa(a, b2, c2, d2) {
       return false;
   }
 }
-function qa(a, b2, c2, d2) {
-  if (null === b2 || "undefined" === typeof b2 || pa(a, b2, c2, d2)) return true;
+function qa$1(a, b2, c2, d2) {
+  if (null === b2 || "undefined" === typeof b2 || pa$1(a, b2, c2, d2)) return true;
   if (d2) return false;
   if (null !== c2) switch (c2.type) {
     case 3:
@@ -664,7 +664,7 @@ function qa(a, b2, c2, d2) {
   }
   return false;
 }
-function v$2(a, b2, c2, d2, e2, f2, g2) {
+function v$3(a, b2, c2, d2, e2, f2, g2) {
   this.acceptsBooleans = 2 === b2 || 3 === b2 || 4 === b2;
   this.attributeName = d2;
   this.attributeNamespace = e2;
@@ -674,66 +674,66 @@ function v$2(a, b2, c2, d2, e2, f2, g2) {
   this.sanitizeURL = f2;
   this.removeEmptyString = g2;
 }
-var z$1 = {};
+var z$2 = {};
 "children dangerouslySetInnerHTML defaultValue defaultChecked innerHTML suppressContentEditableWarning suppressHydrationWarning style".split(" ").forEach(function(a) {
-  z$1[a] = new v$2(a, 0, false, a, null, false, false);
+  z$2[a] = new v$3(a, 0, false, a, null, false, false);
 });
 [["acceptCharset", "accept-charset"], ["className", "class"], ["htmlFor", "for"], ["httpEquiv", "http-equiv"]].forEach(function(a) {
   var b2 = a[0];
-  z$1[b2] = new v$2(b2, 1, false, a[1], null, false, false);
+  z$2[b2] = new v$3(b2, 1, false, a[1], null, false, false);
 });
 ["contentEditable", "draggable", "spellCheck", "value"].forEach(function(a) {
-  z$1[a] = new v$2(a, 2, false, a.toLowerCase(), null, false, false);
+  z$2[a] = new v$3(a, 2, false, a.toLowerCase(), null, false, false);
 });
 ["autoReverse", "externalResourcesRequired", "focusable", "preserveAlpha"].forEach(function(a) {
-  z$1[a] = new v$2(a, 2, false, a, null, false, false);
+  z$2[a] = new v$3(a, 2, false, a, null, false, false);
 });
 "allowFullScreen async autoFocus autoPlay controls default defer disabled disablePictureInPicture disableRemotePlayback formNoValidate hidden loop noModule noValidate open playsInline readOnly required reversed scoped seamless itemScope".split(" ").forEach(function(a) {
-  z$1[a] = new v$2(a, 3, false, a.toLowerCase(), null, false, false);
+  z$2[a] = new v$3(a, 3, false, a.toLowerCase(), null, false, false);
 });
 ["checked", "multiple", "muted", "selected"].forEach(function(a) {
-  z$1[a] = new v$2(a, 3, true, a, null, false, false);
+  z$2[a] = new v$3(a, 3, true, a, null, false, false);
 });
 ["capture", "download"].forEach(function(a) {
-  z$1[a] = new v$2(a, 4, false, a, null, false, false);
+  z$2[a] = new v$3(a, 4, false, a, null, false, false);
 });
 ["cols", "rows", "size", "span"].forEach(function(a) {
-  z$1[a] = new v$2(a, 6, false, a, null, false, false);
+  z$2[a] = new v$3(a, 6, false, a, null, false, false);
 });
 ["rowSpan", "start"].forEach(function(a) {
-  z$1[a] = new v$2(a, 5, false, a.toLowerCase(), null, false, false);
+  z$2[a] = new v$3(a, 5, false, a.toLowerCase(), null, false, false);
 });
-var ra = /[\-:]([a-z])/g;
-function sa(a) {
+var ra$1 = /[\-:]([a-z])/g;
+function sa$1(a) {
   return a[1].toUpperCase();
 }
 "accent-height alignment-baseline arabic-form baseline-shift cap-height clip-path clip-rule color-interpolation color-interpolation-filters color-profile color-rendering dominant-baseline enable-background fill-opacity fill-rule flood-color flood-opacity font-family font-size font-size-adjust font-stretch font-style font-variant font-weight glyph-name glyph-orientation-horizontal glyph-orientation-vertical horiz-adv-x horiz-origin-x image-rendering letter-spacing lighting-color marker-end marker-mid marker-start overline-position overline-thickness paint-order panose-1 pointer-events rendering-intent shape-rendering stop-color stop-opacity strikethrough-position strikethrough-thickness stroke-dasharray stroke-dashoffset stroke-linecap stroke-linejoin stroke-miterlimit stroke-opacity stroke-width text-anchor text-decoration text-rendering underline-position underline-thickness unicode-bidi unicode-range units-per-em v-alphabetic v-hanging v-ideographic v-mathematical vector-effect vert-adv-y vert-origin-x vert-origin-y word-spacing writing-mode xmlns:xlink x-height".split(" ").forEach(function(a) {
   var b2 = a.replace(
-    ra,
-    sa
+    ra$1,
+    sa$1
   );
-  z$1[b2] = new v$2(b2, 1, false, a, null, false, false);
+  z$2[b2] = new v$3(b2, 1, false, a, null, false, false);
 });
 "xlink:actuate xlink:arcrole xlink:role xlink:show xlink:title xlink:type".split(" ").forEach(function(a) {
-  var b2 = a.replace(ra, sa);
-  z$1[b2] = new v$2(b2, 1, false, a, "http://www.w3.org/1999/xlink", false, false);
+  var b2 = a.replace(ra$1, sa$1);
+  z$2[b2] = new v$3(b2, 1, false, a, "http://www.w3.org/1999/xlink", false, false);
 });
 ["xml:base", "xml:lang", "xml:space"].forEach(function(a) {
-  var b2 = a.replace(ra, sa);
-  z$1[b2] = new v$2(b2, 1, false, a, "http://www.w3.org/XML/1998/namespace", false, false);
+  var b2 = a.replace(ra$1, sa$1);
+  z$2[b2] = new v$3(b2, 1, false, a, "http://www.w3.org/XML/1998/namespace", false, false);
 });
 ["tabIndex", "crossOrigin"].forEach(function(a) {
-  z$1[a] = new v$2(a, 1, false, a.toLowerCase(), null, false, false);
+  z$2[a] = new v$3(a, 1, false, a.toLowerCase(), null, false, false);
 });
-z$1.xlinkHref = new v$2("xlinkHref", 1, false, "xlink:href", "http://www.w3.org/1999/xlink", true, false);
+z$2.xlinkHref = new v$3("xlinkHref", 1, false, "xlink:href", "http://www.w3.org/1999/xlink", true, false);
 ["src", "href", "action", "formAction"].forEach(function(a) {
-  z$1[a] = new v$2(a, 1, false, a.toLowerCase(), null, true, true);
+  z$2[a] = new v$3(a, 1, false, a.toLowerCase(), null, true, true);
 });
-function ta(a, b2, c2, d2) {
-  var e2 = z$1.hasOwnProperty(b2) ? z$1[b2] : null;
-  if (null !== e2 ? 0 !== e2.type : d2 || !(2 < b2.length) || "o" !== b2[0] && "O" !== b2[0] || "n" !== b2[1] && "N" !== b2[1]) qa(b2, c2, e2, d2) && (c2 = null), d2 || null === e2 ? oa(b2) && (null === c2 ? a.removeAttribute(b2) : a.setAttribute(b2, "" + c2)) : e2.mustUseProperty ? a[e2.propertyName] = null === c2 ? 3 === e2.type ? false : "" : c2 : (b2 = e2.attributeName, d2 = e2.attributeNamespace, null === c2 ? a.removeAttribute(b2) : (e2 = e2.type, c2 = 3 === e2 || 4 === e2 && true === c2 ? "" : "" + c2, d2 ? a.setAttributeNS(d2, b2, c2) : a.setAttribute(b2, c2)));
+function ta$1(a, b2, c2, d2) {
+  var e2 = z$2.hasOwnProperty(b2) ? z$2[b2] : null;
+  if (null !== e2 ? 0 !== e2.type : d2 || !(2 < b2.length) || "o" !== b2[0] && "O" !== b2[0] || "n" !== b2[1] && "N" !== b2[1]) qa$1(b2, c2, e2, d2) && (c2 = null), d2 || null === e2 ? oa(b2) && (null === c2 ? a.removeAttribute(b2) : a.setAttribute(b2, "" + c2)) : e2.mustUseProperty ? a[e2.propertyName] = null === c2 ? 3 === e2.type ? false : "" : c2 : (b2 = e2.attributeName, d2 = e2.attributeNamespace, null === c2 ? a.removeAttribute(b2) : (e2 = e2.type, c2 = 3 === e2 || 4 === e2 && true === c2 ? "" : "" + c2, d2 ? a.setAttributeNS(d2, b2, c2) : a.setAttribute(b2, c2)));
 }
-var ua = aa.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, va = Symbol.for("react.element"), wa = Symbol.for("react.portal"), ya = Symbol.for("react.fragment"), za = Symbol.for("react.strict_mode"), Aa = Symbol.for("react.profiler"), Ba = Symbol.for("react.provider"), Ca = Symbol.for("react.context"), Da = Symbol.for("react.forward_ref"), Ea = Symbol.for("react.suspense"), Fa = Symbol.for("react.suspense_list"), Ga = Symbol.for("react.memo"), Ha = Symbol.for("react.lazy");
+var ua$1 = aa$1.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, va$1 = Symbol.for("react.element"), wa$1 = Symbol.for("react.portal"), ya$1 = Symbol.for("react.fragment"), za$1 = Symbol.for("react.strict_mode"), Aa$1 = Symbol.for("react.profiler"), Ba$1 = Symbol.for("react.provider"), Ca$1 = Symbol.for("react.context"), Da$1 = Symbol.for("react.forward_ref"), Ea = Symbol.for("react.suspense"), Fa = Symbol.for("react.suspense_list"), Ga = Symbol.for("react.memo"), Ha = Symbol.for("react.lazy");
 var Ia = Symbol.for("react.offscreen");
 var Ja = Symbol.iterator;
 function Ka(a) {
@@ -741,7 +741,7 @@ function Ka(a) {
   a = Ja && a[Ja] || a["@@iterator"];
   return "function" === typeof a ? a : null;
 }
-var A$1 = Object.assign, La;
+var A$2 = Object.assign, La;
 function Ma(a) {
   if (void 0 === La) try {
     throw Error();
@@ -833,13 +833,13 @@ function Qa(a) {
   if ("function" === typeof a) return a.displayName || a.name || null;
   if ("string" === typeof a) return a;
   switch (a) {
-    case ya:
+    case ya$1:
       return "Fragment";
-    case wa:
+    case wa$1:
       return "Portal";
-    case Aa:
+    case Aa$1:
       return "Profiler";
-    case za:
+    case za$1:
       return "StrictMode";
     case Ea:
       return "Suspense";
@@ -847,11 +847,11 @@ function Qa(a) {
       return "SuspenseList";
   }
   if ("object" === typeof a) switch (a.$$typeof) {
-    case Ca:
+    case Ca$1:
       return (a.displayName || "Context") + ".Consumer";
-    case Ba:
+    case Ba$1:
       return (a._context.displayName || "Context") + ".Provider";
-    case Da:
+    case Da$1:
       var b2 = a.render;
       a = a.displayName;
       a || (a = b2.displayName || b2.name || "", a = "" !== a ? "ForwardRef(" + a + ")" : "ForwardRef");
@@ -894,7 +894,7 @@ function Ra(a) {
     case 16:
       return Qa(b2);
     case 8:
-      return b2 === za ? "StrictMode" : "Mode";
+      return b2 === za$1 ? "StrictMode" : "Mode";
     case 22:
       return "Offscreen";
     case 12:
@@ -980,7 +980,7 @@ function Xa(a) {
 }
 function Ya(a, b2) {
   var c2 = b2.checked;
-  return A$1({}, b2, { defaultChecked: void 0, defaultValue: void 0, value: void 0, checked: null != c2 ? c2 : a._wrapperState.initialChecked });
+  return A$2({}, b2, { defaultChecked: void 0, defaultValue: void 0, value: void 0, checked: null != c2 ? c2 : a._wrapperState.initialChecked });
 }
 function Za(a, b2) {
   var c2 = null == b2.defaultValue ? "" : b2.defaultValue, d2 = null != b2.checked ? b2.checked : b2.defaultChecked;
@@ -989,7 +989,7 @@ function Za(a, b2) {
 }
 function ab(a, b2) {
   b2 = b2.checked;
-  null != b2 && ta(a, "checked", b2, false);
+  null != b2 && ta$1(a, "checked", b2, false);
 }
 function bb(a, b2) {
   ab(a, b2);
@@ -1042,8 +1042,8 @@ function fb(a, b2, c2, d2) {
   }
 }
 function gb(a, b2) {
-  if (null != b2.dangerouslySetInnerHTML) throw Error(p$2(91));
-  return A$1({}, b2, { value: void 0, defaultValue: void 0, children: "" + a._wrapperState.initialValue });
+  if (null != b2.dangerouslySetInnerHTML) throw Error(p$3(91));
+  return A$2({}, b2, { value: void 0, defaultValue: void 0, children: "" + a._wrapperState.initialValue });
 }
 function hb(a, b2) {
   var c2 = b2.value;
@@ -1051,9 +1051,9 @@ function hb(a, b2) {
     c2 = b2.children;
     b2 = b2.defaultValue;
     if (null != c2) {
-      if (null != b2) throw Error(p$2(92));
+      if (null != b2) throw Error(p$3(92));
       if (eb(c2)) {
-        if (1 < c2.length) throw Error(p$2(93));
+        if (1 < c2.length) throw Error(p$3(93));
         c2 = c2[0];
       }
       b2 = c2;
@@ -1172,15 +1172,15 @@ function sb(a, b2) {
     d2 ? a.setProperty(c2, e2) : a[c2] = e2;
   }
 }
-var tb = A$1({ menuitem: true }, { area: true, base: true, br: true, col: true, embed: true, hr: true, img: true, input: true, keygen: true, link: true, meta: true, param: true, source: true, track: true, wbr: true });
+var tb = A$2({ menuitem: true }, { area: true, base: true, br: true, col: true, embed: true, hr: true, img: true, input: true, keygen: true, link: true, meta: true, param: true, source: true, track: true, wbr: true });
 function ub(a, b2) {
   if (b2) {
-    if (tb[a] && (null != b2.children || null != b2.dangerouslySetInnerHTML)) throw Error(p$2(137, a));
+    if (tb[a] && (null != b2.children || null != b2.dangerouslySetInnerHTML)) throw Error(p$3(137, a));
     if (null != b2.dangerouslySetInnerHTML) {
-      if (null != b2.children) throw Error(p$2(60));
-      if ("object" !== typeof b2.dangerouslySetInnerHTML || !("__html" in b2.dangerouslySetInnerHTML)) throw Error(p$2(61));
+      if (null != b2.children) throw Error(p$3(60));
+      if ("object" !== typeof b2.dangerouslySetInnerHTML || !("__html" in b2.dangerouslySetInnerHTML)) throw Error(p$3(61));
     }
-    if (null != b2.style && "object" !== typeof b2.style) throw Error(p$2(62));
+    if (null != b2.style && "object" !== typeof b2.style) throw Error(p$3(62));
   }
 }
 function vb(a, b2) {
@@ -1208,7 +1208,7 @@ function xb(a) {
 var yb = null, zb = null, Ab = null;
 function Bb(a) {
   if (a = Cb(a)) {
-    if ("function" !== typeof yb) throw Error(p$2(280));
+    if ("function" !== typeof yb) throw Error(p$3(280));
     var b2 = a.stateNode;
     b2 && (b2 = Db(b2), yb(a.stateNode, a.type, b2));
   }
@@ -1264,11 +1264,11 @@ function Kb(a, b2) {
       a = false;
   }
   if (a) return null;
-  if (c2 && "function" !== typeof c2) throw Error(p$2(231, b2, typeof c2));
+  if (c2 && "function" !== typeof c2) throw Error(p$3(231, b2, typeof c2));
   return c2;
 }
 var Lb = false;
-if (ia) try {
+if (ia$1) try {
   var Mb = {};
   Object.defineProperty(Mb, "passive", { get: function() {
     Lb = true;
@@ -1302,7 +1302,7 @@ function Ub(a, b2, c2, d2, e2, f2, g2, h2, k2) {
       var l2 = Pb;
       Ob = false;
       Pb = null;
-    } else throw Error(p$2(198));
+    } else throw Error(p$3(198));
     Qb || (Qb = true, Rb = l2);
   }
 }
@@ -1326,13 +1326,13 @@ function Wb(a) {
   return null;
 }
 function Xb(a) {
-  if (Vb(a) !== a) throw Error(p$2(188));
+  if (Vb(a) !== a) throw Error(p$3(188));
 }
 function Yb(a) {
   var b2 = a.alternate;
   if (!b2) {
     b2 = Vb(a);
-    if (null === b2) throw Error(p$2(188));
+    if (null === b2) throw Error(p$3(188));
     return b2 !== a ? null : a;
   }
   for (var c2 = a, d2 = b2; ; ) {
@@ -1353,7 +1353,7 @@ function Yb(a) {
         if (f2 === d2) return Xb(e2), b2;
         f2 = f2.sibling;
       }
-      throw Error(p$2(188));
+      throw Error(p$3(188));
     }
     if (c2.return !== d2.return) c2 = e2, d2 = f2;
     else {
@@ -1388,12 +1388,12 @@ function Yb(a) {
           }
           h2 = h2.sibling;
         }
-        if (!g2) throw Error(p$2(189));
+        if (!g2) throw Error(p$3(189));
       }
     }
-    if (c2.alternate !== d2) throw Error(p$2(190));
+    if (c2.alternate !== d2) throw Error(p$3(190));
   }
-  if (3 !== c2.tag) throw Error(p$2(188));
+  if (3 !== c2.tag) throw Error(p$3(188));
   return c2.stateNode.current === c2 ? a : b2;
 }
 function Zb(a) {
@@ -1409,7 +1409,7 @@ function $b(a) {
   }
   return null;
 }
-var ac = ca.unstable_scheduleCallback, bc = ca.unstable_cancelCallback, cc = ca.unstable_shouldYield, dc = ca.unstable_requestPaint, B = ca.unstable_now, ec = ca.unstable_getCurrentPriorityLevel, fc = ca.unstable_ImmediatePriority, gc = ca.unstable_UserBlockingPriority, hc = ca.unstable_NormalPriority, ic = ca.unstable_LowPriority, jc = ca.unstable_IdlePriority, kc = null, lc = null;
+var ac = ca$1.unstable_scheduleCallback, bc = ca$1.unstable_cancelCallback, cc = ca$1.unstable_shouldYield, dc = ca$1.unstable_requestPaint, B$1 = ca$1.unstable_now, ec = ca$1.unstable_getCurrentPriorityLevel, fc = ca$1.unstable_ImmediatePriority, gc = ca$1.unstable_UserBlockingPriority, hc = ca$1.unstable_NormalPriority, ic = ca$1.unstable_LowPriority, jc = ca$1.unstable_IdlePriority, kc = null, lc = null;
 function mc(a) {
   if (lc && "function" === typeof lc.onCommitFiberRoot) try {
     lc.onCommitFiberRoot(kc, a, void 0, 128 === (a.current.flags & 128));
@@ -1583,7 +1583,7 @@ function Cc(a, b2) {
     c2 &= ~e2;
   }
 }
-var C = 0;
+var C$1 = 0;
 function Dc(a) {
   a &= -a;
   return 1 < a ? 4 < a ? 0 !== (a & 268435455) ? 16 : 536870912 : 4 : 1;
@@ -1684,7 +1684,7 @@ function $c() {
   Pc.forEach(Zc);
 }
 function ad(a, b2) {
-  a.blockedOn === b2 && (a.blockedOn = null, Jc || (Jc = true, ca.unstable_scheduleCallback(ca.unstable_NormalPriority, $c)));
+  a.blockedOn === b2 && (a.blockedOn = null, Jc || (Jc = true, ca$1.unstable_scheduleCallback(ca$1.unstable_NormalPriority, $c)));
 }
 function bd(a) {
   function b2(b3) {
@@ -1705,23 +1705,23 @@ function bd(a) {
   for (c2 = 0; c2 < Qc.length; c2++) d2 = Qc[c2], d2.blockedOn === a && (d2.blockedOn = null);
   for (; 0 < Qc.length && (c2 = Qc[0], null === c2.blockedOn); ) Vc(c2), null === c2.blockedOn && Qc.shift();
 }
-var cd = ua.ReactCurrentBatchConfig, dd = true;
+var cd = ua$1.ReactCurrentBatchConfig, dd = true;
 function ed(a, b2, c2, d2) {
-  var e2 = C, f2 = cd.transition;
+  var e2 = C$1, f2 = cd.transition;
   cd.transition = null;
   try {
-    C = 1, fd(a, b2, c2, d2);
+    C$1 = 1, fd(a, b2, c2, d2);
   } finally {
-    C = e2, cd.transition = f2;
+    C$1 = e2, cd.transition = f2;
   }
 }
 function gd(a, b2, c2, d2) {
-  var e2 = C, f2 = cd.transition;
+  var e2 = C$1, f2 = cd.transition;
   cd.transition = null;
   try {
-    C = 4, fd(a, b2, c2, d2);
+    C$1 = 4, fd(a, b2, c2, d2);
   } finally {
-    C = e2, cd.transition = f2;
+    C$1 = e2, cd.transition = f2;
   }
 }
 function fd(a, b2, c2, d2) {
@@ -1885,7 +1885,7 @@ function rd(a) {
     this.isPropagationStopped = qd;
     return this;
   }
-  A$1(b2.prototype, { preventDefault: function() {
+  A$2(b2.prototype, { preventDefault: function() {
     this.defaultPrevented = true;
     var a2 = this.nativeEvent;
     a2 && (a2.preventDefault ? a2.preventDefault() : "unknown" !== typeof a2.returnValue && (a2.returnValue = false), this.isDefaultPrevented = pd);
@@ -1898,7 +1898,7 @@ function rd(a) {
 }
 var sd = { eventPhase: 0, bubbles: 0, cancelable: 0, timeStamp: function(a) {
   return a.timeStamp || Date.now();
-}, defaultPrevented: 0, isTrusted: 0 }, td = rd(sd), ud = A$1({}, sd, { view: 0, detail: 0 }), vd = rd(ud), wd, xd, yd, Ad = A$1({}, ud, { screenX: 0, screenY: 0, clientX: 0, clientY: 0, pageX: 0, pageY: 0, ctrlKey: 0, shiftKey: 0, altKey: 0, metaKey: 0, getModifierState: zd, button: 0, buttons: 0, relatedTarget: function(a) {
+}, defaultPrevented: 0, isTrusted: 0 }, td = rd(sd), ud = A$2({}, sd, { view: 0, detail: 0 }), vd = rd(ud), wd, xd, yd, Ad = A$2({}, ud, { screenX: 0, screenY: 0, clientX: 0, clientY: 0, pageX: 0, pageY: 0, ctrlKey: 0, shiftKey: 0, altKey: 0, metaKey: 0, getModifierState: zd, button: 0, buttons: 0, relatedTarget: function(a) {
   return void 0 === a.relatedTarget ? a.fromElement === a.srcElement ? a.toElement : a.fromElement : a.relatedTarget;
 }, movementX: function(a) {
   if ("movementX" in a) return a.movementX;
@@ -1906,9 +1906,9 @@ var sd = { eventPhase: 0, bubbles: 0, cancelable: 0, timeStamp: function(a) {
   return wd;
 }, movementY: function(a) {
   return "movementY" in a ? a.movementY : xd;
-} }), Bd = rd(Ad), Cd = A$1({}, Ad, { dataTransfer: 0 }), Dd = rd(Cd), Ed = A$1({}, ud, { relatedTarget: 0 }), Fd = rd(Ed), Gd = A$1({}, sd, { animationName: 0, elapsedTime: 0, pseudoElement: 0 }), Hd = rd(Gd), Id = A$1({}, sd, { clipboardData: function(a) {
+} }), Bd = rd(Ad), Cd = A$2({}, Ad, { dataTransfer: 0 }), Dd = rd(Cd), Ed = A$2({}, ud, { relatedTarget: 0 }), Fd = rd(Ed), Gd = A$2({}, sd, { animationName: 0, elapsedTime: 0, pseudoElement: 0 }), Hd = rd(Gd), Id = A$2({}, sd, { clipboardData: function(a) {
   return "clipboardData" in a ? a.clipboardData : window.clipboardData;
-} }), Jd = rd(Id), Kd = A$1({}, sd, { data: 0 }), Ld = rd(Kd), Md = {
+} }), Jd = rd(Id), Kd = A$2({}, sd, { data: 0 }), Ld = rd(Kd), Md = {
   Esc: "Escape",
   Spacebar: " ",
   Left: "ArrowLeft",
@@ -1966,7 +1966,7 @@ function Pd(a) {
 function zd() {
   return Pd;
 }
-var Qd = A$1({}, ud, { key: function(a) {
+var Qd = A$2({}, ud, { key: function(a) {
   if (a.key) {
     var b2 = Md[a.key] || a.key;
     if ("Unidentified" !== b2) return b2;
@@ -1978,7 +1978,7 @@ var Qd = A$1({}, ud, { key: function(a) {
   return "keydown" === a.type || "keyup" === a.type ? a.keyCode : 0;
 }, which: function(a) {
   return "keypress" === a.type ? od(a) : "keydown" === a.type || "keyup" === a.type ? a.keyCode : 0;
-} }), Rd = rd(Qd), Sd = A$1({}, Ad, { pointerId: 0, width: 0, height: 0, pressure: 0, tangentialPressure: 0, tiltX: 0, tiltY: 0, twist: 0, pointerType: 0, isPrimary: 0 }), Td = rd(Sd), Ud = A$1({}, ud, { touches: 0, targetTouches: 0, changedTouches: 0, altKey: 0, metaKey: 0, ctrlKey: 0, shiftKey: 0, getModifierState: zd }), Vd = rd(Ud), Wd = A$1({}, sd, { propertyName: 0, elapsedTime: 0, pseudoElement: 0 }), Xd = rd(Wd), Yd = A$1({}, Ad, {
+} }), Rd = rd(Qd), Sd = A$2({}, Ad, { pointerId: 0, width: 0, height: 0, pressure: 0, tangentialPressure: 0, tiltX: 0, tiltY: 0, twist: 0, pointerType: 0, isPrimary: 0 }), Td = rd(Sd), Ud = A$2({}, ud, { touches: 0, targetTouches: 0, changedTouches: 0, altKey: 0, metaKey: 0, ctrlKey: 0, shiftKey: 0, getModifierState: zd }), Vd = rd(Ud), Wd = A$2({}, sd, { propertyName: 0, elapsedTime: 0, pseudoElement: 0 }), Xd = rd(Wd), Yd = A$2({}, Ad, {
   deltaX: function(a) {
     return "deltaX" in a ? a.deltaX : "wheelDeltaX" in a ? -a.wheelDeltaX : 0;
   },
@@ -1987,9 +1987,9 @@ var Qd = A$1({}, ud, { key: function(a) {
   },
   deltaZ: 0,
   deltaMode: 0
-}), Zd = rd(Yd), $d = [9, 13, 27, 32], ae = ia && "CompositionEvent" in window, be = null;
-ia && "documentMode" in document && (be = document.documentMode);
-var ce = ia && "TextEvent" in window && !be, de = ia && (!ae || be && 8 < be && 11 >= be), ee = String.fromCharCode(32), fe = false;
+}), Zd = rd(Yd), $d = [9, 13, 27, 32], ae = ia$1 && "CompositionEvent" in window, be = null;
+ia$1 && "documentMode" in document && (be = document.documentMode);
+var ce = ia$1 && "TextEvent" in window && !be, de = ia$1 && (!ae || be && 8 < be && 11 >= be), ee = String.fromCharCode(32), fe = false;
 function ge(a, b2) {
   switch (a) {
     case "keyup":
@@ -2062,9 +2062,9 @@ function ve(a, b2) {
   if ("change" === a) return b2;
 }
 var we = false;
-if (ia) {
+if (ia$1) {
   var xe;
-  if (ia) {
+  if (ia$1) {
     var ye = "oninput" in document;
     if (!ye) {
       var ze = document.createElement("div");
@@ -2108,7 +2108,7 @@ function Ie(a, b2) {
   if (c2.length !== d2.length) return false;
   for (d2 = 0; d2 < c2.length; d2++) {
     var e2 = c2[d2];
-    if (!ja.call(b2, e2) || !He(a[e2], b2[e2])) return false;
+    if (!ja$1.call(b2, e2) || !He(a[e2], b2[e2])) return false;
   }
   return true;
 }
@@ -2182,7 +2182,7 @@ function Oe(a) {
     for (c2 = 0; c2 < b2.length; c2++) a = b2[c2], a.element.scrollLeft = a.left, a.element.scrollTop = a.top;
   }
 }
-var Pe = ia && "documentMode" in document && 11 >= document.documentMode, Qe = null, Re = null, Se = null, Te = false;
+var Pe = ia$1 && "documentMode" in document && 11 >= document.documentMode, Qe = null, Re = null, Se = null, Te = false;
 function Ue(a, b2, c2) {
   var d2 = c2.window === c2 ? c2.document : 9 === c2.nodeType ? c2 : c2.ownerDocument;
   Te || null == Qe || Qe !== Xa(d2) || (d2 = Qe, "selectionStart" in d2 && Ne(d2) ? d2 = { start: d2.selectionStart, end: d2.selectionEnd } : (d2 = (d2.ownerDocument && d2.ownerDocument.defaultView || window).getSelection(), d2 = { anchorNode: d2.anchorNode, anchorOffset: d2.anchorOffset, focusNode: d2.focusNode, focusOffset: d2.focusOffset }), Se && Ie(Se, d2) || (Se = d2, d2 = oe(Re, "onSelect"), 0 < d2.length && (b2 = new td("onSelect", "select", null, b2, c2), a.push({ event: b2, listeners: d2 }), b2.target = Qe)));
@@ -2195,7 +2195,7 @@ function Ve(a, b2) {
   return c2;
 }
 var We = { animationend: Ve("Animation", "AnimationEnd"), animationiteration: Ve("Animation", "AnimationIteration"), animationstart: Ve("Animation", "AnimationStart"), transitionend: Ve("Transition", "TransitionEnd") }, Xe = {}, Ye = {};
-ia && (Ye = document.createElement("div").style, "AnimationEvent" in window || (delete We.animationend.animation, delete We.animationiteration.animation, delete We.animationstart.animation), "TransitionEvent" in window || delete We.transitionend.transition);
+ia$1 && (Ye = document.createElement("div").style, "AnimationEvent" in window || (delete We.animationend.animation, delete We.animationiteration.animation, delete We.animationstart.animation), "TransitionEvent" in window || delete We.transitionend.transition);
 function Ze(a) {
   if (Xe[a]) return Xe[a];
   if (!We[a]) return a;
@@ -2206,7 +2206,7 @@ function Ze(a) {
 var $e = Ze("animationend"), af = Ze("animationiteration"), bf = Ze("animationstart"), cf = Ze("transitionend"), df = /* @__PURE__ */ new Map(), ef = "abort auxClick cancel canPlay canPlayThrough click close contextMenu copy cut drag dragEnd dragEnter dragExit dragLeave dragOver dragStart drop durationChange emptied encrypted ended error gotPointerCapture input invalid keyDown keyPress keyUp load loadedData loadedMetadata loadStart lostPointerCapture mouseDown mouseMove mouseOut mouseOver mouseUp paste pause play playing pointerCancel pointerDown pointerMove pointerOut pointerOver pointerUp progress rateChange reset resize seeked seeking stalled submit suspend timeUpdate touchCancel touchEnd touchStart volumeChange scroll toggle touchMove waiting wheel".split(" ");
 function ff(a, b2) {
   df.set(a, b2);
-  fa(b2, [a]);
+  fa$1(b2, [a]);
 }
 for (var gf = 0; gf < ef.length; gf++) {
   var hf = ef[gf], jf = hf.toLowerCase(), kf = hf[0].toUpperCase() + hf.slice(1);
@@ -2219,16 +2219,16 @@ ff("dblclick", "onDoubleClick");
 ff("focusin", "onFocus");
 ff("focusout", "onBlur");
 ff(cf, "onTransitionEnd");
-ha("onMouseEnter", ["mouseout", "mouseover"]);
-ha("onMouseLeave", ["mouseout", "mouseover"]);
-ha("onPointerEnter", ["pointerout", "pointerover"]);
-ha("onPointerLeave", ["pointerout", "pointerover"]);
-fa("onChange", "change click focusin focusout input keydown keyup selectionchange".split(" "));
-fa("onSelect", "focusout contextmenu dragend focusin keydown keyup mousedown mouseup selectionchange".split(" "));
-fa("onBeforeInput", ["compositionend", "keypress", "textInput", "paste"]);
-fa("onCompositionEnd", "compositionend focusout keydown keypress keyup mousedown".split(" "));
-fa("onCompositionStart", "compositionstart focusout keydown keypress keyup mousedown".split(" "));
-fa("onCompositionUpdate", "compositionupdate focusout keydown keypress keyup mousedown".split(" "));
+ha$1("onMouseEnter", ["mouseout", "mouseover"]);
+ha$1("onMouseLeave", ["mouseout", "mouseover"]);
+ha$1("onPointerEnter", ["pointerout", "pointerover"]);
+ha$1("onPointerLeave", ["pointerout", "pointerover"]);
+fa$1("onChange", "change click focusin focusout input keydown keyup selectionchange".split(" "));
+fa$1("onSelect", "focusout contextmenu dragend focusin keydown keyup mousedown mouseup selectionchange".split(" "));
+fa$1("onBeforeInput", ["compositionend", "keypress", "textInput", "paste"]);
+fa$1("onCompositionEnd", "compositionend focusout keydown keypress keyup mousedown".split(" "));
+fa$1("onCompositionStart", "compositionstart focusout keydown keypress keyup mousedown".split(" "));
+fa$1("onCompositionUpdate", "compositionupdate focusout keydown keypress keyup mousedown".split(" "));
 var lf = "abort canplay canplaythrough durationchange emptied encrypted ended error loadeddata loadedmetadata loadstart pause play playing progress ratechange resize seeked seeking stalled suspend timeupdate volumechange waiting".split(" "), mf = new Set("cancel close invalid load scroll toggle".split(" ").concat(lf));
 function nf(a, b2, c2) {
   var d2 = a.type || "unknown-event";
@@ -2263,7 +2263,7 @@ function se(a, b2) {
   }
   if (Qb) throw a = Rb, Qb = false, Rb = null, a;
 }
-function D(a, b2) {
+function D$1(a, b2) {
   var c2 = b2[of];
   void 0 === c2 && (c2 = b2[of] = /* @__PURE__ */ new Set());
   var d2 = a + "__bubble";
@@ -2278,7 +2278,7 @@ var rf = "_reactListening" + Math.random().toString(36).slice(2);
 function sf(a) {
   if (!a[rf]) {
     a[rf] = true;
-    da.forEach(function(b3) {
+    da$1.forEach(function(b3) {
       "selectionchange" !== b3 && (mf.has(b3) || qf(b3, false, a), qf(b3, true, a));
     });
     var b2 = 9 === a.nodeType ? a : a.ownerDocument;
@@ -2472,24 +2472,24 @@ function hd(a, b2, c2, d2, e2) {
       a: {
         h3 = d3 ? ue(d3) : window;
         k3 = h3.nodeName && h3.nodeName.toLowerCase();
-        if ("select" === k3 || "input" === k3 && "file" === h3.type) var na = ve;
-        else if (me(h3)) if (we) na = Fe;
+        if ("select" === k3 || "input" === k3 && "file" === h3.type) var na2 = ve;
+        else if (me(h3)) if (we) na2 = Fe;
         else {
-          na = De;
-          var xa = Ce;
+          na2 = De;
+          var xa2 = Ce;
         }
-        else (k3 = h3.nodeName) && "input" === k3.toLowerCase() && ("checkbox" === h3.type || "radio" === h3.type) && (na = Ee);
-        if (na && (na = na(a, d3))) {
-          ne(g3, na, c2, e3);
+        else (k3 = h3.nodeName) && "input" === k3.toLowerCase() && ("checkbox" === h3.type || "radio" === h3.type) && (na2 = Ee);
+        if (na2 && (na2 = na2(a, d3))) {
+          ne(g3, na2, c2, e3);
           break a;
         }
-        xa && xa(a, h3, d3);
-        "focusout" === a && (xa = h3._wrapperState) && xa.controlled && "number" === h3.type && cb(h3, "number", h3.value);
+        xa2 && xa2(a, h3, d3);
+        "focusout" === a && (xa2 = h3._wrapperState) && xa2.controlled && "number" === h3.type && cb(h3, "number", h3.value);
       }
-      xa = d3 ? ue(d3) : window;
+      xa2 = d3 ? ue(d3) : window;
       switch (a) {
         case "focusin":
-          if (me(xa) || "true" === xa.contentEditable) Qe = xa, Re = d3, Se = null;
+          if (me(xa2) || "true" === xa2.contentEditable) Qe = xa2, Re = d3, Se = null;
           break;
         case "focusout":
           Se = Re = Qe = null;
@@ -2513,19 +2513,19 @@ function hd(a, b2, c2, d2, e2) {
       if (ae) b: {
         switch (a) {
           case "compositionstart":
-            var ba = "onCompositionStart";
+            var ba2 = "onCompositionStart";
             break b;
           case "compositionend":
-            ba = "onCompositionEnd";
+            ba2 = "onCompositionEnd";
             break b;
           case "compositionupdate":
-            ba = "onCompositionUpdate";
+            ba2 = "onCompositionUpdate";
             break b;
         }
-        ba = void 0;
+        ba2 = void 0;
       }
-      else ie ? ge(a, c2) && (ba = "onCompositionEnd") : "keydown" === a && 229 === c2.keyCode && (ba = "onCompositionStart");
-      ba && (de && "ko" !== c2.locale && (ie || "onCompositionStart" !== ba ? "onCompositionEnd" === ba && ie && ($a = nd()) : (kd = e3, ld = "value" in kd ? kd.value : kd.textContent, ie = true)), xa = oe(d3, ba), 0 < xa.length && (ba = new Ld(ba, a, null, c2, e3), g3.push({ event: ba, listeners: xa }), $a ? ba.data = $a : ($a = he(c2), null !== $a && (ba.data = $a))));
+      else ie ? ge(a, c2) && (ba2 = "onCompositionEnd") : "keydown" === a && 229 === c2.keyCode && (ba2 = "onCompositionStart");
+      ba2 && (de && "ko" !== c2.locale && (ie || "onCompositionStart" !== ba2 ? "onCompositionEnd" === ba2 && ie && ($a = nd()) : (kd = e3, ld = "value" in kd ? kd.value : kd.textContent, ie = true)), xa2 = oe(d3, ba2), 0 < xa2.length && (ba2 = new Ld(ba2, a, null, c2, e3), g3.push({ event: ba2, listeners: xa2 }), $a ? ba2.data = $a : ($a = he(c2), null !== $a && (ba2.data = $a))));
       if ($a = ce ? je(a, c2) : ke(a, c2)) d3 = oe(d3, "onBeforeInput"), 0 < d3.length && (e3 = new Ld("onBeforeInput", "beforeinput", null, c2, e3), g3.push({ event: e3, listeners: d3 }), e3.data = $a);
     }
     se(g3, b2);
@@ -2564,7 +2564,7 @@ function zf(a) {
 }
 function Af(a, b2, c2) {
   b2 = zf(b2);
-  if (zf(a) !== b2 && c2) throw Error(p$2(425));
+  if (zf(a) !== b2 && c2) throw Error(p$3(425));
 }
 function Bf() {
 }
@@ -2647,7 +2647,7 @@ function Cb(a) {
 }
 function ue(a) {
   if (5 === a.tag || 6 === a.tag) return a.stateNode;
-  throw Error(p$2(33));
+  throw Error(p$3(33));
 }
 function Db(a) {
   return a[Pf] || null;
@@ -2656,7 +2656,7 @@ var Sf = [], Tf = -1;
 function Uf(a) {
   return { current: a };
 }
-function E(a) {
+function E$1(a) {
   0 > Tf || (a.current = Sf[Tf], Sf[Tf] = null, Tf--);
 }
 function G(a, b2) {
@@ -2664,7 +2664,7 @@ function G(a, b2) {
   Sf[Tf] = a.current;
   a.current = b2;
 }
-var Vf = {}, H = Uf(Vf), Wf = Uf(false), Xf = Vf;
+var Vf = {}, H$1 = Uf(Vf), Wf = Uf(false), Xf = Vf;
 function Yf(a, b2) {
   var c2 = a.type.contextTypes;
   if (!c2) return Vf;
@@ -2680,12 +2680,12 @@ function Zf(a) {
   return null !== a && void 0 !== a;
 }
 function $f() {
-  E(Wf);
-  E(H);
+  E$1(Wf);
+  E$1(H$1);
 }
 function ag(a, b2, c2) {
-  if (H.current !== Vf) throw Error(p$2(168));
-  G(H, b2);
+  if (H$1.current !== Vf) throw Error(p$3(168));
+  G(H$1, b2);
   G(Wf, c2);
 }
 function bg(a, b2, c2) {
@@ -2693,20 +2693,20 @@ function bg(a, b2, c2) {
   b2 = b2.childContextTypes;
   if ("function" !== typeof d2.getChildContext) return c2;
   d2 = d2.getChildContext();
-  for (var e2 in d2) if (!(e2 in b2)) throw Error(p$2(108, Ra(a) || "Unknown", e2));
-  return A$1({}, c2, d2);
+  for (var e2 in d2) if (!(e2 in b2)) throw Error(p$3(108, Ra(a) || "Unknown", e2));
+  return A$2({}, c2, d2);
 }
 function cg(a) {
   a = (a = a.stateNode) && a.__reactInternalMemoizedMergedChildContext || Vf;
-  Xf = H.current;
-  G(H, a);
+  Xf = H$1.current;
+  G(H$1, a);
   G(Wf, Wf.current);
   return true;
 }
 function dg(a, b2, c2) {
   var d2 = a.stateNode;
-  if (!d2) throw Error(p$2(169));
-  c2 ? (a = bg(a, b2, Xf), d2.__reactInternalMemoizedMergedChildContext = a, E(Wf), E(H), G(H, a)) : E(Wf);
+  if (!d2) throw Error(p$3(169));
+  c2 ? (a = bg(a, b2, Xf), d2.__reactInternalMemoizedMergedChildContext = a, E$1(Wf), E$1(H$1), G(H$1, a)) : E$1(Wf);
   G(Wf, c2);
 }
 var eg = null, fg = false, gg = false;
@@ -2720,10 +2720,10 @@ function ig(a) {
 function jg() {
   if (!gg && null !== eg) {
     gg = true;
-    var a = 0, b2 = C;
+    var a = 0, b2 = C$1;
     try {
       var c2 = eg;
-      for (C = 1; a < c2.length; a++) {
+      for (C$1 = 1; a < c2.length; a++) {
         var d2 = c2[a];
         do
           d2 = d2(true);
@@ -2734,7 +2734,7 @@ function jg() {
     } catch (e2) {
       throw null !== eg && (eg = eg.slice(a + 1)), ac(fc, jg), e2;
     } finally {
-      C = b2, gg = false;
+      C$1 = b2, gg = false;
     }
   }
   return null;
@@ -2773,7 +2773,7 @@ function wg(a) {
   for (; a === mg; ) mg = kg[--lg], kg[lg] = null, ng = kg[--lg], kg[lg] = null;
   for (; a === qg; ) qg = og[--pg], og[pg] = null, sg = og[--pg], og[pg] = null, rg = og[--pg], og[pg] = null;
 }
-var xg = null, yg = null, I = false, zg = null;
+var xg = null, yg = null, I$1 = false, zg = null;
 function Ag(a, b2) {
   var c2 = Bg(5, null, null, 0);
   c2.elementType = "DELETED";
@@ -2800,20 +2800,20 @@ function Dg(a) {
   return 0 !== (a.mode & 1) && 0 === (a.flags & 128);
 }
 function Eg(a) {
-  if (I) {
+  if (I$1) {
     var b2 = yg;
     if (b2) {
       var c2 = b2;
       if (!Cg(a, b2)) {
-        if (Dg(a)) throw Error(p$2(418));
+        if (Dg(a)) throw Error(p$3(418));
         b2 = Lf(c2.nextSibling);
         var d2 = xg;
-        b2 && Cg(a, b2) ? Ag(d2, c2) : (a.flags = a.flags & -4097 | 2, I = false, xg = a);
+        b2 && Cg(a, b2) ? Ag(d2, c2) : (a.flags = a.flags & -4097 | 2, I$1 = false, xg = a);
       }
     } else {
-      if (Dg(a)) throw Error(p$2(418));
+      if (Dg(a)) throw Error(p$3(418));
       a.flags = a.flags & -4097 | 2;
-      I = false;
+      I$1 = false;
       xg = a;
     }
   }
@@ -2824,18 +2824,18 @@ function Fg(a) {
 }
 function Gg(a) {
   if (a !== xg) return false;
-  if (!I) return Fg(a), I = true, false;
+  if (!I$1) return Fg(a), I$1 = true, false;
   var b2;
   (b2 = 3 !== a.tag) && !(b2 = 5 !== a.tag) && (b2 = a.type, b2 = "head" !== b2 && "body" !== b2 && !Ef(a.type, a.memoizedProps));
   if (b2 && (b2 = yg)) {
-    if (Dg(a)) throw Hg(), Error(p$2(418));
+    if (Dg(a)) throw Hg(), Error(p$3(418));
     for (; b2; ) Ag(a, b2), b2 = Lf(b2.nextSibling);
   }
   Fg(a);
   if (13 === a.tag) {
     a = a.memoizedState;
     a = null !== a ? a.dehydrated : null;
-    if (!a) throw Error(p$2(317));
+    if (!a) throw Error(p$3(317));
     a: {
       a = a.nextSibling;
       for (b2 = 0; a; ) {
@@ -2861,22 +2861,22 @@ function Hg() {
 }
 function Ig() {
   yg = xg = null;
-  I = false;
+  I$1 = false;
 }
 function Jg(a) {
   null === zg ? zg = [a] : zg.push(a);
 }
-var Kg = ua.ReactCurrentBatchConfig;
+var Kg = ua$1.ReactCurrentBatchConfig;
 function Lg(a, b2, c2) {
   a = c2.ref;
   if (null !== a && "function" !== typeof a && "object" !== typeof a) {
     if (c2._owner) {
       c2 = c2._owner;
       if (c2) {
-        if (1 !== c2.tag) throw Error(p$2(309));
+        if (1 !== c2.tag) throw Error(p$3(309));
         var d2 = c2.stateNode;
       }
-      if (!d2) throw Error(p$2(147, a));
+      if (!d2) throw Error(p$3(147, a));
       var e2 = d2, f2 = "" + a;
       if (null !== b2 && null !== b2.ref && "function" === typeof b2.ref && b2.ref._stringRef === f2) return b2.ref;
       b2 = function(a2) {
@@ -2886,14 +2886,14 @@ function Lg(a, b2, c2) {
       b2._stringRef = f2;
       return b2;
     }
-    if ("string" !== typeof a) throw Error(p$2(284));
-    if (!c2._owner) throw Error(p$2(290, a));
+    if ("string" !== typeof a) throw Error(p$3(284));
+    if (!c2._owner) throw Error(p$3(290, a));
   }
   return a;
 }
 function Mg(a, b2) {
   a = Object.prototype.toString.call(b2);
-  throw Error(p$2(31, "[object Object]" === a ? "object with keys {" + Object.keys(b2).join(", ") + "}" : a));
+  throw Error(p$3(31, "[object Object]" === a ? "object with keys {" + Object.keys(b2).join(", ") + "}" : a));
 }
 function Ng(a) {
   var b2 = a._init;
@@ -2941,7 +2941,7 @@ function Og(a) {
   }
   function k2(a2, b3, c3, d3) {
     var f3 = c3.type;
-    if (f3 === ya) return m2(a2, b3, c3.props.children, d3, c3.key);
+    if (f3 === ya$1) return m2(a2, b3, c3.props.children, d3, c3.key);
     if (null !== b3 && (b3.elementType === f3 || "object" === typeof f3 && null !== f3 && f3.$$typeof === Ha && Ng(f3) === b3.type)) return d3 = e2(b3, c3.props), d3.ref = Lg(a2, b3, c3), d3.return = a2, d3;
     d3 = Rg(c3.type, c3.key, c3.props, null, a2.mode, d3);
     d3.ref = Lg(a2, b3, c3);
@@ -2964,9 +2964,9 @@ function Og(a) {
     if ("string" === typeof b3 && "" !== b3 || "number" === typeof b3) return b3 = Qg("" + b3, a2.mode, c3), b3.return = a2, b3;
     if ("object" === typeof b3 && null !== b3) {
       switch (b3.$$typeof) {
-        case va:
+        case va$1:
           return c3 = Rg(b3.type, b3.key, b3.props, null, a2.mode, c3), c3.ref = Lg(a2, null, b3), c3.return = a2, c3;
-        case wa:
+        case wa$1:
           return b3 = Sg(b3, a2.mode, c3), b3.return = a2, b3;
         case Ha:
           var d3 = b3._init;
@@ -2982,9 +2982,9 @@ function Og(a) {
     if ("string" === typeof c3 && "" !== c3 || "number" === typeof c3) return null !== e3 ? null : h2(a2, b3, "" + c3, d3);
     if ("object" === typeof c3 && null !== c3) {
       switch (c3.$$typeof) {
-        case va:
+        case va$1:
           return c3.key === e3 ? k2(a2, b3, c3, d3) : null;
-        case wa:
+        case wa$1:
           return c3.key === e3 ? l2(a2, b3, c3, d3) : null;
         case Ha:
           return e3 = c3._init, r2(
@@ -3003,9 +3003,9 @@ function Og(a) {
     if ("string" === typeof d3 && "" !== d3 || "number" === typeof d3) return a2 = a2.get(c3) || null, h2(b3, a2, "" + d3, e3);
     if ("object" === typeof d3 && null !== d3) {
       switch (d3.$$typeof) {
-        case va:
+        case va$1:
           return a2 = a2.get(null === d3.key ? c3 : d3.key) || null, k2(b3, a2, d3, e3);
-        case wa:
+        case wa$1:
           return a2 = a2.get(null === d3.key ? c3 : d3.key) || null, l2(b3, a2, d3, e3);
         case Ha:
           var f3 = d3._init;
@@ -3030,24 +3030,24 @@ function Og(a) {
       m3 = n3;
       u2 = x2;
     }
-    if (w2 === h3.length) return c2(e3, u2), I && tg(e3, w2), l3;
+    if (w2 === h3.length) return c2(e3, u2), I$1 && tg(e3, w2), l3;
     if (null === u2) {
       for (; w2 < h3.length; w2++) u2 = q2(e3, h3[w2], k3), null !== u2 && (g3 = f2(u2, g3, w2), null === m3 ? l3 = u2 : m3.sibling = u2, m3 = u2);
-      I && tg(e3, w2);
+      I$1 && tg(e3, w2);
       return l3;
     }
     for (u2 = d2(e3, u2); w2 < h3.length; w2++) x2 = y2(u2, e3, w2, h3[w2], k3), null !== x2 && (a && null !== x2.alternate && u2.delete(null === x2.key ? w2 : x2.key), g3 = f2(x2, g3, w2), null === m3 ? l3 = x2 : m3.sibling = x2, m3 = x2);
     a && u2.forEach(function(a2) {
       return b2(e3, a2);
     });
-    I && tg(e3, w2);
+    I$1 && tg(e3, w2);
     return l3;
   }
   function t2(e3, g3, h3, k3) {
     var l3 = Ka(h3);
-    if ("function" !== typeof l3) throw Error(p$2(150));
+    if ("function" !== typeof l3) throw Error(p$3(150));
     h3 = l3.call(h3);
-    if (null == h3) throw Error(p$2(151));
+    if (null == h3) throw Error(p$3(151));
     for (var u2 = l3 = null, m3 = g3, w2 = g3 = 0, x2 = null, n3 = h3.next(); null !== m3 && !n3.done; w2++, n3 = h3.next()) {
       m3.index > w2 ? (x2 = m3, m3 = null) : x2 = m3.sibling;
       var t3 = r2(e3, m3, n3.value, k3);
@@ -3064,29 +3064,29 @@ function Og(a) {
     if (n3.done) return c2(
       e3,
       m3
-    ), I && tg(e3, w2), l3;
+    ), I$1 && tg(e3, w2), l3;
     if (null === m3) {
       for (; !n3.done; w2++, n3 = h3.next()) n3 = q2(e3, n3.value, k3), null !== n3 && (g3 = f2(n3, g3, w2), null === u2 ? l3 = n3 : u2.sibling = n3, u2 = n3);
-      I && tg(e3, w2);
+      I$1 && tg(e3, w2);
       return l3;
     }
     for (m3 = d2(e3, m3); !n3.done; w2++, n3 = h3.next()) n3 = y2(m3, e3, w2, n3.value, k3), null !== n3 && (a && null !== n3.alternate && m3.delete(null === n3.key ? w2 : n3.key), g3 = f2(n3, g3, w2), null === u2 ? l3 = n3 : u2.sibling = n3, u2 = n3);
     a && m3.forEach(function(a2) {
       return b2(e3, a2);
     });
-    I && tg(e3, w2);
+    I$1 && tg(e3, w2);
     return l3;
   }
   function J2(a2, d3, f3, h3) {
-    "object" === typeof f3 && null !== f3 && f3.type === ya && null === f3.key && (f3 = f3.props.children);
+    "object" === typeof f3 && null !== f3 && f3.type === ya$1 && null === f3.key && (f3 = f3.props.children);
     if ("object" === typeof f3 && null !== f3) {
       switch (f3.$$typeof) {
-        case va:
+        case va$1:
           a: {
             for (var k3 = f3.key, l3 = d3; null !== l3; ) {
               if (l3.key === k3) {
                 k3 = f3.type;
-                if (k3 === ya) {
+                if (k3 === ya$1) {
                   if (7 === l3.tag) {
                     c2(a2, l3.sibling);
                     d3 = e2(l3, f3.props.children);
@@ -3107,10 +3107,10 @@ function Og(a) {
               } else b2(a2, l3);
               l3 = l3.sibling;
             }
-            f3.type === ya ? (d3 = Tg(f3.props.children, a2.mode, h3, f3.key), d3.return = a2, a2 = d3) : (h3 = Rg(f3.type, f3.key, f3.props, null, a2.mode, h3), h3.ref = Lg(a2, d3, f3), h3.return = a2, a2 = h3);
+            f3.type === ya$1 ? (d3 = Tg(f3.props.children, a2.mode, h3, f3.key), d3.return = a2, a2 = d3) : (h3 = Rg(f3.type, f3.key, f3.props, null, a2.mode, h3), h3.ref = Lg(a2, d3, f3), h3.return = a2, a2 = h3);
           }
           return g2(a2);
-        case wa:
+        case wa$1:
           a: {
             for (l3 = f3.key; null !== d3; ) {
               if (d3.key === l3) if (4 === d3.tag && d3.stateNode.containerInfo === f3.containerInfo && d3.stateNode.implementation === f3.implementation) {
@@ -3148,7 +3148,7 @@ function $g() {
 }
 function ah(a) {
   var b2 = Wg.current;
-  E(Wg);
+  E$1(Wg);
   a._currentValue = b2;
 }
 function bh(a, b2, c2) {
@@ -3168,7 +3168,7 @@ function ch(a, b2) {
 function eh(a) {
   var b2 = a._currentValue;
   if (Zg !== a) if (a = { context: a, memoizedValue: b2, next: null }, null === Yg) {
-    if (null === Xg) throw Error(p$2(308));
+    if (null === Xg) throw Error(p$3(308));
     Yg = a;
     Xg.dependencies = { lanes: 0, firstContext: a };
   } else Yg = Yg.next = a;
@@ -3207,7 +3207,7 @@ function nh(a, b2, c2) {
   var d2 = a.updateQueue;
   if (null === d2) return null;
   d2 = d2.shared;
-  if (0 !== (K & 2)) {
+  if (0 !== (K$1 & 2)) {
     var e2 = d2.pending;
     null === e2 ? b2.next = b2 : (b2.next = e2.next, e2.next = b2);
     d2.pending = b2;
@@ -3297,7 +3297,7 @@ function qh(a, b2, c2, d2) {
               n2 = t2.payload;
               r2 = "function" === typeof n2 ? n2.call(y2, q2, r2) : n2;
               if (null === r2 || void 0 === r2) break a;
-              q2 = A$1({}, q2, r2);
+              q2 = A$2({}, q2, r2);
               break a;
             case 2:
               jh = true;
@@ -3333,14 +3333,14 @@ function sh(a, b2, c2) {
     if (null !== e2) {
       d2.callback = null;
       d2 = c2;
-      if ("function" !== typeof e2) throw Error(p$2(191, e2));
+      if ("function" !== typeof e2) throw Error(p$3(191, e2));
       e2.call(d2);
     }
   }
 }
 var th = {}, uh = Uf(th), vh = Uf(th), wh = Uf(th);
 function xh(a) {
-  if (a === th) throw Error(p$2(174));
+  if (a === th) throw Error(p$3(174));
   return a;
 }
 function yh(a, b2) {
@@ -3356,13 +3356,13 @@ function yh(a, b2) {
     default:
       a = 8 === a ? b2.parentNode : b2, b2 = a.namespaceURI || null, a = a.tagName, b2 = lb(b2, a);
   }
-  E(uh);
+  E$1(uh);
   G(uh, b2);
 }
 function zh() {
-  E(uh);
-  E(vh);
-  E(wh);
+  E$1(uh);
+  E$1(vh);
+  E$1(wh);
 }
 function Ah(a) {
   xh(wh.current);
@@ -3371,9 +3371,9 @@ function Ah(a) {
   b2 !== c2 && (G(vh, a), G(uh, c2));
 }
 function Bh(a) {
-  vh.current === a && (E(uh), E(vh));
+  vh.current === a && (E$1(uh), E$1(vh));
 }
-var L = Uf(0);
+var L$1 = Uf(0);
 function Ch(a) {
   for (var b2 = a; null !== b2; ) {
     if (13 === b2.tag) {
@@ -3401,9 +3401,9 @@ function Eh() {
   for (var a = 0; a < Dh.length; a++) Dh[a]._workInProgressVersionPrimary = null;
   Dh.length = 0;
 }
-var Fh = ua.ReactCurrentDispatcher, Gh = ua.ReactCurrentBatchConfig, Hh = 0, M = null, N = null, O = null, Ih = false, Jh = false, Kh = 0, Lh = 0;
-function P() {
-  throw Error(p$2(321));
+var Fh = ua$1.ReactCurrentDispatcher, Gh = ua$1.ReactCurrentBatchConfig, Hh = 0, M$1 = null, N = null, O$1 = null, Ih = false, Jh = false, Kh = 0, Lh = 0;
+function P$1() {
+  throw Error(p$3(321));
 }
 function Mh(a, b2) {
   if (null === b2) return false;
@@ -3412,7 +3412,7 @@ function Mh(a, b2) {
 }
 function Nh(a, b2, c2, d2, e2, f2) {
   Hh = f2;
-  M = b2;
+  M$1 = b2;
   b2.memoizedState = null;
   b2.updateQueue = null;
   b2.lanes = 0;
@@ -3423,9 +3423,9 @@ function Nh(a, b2, c2, d2, e2, f2) {
     do {
       Jh = false;
       Kh = 0;
-      if (25 <= f2) throw Error(p$2(301));
+      if (25 <= f2) throw Error(p$3(301));
       f2 += 1;
-      O = N = null;
+      O$1 = N = null;
       b2.updateQueue = null;
       Fh.current = Qh;
       a = c2(d2, e2);
@@ -3434,9 +3434,9 @@ function Nh(a, b2, c2, d2, e2, f2) {
   Fh.current = Rh;
   b2 = null !== N && null !== N.next;
   Hh = 0;
-  O = N = M = null;
+  O$1 = N = M$1 = null;
   Ih = false;
-  if (b2) throw Error(p$2(300));
+  if (b2) throw Error(p$3(300));
   return a;
 }
 function Sh() {
@@ -3446,30 +3446,30 @@ function Sh() {
 }
 function Th() {
   var a = { memoizedState: null, baseState: null, baseQueue: null, queue: null, next: null };
-  null === O ? M.memoizedState = O = a : O = O.next = a;
-  return O;
+  null === O$1 ? M$1.memoizedState = O$1 = a : O$1 = O$1.next = a;
+  return O$1;
 }
 function Uh() {
   if (null === N) {
-    var a = M.alternate;
+    var a = M$1.alternate;
     a = null !== a ? a.memoizedState : null;
   } else a = N.next;
-  var b2 = null === O ? M.memoizedState : O.next;
-  if (null !== b2) O = b2, N = a;
+  var b2 = null === O$1 ? M$1.memoizedState : O$1.next;
+  if (null !== b2) O$1 = b2, N = a;
   else {
-    if (null === a) throw Error(p$2(310));
+    if (null === a) throw Error(p$3(310));
     N = a;
     a = { memoizedState: N.memoizedState, baseState: N.baseState, baseQueue: N.baseQueue, queue: N.queue, next: null };
-    null === O ? M.memoizedState = O = a : O = O.next = a;
+    null === O$1 ? M$1.memoizedState = O$1 = a : O$1 = O$1.next = a;
   }
-  return O;
+  return O$1;
 }
 function Vh(a, b2) {
   return "function" === typeof b2 ? b2(a) : b2;
 }
 function Wh(a) {
   var b2 = Uh(), c2 = b2.queue;
-  if (null === c2) throw Error(p$2(311));
+  if (null === c2) throw Error(p$3(311));
   c2.lastRenderedReducer = a;
   var d2 = N, e2 = d2.baseQueue, f2 = c2.pending;
   if (null !== f2) {
@@ -3497,7 +3497,7 @@ function Wh(a) {
           next: null
         };
         null === k2 ? (h2 = k2 = q2, g2 = d2) : k2 = k2.next = q2;
-        M.lanes |= m2;
+        M$1.lanes |= m2;
         rh |= m2;
       }
       l2 = l2.next;
@@ -3513,14 +3513,14 @@ function Wh(a) {
   if (null !== a) {
     e2 = a;
     do
-      f2 = e2.lane, M.lanes |= f2, rh |= f2, e2 = e2.next;
+      f2 = e2.lane, M$1.lanes |= f2, rh |= f2, e2 = e2.next;
     while (e2 !== a);
   } else null === e2 && (c2.lanes = 0);
   return [b2.memoizedState, c2.dispatch];
 }
 function Xh(a) {
   var b2 = Uh(), c2 = b2.queue;
-  if (null === c2) throw Error(p$2(311));
+  if (null === c2) throw Error(p$3(311));
   c2.lastRenderedReducer = a;
   var d2 = c2.dispatch, e2 = c2.pending, f2 = b2.memoizedState;
   if (null !== e2) {
@@ -3539,14 +3539,14 @@ function Xh(a) {
 function Yh() {
 }
 function Zh(a, b2) {
-  var c2 = M, d2 = Uh(), e2 = b2(), f2 = !He(d2.memoizedState, e2);
+  var c2 = M$1, d2 = Uh(), e2 = b2(), f2 = !He(d2.memoizedState, e2);
   f2 && (d2.memoizedState = e2, dh = true);
   d2 = d2.queue;
   $h(ai.bind(null, c2, d2, a), [a]);
-  if (d2.getSnapshot !== b2 || f2 || null !== O && O.memoizedState.tag & 1) {
+  if (d2.getSnapshot !== b2 || f2 || null !== O$1 && O$1.memoizedState.tag & 1) {
     c2.flags |= 2048;
     bi(9, ci.bind(null, c2, d2, e2, b2), void 0, null);
-    if (null === Q) throw Error(p$2(349));
+    if (null === Q$1) throw Error(p$3(349));
     0 !== (Hh & 30) || di(c2, b2, e2);
   }
   return e2;
@@ -3554,8 +3554,8 @@ function Zh(a, b2) {
 function di(a, b2, c2) {
   a.flags |= 16384;
   a = { getSnapshot: b2, value: c2 };
-  b2 = M.updateQueue;
-  null === b2 ? (b2 = { lastEffect: null, stores: null }, M.updateQueue = b2, b2.stores = [a]) : (c2 = b2.stores, null === c2 ? b2.stores = [a] : c2.push(a));
+  b2 = M$1.updateQueue;
+  null === b2 ? (b2 = { lastEffect: null, stores: null }, M$1.updateQueue = b2, b2.stores = [a]) : (c2 = b2.stores, null === c2 ? b2.stores = [a] : c2.push(a));
 }
 function ci(a, b2, c2, d2) {
   b2.value = c2;
@@ -3587,13 +3587,13 @@ function hi(a) {
   b2.memoizedState = b2.baseState = a;
   a = { pending: null, interleaved: null, lanes: 0, dispatch: null, lastRenderedReducer: Vh, lastRenderedState: a };
   b2.queue = a;
-  a = a.dispatch = ii.bind(null, M, a);
+  a = a.dispatch = ii.bind(null, M$1, a);
   return [b2.memoizedState, a];
 }
 function bi(a, b2, c2, d2) {
   a = { tag: a, create: b2, destroy: c2, deps: d2, next: null };
-  b2 = M.updateQueue;
-  null === b2 ? (b2 = { lastEffect: null, stores: null }, M.updateQueue = b2, b2.lastEffect = a.next = a) : (c2 = b2.lastEffect, null === c2 ? b2.lastEffect = a.next = a : (d2 = c2.next, c2.next = a, a.next = d2, b2.lastEffect = a));
+  b2 = M$1.updateQueue;
+  null === b2 ? (b2 = { lastEffect: null, stores: null }, M$1.updateQueue = b2, b2.lastEffect = a.next = a) : (c2 = b2.lastEffect, null === c2 ? b2.lastEffect = a.next = a : (d2 = c2.next, c2.next = a, a.next = d2, b2.lastEffect = a));
   return a;
 }
 function ji() {
@@ -3601,7 +3601,7 @@ function ji() {
 }
 function ki(a, b2, c2, d2) {
   var e2 = Th();
-  M.flags |= a;
+  M$1.flags |= a;
   e2.memoizedState = bi(1 | b2, c2, void 0, void 0 === d2 ? null : d2);
 }
 function li(a, b2, c2, d2) {
@@ -3616,7 +3616,7 @@ function li(a, b2, c2, d2) {
       return;
     }
   }
-  M.flags |= a;
+  M$1.flags |= a;
   e2.memoizedState = bi(1 | b2, c2, f2, d2);
 }
 function mi(a, b2) {
@@ -3664,19 +3664,19 @@ function ti(a, b2) {
 }
 function ui(a, b2, c2) {
   if (0 === (Hh & 21)) return a.baseState && (a.baseState = false, dh = true), a.memoizedState = c2;
-  He(c2, b2) || (c2 = yc(), M.lanes |= c2, rh |= c2, a.baseState = true);
+  He(c2, b2) || (c2 = yc(), M$1.lanes |= c2, rh |= c2, a.baseState = true);
   return b2;
 }
 function vi(a, b2) {
-  var c2 = C;
-  C = 0 !== c2 && 4 > c2 ? c2 : 4;
+  var c2 = C$1;
+  C$1 = 0 !== c2 && 4 > c2 ? c2 : 4;
   a(true);
   var d2 = Gh.transition;
   Gh.transition = {};
   try {
     a(false), b2();
   } finally {
-    C = c2, Gh.transition = d2;
+    C$1 = c2, Gh.transition = d2;
   }
 }
 function wi() {
@@ -3687,7 +3687,7 @@ function xi(a, b2, c2) {
   c2 = { lane: d2, action: c2, hasEagerState: false, eagerState: null, next: null };
   if (zi(a)) Ai(b2, c2);
   else if (c2 = hh(a, b2, c2, d2), null !== c2) {
-    var e2 = R();
+    var e2 = R$1();
     gi(c2, a, d2, e2);
     Bi(c2, b2, d2);
   }
@@ -3711,12 +3711,12 @@ function ii(a, b2, c2) {
     } finally {
     }
     c2 = hh(a, b2, e2, d2);
-    null !== c2 && (e2 = R(), gi(c2, a, d2, e2), Bi(c2, b2, d2));
+    null !== c2 && (e2 = R$1(), gi(c2, a, d2, e2), Bi(c2, b2, d2));
   }
 }
 function zi(a) {
   var b2 = a.alternate;
-  return a === M || null !== b2 && b2 === M;
+  return a === M$1 || null !== b2 && b2 === M$1;
 }
 function Ai(a, b2) {
   Jh = Ih = true;
@@ -3733,7 +3733,7 @@ function Bi(a, b2, c2) {
     Cc(a, c2);
   }
 }
-var Rh = { readContext: eh, useCallback: P, useContext: P, useEffect: P, useImperativeHandle: P, useInsertionEffect: P, useLayoutEffect: P, useMemo: P, useReducer: P, useRef: P, useState: P, useDebugValue: P, useDeferredValue: P, useTransition: P, useMutableSource: P, useSyncExternalStore: P, useId: P, unstable_isNewReconciler: false }, Oh = { readContext: eh, useCallback: function(a, b2) {
+var Rh = { readContext: eh, useCallback: P$1, useContext: P$1, useEffect: P$1, useImperativeHandle: P$1, useInsertionEffect: P$1, useLayoutEffect: P$1, useMemo: P$1, useReducer: P$1, useRef: P$1, useState: P$1, useDebugValue: P$1, useDeferredValue: P$1, useTransition: P$1, useMutableSource: P$1, useSyncExternalStore: P$1, useId: P$1, unstable_isNewReconciler: false }, Oh = { readContext: eh, useCallback: function(a, b2) {
   Th().memoizedState = [a, void 0 === b2 ? null : b2];
   return a;
 }, useContext: eh, useEffect: mi, useImperativeHandle: function(a, b2, c2) {
@@ -3760,7 +3760,7 @@ var Rh = { readContext: eh, useCallback: P, useContext: P, useEffect: P, useImpe
   d2.memoizedState = d2.baseState = b2;
   a = { pending: null, interleaved: null, lanes: 0, dispatch: null, lastRenderedReducer: a, lastRenderedState: b2 };
   d2.queue = a;
-  a = a.dispatch = xi.bind(null, M, a);
+  a = a.dispatch = xi.bind(null, M$1, a);
   return [d2.memoizedState, a];
 }, useRef: function(a) {
   var b2 = Th();
@@ -3775,13 +3775,13 @@ var Rh = { readContext: eh, useCallback: P, useContext: P, useEffect: P, useImpe
   return [b2, a];
 }, useMutableSource: function() {
 }, useSyncExternalStore: function(a, b2, c2) {
-  var d2 = M, e2 = Th();
-  if (I) {
-    if (void 0 === c2) throw Error(p$2(407));
+  var d2 = M$1, e2 = Th();
+  if (I$1) {
+    if (void 0 === c2) throw Error(p$3(407));
     c2 = c2();
   } else {
     c2 = b2();
-    if (null === Q) throw Error(p$2(349));
+    if (null === Q$1) throw Error(p$3(349));
     0 !== (Hh & 30) || di(d2, b2, c2);
   }
   e2.memoizedState = c2;
@@ -3797,8 +3797,8 @@ var Rh = { readContext: eh, useCallback: P, useContext: P, useEffect: P, useImpe
   bi(9, ci.bind(null, d2, f2, c2, b2), void 0, null);
   return c2;
 }, useId: function() {
-  var a = Th(), b2 = Q.identifierPrefix;
-  if (I) {
+  var a = Th(), b2 = Q$1.identifierPrefix;
+  if (I$1) {
     var c2 = sg;
     var d2 = rg;
     c2 = (d2 & ~(1 << 32 - oc(d2) - 1)).toString(32) + c2;
@@ -3846,7 +3846,7 @@ var Rh = { readContext: eh, useCallback: P, useContext: P, useEffect: P, useImpe
 }, useMutableSource: Yh, useSyncExternalStore: Zh, useId: wi, unstable_isNewReconciler: false };
 function Ci(a, b2) {
   if (a && a.defaultProps) {
-    b2 = A$1({}, b2);
+    b2 = A$2({}, b2);
     a = a.defaultProps;
     for (var c2 in a) void 0 === b2[c2] && (b2[c2] = a[c2]);
     return b2;
@@ -3856,7 +3856,7 @@ function Ci(a, b2) {
 function Di(a, b2, c2, d2) {
   b2 = a.memoizedState;
   c2 = c2(d2, b2);
-  c2 = null === c2 || void 0 === c2 ? b2 : A$1({}, b2, c2);
+  c2 = null === c2 || void 0 === c2 ? b2 : A$2({}, b2, c2);
   a.memoizedState = c2;
   0 === a.lanes && (a.updateQueue.baseState = c2);
 }
@@ -3864,14 +3864,14 @@ var Ei = { isMounted: function(a) {
   return (a = a._reactInternals) ? Vb(a) === a : false;
 }, enqueueSetState: function(a, b2, c2) {
   a = a._reactInternals;
-  var d2 = R(), e2 = yi(a), f2 = mh(d2, e2);
+  var d2 = R$1(), e2 = yi(a), f2 = mh(d2, e2);
   f2.payload = b2;
   void 0 !== c2 && null !== c2 && (f2.callback = c2);
   b2 = nh(a, f2, e2);
   null !== b2 && (gi(b2, a, e2, d2), oh(b2, a, e2));
 }, enqueueReplaceState: function(a, b2, c2) {
   a = a._reactInternals;
-  var d2 = R(), e2 = yi(a), f2 = mh(d2, e2);
+  var d2 = R$1(), e2 = yi(a), f2 = mh(d2, e2);
   f2.tag = 1;
   f2.payload = b2;
   void 0 !== c2 && null !== c2 && (f2.callback = c2);
@@ -3879,7 +3879,7 @@ var Ei = { isMounted: function(a) {
   null !== b2 && (gi(b2, a, e2, d2), oh(b2, a, e2));
 }, enqueueForceUpdate: function(a, b2) {
   a = a._reactInternals;
-  var c2 = R(), d2 = yi(a), e2 = mh(c2, d2);
+  var c2 = R$1(), d2 = yi(a), e2 = mh(c2, d2);
   e2.tag = 2;
   void 0 !== b2 && null !== b2 && (e2.callback = b2);
   b2 = nh(a, e2, d2);
@@ -3892,7 +3892,7 @@ function Fi(a, b2, c2, d2, e2, f2, g2) {
 function Gi(a, b2, c2) {
   var d2 = false, e2 = Vf;
   var f2 = b2.contextType;
-  "object" === typeof f2 && null !== f2 ? f2 = eh(f2) : (e2 = Zf(b2) ? Xf : H.current, d2 = b2.contextTypes, f2 = (d2 = null !== d2 && void 0 !== d2) ? Yf(a, e2) : Vf);
+  "object" === typeof f2 && null !== f2 ? f2 = eh(f2) : (e2 = Zf(b2) ? Xf : H$1.current, d2 = b2.contextTypes, f2 = (d2 = null !== d2 && void 0 !== d2) ? Yf(a, e2) : Vf);
   b2 = new b2(c2, f2);
   a.memoizedState = null !== b2.state && void 0 !== b2.state ? b2.state : null;
   b2.updater = Ei;
@@ -3914,7 +3914,7 @@ function Ii(a, b2, c2, d2) {
   e2.refs = {};
   kh(a);
   var f2 = b2.contextType;
-  "object" === typeof f2 && null !== f2 ? e2.context = eh(f2) : (f2 = Zf(b2) ? Xf : H.current, e2.context = Yf(a, f2));
+  "object" === typeof f2 && null !== f2 ? e2.context = eh(f2) : (f2 = Zf(b2) ? Xf : H$1.current, e2.context = Yf(a, f2));
   e2.state = a.memoizedState;
   f2 = b2.getDerivedStateFromProps;
   "function" === typeof f2 && (Di(a, b2, f2, c2), e2.state = a.memoizedState);
@@ -4003,7 +4003,7 @@ function Vi(a, b2, c2, d2, e2) {
   a.lanes = e2;
   return a;
 }
-var Wi = ua.ReactCurrentOwner, dh = false;
+var Wi = ua$1.ReactCurrentOwner, dh = false;
 function Xi(a, b2, c2, d2) {
   b2.child = null === a ? Vg(b2, null, c2, d2) : Ug(b2, a.child, c2, d2);
 }
@@ -4014,7 +4014,7 @@ function Yi(a, b2, c2, d2, e2) {
   d2 = Nh(a, b2, c2, d2, f2, e2);
   c2 = Sh();
   if (null !== a && !dh) return b2.updateQueue = a.updateQueue, b2.flags &= -2053, a.lanes &= ~e2, Zi(a, b2, e2);
-  I && c2 && vg(b2);
+  I$1 && c2 && vg(b2);
   b2.flags |= 1;
   Xi(a, b2, d2, e2);
   return b2.child;
@@ -4068,13 +4068,13 @@ function gj(a, b2) {
   if (null === a && null !== c2 || null !== a && a.ref !== c2) b2.flags |= 512, b2.flags |= 2097152;
 }
 function cj(a, b2, c2, d2, e2) {
-  var f2 = Zf(c2) ? Xf : H.current;
+  var f2 = Zf(c2) ? Xf : H$1.current;
   f2 = Yf(b2, f2);
   ch(b2, e2);
   c2 = Nh(a, b2, c2, d2, f2, e2);
   d2 = Sh();
   if (null !== a && !dh) return b2.updateQueue = a.updateQueue, b2.flags &= -2053, a.lanes &= ~e2, Zi(a, b2, e2);
-  I && d2 && vg(b2);
+  I$1 && d2 && vg(b2);
   b2.flags |= 1;
   Xi(a, b2, c2, e2);
   return b2.child;
@@ -4090,7 +4090,7 @@ function hj(a, b2, c2, d2, e2) {
     var g2 = b2.stateNode, h2 = b2.memoizedProps;
     g2.props = h2;
     var k2 = g2.context, l2 = c2.contextType;
-    "object" === typeof l2 && null !== l2 ? l2 = eh(l2) : (l2 = Zf(c2) ? Xf : H.current, l2 = Yf(b2, l2));
+    "object" === typeof l2 && null !== l2 ? l2 = eh(l2) : (l2 = Zf(c2) ? Xf : H$1.current, l2 = Yf(b2, l2));
     var m2 = c2.getDerivedStateFromProps, q2 = "function" === typeof m2 || "function" === typeof g2.getSnapshotBeforeUpdate;
     q2 || "function" !== typeof g2.UNSAFE_componentWillReceiveProps && "function" !== typeof g2.componentWillReceiveProps || (h2 !== d2 || k2 !== l2) && Hi(b2, g2, d2, l2);
     jh = false;
@@ -4108,7 +4108,7 @@ function hj(a, b2, c2, d2, e2) {
     q2 = b2.pendingProps;
     r2 = g2.context;
     k2 = c2.contextType;
-    "object" === typeof k2 && null !== k2 ? k2 = eh(k2) : (k2 = Zf(c2) ? Xf : H.current, k2 = Yf(b2, k2));
+    "object" === typeof k2 && null !== k2 ? k2 = eh(k2) : (k2 = Zf(c2) ? Xf : H$1.current, k2 = Yf(b2, k2));
     var y2 = c2.getDerivedStateFromProps;
     (m2 = "function" === typeof y2 || "function" === typeof g2.getSnapshotBeforeUpdate) || "function" !== typeof g2.UNSAFE_componentWillReceiveProps && "function" !== typeof g2.componentWillReceiveProps || (h2 !== q2 || r2 !== k2) && Hi(b2, g2, d2, k2);
     jh = false;
@@ -4150,11 +4150,11 @@ function nj(a) {
   return { baseLanes: a, cachePool: null, transitions: null };
 }
 function oj(a, b2, c2) {
-  var d2 = b2.pendingProps, e2 = L.current, f2 = false, g2 = 0 !== (b2.flags & 128), h2;
+  var d2 = b2.pendingProps, e2 = L$1.current, f2 = false, g2 = 0 !== (b2.flags & 128), h2;
   (h2 = g2) || (h2 = null !== a && null === a.memoizedState ? false : 0 !== (e2 & 2));
   if (h2) f2 = true, b2.flags &= -129;
   else if (null === a || null !== a.memoizedState) e2 |= 1;
-  G(L, e2 & 1);
+  G(L$1, e2 & 1);
   if (null === a) {
     Eg(b2);
     a = b2.memoizedState;
@@ -4212,7 +4212,7 @@ function sj(a, b2, c2, d2) {
 }
 function rj(a, b2, c2, d2, e2, f2, g2) {
   if (c2) {
-    if (b2.flags & 256) return b2.flags &= -257, d2 = Ki(Error(p$2(422))), sj(a, b2, g2, d2);
+    if (b2.flags & 256) return b2.flags &= -257, d2 = Ki(Error(p$3(422))), sj(a, b2, g2, d2);
     if (null !== b2.memoizedState) return b2.child = a.child, b2.flags |= 128, null;
     f2 = d2.fallback;
     e2 = b2.mode;
@@ -4233,13 +4233,13 @@ function rj(a, b2, c2, d2, e2, f2, g2) {
     d2 = e2.nextSibling && e2.nextSibling.dataset;
     if (d2) var h2 = d2.dgst;
     d2 = h2;
-    f2 = Error(p$2(419));
+    f2 = Error(p$3(419));
     d2 = Ki(f2, d2, void 0);
     return sj(a, b2, g2, d2);
   }
   h2 = 0 !== (g2 & a.childLanes);
   if (dh || h2) {
-    d2 = Q;
+    d2 = Q$1;
     if (null !== d2) {
       switch (g2 & -g2) {
         case 4:
@@ -4281,14 +4281,14 @@ function rj(a, b2, c2, d2, e2, f2, g2) {
       0 !== e2 && e2 !== f2.retryLane && (f2.retryLane = e2, ih(a, e2), gi(d2, a, e2, -1));
     }
     tj();
-    d2 = Ki(Error(p$2(421)));
+    d2 = Ki(Error(p$3(421)));
     return sj(a, b2, g2, d2);
   }
   if ("$?" === e2.data) return b2.flags |= 128, b2.child = a.child, b2 = uj.bind(null, a), e2._reactRetry = b2, null;
   a = f2.treeContext;
   yg = Lf(e2.nextSibling);
   xg = b2;
-  I = true;
+  I$1 = true;
   zg = null;
   null !== a && (og[pg++] = rg, og[pg++] = sg, og[pg++] = qg, rg = a.id, sg = a.overflow, qg = b2);
   b2 = qj(b2, d2.children);
@@ -4308,7 +4308,7 @@ function wj(a, b2, c2, d2, e2) {
 function xj(a, b2, c2) {
   var d2 = b2.pendingProps, e2 = d2.revealOrder, f2 = d2.tail;
   Xi(a, b2, d2.children, c2);
-  d2 = L.current;
+  d2 = L$1.current;
   if (0 !== (d2 & 2)) d2 = d2 & 1 | 2, b2.flags |= 128;
   else {
     if (null !== a && 0 !== (a.flags & 128)) a: for (a = b2.child; null !== a; ) {
@@ -4329,7 +4329,7 @@ function xj(a, b2, c2) {
     }
     d2 &= 1;
   }
-  G(L, d2);
+  G(L$1, d2);
   if (0 === (b2.mode & 1)) b2.memoizedState = null;
   else switch (e2) {
     case "forwards":
@@ -4370,7 +4370,7 @@ function Zi(a, b2, c2) {
   null !== a && (b2.dependencies = a.dependencies);
   rh |= b2.lanes;
   if (0 === (c2 & b2.childLanes)) return null;
-  if (null !== a && b2.child !== a.child) throw Error(p$2(153));
+  if (null !== a && b2.child !== a.child) throw Error(p$3(153));
   if (null !== b2.child) {
     a = b2.child;
     c2 = Pg(a, a.pendingProps);
@@ -4403,13 +4403,13 @@ function yj(a, b2, c2) {
     case 13:
       d2 = b2.memoizedState;
       if (null !== d2) {
-        if (null !== d2.dehydrated) return G(L, L.current & 1), b2.flags |= 128, null;
+        if (null !== d2.dehydrated) return G(L$1, L$1.current & 1), b2.flags |= 128, null;
         if (0 !== (c2 & b2.child.childLanes)) return oj(a, b2, c2);
-        G(L, L.current & 1);
+        G(L$1, L$1.current & 1);
         a = Zi(a, b2, c2);
         return null !== a ? a.sibling : null;
       }
-      G(L, L.current & 1);
+      G(L$1, L$1.current & 1);
       break;
     case 19:
       d2 = 0 !== (c2 & b2.childLanes);
@@ -4419,7 +4419,7 @@ function yj(a, b2, c2) {
       }
       e2 = b2.memoizedState;
       null !== e2 && (e2.rendering = null, e2.tail = null, e2.lastEffect = null);
-      G(L, L.current);
+      G(L$1, L$1.current);
       if (d2) break;
       else return null;
     case 22:
@@ -4461,8 +4461,8 @@ Bj = function(a, b2, c2, d2) {
         f2 = [];
         break;
       case "select":
-        e2 = A$1({}, e2, { value: void 0 });
-        d2 = A$1({}, d2, { value: void 0 });
+        e2 = A$2({}, e2, { value: void 0 });
+        d2 = A$2({}, d2, { value: void 0 });
         f2 = [];
         break;
       case "textarea":
@@ -4479,7 +4479,7 @@ Bj = function(a, b2, c2, d2) {
     for (l2 in e2) if (!d2.hasOwnProperty(l2) && e2.hasOwnProperty(l2) && null != e2[l2]) if ("style" === l2) {
       var h2 = e2[l2];
       for (g2 in h2) h2.hasOwnProperty(g2) && (c2 || (c2 = {}), c2[g2] = "");
-    } else "dangerouslySetInnerHTML" !== l2 && "children" !== l2 && "suppressContentEditableWarning" !== l2 && "suppressHydrationWarning" !== l2 && "autoFocus" !== l2 && (ea.hasOwnProperty(l2) ? f2 || (f2 = []) : (f2 = f2 || []).push(l2, null));
+    } else "dangerouslySetInnerHTML" !== l2 && "children" !== l2 && "suppressContentEditableWarning" !== l2 && "suppressHydrationWarning" !== l2 && "autoFocus" !== l2 && (ea$1.hasOwnProperty(l2) ? f2 || (f2 = []) : (f2 = f2 || []).push(l2, null));
     for (l2 in d2) {
       var k2 = d2[l2];
       h2 = null != e2 ? e2[l2] : void 0;
@@ -4490,7 +4490,7 @@ Bj = function(a, b2, c2, d2) {
         l2,
         c2
       )), c2 = k2;
-      else "dangerouslySetInnerHTML" === l2 ? (k2 = k2 ? k2.__html : void 0, h2 = h2 ? h2.__html : void 0, null != k2 && h2 !== k2 && (f2 = f2 || []).push(l2, k2)) : "children" === l2 ? "string" !== typeof k2 && "number" !== typeof k2 || (f2 = f2 || []).push(l2, "" + k2) : "suppressContentEditableWarning" !== l2 && "suppressHydrationWarning" !== l2 && (ea.hasOwnProperty(l2) ? (null != k2 && "onScroll" === l2 && D("scroll", a), f2 || h2 === k2 || (f2 = [])) : (f2 = f2 || []).push(l2, k2));
+      else "dangerouslySetInnerHTML" === l2 ? (k2 = k2 ? k2.__html : void 0, h2 = h2 ? h2.__html : void 0, null != k2 && h2 !== k2 && (f2 = f2 || []).push(l2, k2)) : "children" === l2 ? "string" !== typeof k2 && "number" !== typeof k2 || (f2 = f2 || []).push(l2, "" + k2) : "suppressContentEditableWarning" !== l2 && "suppressHydrationWarning" !== l2 && (ea$1.hasOwnProperty(l2) ? (null != k2 && "onScroll" === l2 && D$1("scroll", a), f2 || h2 === k2 || (f2 = [])) : (f2 = f2 || []).push(l2, k2));
     }
     c2 && (f2 = f2 || []).push("style", c2);
     var l2 = f2;
@@ -4501,7 +4501,7 @@ Cj = function(a, b2, c2, d2) {
   c2 !== d2 && (b2.flags |= 4);
 };
 function Dj(a, b2) {
-  if (!I) switch (a.tailMode) {
+  if (!I$1) switch (a.tailMode) {
     case "hidden":
       b2 = a.tail;
       for (var c2 = null; null !== b2; ) null !== b2.alternate && (c2 = b2), b2 = b2.sibling;
@@ -4513,7 +4513,7 @@ function Dj(a, b2) {
       null === d2 ? b2 || null === a.tail ? a.tail = null : a.tail.sibling = null : d2.sibling = null;
   }
 }
-function S(a) {
+function S$1(a) {
   var b2 = null !== a.alternate && a.alternate.child === a.child, c2 = 0, d2 = 0;
   if (b2) for (var e2 = a.child; null !== e2; ) c2 |= e2.lanes | e2.childLanes, d2 |= e2.subtreeFlags & 14680064, d2 |= e2.flags & 14680064, e2.return = a, e2 = e2.sibling;
   else for (e2 = a.child; null !== e2; ) c2 |= e2.lanes | e2.childLanes, d2 |= e2.subtreeFlags, d2 |= e2.flags, e2.return = a, e2 = e2.sibling;
@@ -4535,19 +4535,19 @@ function Ej(a, b2, c2) {
     case 12:
     case 9:
     case 14:
-      return S(b2), null;
+      return S$1(b2), null;
     case 1:
-      return Zf(b2.type) && $f(), S(b2), null;
+      return Zf(b2.type) && $f(), S$1(b2), null;
     case 3:
       d2 = b2.stateNode;
       zh();
-      E(Wf);
-      E(H);
+      E$1(Wf);
+      E$1(H$1);
       Eh();
       d2.pendingContext && (d2.context = d2.pendingContext, d2.pendingContext = null);
       if (null === a || null === a.child) Gg(b2) ? b2.flags |= 4 : null === a || a.memoizedState.isDehydrated && 0 === (b2.flags & 256) || (b2.flags |= 1024, null !== zg && (Fj(zg), zg = null));
       Aj(a, b2);
-      S(b2);
+      S$1(b2);
       return null;
     case 5:
       Bh(b2);
@@ -4556,8 +4556,8 @@ function Ej(a, b2, c2) {
       if (null !== a && null != b2.stateNode) Bj(a, b2, c2, d2, e2), a.ref !== b2.ref && (b2.flags |= 512, b2.flags |= 2097152);
       else {
         if (!d2) {
-          if (null === b2.stateNode) throw Error(p$2(166));
-          S(b2);
+          if (null === b2.stateNode) throw Error(p$3(166));
+          S$1(b2);
           return null;
         }
         a = xh(uh.current);
@@ -4570,43 +4570,43 @@ function Ej(a, b2, c2) {
           a = 0 !== (b2.mode & 1);
           switch (c2) {
             case "dialog":
-              D("cancel", d2);
-              D("close", d2);
+              D$1("cancel", d2);
+              D$1("close", d2);
               break;
             case "iframe":
             case "object":
             case "embed":
-              D("load", d2);
+              D$1("load", d2);
               break;
             case "video":
             case "audio":
-              for (e2 = 0; e2 < lf.length; e2++) D(lf[e2], d2);
+              for (e2 = 0; e2 < lf.length; e2++) D$1(lf[e2], d2);
               break;
             case "source":
-              D("error", d2);
+              D$1("error", d2);
               break;
             case "img":
             case "image":
             case "link":
-              D(
+              D$1(
                 "error",
                 d2
               );
-              D("load", d2);
+              D$1("load", d2);
               break;
             case "details":
-              D("toggle", d2);
+              D$1("toggle", d2);
               break;
             case "input":
               Za(d2, f2);
-              D("invalid", d2);
+              D$1("invalid", d2);
               break;
             case "select":
               d2._wrapperState = { wasMultiple: !!f2.multiple };
-              D("invalid", d2);
+              D$1("invalid", d2);
               break;
             case "textarea":
-              hb(d2, f2), D("invalid", d2);
+              hb(d2, f2), D$1("invalid", d2);
           }
           ub(c2, f2);
           e2 = null;
@@ -4616,7 +4616,7 @@ function Ej(a, b2, c2) {
               d2.textContent,
               h2,
               a
-            ), e2 = ["children", "" + h2]) : ea.hasOwnProperty(g2) && null != h2 && "onScroll" === g2 && D("scroll", d2);
+            ), e2 = ["children", "" + h2]) : ea$1.hasOwnProperty(g2) && null != h2 && "onScroll" === g2 && D$1("scroll", d2);
           }
           switch (c2) {
             case "input":
@@ -4648,56 +4648,56 @@ function Ej(a, b2, c2) {
             g2 = vb(c2, d2);
             switch (c2) {
               case "dialog":
-                D("cancel", a);
-                D("close", a);
+                D$1("cancel", a);
+                D$1("close", a);
                 e2 = d2;
                 break;
               case "iframe":
               case "object":
               case "embed":
-                D("load", a);
+                D$1("load", a);
                 e2 = d2;
                 break;
               case "video":
               case "audio":
-                for (e2 = 0; e2 < lf.length; e2++) D(lf[e2], a);
+                for (e2 = 0; e2 < lf.length; e2++) D$1(lf[e2], a);
                 e2 = d2;
                 break;
               case "source":
-                D("error", a);
+                D$1("error", a);
                 e2 = d2;
                 break;
               case "img":
               case "image":
               case "link":
-                D(
+                D$1(
                   "error",
                   a
                 );
-                D("load", a);
+                D$1("load", a);
                 e2 = d2;
                 break;
               case "details":
-                D("toggle", a);
+                D$1("toggle", a);
                 e2 = d2;
                 break;
               case "input":
                 Za(a, d2);
                 e2 = Ya(a, d2);
-                D("invalid", a);
+                D$1("invalid", a);
                 break;
               case "option":
                 e2 = d2;
                 break;
               case "select":
                 a._wrapperState = { wasMultiple: !!d2.multiple };
-                e2 = A$1({}, d2, { value: void 0 });
-                D("invalid", a);
+                e2 = A$2({}, d2, { value: void 0 });
+                D$1("invalid", a);
                 break;
               case "textarea":
                 hb(a, d2);
                 e2 = gb(a, d2);
-                D("invalid", a);
+                D$1("invalid", a);
                 break;
               default:
                 e2 = d2;
@@ -4706,7 +4706,7 @@ function Ej(a, b2, c2) {
             h2 = e2;
             for (f2 in h2) if (h2.hasOwnProperty(f2)) {
               var k2 = h2[f2];
-              "style" === f2 ? sb(a, k2) : "dangerouslySetInnerHTML" === f2 ? (k2 = k2 ? k2.__html : void 0, null != k2 && nb(a, k2)) : "children" === f2 ? "string" === typeof k2 ? ("textarea" !== c2 || "" !== k2) && ob(a, k2) : "number" === typeof k2 && ob(a, "" + k2) : "suppressContentEditableWarning" !== f2 && "suppressHydrationWarning" !== f2 && "autoFocus" !== f2 && (ea.hasOwnProperty(f2) ? null != k2 && "onScroll" === f2 && D("scroll", a) : null != k2 && ta(a, f2, k2, g2));
+              "style" === f2 ? sb(a, k2) : "dangerouslySetInnerHTML" === f2 ? (k2 = k2 ? k2.__html : void 0, null != k2 && nb(a, k2)) : "children" === f2 ? "string" === typeof k2 ? ("textarea" !== c2 || "" !== k2) && ob(a, k2) : "number" === typeof k2 && ob(a, "" + k2) : "suppressContentEditableWarning" !== f2 && "suppressHydrationWarning" !== f2 && "autoFocus" !== f2 && (ea$1.hasOwnProperty(f2) ? null != k2 && "onScroll" === f2 && D$1("scroll", a) : null != k2 && ta$1(a, f2, k2, g2));
             }
             switch (c2) {
               case "input":
@@ -4751,12 +4751,12 @@ function Ej(a, b2, c2) {
         }
         null !== b2.ref && (b2.flags |= 512, b2.flags |= 2097152);
       }
-      S(b2);
+      S$1(b2);
       return null;
     case 6:
       if (a && null != b2.stateNode) Cj(a, b2, a.memoizedProps, d2);
       else {
-        if ("string" !== typeof d2 && null === b2.stateNode) throw Error(p$2(166));
+        if ("string" !== typeof d2 && null === b2.stateNode) throw Error(p$3(166));
         c2 = xh(wh.current);
         xh(uh.current);
         if (Gg(b2)) {
@@ -4775,47 +4775,47 @@ function Ej(a, b2, c2) {
           f2 && (b2.flags |= 4);
         } else d2 = (9 === c2.nodeType ? c2 : c2.ownerDocument).createTextNode(d2), d2[Of] = b2, b2.stateNode = d2;
       }
-      S(b2);
+      S$1(b2);
       return null;
     case 13:
-      E(L);
+      E$1(L$1);
       d2 = b2.memoizedState;
       if (null === a || null !== a.memoizedState && null !== a.memoizedState.dehydrated) {
-        if (I && null !== yg && 0 !== (b2.mode & 1) && 0 === (b2.flags & 128)) Hg(), Ig(), b2.flags |= 98560, f2 = false;
+        if (I$1 && null !== yg && 0 !== (b2.mode & 1) && 0 === (b2.flags & 128)) Hg(), Ig(), b2.flags |= 98560, f2 = false;
         else if (f2 = Gg(b2), null !== d2 && null !== d2.dehydrated) {
           if (null === a) {
-            if (!f2) throw Error(p$2(318));
+            if (!f2) throw Error(p$3(318));
             f2 = b2.memoizedState;
             f2 = null !== f2 ? f2.dehydrated : null;
-            if (!f2) throw Error(p$2(317));
+            if (!f2) throw Error(p$3(317));
             f2[Of] = b2;
           } else Ig(), 0 === (b2.flags & 128) && (b2.memoizedState = null), b2.flags |= 4;
-          S(b2);
+          S$1(b2);
           f2 = false;
         } else null !== zg && (Fj(zg), zg = null), f2 = true;
         if (!f2) return b2.flags & 65536 ? b2 : null;
       }
       if (0 !== (b2.flags & 128)) return b2.lanes = c2, b2;
       d2 = null !== d2;
-      d2 !== (null !== a && null !== a.memoizedState) && d2 && (b2.child.flags |= 8192, 0 !== (b2.mode & 1) && (null === a || 0 !== (L.current & 1) ? 0 === T && (T = 3) : tj()));
+      d2 !== (null !== a && null !== a.memoizedState) && d2 && (b2.child.flags |= 8192, 0 !== (b2.mode & 1) && (null === a || 0 !== (L$1.current & 1) ? 0 === T$1 && (T$1 = 3) : tj()));
       null !== b2.updateQueue && (b2.flags |= 4);
-      S(b2);
+      S$1(b2);
       return null;
     case 4:
-      return zh(), Aj(a, b2), null === a && sf(b2.stateNode.containerInfo), S(b2), null;
+      return zh(), Aj(a, b2), null === a && sf(b2.stateNode.containerInfo), S$1(b2), null;
     case 10:
-      return ah(b2.type._context), S(b2), null;
+      return ah(b2.type._context), S$1(b2), null;
     case 17:
-      return Zf(b2.type) && $f(), S(b2), null;
+      return Zf(b2.type) && $f(), S$1(b2), null;
     case 19:
-      E(L);
+      E$1(L$1);
       f2 = b2.memoizedState;
-      if (null === f2) return S(b2), null;
+      if (null === f2) return S$1(b2), null;
       d2 = 0 !== (b2.flags & 128);
       g2 = f2.rendering;
       if (null === g2) if (d2) Dj(f2, false);
       else {
-        if (0 !== T || null !== a && 0 !== (a.flags & 128)) for (a = b2.child; null !== a; ) {
+        if (0 !== T$1 || null !== a && 0 !== (a.flags & 128)) for (a = b2.child; null !== a; ) {
           g2 = Ch(a);
           if (null !== g2) {
             b2.flags |= 128;
@@ -4825,31 +4825,31 @@ function Ej(a, b2, c2) {
             b2.subtreeFlags = 0;
             d2 = c2;
             for (c2 = b2.child; null !== c2; ) f2 = c2, a = d2, f2.flags &= 14680066, g2 = f2.alternate, null === g2 ? (f2.childLanes = 0, f2.lanes = a, f2.child = null, f2.subtreeFlags = 0, f2.memoizedProps = null, f2.memoizedState = null, f2.updateQueue = null, f2.dependencies = null, f2.stateNode = null) : (f2.childLanes = g2.childLanes, f2.lanes = g2.lanes, f2.child = g2.child, f2.subtreeFlags = 0, f2.deletions = null, f2.memoizedProps = g2.memoizedProps, f2.memoizedState = g2.memoizedState, f2.updateQueue = g2.updateQueue, f2.type = g2.type, a = g2.dependencies, f2.dependencies = null === a ? null : { lanes: a.lanes, firstContext: a.firstContext }), c2 = c2.sibling;
-            G(L, L.current & 1 | 2);
+            G(L$1, L$1.current & 1 | 2);
             return b2.child;
           }
           a = a.sibling;
         }
-        null !== f2.tail && B() > Gj && (b2.flags |= 128, d2 = true, Dj(f2, false), b2.lanes = 4194304);
+        null !== f2.tail && B$1() > Gj && (b2.flags |= 128, d2 = true, Dj(f2, false), b2.lanes = 4194304);
       }
       else {
         if (!d2) if (a = Ch(g2), null !== a) {
-          if (b2.flags |= 128, d2 = true, c2 = a.updateQueue, null !== c2 && (b2.updateQueue = c2, b2.flags |= 4), Dj(f2, true), null === f2.tail && "hidden" === f2.tailMode && !g2.alternate && !I) return S(b2), null;
-        } else 2 * B() - f2.renderingStartTime > Gj && 1073741824 !== c2 && (b2.flags |= 128, d2 = true, Dj(f2, false), b2.lanes = 4194304);
+          if (b2.flags |= 128, d2 = true, c2 = a.updateQueue, null !== c2 && (b2.updateQueue = c2, b2.flags |= 4), Dj(f2, true), null === f2.tail && "hidden" === f2.tailMode && !g2.alternate && !I$1) return S$1(b2), null;
+        } else 2 * B$1() - f2.renderingStartTime > Gj && 1073741824 !== c2 && (b2.flags |= 128, d2 = true, Dj(f2, false), b2.lanes = 4194304);
         f2.isBackwards ? (g2.sibling = b2.child, b2.child = g2) : (c2 = f2.last, null !== c2 ? c2.sibling = g2 : b2.child = g2, f2.last = g2);
       }
-      if (null !== f2.tail) return b2 = f2.tail, f2.rendering = b2, f2.tail = b2.sibling, f2.renderingStartTime = B(), b2.sibling = null, c2 = L.current, G(L, d2 ? c2 & 1 | 2 : c2 & 1), b2;
-      S(b2);
+      if (null !== f2.tail) return b2 = f2.tail, f2.rendering = b2, f2.tail = b2.sibling, f2.renderingStartTime = B$1(), b2.sibling = null, c2 = L$1.current, G(L$1, d2 ? c2 & 1 | 2 : c2 & 1), b2;
+      S$1(b2);
       return null;
     case 22:
     case 23:
-      return Hj(), d2 = null !== b2.memoizedState, null !== a && null !== a.memoizedState !== d2 && (b2.flags |= 8192), d2 && 0 !== (b2.mode & 1) ? 0 !== (fj & 1073741824) && (S(b2), b2.subtreeFlags & 6 && (b2.flags |= 8192)) : S(b2), null;
+      return Hj(), d2 = null !== b2.memoizedState, null !== a && null !== a.memoizedState !== d2 && (b2.flags |= 8192), d2 && 0 !== (b2.mode & 1) ? 0 !== (fj & 1073741824) && (S$1(b2), b2.subtreeFlags & 6 && (b2.flags |= 8192)) : S$1(b2), null;
     case 24:
       return null;
     case 25:
       return null;
   }
-  throw Error(p$2(156, b2.tag));
+  throw Error(p$3(156, b2.tag));
 }
 function Ij(a, b2) {
   wg(b2);
@@ -4857,20 +4857,20 @@ function Ij(a, b2) {
     case 1:
       return Zf(b2.type) && $f(), a = b2.flags, a & 65536 ? (b2.flags = a & -65537 | 128, b2) : null;
     case 3:
-      return zh(), E(Wf), E(H), Eh(), a = b2.flags, 0 !== (a & 65536) && 0 === (a & 128) ? (b2.flags = a & -65537 | 128, b2) : null;
+      return zh(), E$1(Wf), E$1(H$1), Eh(), a = b2.flags, 0 !== (a & 65536) && 0 === (a & 128) ? (b2.flags = a & -65537 | 128, b2) : null;
     case 5:
       return Bh(b2), null;
     case 13:
-      E(L);
+      E$1(L$1);
       a = b2.memoizedState;
       if (null !== a && null !== a.dehydrated) {
-        if (null === b2.alternate) throw Error(p$2(340));
+        if (null === b2.alternate) throw Error(p$3(340));
         Ig();
       }
       a = b2.flags;
       return a & 65536 ? (b2.flags = a & -65537 | 128, b2) : null;
     case 19:
-      return E(L), null;
+      return E$1(L$1), null;
     case 4:
       return zh(), null;
     case 10:
@@ -4884,13 +4884,13 @@ function Ij(a, b2) {
       return null;
   }
 }
-var Jj = false, U = false, Kj = "function" === typeof WeakSet ? WeakSet : Set, V = null;
+var Jj = false, U$1 = false, Kj = "function" === typeof WeakSet ? WeakSet : Set, V$1 = null;
 function Lj(a, b2) {
   var c2 = a.ref;
   if (null !== c2) if ("function" === typeof c2) try {
     c2(null);
   } catch (d2) {
-    W(a, b2, d2);
+    W$1(a, b2, d2);
   }
   else c2.current = null;
 }
@@ -4898,7 +4898,7 @@ function Mj(a, b2, c2) {
   try {
     c2();
   } catch (d2) {
-    W(a, b2, d2);
+    W$1(a, b2, d2);
   }
 }
 var Nj = false;
@@ -4947,9 +4947,9 @@ function Oj(a, b2) {
   } else c2 = null;
   Df = { focusedElem: a, selectionRange: c2 };
   dd = false;
-  for (V = b2; null !== V; ) if (b2 = V, a = b2.child, 0 !== (b2.subtreeFlags & 1028) && null !== a) a.return = b2, V = a;
-  else for (; null !== V; ) {
-    b2 = V;
+  for (V$1 = b2; null !== V$1; ) if (b2 = V$1, a = b2.child, 0 !== (b2.subtreeFlags & 1028) && null !== a) a.return = b2, V$1 = a;
+  else for (; null !== V$1; ) {
+    b2 = V$1;
     try {
       var n2 = b2.alternate;
       if (0 !== (b2.flags & 1024)) switch (b2.tag) {
@@ -4973,18 +4973,18 @@ function Oj(a, b2) {
         case 17:
           break;
         default:
-          throw Error(p$2(163));
+          throw Error(p$3(163));
       }
     } catch (F2) {
-      W(b2, b2.return, F2);
+      W$1(b2, b2.return, F2);
     }
     a = b2.sibling;
     if (null !== a) {
       a.return = b2.return;
-      V = a;
+      V$1 = a;
       break;
     }
-    V = b2.return;
+    V$1 = b2.return;
   }
   n2 = Nj;
   Nj = false;
@@ -5077,7 +5077,7 @@ function Wj(a, b2, c2) {
   if (5 === d2 || 6 === d2) a = a.stateNode, b2 ? c2.insertBefore(a, b2) : c2.appendChild(a);
   else if (4 !== d2 && (a = a.child, null !== a)) for (Wj(a, b2, c2), a = a.sibling; null !== a; ) Wj(a, b2, c2), a = a.sibling;
 }
-var X = null, Xj = false;
+var X$1 = null, Xj = false;
 function Yj(a, b2, c2) {
   for (c2 = c2.child; null !== c2; ) Zj(a, b2, c2), c2 = c2.sibling;
 }
@@ -5088,32 +5088,32 @@ function Zj(a, b2, c2) {
   }
   switch (c2.tag) {
     case 5:
-      U || Lj(c2, b2);
+      U$1 || Lj(c2, b2);
     case 6:
-      var d2 = X, e2 = Xj;
-      X = null;
+      var d2 = X$1, e2 = Xj;
+      X$1 = null;
       Yj(a, b2, c2);
-      X = d2;
+      X$1 = d2;
       Xj = e2;
-      null !== X && (Xj ? (a = X, c2 = c2.stateNode, 8 === a.nodeType ? a.parentNode.removeChild(c2) : a.removeChild(c2)) : X.removeChild(c2.stateNode));
+      null !== X$1 && (Xj ? (a = X$1, c2 = c2.stateNode, 8 === a.nodeType ? a.parentNode.removeChild(c2) : a.removeChild(c2)) : X$1.removeChild(c2.stateNode));
       break;
     case 18:
-      null !== X && (Xj ? (a = X, c2 = c2.stateNode, 8 === a.nodeType ? Kf(a.parentNode, c2) : 1 === a.nodeType && Kf(a, c2), bd(a)) : Kf(X, c2.stateNode));
+      null !== X$1 && (Xj ? (a = X$1, c2 = c2.stateNode, 8 === a.nodeType ? Kf(a.parentNode, c2) : 1 === a.nodeType && Kf(a, c2), bd(a)) : Kf(X$1, c2.stateNode));
       break;
     case 4:
-      d2 = X;
+      d2 = X$1;
       e2 = Xj;
-      X = c2.stateNode.containerInfo;
+      X$1 = c2.stateNode.containerInfo;
       Xj = true;
       Yj(a, b2, c2);
-      X = d2;
+      X$1 = d2;
       Xj = e2;
       break;
     case 0:
     case 11:
     case 14:
     case 15:
-      if (!U && (d2 = c2.updateQueue, null !== d2 && (d2 = d2.lastEffect, null !== d2))) {
+      if (!U$1 && (d2 = c2.updateQueue, null !== d2 && (d2 = d2.lastEffect, null !== d2))) {
         e2 = d2 = d2.next;
         do {
           var f2 = e2, g2 = f2.destroy;
@@ -5125,10 +5125,10 @@ function Zj(a, b2, c2) {
       Yj(a, b2, c2);
       break;
     case 1:
-      if (!U && (Lj(c2, b2), d2 = c2.stateNode, "function" === typeof d2.componentWillUnmount)) try {
+      if (!U$1 && (Lj(c2, b2), d2 = c2.stateNode, "function" === typeof d2.componentWillUnmount)) try {
         d2.props = c2.memoizedProps, d2.state = c2.memoizedState, d2.componentWillUnmount();
       } catch (h2) {
-        W(c2, b2, h2);
+        W$1(c2, b2, h2);
       }
       Yj(a, b2, c2);
       break;
@@ -5136,7 +5136,7 @@ function Zj(a, b2, c2) {
       Yj(a, b2, c2);
       break;
     case 22:
-      c2.mode & 1 ? (U = (d2 = U) || null !== c2.memoizedState, Yj(a, b2, c2), U = d2) : Yj(a, b2, c2);
+      c2.mode & 1 ? (U$1 = (d2 = U$1) || null !== c2.memoizedState, Yj(a, b2, c2), U$1 = d2) : Yj(a, b2, c2);
       break;
     default:
       Yj(a, b2, c2);
@@ -5163,29 +5163,29 @@ function ck(a, b2) {
       a: for (; null !== h2; ) {
         switch (h2.tag) {
           case 5:
-            X = h2.stateNode;
+            X$1 = h2.stateNode;
             Xj = false;
             break a;
           case 3:
-            X = h2.stateNode.containerInfo;
+            X$1 = h2.stateNode.containerInfo;
             Xj = true;
             break a;
           case 4:
-            X = h2.stateNode.containerInfo;
+            X$1 = h2.stateNode.containerInfo;
             Xj = true;
             break a;
         }
         h2 = h2.return;
       }
-      if (null === X) throw Error(p$2(160));
+      if (null === X$1) throw Error(p$3(160));
       Zj(f2, g2, e2);
-      X = null;
+      X$1 = null;
       Xj = false;
       var k2 = e2.alternate;
       null !== k2 && (k2.return = null);
       e2.return = null;
     } catch (l2) {
-      W(e2, b2, l2);
+      W$1(e2, b2, l2);
     }
   }
   if (b2.subtreeFlags & 12854) for (b2 = b2.child; null !== b2; ) dk(b2, a), b2 = b2.sibling;
@@ -5203,12 +5203,12 @@ function dk(a, b2) {
         try {
           Pj(3, a, a.return), Qj(3, a);
         } catch (t2) {
-          W(a, a.return, t2);
+          W$1(a, a.return, t2);
         }
         try {
           Pj(5, a, a.return);
         } catch (t2) {
-          W(a, a.return, t2);
+          W$1(a, a.return, t2);
         }
       }
       break;
@@ -5226,7 +5226,7 @@ function dk(a, b2) {
         try {
           ob(e2, "");
         } catch (t2) {
-          W(a, a.return, t2);
+          W$1(a, a.return, t2);
         }
       }
       if (d2 & 4 && (e2 = a.stateNode, null != e2)) {
@@ -5238,7 +5238,7 @@ function dk(a, b2) {
           var l2 = vb(h2, f2);
           for (g2 = 0; g2 < k2.length; g2 += 2) {
             var m2 = k2[g2], q2 = k2[g2 + 1];
-            "style" === m2 ? sb(e2, q2) : "dangerouslySetInnerHTML" === m2 ? nb(e2, q2) : "children" === m2 ? ob(e2, q2) : ta(e2, m2, q2, l2);
+            "style" === m2 ? sb(e2, q2) : "dangerouslySetInnerHTML" === m2 ? nb(e2, q2) : "children" === m2 ? ob(e2, q2) : ta$1(e2, m2, q2, l2);
           }
           switch (h2) {
             case "input":
@@ -5260,7 +5260,7 @@ function dk(a, b2) {
           }
           e2[Pf] = f2;
         } catch (t2) {
-          W(a, a.return, t2);
+          W$1(a, a.return, t2);
         }
       }
       break;
@@ -5268,13 +5268,13 @@ function dk(a, b2) {
       ck(b2, a);
       ek(a);
       if (d2 & 4) {
-        if (null === a.stateNode) throw Error(p$2(162));
+        if (null === a.stateNode) throw Error(p$3(162));
         e2 = a.stateNode;
         f2 = a.memoizedProps;
         try {
           e2.nodeValue = f2;
         } catch (t2) {
-          W(a, a.return, t2);
+          W$1(a, a.return, t2);
         }
       }
       break;
@@ -5284,7 +5284,7 @@ function dk(a, b2) {
       if (d2 & 4 && null !== c2 && c2.memoizedState.isDehydrated) try {
         bd(b2.containerInfo);
       } catch (t2) {
-        W(a, a.return, t2);
+        W$1(a, a.return, t2);
       }
       break;
     case 4:
@@ -5295,18 +5295,18 @@ function dk(a, b2) {
       ck(b2, a);
       ek(a);
       e2 = a.child;
-      e2.flags & 8192 && (f2 = null !== e2.memoizedState, e2.stateNode.isHidden = f2, !f2 || null !== e2.alternate && null !== e2.alternate.memoizedState || (fk = B()));
+      e2.flags & 8192 && (f2 = null !== e2.memoizedState, e2.stateNode.isHidden = f2, !f2 || null !== e2.alternate && null !== e2.alternate.memoizedState || (fk = B$1()));
       d2 & 4 && ak(a);
       break;
     case 22:
       m2 = null !== c2 && null !== c2.memoizedState;
-      a.mode & 1 ? (U = (l2 = U) || m2, ck(b2, a), U = l2) : ck(b2, a);
+      a.mode & 1 ? (U$1 = (l2 = U$1) || m2, ck(b2, a), U$1 = l2) : ck(b2, a);
       ek(a);
       if (d2 & 8192) {
         l2 = null !== a.memoizedState;
-        if ((a.stateNode.isHidden = l2) && !m2 && 0 !== (a.mode & 1)) for (V = a, m2 = a.child; null !== m2; ) {
-          for (q2 = V = m2; null !== V; ) {
-            r2 = V;
+        if ((a.stateNode.isHidden = l2) && !m2 && 0 !== (a.mode & 1)) for (V$1 = a, m2 = a.child; null !== m2; ) {
+          for (q2 = V$1 = m2; null !== V$1; ) {
+            r2 = V$1;
             y2 = r2.child;
             switch (r2.tag) {
               case 0:
@@ -5324,7 +5324,7 @@ function dk(a, b2) {
                   try {
                     b2 = d2, n2.props = b2.memoizedProps, n2.state = b2.memoizedState, n2.componentWillUnmount();
                   } catch (t2) {
-                    W(d2, c2, t2);
+                    W$1(d2, c2, t2);
                   }
                 }
                 break;
@@ -5337,7 +5337,7 @@ function dk(a, b2) {
                   continue;
                 }
             }
-            null !== y2 ? (y2.return = r2, V = y2) : gk(q2);
+            null !== y2 ? (y2.return = r2, V$1 = y2) : gk(q2);
           }
           m2 = m2.sibling;
         }
@@ -5348,14 +5348,14 @@ function dk(a, b2) {
               try {
                 e2 = q2.stateNode, l2 ? (f2 = e2.style, "function" === typeof f2.setProperty ? f2.setProperty("display", "none", "important") : f2.display = "none") : (h2 = q2.stateNode, k2 = q2.memoizedProps.style, g2 = void 0 !== k2 && null !== k2 && k2.hasOwnProperty("display") ? k2.display : null, h2.style.display = rb("display", g2));
               } catch (t2) {
-                W(a, a.return, t2);
+                W$1(a, a.return, t2);
               }
             }
           } else if (6 === q2.tag) {
             if (null === m2) try {
               q2.stateNode.nodeValue = l2 ? "" : q2.memoizedProps;
             } catch (t2) {
-              W(a, a.return, t2);
+              W$1(a, a.return, t2);
             }
           } else if ((22 !== q2.tag && 23 !== q2.tag || null === q2.memoizedState || q2 === a) && null !== q2.child) {
             q2.child.return = q2;
@@ -5400,7 +5400,7 @@ function ek(a) {
           }
           c2 = c2.return;
         }
-        throw Error(p$2(160));
+        throw Error(p$3(160));
       }
       switch (d2.tag) {
         case 5:
@@ -5415,42 +5415,42 @@ function ek(a) {
           Vj(a, h2, g2);
           break;
         default:
-          throw Error(p$2(161));
+          throw Error(p$3(161));
       }
     } catch (k2) {
-      W(a, a.return, k2);
+      W$1(a, a.return, k2);
     }
     a.flags &= -3;
   }
   b2 & 4096 && (a.flags &= -4097);
 }
 function hk(a, b2, c2) {
-  V = a;
+  V$1 = a;
   ik(a);
 }
 function ik(a, b2, c2) {
-  for (var d2 = 0 !== (a.mode & 1); null !== V; ) {
-    var e2 = V, f2 = e2.child;
+  for (var d2 = 0 !== (a.mode & 1); null !== V$1; ) {
+    var e2 = V$1, f2 = e2.child;
     if (22 === e2.tag && d2) {
       var g2 = null !== e2.memoizedState || Jj;
       if (!g2) {
-        var h2 = e2.alternate, k2 = null !== h2 && null !== h2.memoizedState || U;
+        var h2 = e2.alternate, k2 = null !== h2 && null !== h2.memoizedState || U$1;
         h2 = Jj;
-        var l2 = U;
+        var l2 = U$1;
         Jj = g2;
-        if ((U = k2) && !l2) for (V = e2; null !== V; ) g2 = V, k2 = g2.child, 22 === g2.tag && null !== g2.memoizedState ? jk(e2) : null !== k2 ? (k2.return = g2, V = k2) : jk(e2);
-        for (; null !== f2; ) V = f2, ik(f2), f2 = f2.sibling;
-        V = e2;
+        if ((U$1 = k2) && !l2) for (V$1 = e2; null !== V$1; ) g2 = V$1, k2 = g2.child, 22 === g2.tag && null !== g2.memoizedState ? jk(e2) : null !== k2 ? (k2.return = g2, V$1 = k2) : jk(e2);
+        for (; null !== f2; ) V$1 = f2, ik(f2), f2 = f2.sibling;
+        V$1 = e2;
         Jj = h2;
-        U = l2;
+        U$1 = l2;
       }
       kk(a);
-    } else 0 !== (e2.subtreeFlags & 8772) && null !== f2 ? (f2.return = e2, V = f2) : kk(a);
+    } else 0 !== (e2.subtreeFlags & 8772) && null !== f2 ? (f2.return = e2, V$1 = f2) : kk(a);
   }
 }
 function kk(a) {
-  for (; null !== V; ) {
-    var b2 = V;
+  for (; null !== V$1; ) {
+    var b2 = V$1;
     if (0 !== (b2.flags & 8772)) {
       var c2 = b2.alternate;
       try {
@@ -5458,11 +5458,11 @@ function kk(a) {
           case 0:
           case 11:
           case 15:
-            U || Qj(5, b2);
+            U$1 || Qj(5, b2);
             break;
           case 1:
             var d2 = b2.stateNode;
-            if (b2.flags & 4 && !U) if (null === c2) d2.componentDidMount();
+            if (b2.flags & 4 && !U$1) if (null === c2) d2.componentDidMount();
             else {
               var e2 = b2.elementType === b2.type ? c2.memoizedProps : Ci(b2.type, c2.memoizedProps);
               d2.componentDidUpdate(e2, c2.memoizedState, d2.__reactInternalSnapshotBeforeUpdate);
@@ -5527,45 +5527,45 @@ function kk(a) {
           case 25:
             break;
           default:
-            throw Error(p$2(163));
+            throw Error(p$3(163));
         }
-        U || b2.flags & 512 && Rj(b2);
+        U$1 || b2.flags & 512 && Rj(b2);
       } catch (r2) {
-        W(b2, b2.return, r2);
+        W$1(b2, b2.return, r2);
       }
     }
     if (b2 === a) {
-      V = null;
+      V$1 = null;
       break;
     }
     c2 = b2.sibling;
     if (null !== c2) {
       c2.return = b2.return;
-      V = c2;
+      V$1 = c2;
       break;
     }
-    V = b2.return;
+    V$1 = b2.return;
   }
 }
 function gk(a) {
-  for (; null !== V; ) {
-    var b2 = V;
+  for (; null !== V$1; ) {
+    var b2 = V$1;
     if (b2 === a) {
-      V = null;
+      V$1 = null;
       break;
     }
     var c2 = b2.sibling;
     if (null !== c2) {
       c2.return = b2.return;
-      V = c2;
+      V$1 = c2;
       break;
     }
-    V = b2.return;
+    V$1 = b2.return;
   }
 }
 function jk(a) {
-  for (; null !== V; ) {
-    var b2 = V;
+  for (; null !== V$1; ) {
+    var b2 = V$1;
     try {
       switch (b2.tag) {
         case 0:
@@ -5575,7 +5575,7 @@ function jk(a) {
           try {
             Qj(4, b2);
           } catch (k2) {
-            W(b2, c2, k2);
+            W$1(b2, c2, k2);
           }
           break;
         case 1:
@@ -5585,14 +5585,14 @@ function jk(a) {
             try {
               d2.componentDidMount();
             } catch (k2) {
-              W(b2, e2, k2);
+              W$1(b2, e2, k2);
             }
           }
           var f2 = b2.return;
           try {
             Rj(b2);
           } catch (k2) {
-            W(b2, f2, k2);
+            W$1(b2, f2, k2);
           }
           break;
         case 5:
@@ -5600,53 +5600,53 @@ function jk(a) {
           try {
             Rj(b2);
           } catch (k2) {
-            W(b2, g2, k2);
+            W$1(b2, g2, k2);
           }
       }
     } catch (k2) {
-      W(b2, b2.return, k2);
+      W$1(b2, b2.return, k2);
     }
     if (b2 === a) {
-      V = null;
+      V$1 = null;
       break;
     }
     var h2 = b2.sibling;
     if (null !== h2) {
       h2.return = b2.return;
-      V = h2;
+      V$1 = h2;
       break;
     }
-    V = b2.return;
+    V$1 = b2.return;
   }
 }
-var lk = Math.ceil, mk = ua.ReactCurrentDispatcher, nk = ua.ReactCurrentOwner, ok = ua.ReactCurrentBatchConfig, K = 0, Q = null, Y = null, Z = 0, fj = 0, ej = Uf(0), T = 0, pk = null, rh = 0, qk = 0, rk = 0, sk = null, tk = null, fk = 0, Gj = Infinity, uk = null, Oi = false, Pi = null, Ri = null, vk = false, wk = null, xk = 0, yk = 0, zk = null, Ak = -1, Bk = 0;
-function R() {
-  return 0 !== (K & 6) ? B() : -1 !== Ak ? Ak : Ak = B();
+var lk = Math.ceil, mk = ua$1.ReactCurrentDispatcher, nk = ua$1.ReactCurrentOwner, ok = ua$1.ReactCurrentBatchConfig, K$1 = 0, Q$1 = null, Y$1 = null, Z$1 = 0, fj = 0, ej = Uf(0), T$1 = 0, pk = null, rh = 0, qk = 0, rk = 0, sk = null, tk = null, fk = 0, Gj = Infinity, uk = null, Oi = false, Pi = null, Ri = null, vk = false, wk = null, xk = 0, yk = 0, zk = null, Ak = -1, Bk = 0;
+function R$1() {
+  return 0 !== (K$1 & 6) ? B$1() : -1 !== Ak ? Ak : Ak = B$1();
 }
 function yi(a) {
   if (0 === (a.mode & 1)) return 1;
-  if (0 !== (K & 2) && 0 !== Z) return Z & -Z;
+  if (0 !== (K$1 & 2) && 0 !== Z$1) return Z$1 & -Z$1;
   if (null !== Kg.transition) return 0 === Bk && (Bk = yc()), Bk;
-  a = C;
+  a = C$1;
   if (0 !== a) return a;
   a = window.event;
   a = void 0 === a ? 16 : jd(a.type);
   return a;
 }
 function gi(a, b2, c2, d2) {
-  if (50 < yk) throw yk = 0, zk = null, Error(p$2(185));
+  if (50 < yk) throw yk = 0, zk = null, Error(p$3(185));
   Ac(a, c2, d2);
-  if (0 === (K & 2) || a !== Q) a === Q && (0 === (K & 2) && (qk |= c2), 4 === T && Ck(a, Z)), Dk(a, d2), 1 === c2 && 0 === K && 0 === (b2.mode & 1) && (Gj = B() + 500, fg && jg());
+  if (0 === (K$1 & 2) || a !== Q$1) a === Q$1 && (0 === (K$1 & 2) && (qk |= c2), 4 === T$1 && Ck(a, Z$1)), Dk(a, d2), 1 === c2 && 0 === K$1 && 0 === (b2.mode & 1) && (Gj = B$1() + 500, fg && jg());
 }
 function Dk(a, b2) {
   var c2 = a.callbackNode;
   wc(a, b2);
-  var d2 = uc(a, a === Q ? Z : 0);
+  var d2 = uc(a, a === Q$1 ? Z$1 : 0);
   if (0 === d2) null !== c2 && bc(c2), a.callbackNode = null, a.callbackPriority = 0;
   else if (b2 = d2 & -d2, a.callbackPriority !== b2) {
     null != c2 && bc(c2);
     if (1 === b2) 0 === a.tag ? ig(Ek.bind(null, a)) : hg(Ek.bind(null, a)), Jf(function() {
-      0 === (K & 6) && jg();
+      0 === (K$1 & 6) && jg();
     }), c2 = null;
     else {
       switch (Dc(d2)) {
@@ -5674,18 +5674,18 @@ function Dk(a, b2) {
 function Gk(a, b2) {
   Ak = -1;
   Bk = 0;
-  if (0 !== (K & 6)) throw Error(p$2(327));
+  if (0 !== (K$1 & 6)) throw Error(p$3(327));
   var c2 = a.callbackNode;
   if (Hk() && a.callbackNode !== c2) return null;
-  var d2 = uc(a, a === Q ? Z : 0);
+  var d2 = uc(a, a === Q$1 ? Z$1 : 0);
   if (0 === d2) return null;
   if (0 !== (d2 & 30) || 0 !== (d2 & a.expiredLanes) || b2) b2 = Ik(a, d2);
   else {
     b2 = d2;
-    var e2 = K;
-    K |= 2;
+    var e2 = K$1;
+    K$1 |= 2;
     var f2 = Jk();
-    if (Q !== a || Z !== b2) uk = null, Gj = B() + 500, Kk(a, b2);
+    if (Q$1 !== a || Z$1 !== b2) uk = null, Gj = B$1() + 500, Kk(a, b2);
     do
       try {
         Lk();
@@ -5696,32 +5696,32 @@ function Gk(a, b2) {
     while (1);
     $g();
     mk.current = f2;
-    K = e2;
-    null !== Y ? b2 = 0 : (Q = null, Z = 0, b2 = T);
+    K$1 = e2;
+    null !== Y$1 ? b2 = 0 : (Q$1 = null, Z$1 = 0, b2 = T$1);
   }
   if (0 !== b2) {
     2 === b2 && (e2 = xc(a), 0 !== e2 && (d2 = e2, b2 = Nk(a, e2)));
-    if (1 === b2) throw c2 = pk, Kk(a, 0), Ck(a, d2), Dk(a, B()), c2;
+    if (1 === b2) throw c2 = pk, Kk(a, 0), Ck(a, d2), Dk(a, B$1()), c2;
     if (6 === b2) Ck(a, d2);
     else {
       e2 = a.current.alternate;
-      if (0 === (d2 & 30) && !Ok(e2) && (b2 = Ik(a, d2), 2 === b2 && (f2 = xc(a), 0 !== f2 && (d2 = f2, b2 = Nk(a, f2))), 1 === b2)) throw c2 = pk, Kk(a, 0), Ck(a, d2), Dk(a, B()), c2;
+      if (0 === (d2 & 30) && !Ok(e2) && (b2 = Ik(a, d2), 2 === b2 && (f2 = xc(a), 0 !== f2 && (d2 = f2, b2 = Nk(a, f2))), 1 === b2)) throw c2 = pk, Kk(a, 0), Ck(a, d2), Dk(a, B$1()), c2;
       a.finishedWork = e2;
       a.finishedLanes = d2;
       switch (b2) {
         case 0:
         case 1:
-          throw Error(p$2(345));
+          throw Error(p$3(345));
         case 2:
           Pk(a, tk, uk);
           break;
         case 3:
           Ck(a, d2);
-          if ((d2 & 130023424) === d2 && (b2 = fk + 500 - B(), 10 < b2)) {
+          if ((d2 & 130023424) === d2 && (b2 = fk + 500 - B$1(), 10 < b2)) {
             if (0 !== uc(a, 0)) break;
             e2 = a.suspendedLanes;
             if ((e2 & d2) !== d2) {
-              R();
+              R$1();
               a.pingedLanes |= a.suspendedLanes & e2;
               break;
             }
@@ -5742,7 +5742,7 @@ function Gk(a, b2) {
             d2 &= ~f2;
           }
           d2 = e2;
-          d2 = B() - d2;
+          d2 = B$1() - d2;
           d2 = (120 > d2 ? 120 : 480 > d2 ? 480 : 1080 > d2 ? 1080 : 1920 > d2 ? 1920 : 3e3 > d2 ? 3e3 : 4320 > d2 ? 4320 : 1960 * lk(d2 / 1960)) - d2;
           if (10 < d2) {
             a.timeoutHandle = Ff(Pk.bind(null, a, tk, uk), d2);
@@ -5754,11 +5754,11 @@ function Gk(a, b2) {
           Pk(a, tk, uk);
           break;
         default:
-          throw Error(p$2(329));
+          throw Error(p$3(329));
       }
     }
   }
-  Dk(a, B());
+  Dk(a, B$1());
   return a.callbackNode === c2 ? Gk.bind(null, a) : null;
 }
 function Nk(a, b2) {
@@ -5811,53 +5811,53 @@ function Ck(a, b2) {
   }
 }
 function Ek(a) {
-  if (0 !== (K & 6)) throw Error(p$2(327));
+  if (0 !== (K$1 & 6)) throw Error(p$3(327));
   Hk();
   var b2 = uc(a, 0);
-  if (0 === (b2 & 1)) return Dk(a, B()), null;
+  if (0 === (b2 & 1)) return Dk(a, B$1()), null;
   var c2 = Ik(a, b2);
   if (0 !== a.tag && 2 === c2) {
     var d2 = xc(a);
     0 !== d2 && (b2 = d2, c2 = Nk(a, d2));
   }
-  if (1 === c2) throw c2 = pk, Kk(a, 0), Ck(a, b2), Dk(a, B()), c2;
-  if (6 === c2) throw Error(p$2(345));
+  if (1 === c2) throw c2 = pk, Kk(a, 0), Ck(a, b2), Dk(a, B$1()), c2;
+  if (6 === c2) throw Error(p$3(345));
   a.finishedWork = a.current.alternate;
   a.finishedLanes = b2;
   Pk(a, tk, uk);
-  Dk(a, B());
+  Dk(a, B$1());
   return null;
 }
 function Qk(a, b2) {
-  var c2 = K;
-  K |= 1;
+  var c2 = K$1;
+  K$1 |= 1;
   try {
     return a(b2);
   } finally {
-    K = c2, 0 === K && (Gj = B() + 500, fg && jg());
+    K$1 = c2, 0 === K$1 && (Gj = B$1() + 500, fg && jg());
   }
 }
 function Rk(a) {
-  null !== wk && 0 === wk.tag && 0 === (K & 6) && Hk();
-  var b2 = K;
-  K |= 1;
-  var c2 = ok.transition, d2 = C;
+  null !== wk && 0 === wk.tag && 0 === (K$1 & 6) && Hk();
+  var b2 = K$1;
+  K$1 |= 1;
+  var c2 = ok.transition, d2 = C$1;
   try {
-    if (ok.transition = null, C = 1, a) return a();
+    if (ok.transition = null, C$1 = 1, a) return a();
   } finally {
-    C = d2, ok.transition = c2, K = b2, 0 === (K & 6) && jg();
+    C$1 = d2, ok.transition = c2, K$1 = b2, 0 === (K$1 & 6) && jg();
   }
 }
 function Hj() {
   fj = ej.current;
-  E(ej);
+  E$1(ej);
 }
 function Kk(a, b2) {
   a.finishedWork = null;
   a.finishedLanes = 0;
   var c2 = a.timeoutHandle;
   -1 !== c2 && (a.timeoutHandle = -1, Gf(c2));
-  if (null !== Y) for (c2 = Y.return; null !== c2; ) {
+  if (null !== Y$1) for (c2 = Y$1.return; null !== c2; ) {
     var d2 = c2;
     wg(d2);
     switch (d2.tag) {
@@ -5867,8 +5867,8 @@ function Kk(a, b2) {
         break;
       case 3:
         zh();
-        E(Wf);
-        E(H);
+        E$1(Wf);
+        E$1(H$1);
         Eh();
         break;
       case 5:
@@ -5878,10 +5878,10 @@ function Kk(a, b2) {
         zh();
         break;
       case 13:
-        E(L);
+        E$1(L$1);
         break;
       case 19:
-        E(L);
+        E$1(L$1);
         break;
       case 10:
         ah(d2.type._context);
@@ -5892,10 +5892,10 @@ function Kk(a, b2) {
     }
     c2 = c2.return;
   }
-  Q = a;
-  Y = a = Pg(a.current, null);
-  Z = fj = b2;
-  T = 0;
+  Q$1 = a;
+  Y$1 = a = Pg(a.current, null);
+  Z$1 = fj = b2;
+  T$1 = 0;
   pk = null;
   rk = qk = rh = 0;
   tk = sk = null;
@@ -5916,12 +5916,12 @@ function Kk(a, b2) {
 }
 function Mk(a, b2) {
   do {
-    var c2 = Y;
+    var c2 = Y$1;
     try {
       $g();
       Fh.current = Rh;
       if (Ih) {
-        for (var d2 = M.memoizedState; null !== d2; ) {
+        for (var d2 = M$1.memoizedState; null !== d2; ) {
           var e2 = d2.queue;
           null !== e2 && (e2.pending = null);
           d2 = d2.next;
@@ -5929,19 +5929,19 @@ function Mk(a, b2) {
         Ih = false;
       }
       Hh = 0;
-      O = N = M = null;
+      O$1 = N = M$1 = null;
       Jh = false;
       Kh = 0;
       nk.current = null;
       if (null === c2 || null === c2.return) {
-        T = 1;
+        T$1 = 1;
         pk = b2;
-        Y = null;
+        Y$1 = null;
         break;
       }
       a: {
         var f2 = a, g2 = c2.return, h2 = c2, k2 = b2;
-        b2 = Z;
+        b2 = Z$1;
         h2.flags |= 32768;
         if (null !== k2 && "object" === typeof k2 && "function" === typeof k2.then) {
           var l2 = k2, m2 = h2, q2 = m2.tag;
@@ -5969,9 +5969,9 @@ function Mk(a, b2) {
               tj();
               break a;
             }
-            k2 = Error(p$2(426));
+            k2 = Error(p$3(426));
           }
-        } else if (I && h2.mode & 1) {
+        } else if (I$1 && h2.mode & 1) {
           var J2 = Ui(g2);
           if (null !== J2) {
             0 === (J2.flags & 65536) && (J2.flags |= 256);
@@ -5981,7 +5981,7 @@ function Mk(a, b2) {
           }
         }
         f2 = k2 = Ji(k2, h2);
-        4 !== T && (T = 2);
+        4 !== T$1 && (T$1 = 2);
         null === sk ? sk = [f2] : sk.push(f2);
         f2 = g2;
         do {
@@ -6009,9 +6009,9 @@ function Mk(a, b2) {
         } while (null !== f2);
       }
       Sk(c2);
-    } catch (na) {
-      b2 = na;
-      Y === c2 && null !== c2 && (Y = c2 = c2.return);
+    } catch (na2) {
+      b2 = na2;
+      Y$1 === c2 && null !== c2 && (Y$1 = c2 = c2.return);
       continue;
     }
     break;
@@ -6023,14 +6023,14 @@ function Jk() {
   return null === a ? Rh : a;
 }
 function tj() {
-  if (0 === T || 3 === T || 2 === T) T = 4;
-  null === Q || 0 === (rh & 268435455) && 0 === (qk & 268435455) || Ck(Q, Z);
+  if (0 === T$1 || 3 === T$1 || 2 === T$1) T$1 = 4;
+  null === Q$1 || 0 === (rh & 268435455) && 0 === (qk & 268435455) || Ck(Q$1, Z$1);
 }
 function Ik(a, b2) {
-  var c2 = K;
-  K |= 2;
+  var c2 = K$1;
+  K$1 |= 2;
   var d2 = Jk();
-  if (Q !== a || Z !== b2) uk = null, Kk(a, b2);
+  if (Q$1 !== a || Z$1 !== b2) uk = null, Kk(a, b2);
   do
     try {
       Tk();
@@ -6040,23 +6040,23 @@ function Ik(a, b2) {
     }
   while (1);
   $g();
-  K = c2;
+  K$1 = c2;
   mk.current = d2;
-  if (null !== Y) throw Error(p$2(261));
-  Q = null;
-  Z = 0;
-  return T;
+  if (null !== Y$1) throw Error(p$3(261));
+  Q$1 = null;
+  Z$1 = 0;
+  return T$1;
 }
 function Tk() {
-  for (; null !== Y; ) Uk(Y);
+  for (; null !== Y$1; ) Uk(Y$1);
 }
 function Lk() {
-  for (; null !== Y && !cc(); ) Uk(Y);
+  for (; null !== Y$1 && !cc(); ) Uk(Y$1);
 }
 function Uk(a) {
   var b2 = Vk(a.alternate, a, fj);
   a.memoizedProps = a.pendingProps;
-  null === b2 ? Sk(a) : Y = b2;
+  null === b2 ? Sk(a) : Y$1 = b2;
   nk.current = null;
 }
 function Sk(a) {
@@ -6066,38 +6066,38 @@ function Sk(a) {
     a = b2.return;
     if (0 === (b2.flags & 32768)) {
       if (c2 = Ej(c2, b2, fj), null !== c2) {
-        Y = c2;
+        Y$1 = c2;
         return;
       }
     } else {
       c2 = Ij(c2, b2);
       if (null !== c2) {
         c2.flags &= 32767;
-        Y = c2;
+        Y$1 = c2;
         return;
       }
       if (null !== a) a.flags |= 32768, a.subtreeFlags = 0, a.deletions = null;
       else {
-        T = 6;
-        Y = null;
+        T$1 = 6;
+        Y$1 = null;
         return;
       }
     }
     b2 = b2.sibling;
     if (null !== b2) {
-      Y = b2;
+      Y$1 = b2;
       return;
     }
-    Y = b2 = a;
+    Y$1 = b2 = a;
   } while (null !== b2);
-  0 === T && (T = 5);
+  0 === T$1 && (T$1 = 5);
 }
 function Pk(a, b2, c2) {
-  var d2 = C, e2 = ok.transition;
+  var d2 = C$1, e2 = ok.transition;
   try {
-    ok.transition = null, C = 1, Wk(a, b2, c2, d2);
+    ok.transition = null, C$1 = 1, Wk(a, b2, c2, d2);
   } finally {
-    ok.transition = e2, C = d2;
+    ok.transition = e2, C$1 = d2;
   }
   return null;
 }
@@ -6105,18 +6105,18 @@ function Wk(a, b2, c2, d2) {
   do
     Hk();
   while (null !== wk);
-  if (0 !== (K & 6)) throw Error(p$2(327));
+  if (0 !== (K$1 & 6)) throw Error(p$3(327));
   c2 = a.finishedWork;
   var e2 = a.finishedLanes;
   if (null === c2) return null;
   a.finishedWork = null;
   a.finishedLanes = 0;
-  if (c2 === a.current) throw Error(p$2(177));
+  if (c2 === a.current) throw Error(p$3(177));
   a.callbackNode = null;
   a.callbackPriority = 0;
   var f2 = c2.lanes | c2.childLanes;
   Bc(a, f2);
-  a === Q && (Y = Q = null, Z = 0);
+  a === Q$1 && (Y$1 = Q$1 = null, Z$1 = 0);
   0 === (c2.subtreeFlags & 2064) && 0 === (c2.flags & 2064) || vk || (vk = true, Fk(hc, function() {
     Hk();
     return null;
@@ -6125,10 +6125,10 @@ function Wk(a, b2, c2, d2) {
   if (0 !== (c2.subtreeFlags & 15990) || f2) {
     f2 = ok.transition;
     ok.transition = null;
-    var g2 = C;
-    C = 1;
-    var h2 = K;
-    K |= 4;
+    var g2 = C$1;
+    C$1 = 1;
+    var h2 = K$1;
+    K$1 |= 4;
     nk.current = null;
     Oj(a, c2);
     dk(c2, a);
@@ -6138,15 +6138,15 @@ function Wk(a, b2, c2, d2) {
     a.current = c2;
     hk(c2);
     dc();
-    K = h2;
-    C = g2;
+    K$1 = h2;
+    C$1 = g2;
     ok.transition = f2;
   } else a.current = c2;
   vk && (vk = false, wk = a, xk = e2);
   f2 = a.pendingLanes;
   0 === f2 && (Ri = null);
   mc(c2.stateNode);
-  Dk(a, B());
+  Dk(a, B$1());
   if (null !== b2) for (d2 = a.onRecoverableError, c2 = 0; c2 < b2.length; c2++) e2 = b2[c2], d2(e2.value, { componentStack: e2.stack, digest: e2.digest });
   if (Oi) throw Oi = false, a = Pi, Pi = null, a;
   0 !== (xk & 1) && 0 !== a.tag && Hk();
@@ -6157,27 +6157,27 @@ function Wk(a, b2, c2, d2) {
 }
 function Hk() {
   if (null !== wk) {
-    var a = Dc(xk), b2 = ok.transition, c2 = C;
+    var a = Dc(xk), b2 = ok.transition, c2 = C$1;
     try {
       ok.transition = null;
-      C = 16 > a ? 16 : a;
+      C$1 = 16 > a ? 16 : a;
       if (null === wk) var d2 = false;
       else {
         a = wk;
         wk = null;
         xk = 0;
-        if (0 !== (K & 6)) throw Error(p$2(331));
-        var e2 = K;
-        K |= 4;
-        for (V = a.current; null !== V; ) {
-          var f2 = V, g2 = f2.child;
-          if (0 !== (V.flags & 16)) {
+        if (0 !== (K$1 & 6)) throw Error(p$3(331));
+        var e2 = K$1;
+        K$1 |= 4;
+        for (V$1 = a.current; null !== V$1; ) {
+          var f2 = V$1, g2 = f2.child;
+          if (0 !== (V$1.flags & 16)) {
             var h2 = f2.deletions;
             if (null !== h2) {
               for (var k2 = 0; k2 < h2.length; k2++) {
                 var l2 = h2[k2];
-                for (V = l2; null !== V; ) {
-                  var m2 = V;
+                for (V$1 = l2; null !== V$1; ) {
+                  var m2 = V$1;
                   switch (m2.tag) {
                     case 0:
                     case 11:
@@ -6185,21 +6185,21 @@ function Hk() {
                       Pj(8, m2, f2);
                   }
                   var q2 = m2.child;
-                  if (null !== q2) q2.return = m2, V = q2;
-                  else for (; null !== V; ) {
-                    m2 = V;
+                  if (null !== q2) q2.return = m2, V$1 = q2;
+                  else for (; null !== V$1; ) {
+                    m2 = V$1;
                     var r2 = m2.sibling, y2 = m2.return;
                     Sj(m2);
                     if (m2 === l2) {
-                      V = null;
+                      V$1 = null;
                       break;
                     }
                     if (null !== r2) {
                       r2.return = y2;
-                      V = r2;
+                      V$1 = r2;
                       break;
                     }
-                    V = y2;
+                    V$1 = y2;
                   }
                 }
               }
@@ -6215,12 +6215,12 @@ function Hk() {
                   } while (null !== t2);
                 }
               }
-              V = f2;
+              V$1 = f2;
             }
           }
-          if (0 !== (f2.subtreeFlags & 2064) && null !== g2) g2.return = f2, V = g2;
-          else b: for (; null !== V; ) {
-            f2 = V;
+          if (0 !== (f2.subtreeFlags & 2064) && null !== g2) g2.return = f2, V$1 = g2;
+          else b: for (; null !== V$1; ) {
+            f2 = V$1;
             if (0 !== (f2.flags & 2048)) switch (f2.tag) {
               case 0:
               case 11:
@@ -6230,19 +6230,19 @@ function Hk() {
             var x2 = f2.sibling;
             if (null !== x2) {
               x2.return = f2.return;
-              V = x2;
+              V$1 = x2;
               break b;
             }
-            V = f2.return;
+            V$1 = f2.return;
           }
         }
         var w2 = a.current;
-        for (V = w2; null !== V; ) {
-          g2 = V;
+        for (V$1 = w2; null !== V$1; ) {
+          g2 = V$1;
           var u2 = g2.child;
-          if (0 !== (g2.subtreeFlags & 2064) && null !== u2) u2.return = g2, V = u2;
-          else b: for (g2 = w2; null !== V; ) {
-            h2 = V;
+          if (0 !== (g2.subtreeFlags & 2064) && null !== u2) u2.return = g2, V$1 = u2;
+          else b: for (g2 = w2; null !== V$1; ) {
+            h2 = V$1;
             if (0 !== (h2.flags & 2048)) try {
               switch (h2.tag) {
                 case 0:
@@ -6250,33 +6250,33 @@ function Hk() {
                 case 15:
                   Qj(9, h2);
               }
-            } catch (na) {
-              W(h2, h2.return, na);
+            } catch (na2) {
+              W$1(h2, h2.return, na2);
             }
             if (h2 === g2) {
-              V = null;
+              V$1 = null;
               break b;
             }
             var F2 = h2.sibling;
             if (null !== F2) {
               F2.return = h2.return;
-              V = F2;
+              V$1 = F2;
               break b;
             }
-            V = h2.return;
+            V$1 = h2.return;
           }
         }
-        K = e2;
+        K$1 = e2;
         jg();
         if (lc && "function" === typeof lc.onPostCommitFiberRoot) try {
           lc.onPostCommitFiberRoot(kc, a);
-        } catch (na) {
+        } catch (na2) {
         }
         d2 = true;
       }
       return d2;
     } finally {
-      C = c2, ok.transition = b2;
+      C$1 = c2, ok.transition = b2;
     }
   }
   return false;
@@ -6285,10 +6285,10 @@ function Xk(a, b2, c2) {
   b2 = Ji(c2, b2);
   b2 = Ni(a, b2, 1);
   a = nh(a, b2, 1);
-  b2 = R();
+  b2 = R$1();
   null !== a && (Ac(a, 1, b2), Dk(a, b2));
 }
-function W(a, b2, c2) {
+function W$1(a, b2, c2) {
   if (3 === a.tag) Xk(a, a, c2);
   else for (; null !== b2; ) {
     if (3 === b2.tag) {
@@ -6300,7 +6300,7 @@ function W(a, b2, c2) {
         a = Ji(c2, a);
         a = Qi(b2, a, 1);
         b2 = nh(b2, a, 1);
-        a = R();
+        a = R$1();
         null !== b2 && (Ac(b2, 1, a), Dk(b2, a));
         break;
       }
@@ -6311,14 +6311,14 @@ function W(a, b2, c2) {
 function Ti(a, b2, c2) {
   var d2 = a.pingCache;
   null !== d2 && d2.delete(b2);
-  b2 = R();
+  b2 = R$1();
   a.pingedLanes |= a.suspendedLanes & c2;
-  Q === a && (Z & c2) === c2 && (4 === T || 3 === T && (Z & 130023424) === Z && 500 > B() - fk ? Kk(a, 0) : rk |= c2);
+  Q$1 === a && (Z$1 & c2) === c2 && (4 === T$1 || 3 === T$1 && (Z$1 & 130023424) === Z$1 && 500 > B$1() - fk ? Kk(a, 0) : rk |= c2);
   Dk(a, b2);
 }
 function Yk(a, b2) {
   0 === b2 && (0 === (a.mode & 1) ? b2 = 1 : (b2 = sc, sc <<= 1, 0 === (sc & 130023424) && (sc = 4194304)));
-  var c2 = R();
+  var c2 = R$1();
   a = ih(a, b2);
   null !== a && (Ac(a, b2, c2), Dk(a, c2));
 }
@@ -6339,7 +6339,7 @@ function bk(a, b2) {
       d2 = a.stateNode;
       break;
     default:
-      throw Error(p$2(314));
+      throw Error(p$3(314));
   }
   null !== d2 && d2.delete(b2);
   Yk(a, c2);
@@ -6351,19 +6351,19 @@ Vk = function(a, b2, c2) {
     if (0 === (a.lanes & c2) && 0 === (b2.flags & 128)) return dh = false, yj(a, b2, c2);
     dh = 0 !== (a.flags & 131072) ? true : false;
   }
-  else dh = false, I && 0 !== (b2.flags & 1048576) && ug(b2, ng, b2.index);
+  else dh = false, I$1 && 0 !== (b2.flags & 1048576) && ug(b2, ng, b2.index);
   b2.lanes = 0;
   switch (b2.tag) {
     case 2:
       var d2 = b2.type;
       ij(a, b2);
       a = b2.pendingProps;
-      var e2 = Yf(b2, H.current);
+      var e2 = Yf(b2, H$1.current);
       ch(b2, c2);
       e2 = Nh(null, b2, d2, a, e2, c2);
       var f2 = Sh();
       b2.flags |= 1;
-      "object" === typeof e2 && null !== e2 && "function" === typeof e2.render && void 0 === e2.$$typeof ? (b2.tag = 1, b2.memoizedState = null, b2.updateQueue = null, Zf(d2) ? (f2 = true, cg(b2)) : f2 = false, b2.memoizedState = null !== e2.state && void 0 !== e2.state ? e2.state : null, kh(b2), e2.updater = Ei, b2.stateNode = e2, e2._reactInternals = b2, Ii(b2, d2, a, c2), b2 = jj(null, b2, d2, true, f2, c2)) : (b2.tag = 0, I && f2 && vg(b2), Xi(null, b2, e2, c2), b2 = b2.child);
+      "object" === typeof e2 && null !== e2 && "function" === typeof e2.render && void 0 === e2.$$typeof ? (b2.tag = 1, b2.memoizedState = null, b2.updateQueue = null, Zf(d2) ? (f2 = true, cg(b2)) : f2 = false, b2.memoizedState = null !== e2.state && void 0 !== e2.state ? e2.state : null, kh(b2), e2.updater = Ei, b2.stateNode = e2, e2._reactInternals = b2, Ii(b2, d2, a, c2), b2 = jj(null, b2, d2, true, f2, c2)) : (b2.tag = 0, I$1 && f2 && vg(b2), Xi(null, b2, e2, c2), b2 = b2.child);
       return b2;
     case 16:
       d2 = b2.elementType;
@@ -6389,7 +6389,7 @@ Vk = function(a, b2, c2) {
             b2 = $i(null, b2, d2, Ci(d2.type, a), c2);
             break a;
         }
-        throw Error(p$2(
+        throw Error(p$3(
           306,
           d2,
           ""
@@ -6403,7 +6403,7 @@ Vk = function(a, b2, c2) {
     case 3:
       a: {
         kj(b2);
-        if (null === a) throw Error(p$2(387));
+        if (null === a) throw Error(p$3(387));
         d2 = b2.pendingProps;
         f2 = b2.memoizedState;
         e2 = f2.element;
@@ -6412,14 +6412,14 @@ Vk = function(a, b2, c2) {
         var g2 = b2.memoizedState;
         d2 = g2.element;
         if (f2.isDehydrated) if (f2 = { element: d2, isDehydrated: false, cache: g2.cache, pendingSuspenseBoundaries: g2.pendingSuspenseBoundaries, transitions: g2.transitions }, b2.updateQueue.baseState = f2, b2.memoizedState = f2, b2.flags & 256) {
-          e2 = Ji(Error(p$2(423)), b2);
+          e2 = Ji(Error(p$3(423)), b2);
           b2 = lj(a, b2, d2, c2, e2);
           break a;
         } else if (d2 !== e2) {
-          e2 = Ji(Error(p$2(424)), b2);
+          e2 = Ji(Error(p$3(424)), b2);
           b2 = lj(a, b2, d2, c2, e2);
           break a;
-        } else for (yg = Lf(b2.stateNode.containerInfo.firstChild), xg = b2, I = true, zg = null, c2 = Vg(b2, null, d2, c2), b2.child = c2; c2; ) c2.flags = c2.flags & -3 | 4096, c2 = c2.sibling;
+        } else for (yg = Lf(b2.stateNode.containerInfo.firstChild), xg = b2, I$1 = true, zg = null, c2 = Vg(b2, null, d2, c2), b2.child = c2; c2; ) c2.flags = c2.flags & -3 | 4096, c2 = c2.sibling;
         else {
           Ig();
           if (d2 === e2) {
@@ -6493,7 +6493,7 @@ Vk = function(a, b2, c2) {
           } else if (10 === f2.tag) g2 = f2.type === b2.type ? null : f2.child;
           else if (18 === f2.tag) {
             g2 = f2.return;
-            if (null === g2) throw Error(p$2(341));
+            if (null === g2) throw Error(p$3(341));
             g2.lanes |= c2;
             h2 = g2.alternate;
             null !== h2 && (h2.lanes |= c2);
@@ -6533,7 +6533,7 @@ Vk = function(a, b2, c2) {
     case 22:
       return dj(a, b2, c2);
   }
-  throw Error(p$2(156, b2.tag));
+  throw Error(p$3(156, b2.tag));
 };
 function Fk(a, b2) {
   return ac(a, b2);
@@ -6563,7 +6563,7 @@ function Zk(a) {
   if ("function" === typeof a) return aj(a) ? 1 : 0;
   if (void 0 !== a && null !== a) {
     a = a.$$typeof;
-    if (a === Da) return 11;
+    if (a === Da$1) return 11;
     if (a === Ga) return 14;
   }
   return 2;
@@ -6591,14 +6591,14 @@ function Rg(a, b2, c2, d2, e2, f2) {
   if ("function" === typeof a) aj(a) && (g2 = 1);
   else if ("string" === typeof a) g2 = 5;
   else a: switch (a) {
-    case ya:
+    case ya$1:
       return Tg(c2.children, e2, f2, b2);
-    case za:
+    case za$1:
       g2 = 8;
       e2 |= 8;
       break;
-    case Aa:
-      return a = Bg(12, c2, b2, e2 | 2), a.elementType = Aa, a.lanes = f2, a;
+    case Aa$1:
+      return a = Bg(12, c2, b2, e2 | 2), a.elementType = Aa$1, a.lanes = f2, a;
     case Ea:
       return a = Bg(13, c2, b2, e2), a.elementType = Ea, a.lanes = f2, a;
     case Fa:
@@ -6607,13 +6607,13 @@ function Rg(a, b2, c2, d2, e2, f2) {
       return pj(c2, e2, f2, b2);
     default:
       if ("object" === typeof a && null !== a) switch (a.$$typeof) {
-        case Ba:
+        case Ba$1:
           g2 = 10;
           break a;
-        case Ca:
+        case Ca$1:
           g2 = 9;
           break a;
-        case Da:
+        case Da$1:
           g2 = 11;
           break a;
         case Ga:
@@ -6624,7 +6624,7 @@ function Rg(a, b2, c2, d2, e2, f2) {
           d2 = null;
           break a;
       }
-      throw Error(p$2(130, null == a ? a : typeof a, ""));
+      throw Error(p$3(130, null == a ? a : typeof a, ""));
   }
   b2 = Bg(g2, c2, b2, e2);
   b2.elementType = a;
@@ -6682,13 +6682,13 @@ function bl(a, b2, c2, d2, e2, f2, g2, h2, k2) {
 }
 function cl(a, b2, c2) {
   var d2 = 3 < arguments.length && void 0 !== arguments[3] ? arguments[3] : null;
-  return { $$typeof: wa, key: null == d2 ? null : "" + d2, children: a, containerInfo: b2, implementation: c2 };
+  return { $$typeof: wa$1, key: null == d2 ? null : "" + d2, children: a, containerInfo: b2, implementation: c2 };
 }
 function dl(a) {
   if (!a) return Vf;
   a = a._reactInternals;
   a: {
-    if (Vb(a) !== a || 1 !== a.tag) throw Error(p$2(170));
+    if (Vb(a) !== a || 1 !== a.tag) throw Error(p$3(170));
     var b2 = a;
     do {
       switch (b2.tag) {
@@ -6703,7 +6703,7 @@ function dl(a) {
       }
       b2 = b2.return;
     } while (null !== b2);
-    throw Error(p$2(171));
+    throw Error(p$3(171));
   }
   if (1 === a.tag) {
     var c2 = a.type;
@@ -6715,7 +6715,7 @@ function el(a, b2, c2, d2, e2, f2, g2, h2, k2) {
   a = bl(c2, d2, true, a, e2, f2, g2, h2, k2);
   a.context = dl(null);
   c2 = a.current;
-  d2 = R();
+  d2 = R$1();
   e2 = yi(c2);
   f2 = mh(d2, e2);
   f2.callback = void 0 !== b2 && null !== b2 ? b2 : null;
@@ -6726,7 +6726,7 @@ function el(a, b2, c2, d2, e2, f2, g2, h2, k2) {
   return a;
 }
 function fl(a, b2, c2, d2) {
-  var e2 = b2.current, f2 = R(), g2 = yi(e2);
+  var e2 = b2.current, f2 = R$1(), g2 = yi(e2);
   c2 = dl(c2);
   null === b2.context ? b2.context = c2 : b2.pendingContext = c2;
   b2 = mh(f2, g2);
@@ -6769,7 +6769,7 @@ function ll(a) {
 }
 ml.prototype.render = ll.prototype.render = function(a) {
   var b2 = this._internalRoot;
-  if (null === b2) throw Error(p$2(409));
+  if (null === b2) throw Error(p$3(409));
   fl(a, b2, null, null);
 };
 ml.prototype.unmount = ll.prototype.unmount = function() {
@@ -6857,14 +6857,14 @@ Ec = function(a) {
       var b2 = a.stateNode;
       if (b2.current.memoizedState.isDehydrated) {
         var c2 = tc(b2.pendingLanes);
-        0 !== c2 && (Cc(b2, c2 | 1), Dk(b2, B()), 0 === (K & 6) && (Gj = B() + 500, jg()));
+        0 !== c2 && (Cc(b2, c2 | 1), Dk(b2, B$1()), 0 === (K$1 & 6) && (Gj = B$1() + 500, jg()));
       }
       break;
     case 13:
       Rk(function() {
         var b3 = ih(a, 1);
         if (null !== b3) {
-          var c3 = R();
+          var c3 = R$1();
           gi(b3, a, 1, c3);
         }
       }), il(a, 1);
@@ -6874,7 +6874,7 @@ Fc = function(a) {
   if (13 === a.tag) {
     var b2 = ih(a, 134217728);
     if (null !== b2) {
-      var c2 = R();
+      var c2 = R$1();
       gi(b2, a, 134217728, c2);
     }
     il(a, 134217728);
@@ -6884,21 +6884,21 @@ Gc = function(a) {
   if (13 === a.tag) {
     var b2 = yi(a), c2 = ih(a, b2);
     if (null !== c2) {
-      var d2 = R();
+      var d2 = R$1();
       gi(c2, a, b2, d2);
     }
     il(a, b2);
   }
 };
 Hc = function() {
-  return C;
+  return C$1;
 };
 Ic = function(a, b2) {
-  var c2 = C;
+  var c2 = C$1;
   try {
-    return C = a, b2();
+    return C$1 = a, b2();
   } finally {
-    C = c2;
+    C$1 = c2;
   }
 };
 yb = function(a, b2, c2) {
@@ -6913,7 +6913,7 @@ yb = function(a, b2, c2) {
           var d2 = c2[b2];
           if (d2 !== a && d2.form === a.form) {
             var e2 = Db(d2);
-            if (!e2) throw Error(p$2(90));
+            if (!e2) throw Error(p$3(90));
             Wa(d2);
             bb(d2, e2);
           }
@@ -6930,7 +6930,7 @@ yb = function(a, b2, c2) {
 Gb = Qk;
 Hb = Rk;
 var sl = { usingClientEntryPoint: false, Events: [Cb, ue, Db, Eb, Fb, Qk] }, tl = { findFiberByHostInstance: Wc, bundleType: 0, version: "18.3.1", rendererPackageName: "react-dom" };
-var ul = { bundleType: tl.bundleType, version: tl.version, rendererPackageName: tl.rendererPackageName, rendererConfig: tl.rendererConfig, overrideHookState: null, overrideHookStateDeletePath: null, overrideHookStateRenamePath: null, overrideProps: null, overridePropsDeletePath: null, overridePropsRenamePath: null, setErrorHandler: null, setSuspenseHandler: null, scheduleUpdate: null, currentDispatcherRef: ua.ReactCurrentDispatcher, findHostInstanceByFiber: function(a) {
+var ul = { bundleType: tl.bundleType, version: tl.version, rendererPackageName: tl.rendererPackageName, rendererConfig: tl.rendererConfig, overrideHookState: null, overrideHookStateDeletePath: null, overrideHookStateRenamePath: null, overrideProps: null, overridePropsDeletePath: null, overridePropsRenamePath: null, setErrorHandler: null, setSuspenseHandler: null, scheduleUpdate: null, currentDispatcherRef: ua$1.ReactCurrentDispatcher, findHostInstanceByFiber: function(a) {
   a = Zb(a);
   return null === a ? null : a.stateNode;
 }, findFiberByHostInstance: tl.findFiberByHostInstance || jl, findHostInstancesForRefresh: null, scheduleRefresh: null, scheduleRoot: null, setRefreshHandler: null, getCurrentFiber: null, reconcilerVersion: "18.3.1-next-f1338f8080-20240426" };
@@ -6944,11 +6944,11 @@ if ("undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__) {
 reactDom_production_min.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = sl;
 reactDom_production_min.createPortal = function(a, b2) {
   var c2 = 2 < arguments.length && void 0 !== arguments[2] ? arguments[2] : null;
-  if (!nl(b2)) throw Error(p$2(200));
+  if (!nl(b2)) throw Error(p$3(200));
   return cl(a, b2, null, c2);
 };
 reactDom_production_min.createRoot = function(a, b2) {
-  if (!nl(a)) throw Error(p$2(299));
+  if (!nl(a)) throw Error(p$3(299));
   var c2 = false, d2 = "", e2 = kl;
   null !== b2 && void 0 !== b2 && (true === b2.unstable_strictMode && (c2 = true), void 0 !== b2.identifierPrefix && (d2 = b2.identifierPrefix), void 0 !== b2.onRecoverableError && (e2 = b2.onRecoverableError));
   b2 = bl(a, 1, false, null, null, c2, false, d2, e2);
@@ -6961,9 +6961,9 @@ reactDom_production_min.findDOMNode = function(a) {
   if (1 === a.nodeType) return a;
   var b2 = a._reactInternals;
   if (void 0 === b2) {
-    if ("function" === typeof a.render) throw Error(p$2(188));
+    if ("function" === typeof a.render) throw Error(p$3(188));
     a = Object.keys(a).join(",");
-    throw Error(p$2(268, a));
+    throw Error(p$3(268, a));
   }
   a = Zb(b2);
   a = null === a ? null : a.stateNode;
@@ -6973,11 +6973,11 @@ reactDom_production_min.flushSync = function(a) {
   return Rk(a);
 };
 reactDom_production_min.hydrate = function(a, b2, c2) {
-  if (!ol(b2)) throw Error(p$2(200));
+  if (!ol(b2)) throw Error(p$3(200));
   return rl(null, a, b2, true, c2);
 };
 reactDom_production_min.hydrateRoot = function(a, b2, c2) {
-  if (!nl(a)) throw Error(p$2(405));
+  if (!nl(a)) throw Error(p$3(405));
   var d2 = null != c2 && c2.hydratedSources || null, e2 = false, f2 = "", g2 = kl;
   null !== c2 && void 0 !== c2 && (true === c2.unstable_strictMode && (e2 = true), void 0 !== c2.identifierPrefix && (f2 = c2.identifierPrefix), void 0 !== c2.onRecoverableError && (g2 = c2.onRecoverableError));
   b2 = el(b2, null, a, 1, null != c2 ? c2 : null, e2, false, f2, g2);
@@ -6990,11 +6990,11 @@ reactDom_production_min.hydrateRoot = function(a, b2, c2) {
   return new ml(b2);
 };
 reactDom_production_min.render = function(a, b2, c2) {
-  if (!ol(b2)) throw Error(p$2(200));
+  if (!ol(b2)) throw Error(p$3(200));
   return rl(null, a, b2, false, c2);
 };
 reactDom_production_min.unmountComponentAtNode = function(a) {
-  if (!ol(a)) throw Error(p$2(40));
+  if (!ol(a)) throw Error(p$3(40));
   return a._reactRootContainer ? (Rk(function() {
     rl(null, null, a, false, function() {
       a._reactRootContainer = null;
@@ -7004,8 +7004,8 @@ reactDom_production_min.unmountComponentAtNode = function(a) {
 };
 reactDom_production_min.unstable_batchedUpdates = Qk;
 reactDom_production_min.unstable_renderSubtreeIntoContainer = function(a, b2, c2, d2) {
-  if (!ol(c2)) throw Error(p$2(200));
-  if (null == a || void 0 === a._reactInternals) throw Error(p$2(38));
+  if (!ol(c2)) throw Error(p$3(200));
+  if (null == a || void 0 === a._reactInternals) throw Error(p$3(38));
   return rl(a, b2, c2, false, d2);
 };
 reactDom_production_min.version = "18.3.1-next-f1338f8080-20240426";
@@ -7025,10 +7025,10 @@ function checkDCE() {
 }
 var reactDomExports = reactDom.exports;
 const ReactDOM = /* @__PURE__ */ getDefaultExportFromCjs(reactDomExports);
-var m$2 = reactDomExports;
+var m$3 = reactDomExports;
 {
-  client.createRoot = m$2.createRoot;
-  client.hydrateRoot = m$2.hydrateRoot;
+  client.createRoot = m$3.createRoot;
+  client.hydrateRoot = m$3.hydrateRoot;
 }
 const common = {
   black: "#000",
@@ -7154,14 +7154,14 @@ function formatMuiErrorMessage(code) {
   return "Minified MUI error #" + code + "; visit " + url + " for the full message.";
 }
 const THEME_ID = "$$material";
-function _extends() {
-  return _extends = Object.assign ? Object.assign.bind() : function(n2) {
+function _extends$3() {
+  return _extends$3 = Object.assign ? Object.assign.bind() : function(n2) {
     for (var e2 = 1; e2 < arguments.length; e2++) {
       var t2 = arguments[e2];
       for (var r2 in t2) ({}).hasOwnProperty.call(t2, r2) && (n2[r2] = t2[r2]);
     }
     return n2;
-  }, _extends.apply(null, arguments);
+  }, _extends$3.apply(null, arguments);
 }
 function memoize$1(fn2) {
   var cache = /* @__PURE__ */ Object.create(null);
@@ -7907,26 +7907,26 @@ var reactIs_production_min$1 = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var b$1 = "function" === typeof Symbol && Symbol.for, c$1 = b$1 ? Symbol.for("react.element") : 60103, d$1 = b$1 ? Symbol.for("react.portal") : 60106, e$1 = b$1 ? Symbol.for("react.fragment") : 60107, f$1 = b$1 ? Symbol.for("react.strict_mode") : 60108, g$1 = b$1 ? Symbol.for("react.profiler") : 60114, h$1 = b$1 ? Symbol.for("react.provider") : 60109, k$1 = b$1 ? Symbol.for("react.context") : 60110, l$1 = b$1 ? Symbol.for("react.async_mode") : 60111, m$1 = b$1 ? Symbol.for("react.concurrent_mode") : 60111, n$1 = b$1 ? Symbol.for("react.forward_ref") : 60112, p$1 = b$1 ? Symbol.for("react.suspense") : 60113, q$1 = b$1 ? Symbol.for("react.suspense_list") : 60120, r$1 = b$1 ? Symbol.for("react.memo") : 60115, t$1 = b$1 ? Symbol.for("react.lazy") : 60116, v$1 = b$1 ? Symbol.for("react.block") : 60121, w = b$1 ? Symbol.for("react.fundamental") : 60117, x = b$1 ? Symbol.for("react.responder") : 60118, y = b$1 ? Symbol.for("react.scope") : 60119;
-function z(a) {
+var b$1 = "function" === typeof Symbol && Symbol.for, c$1 = b$1 ? Symbol.for("react.element") : 60103, d$1 = b$1 ? Symbol.for("react.portal") : 60106, e$1 = b$1 ? Symbol.for("react.fragment") : 60107, f$1 = b$1 ? Symbol.for("react.strict_mode") : 60108, g$1 = b$1 ? Symbol.for("react.profiler") : 60114, h$1 = b$1 ? Symbol.for("react.provider") : 60109, k$2 = b$1 ? Symbol.for("react.context") : 60110, l$2 = b$1 ? Symbol.for("react.async_mode") : 60111, m$2 = b$1 ? Symbol.for("react.concurrent_mode") : 60111, n$2 = b$1 ? Symbol.for("react.forward_ref") : 60112, p$2 = b$1 ? Symbol.for("react.suspense") : 60113, q$2 = b$1 ? Symbol.for("react.suspense_list") : 60120, r$2 = b$1 ? Symbol.for("react.memo") : 60115, t$2 = b$1 ? Symbol.for("react.lazy") : 60116, v$2 = b$1 ? Symbol.for("react.block") : 60121, w$1 = b$1 ? Symbol.for("react.fundamental") : 60117, x$1 = b$1 ? Symbol.for("react.responder") : 60118, y$1 = b$1 ? Symbol.for("react.scope") : 60119;
+function z$1(a) {
   if ("object" === typeof a && null !== a) {
     var u2 = a.$$typeof;
     switch (u2) {
       case c$1:
         switch (a = a.type, a) {
-          case l$1:
-          case m$1:
+          case l$2:
+          case m$2:
           case e$1:
           case g$1:
           case f$1:
-          case p$1:
+          case p$2:
             return a;
           default:
             switch (a = a && a.$$typeof, a) {
-              case k$1:
-              case n$1:
-              case t$1:
-              case r$1:
+              case k$2:
+              case n$2:
+              case t$2:
+              case r$2:
               case h$1:
                 return a;
               default:
@@ -7938,63 +7938,63 @@ function z(a) {
     }
   }
 }
-function A(a) {
-  return z(a) === m$1;
+function A$1(a) {
+  return z$1(a) === m$2;
 }
-reactIs_production_min$1.AsyncMode = l$1;
-reactIs_production_min$1.ConcurrentMode = m$1;
-reactIs_production_min$1.ContextConsumer = k$1;
+reactIs_production_min$1.AsyncMode = l$2;
+reactIs_production_min$1.ConcurrentMode = m$2;
+reactIs_production_min$1.ContextConsumer = k$2;
 reactIs_production_min$1.ContextProvider = h$1;
 reactIs_production_min$1.Element = c$1;
-reactIs_production_min$1.ForwardRef = n$1;
+reactIs_production_min$1.ForwardRef = n$2;
 reactIs_production_min$1.Fragment = e$1;
-reactIs_production_min$1.Lazy = t$1;
-reactIs_production_min$1.Memo = r$1;
+reactIs_production_min$1.Lazy = t$2;
+reactIs_production_min$1.Memo = r$2;
 reactIs_production_min$1.Portal = d$1;
 reactIs_production_min$1.Profiler = g$1;
 reactIs_production_min$1.StrictMode = f$1;
-reactIs_production_min$1.Suspense = p$1;
+reactIs_production_min$1.Suspense = p$2;
 reactIs_production_min$1.isAsyncMode = function(a) {
-  return A(a) || z(a) === l$1;
+  return A$1(a) || z$1(a) === l$2;
 };
-reactIs_production_min$1.isConcurrentMode = A;
+reactIs_production_min$1.isConcurrentMode = A$1;
 reactIs_production_min$1.isContextConsumer = function(a) {
-  return z(a) === k$1;
+  return z$1(a) === k$2;
 };
 reactIs_production_min$1.isContextProvider = function(a) {
-  return z(a) === h$1;
+  return z$1(a) === h$1;
 };
 reactIs_production_min$1.isElement = function(a) {
   return "object" === typeof a && null !== a && a.$$typeof === c$1;
 };
 reactIs_production_min$1.isForwardRef = function(a) {
-  return z(a) === n$1;
+  return z$1(a) === n$2;
 };
 reactIs_production_min$1.isFragment = function(a) {
-  return z(a) === e$1;
+  return z$1(a) === e$1;
 };
 reactIs_production_min$1.isLazy = function(a) {
-  return z(a) === t$1;
+  return z$1(a) === t$2;
 };
 reactIs_production_min$1.isMemo = function(a) {
-  return z(a) === r$1;
+  return z$1(a) === r$2;
 };
 reactIs_production_min$1.isPortal = function(a) {
-  return z(a) === d$1;
+  return z$1(a) === d$1;
 };
 reactIs_production_min$1.isProfiler = function(a) {
-  return z(a) === g$1;
+  return z$1(a) === g$1;
 };
 reactIs_production_min$1.isStrictMode = function(a) {
-  return z(a) === f$1;
+  return z$1(a) === f$1;
 };
 reactIs_production_min$1.isSuspense = function(a) {
-  return z(a) === p$1;
+  return z$1(a) === p$2;
 };
 reactIs_production_min$1.isValidElementType = function(a) {
-  return "string" === typeof a || "function" === typeof a || a === e$1 || a === m$1 || a === g$1 || a === f$1 || a === p$1 || a === q$1 || "object" === typeof a && null !== a && (a.$$typeof === t$1 || a.$$typeof === r$1 || a.$$typeof === h$1 || a.$$typeof === k$1 || a.$$typeof === n$1 || a.$$typeof === w || a.$$typeof === x || a.$$typeof === y || a.$$typeof === v$1);
+  return "string" === typeof a || "function" === typeof a || a === e$1 || a === m$2 || a === g$1 || a === f$1 || a === p$2 || a === q$2 || "object" === typeof a && null !== a && (a.$$typeof === t$2 || a.$$typeof === r$2 || a.$$typeof === h$1 || a.$$typeof === k$2 || a.$$typeof === n$2 || a.$$typeof === w$1 || a.$$typeof === x$1 || a.$$typeof === y$1 || a.$$typeof === v$2);
 };
-reactIs_production_min$1.typeOf = z;
+reactIs_production_min$1.typeOf = z$1;
 {
   reactIs$1.exports = reactIs_production_min$1;
 }
@@ -8018,7 +8018,7 @@ var MEMO_STATICS = {
 var TYPE_STATICS = {};
 TYPE_STATICS[reactIs.ForwardRef] = FORWARD_REF_STATICS;
 TYPE_STATICS[reactIs.Memo] = MEMO_STATICS;
-var isBrowser = true;
+var isBrowser$1 = true;
 function getRegisteredStyles(registered, registeredStyles, classNames) {
   var rawClassName = "";
   classNames.split(" ").forEach(function(className) {
@@ -8042,7 +8042,7 @@ var registerStyles = function registerStyles2(cache, serialized, isStringTag2) {
     // in node since emotion-server relies on whether a style is in
     // the registered cache to know whether a style is global or not
     // also, note that this check will be dead code eliminated in the browser
-    isBrowser === false) && cache.registered[className] === void 0
+    isBrowser$1 === false) && cache.registered[className] === void 0
   ) {
     cache.registered[className] = serialized.styles;
   }
@@ -8512,7 +8512,7 @@ var createStyled$1 = function createStyled(tag, options) {
       }
     });
     Styled.withComponent = function(nextTag, nextOptions) {
-      return createStyled(nextTag, _extends({}, options, nextOptions, {
+      return createStyled(nextTag, _extends$3({}, options, nextOptions, {
         shouldForwardProp: composeShouldForwardProps(Styled, nextOptions, true)
       })).apply(void 0, styles2);
     };
@@ -8680,7 +8680,7 @@ function GlobalStyles$3(props) {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-function styled$2(tag, options) {
+function styled$1(tag, options) {
   const stylesFactory = newStyled(tag, options);
   return stylesFactory;
 }
@@ -9947,17 +9947,17 @@ const createClassNameGenerator = () => {
   };
 };
 const ClassNameGenerator = createClassNameGenerator();
-function r(e2) {
+function r$1(e2) {
   var t2, f2, n2 = "";
   if ("string" == typeof e2 || "number" == typeof e2) n2 += e2;
   else if ("object" == typeof e2) if (Array.isArray(e2)) {
     var o = e2.length;
-    for (t2 = 0; t2 < o; t2++) e2[t2] && (f2 = r(e2[t2])) && (n2 && (n2 += " "), n2 += f2);
+    for (t2 = 0; t2 < o; t2++) e2[t2] && (f2 = r$1(e2[t2])) && (n2 && (n2 += " "), n2 += f2);
   } else for (f2 in e2) e2[f2] && (n2 && (n2 += " "), n2 += f2);
   return n2;
 }
 function clsx() {
-  for (var e2, t2, f2 = 0, n2 = "", o = arguments.length; f2 < o; f2++) (e2 = arguments[f2]) && (t2 = r(e2)) && (n2 && (n2 += " "), n2 += t2);
+  for (var e2, t2, f2 = 0, n2 = "", o = arguments.length; f2 < o; f2++) (e2 = arguments[f2]) && (t2 = r$1(e2)) && (n2 && (n2 += " "), n2 += t2);
   return n2;
 }
 function createBox(options = {}) {
@@ -9967,7 +9967,7 @@ function createBox(options = {}) {
     defaultClassName = "MuiBox-root",
     generateClassName
   } = options;
-  const BoxRoot = styled$2("div", {
+  const BoxRoot = styled$1("div", {
     shouldForwardProp: (prop) => prop !== "theme" && prop !== "sx" && prop !== "as"
   })(styleFunctionSx);
   const Box2 = /* @__PURE__ */ reactExports.forwardRef(function Box3(inProps, ref) {
@@ -10022,9 +10022,9 @@ var reactIs_production_min = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var b = Symbol.for("react.element"), c = Symbol.for("react.portal"), d = Symbol.for("react.fragment"), e = Symbol.for("react.strict_mode"), f = Symbol.for("react.profiler"), g = Symbol.for("react.provider"), h = Symbol.for("react.context"), k = Symbol.for("react.server_context"), l = Symbol.for("react.forward_ref"), m = Symbol.for("react.suspense"), n = Symbol.for("react.suspense_list"), p = Symbol.for("react.memo"), q = Symbol.for("react.lazy"), t = Symbol.for("react.offscreen"), u;
-u = Symbol.for("react.module.reference");
-function v(a) {
+var b = Symbol.for("react.element"), c = Symbol.for("react.portal"), d = Symbol.for("react.fragment"), e = Symbol.for("react.strict_mode"), f = Symbol.for("react.profiler"), g = Symbol.for("react.provider"), h = Symbol.for("react.context"), k$1 = Symbol.for("react.server_context"), l$1 = Symbol.for("react.forward_ref"), m$1 = Symbol.for("react.suspense"), n$1 = Symbol.for("react.suspense_list"), p$1 = Symbol.for("react.memo"), q$1 = Symbol.for("react.lazy"), t$1 = Symbol.for("react.offscreen"), u$1;
+u$1 = Symbol.for("react.module.reference");
+function v$1(a) {
   if ("object" === typeof a && null !== a) {
     var r2 = a.$$typeof;
     switch (r2) {
@@ -10033,16 +10033,16 @@ function v(a) {
           case d:
           case f:
           case e:
-          case m:
-          case n:
+          case m$1:
+          case n$1:
             return a;
           default:
             switch (a = a && a.$$typeof, a) {
-              case k:
+              case k$1:
               case h:
-              case l:
-              case q:
-              case p:
+              case l$1:
+              case q$1:
+              case p$1:
               case g:
                 return a;
               default:
@@ -10057,15 +10057,15 @@ function v(a) {
 reactIs_production_min.ContextConsumer = h;
 reactIs_production_min.ContextProvider = g;
 reactIs_production_min.Element = b;
-reactIs_production_min.ForwardRef = l;
+reactIs_production_min.ForwardRef = l$1;
 reactIs_production_min.Fragment = d;
-reactIs_production_min.Lazy = q;
-reactIs_production_min.Memo = p;
+reactIs_production_min.Lazy = q$1;
+reactIs_production_min.Memo = p$1;
 reactIs_production_min.Portal = c;
 reactIs_production_min.Profiler = f;
 reactIs_production_min.StrictMode = e;
-reactIs_production_min.Suspense = m;
-reactIs_production_min.SuspenseList = n;
+reactIs_production_min.Suspense = m$1;
+reactIs_production_min.SuspenseList = n$1;
 reactIs_production_min.isAsyncMode = function() {
   return false;
 };
@@ -10073,45 +10073,45 @@ reactIs_production_min.isConcurrentMode = function() {
   return false;
 };
 reactIs_production_min.isContextConsumer = function(a) {
-  return v(a) === h;
+  return v$1(a) === h;
 };
 reactIs_production_min.isContextProvider = function(a) {
-  return v(a) === g;
+  return v$1(a) === g;
 };
 reactIs_production_min.isElement = function(a) {
   return "object" === typeof a && null !== a && a.$$typeof === b;
 };
 reactIs_production_min.isForwardRef = function(a) {
-  return v(a) === l;
+  return v$1(a) === l$1;
 };
 reactIs_production_min.isFragment = function(a) {
-  return v(a) === d;
+  return v$1(a) === d;
 };
 reactIs_production_min.isLazy = function(a) {
-  return v(a) === q;
+  return v$1(a) === q$1;
 };
 reactIs_production_min.isMemo = function(a) {
-  return v(a) === p;
+  return v$1(a) === p$1;
 };
 reactIs_production_min.isPortal = function(a) {
-  return v(a) === c;
+  return v$1(a) === c;
 };
 reactIs_production_min.isProfiler = function(a) {
-  return v(a) === f;
+  return v$1(a) === f;
 };
 reactIs_production_min.isStrictMode = function(a) {
-  return v(a) === e;
+  return v$1(a) === e;
 };
 reactIs_production_min.isSuspense = function(a) {
-  return v(a) === m;
+  return v$1(a) === m$1;
 };
 reactIs_production_min.isSuspenseList = function(a) {
-  return v(a) === n;
+  return v$1(a) === n$1;
 };
 reactIs_production_min.isValidElementType = function(a) {
-  return "string" === typeof a || "function" === typeof a || a === d || a === f || a === e || a === m || a === n || a === t || "object" === typeof a && null !== a && (a.$$typeof === q || a.$$typeof === p || a.$$typeof === g || a.$$typeof === h || a.$$typeof === l || a.$$typeof === u || void 0 !== a.getModuleId) ? true : false;
+  return "string" === typeof a || "function" === typeof a || a === d || a === f || a === e || a === m$1 || a === n$1 || a === t$1 || "object" === typeof a && null !== a && (a.$$typeof === q$1 || a.$$typeof === p$1 || a.$$typeof === g || a.$$typeof === h || a.$$typeof === l$1 || a.$$typeof === u$1 || void 0 !== a.getModuleId) ? true : false;
 };
-reactIs_production_min.typeOf = v;
+reactIs_production_min.typeOf = v$1;
 const systemDefaultTheme = createTheme$1();
 function shouldForwardProp(prop) {
   return prop !== "ownerState" && prop !== "theme" && prop !== "sx" && prop !== "as";
@@ -10225,7 +10225,7 @@ function createStyled2(input = {}) {
     } else if (isStringTag(tag)) {
       shouldForwardPropOption = void 0;
     }
-    const defaultStyledResolver = styled$2(tag, {
+    const defaultStyledResolver = styled$1(tag, {
       shouldForwardProp: shouldForwardPropOption,
       label,
       ...options
@@ -10307,7 +10307,6 @@ function lowercaseFirstLetter(string) {
   }
   return string.charAt(0).toLowerCase() + string.slice(1);
 }
-const styled$1 = createStyled2();
 function resolveProps(defaultProps2, props) {
   const output = {
     ...props
@@ -10506,12 +10505,12 @@ const colorChannel = (color2) => {
   const decomposedColor = decomposeColor(color2);
   return decomposedColor.values.slice(0, 3).map((val, idx) => decomposedColor.type.includes("hsl") && idx !== 0 ? `${val}%` : val).join(" ");
 };
-const private_safeColorChannel = (color2, warning) => {
+const private_safeColorChannel = (color2, warning2) => {
   try {
     return colorChannel(color2);
   } catch (error) {
-    if (warning && false) {
-      console.warn(warning);
+    if (warning2 && false) {
+      console.warn(warning2);
     }
     return color2;
   }
@@ -10587,7 +10586,7 @@ function alpha(color2, value) {
   }
   return recomposeColor(color2);
 }
-function private_safeAlpha(color2, value, warning) {
+function private_safeAlpha(color2, value, warning2) {
   try {
     return alpha(color2, value);
   } catch (error) {
@@ -10606,7 +10605,7 @@ function darken(color2, coefficient) {
   }
   return recomposeColor(color2);
 }
-function private_safeDarken(color2, coefficient, warning) {
+function private_safeDarken(color2, coefficient, warning2) {
   try {
     return darken(color2, coefficient);
   } catch (error) {
@@ -10629,7 +10628,7 @@ function lighten(color2, coefficient) {
   }
   return recomposeColor(color2);
 }
-function private_safeLighten(color2, coefficient, warning) {
+function private_safeLighten(color2, coefficient, warning2) {
   try {
     return lighten(color2, coefficient);
   } catch (error) {
@@ -10639,7 +10638,7 @@ function private_safeLighten(color2, coefficient, warning) {
 function emphasize(color2, coefficient = 0.15) {
   return getLuminance(color2) > 0.5 ? darken(color2, coefficient) : lighten(color2, coefficient);
 }
-function private_safeEmphasize(color2, coefficient, warning) {
+function private_safeEmphasize(color2, coefficient, warning2) {
   try {
     return emphasize(color2, coefficient);
   } catch (error) {
@@ -11285,126 +11284,6 @@ function createGetColorSchemeSelector(selector) {
     return "&";
   };
 }
-const defaultTheme$2 = createTheme$1();
-const defaultCreateStyledComponent = styled$1("div", {
-  name: "MuiContainer",
-  slot: "Root",
-  overridesResolver: (props, styles2) => {
-    const {
-      ownerState
-    } = props;
-    return [styles2.root, styles2[`maxWidth${capitalize(String(ownerState.maxWidth))}`], ownerState.fixed && styles2.fixed, ownerState.disableGutters && styles2.disableGutters];
-  }
-});
-const useThemePropsDefault = (inProps) => useThemeProps$1({
-  props: inProps,
-  name: "MuiContainer",
-  defaultTheme: defaultTheme$2
-});
-const useUtilityClasses$_ = (ownerState, componentName) => {
-  const getContainerUtilityClass = (slot) => {
-    return generateUtilityClass(componentName, slot);
-  };
-  const {
-    classes,
-    fixed,
-    disableGutters,
-    maxWidth: maxWidth2
-  } = ownerState;
-  const slots = {
-    root: ["root", maxWidth2 && `maxWidth${capitalize(String(maxWidth2))}`, fixed && "fixed", disableGutters && "disableGutters"]
-  };
-  return composeClasses(slots, getContainerUtilityClass, classes);
-};
-function createContainer(options = {}) {
-  const {
-    // This will allow adding custom styled fn (for example for custom sx style function)
-    createStyledComponent = defaultCreateStyledComponent,
-    useThemeProps: useThemeProps2 = useThemePropsDefault,
-    componentName = "MuiContainer"
-  } = options;
-  const ContainerRoot = createStyledComponent(({
-    theme,
-    ownerState
-  }) => ({
-    width: "100%",
-    marginLeft: "auto",
-    boxSizing: "border-box",
-    marginRight: "auto",
-    ...!ownerState.disableGutters && {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      // @ts-ignore module augmentation fails if custom breakpoints are used
-      [theme.breakpoints.up("sm")]: {
-        paddingLeft: theme.spacing(3),
-        paddingRight: theme.spacing(3)
-      }
-    }
-  }), ({
-    theme,
-    ownerState
-  }) => ownerState.fixed && Object.keys(theme.breakpoints.values).reduce((acc, breakpointValueKey) => {
-    const breakpoint = breakpointValueKey;
-    const value = theme.breakpoints.values[breakpoint];
-    if (value !== 0) {
-      acc[theme.breakpoints.up(breakpoint)] = {
-        maxWidth: `${value}${theme.breakpoints.unit}`
-      };
-    }
-    return acc;
-  }, {}), ({
-    theme,
-    ownerState
-  }) => ({
-    // @ts-ignore module augmentation fails if custom breakpoints are used
-    ...ownerState.maxWidth === "xs" && {
-      // @ts-ignore module augmentation fails if custom breakpoints are used
-      [theme.breakpoints.up("xs")]: {
-        // @ts-ignore module augmentation fails if custom breakpoints are used
-        maxWidth: Math.max(theme.breakpoints.values.xs, 444)
-      }
-    },
-    ...ownerState.maxWidth && // @ts-ignore module augmentation fails if custom breakpoints are used
-    ownerState.maxWidth !== "xs" && {
-      // @ts-ignore module augmentation fails if custom breakpoints are used
-      [theme.breakpoints.up(ownerState.maxWidth)]: {
-        // @ts-ignore module augmentation fails if custom breakpoints are used
-        maxWidth: `${theme.breakpoints.values[ownerState.maxWidth]}${theme.breakpoints.unit}`
-      }
-    }
-  }));
-  const Container2 = /* @__PURE__ */ reactExports.forwardRef(function Container22(inProps, ref) {
-    const props = useThemeProps2(inProps);
-    const {
-      className,
-      component = "div",
-      disableGutters = false,
-      fixed = false,
-      maxWidth: maxWidth2 = "lg",
-      classes: classesProp,
-      ...other
-    } = props;
-    const ownerState = {
-      ...props,
-      component,
-      disableGutters,
-      fixed,
-      maxWidth: maxWidth2
-    };
-    const classes = useUtilityClasses$_(ownerState, componentName);
-    return (
-      // @ts-ignore theme is injected by the styled util
-      /* @__PURE__ */ jsxRuntimeExports.jsx(ContainerRoot, {
-        as: component,
-        ownerState,
-        className: clsx(classes.root, className),
-        ref,
-        ...other
-      })
-    );
-  });
-  return Container2;
-}
 const light = {
   // The colors used to style the text.
   text: {
@@ -11579,7 +11458,7 @@ function createPalette(palette) {
   const error = palette.error || getDefaultError(mode);
   const info = palette.info || getDefaultInfo(mode);
   const success = palette.success || getDefaultSuccess(mode);
-  const warning = palette.warning || getDefaultWarning(mode);
+  const warning2 = palette.warning || getDefaultWarning(mode);
   function getContrastText(background) {
     const contrastText = getContrastRatio(background, dark.text.primary) >= contrastThreshold ? dark.text.primary : light.text.primary;
     return contrastText;
@@ -11642,7 +11521,7 @@ function createPalette(palette) {
     }),
     // The colors used to represent potentially dangerous actions or important messages.
     warning: augmentColor({
-      color: warning,
+      color: warning2,
       name: "warning"
     }),
     // The colors used to present information to the user that is neutral and not necessarily important.
@@ -12718,7 +12597,7 @@ function createSvgIcon(path, displayName) {
   Component.muiName = SvgIcon.muiName;
   return /* @__PURE__ */ reactExports.memo(/* @__PURE__ */ reactExports.forwardRef(Component));
 }
-function _objectWithoutPropertiesLoose(r2, e2) {
+function _objectWithoutPropertiesLoose$1(r2, e2) {
   if (null == r2) return {};
   var t2 = {};
   for (var n2 in r2) if ({}.hasOwnProperty.call(r2, n2)) {
@@ -12962,7 +12841,7 @@ var Transition$1 = /* @__PURE__ */ function(_React$Component) {
     _this$props.onExiting;
     _this$props.onExited;
     _this$props.nodeRef;
-    var childProps = _objectWithoutPropertiesLoose(_this$props, ["children", "in", "mountOnEnter", "unmountOnExit", "appear", "enter", "exit", "timeout", "addEndListener", "onEnter", "onEntering", "onEntered", "onExit", "onExiting", "onExited", "nodeRef"]);
+    var childProps = _objectWithoutPropertiesLoose$1(_this$props, ["children", "in", "mountOnEnter", "unmountOnExit", "appear", "enter", "exit", "timeout", "addEndListener", "onEnter", "onEntering", "onEntered", "onExit", "onExiting", "onExited", "nodeRef"]);
     return (
       // allows for nested Transitions
       /* @__PURE__ */ React.createElement(TransitionGroupContext.Provider, {
@@ -13144,7 +13023,7 @@ var TransitionGroup = /* @__PURE__ */ function(_React$Component) {
     }
     if (this.mounted) {
       this.setState(function(state) {
-        var children = _extends({}, state.children);
+        var children = _extends$3({}, state.children);
         delete children[child.key];
         return {
           children
@@ -13153,7 +13032,7 @@ var TransitionGroup = /* @__PURE__ */ function(_React$Component) {
     }
   };
   _proto.render = function render() {
-    var _this$props = this.props, Component = _this$props.component, childFactory2 = _this$props.childFactory, props = _objectWithoutPropertiesLoose(_this$props, ["component", "childFactory"]);
+    var _this$props = this.props, Component = _this$props.component, childFactory2 = _this$props.childFactory, props = _objectWithoutPropertiesLoose$1(_this$props, ["component", "childFactory"]);
     var contextValue = this.state.contextValue;
     var children = values(this.state.children).map(childFactory2);
     delete props.appear;
@@ -18558,22 +18437,6 @@ function ClickAwayListener(props) {
     children: /* @__PURE__ */ reactExports.cloneElement(children, childrenProps)
   });
 }
-const Container = createContainer({
-  createStyledComponent: styled("div", {
-    name: "MuiContainer",
-    slot: "Root",
-    overridesResolver: (props, styles2) => {
-      const {
-        ownerState
-      } = props;
-      return [styles2.root, styles2[`maxWidth${capitalize(String(ownerState.maxWidth))}`], ownerState.fixed && styles2.fixed, ownerState.disableGutters && styles2.disableGutters];
-    }
-  }),
-  useThemeProps: (inProps) => useThemeProps({
-    props: inProps,
-    name: "MuiContainer"
-  })
-});
 const isDynamicSupport = typeof globalCss({}) === "function";
 const html = (theme, enableColorScheme) => ({
   WebkitFontSmoothing: "antialiased",
@@ -29612,12 +29475,6 @@ const TextField = /* @__PURE__ */ reactExports.forwardRef(function TextField2(in
     })]
   });
 });
-const NotificationImportantIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M18 16v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-5 0h-2v-2h2zm0-4h-2V8h2zm-1 10c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2"
-}), "NotificationImportant");
-const CloseIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-}), "Close");
 function bind(fn2, thisArg) {
   return function wrap() {
     return fn2.apply(thisArg, arguments);
@@ -31998,257 +31855,6 @@ axios.formToJSON = (thing) => formDataToJSON(utils$1.isHTMLForm(thing) ? new For
 axios.getAdapter = adapters.getAdapter;
 axios.HttpStatusCode = HttpStatusCode;
 axios.default = axios;
-const Transition = React.forwardRef(function Transition2(props, ref) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { direction: "up", ref, ...props });
-});
-const CustomDialog = ({
-  open,
-  title,
-  handleClose,
-  children,
-  maxWidth: maxWidth2 = "sm",
-  fullWidth = true,
-  ...rest
-}) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    Dialog,
-    {
-      TransitionComponent: Transition,
-      keepMounted: true,
-      open,
-      onClose: handleClose,
-      "aria-labelledby": "custom-dialog-title",
-      "aria-describedby": "custom-dialog-description",
-      maxWidth: maxWidth2,
-      fullWidth,
-      ...rest,
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { id: "custom-dialog-title", children: [
-          title,
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            IconButton,
-            {
-              "aria-label": "close",
-              onClick: handleClose,
-              sx: (theme) => ({
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: theme.palette.grey[500]
-              }),
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(CloseIcon, {})
-            }
-          )
-        ] }),
-        children
-      ]
-    }
-  );
-};
-const TabPanel = ({ value, index, children }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { role: "tabpanel", hidden: value !== index, children: value === index && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children }) });
-};
-const ProductHistoryModal = ({ productId, openHistory, onClose, productName }) => {
-  const [productHistory, setProductHistory] = reactExports.useState({ stock: [], purchase: [], sales: [] });
-  const [tabIndex, setTabIndex] = reactExports.useState(0);
-  reactExports.useEffect(() => {
-    if (openHistory) {
-      fetchProductHistory(productId);
-    }
-  }, [openHistory, productId]);
-  const fetchProductHistory = (productId2) => {
-    axios.get(`http://localhost:5000/api/product/${productId2}/history`).then((response) => {
-      setProductHistory({
-        stock: response.data.stock_history,
-        purchase: response.data.purchase_history,
-        sales: response.data.sale_history
-      });
-    }).catch((error) => {
-      console.error("There was an error fetching the product history!", error);
-    });
-  };
-  const handleTabChange = (event, newValue) => {
-    setTabIndex(newValue);
-  };
-  const sortByDate = (history, dateKey) => {
-    return history.slice().sort((a, b2) => {
-      const dateA = new Date(a[dateKey]).getTime();
-      const dateB = new Date(b2[dateKey]).getTime();
-      return dateB - dateA;
-    });
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    CustomDialog,
-    {
-      open: openHistory,
-      handleClose: onClose,
-      title: `Історія товару ${productName}`,
-      maxWidth: "xl",
-      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { value: tabIndex, onChange: handleTabChange, indicatorColor: "primary", textColor: "primary", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія змін" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія закупівель" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія продажів" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "закупівель && продажів" })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 0, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип зміни" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Зміни по Кількості" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.stock && productHistory.stock.length > 0 && sortByDate(productHistory.stock, "timestamp").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.timestamp).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_type }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_amount })
-          ] }, record.id)) })
-        ] }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 1, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість закупівлі" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.purchase && productHistory.purchase.length > 0 && sortByDate(productHistory.purchase, "purchase_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.supplier }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_price_per_item }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_purchase }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_total_price })
-          ] }, record.id)) }),
-          productHistory.purchase && productHistory.purchase.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              Typography,
-              {
-                variant: "subtitle2",
-                children: [
-                  " ",
-                  productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)
-                ]
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle2", children: [
-              "  ",
-              productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
-            ] }) })
-          ] }) })
-        ] }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Клієнт" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість проданих одиниць" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.sales && productHistory.sales.length > 0 && sortByDate(productHistory.sales, "sale_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.sale_date).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.customer }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_price_per_item }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_sold }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_total_price })
-          ] }, record.id)) }),
-          productHistory.sales && productHistory.sales.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Typography,
-              {
-                variant: "subtitle2",
-                children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              Typography,
-              {
-                variant: "subtitle2",
-                children: [
-                  " ",
-                  productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
-                ]
-              }
-            ) })
-          ] }) })
-        ] }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Контрагент" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory && productHistory.purchase && productHistory.sales && // Об'єднання та сортування закупівель і продажів
-          [
-            ...productHistory.purchase.map((record) => ({ ...record, type: "purchase" })),
-            ...productHistory.sales.map((record) => ({ ...record, type: "sale" }))
-          ].sort((a, b2) => {
-            const dateA = a.purchase_date ? new Date(a.purchase_date).getTime() : 0;
-            const dateB = b2.purchase_date ? new Date(b2.purchase_date).getTime() : 0;
-            const dateSaleA = a.sale_date ? new Date(a.sale_date).getTime() : 0;
-            const dateSaleB = b2.sale_date ? new Date(b2.sale_date).getTime() : 0;
-            const finalDateA = dateA || dateSaleA;
-            const finalDateB = dateB || dateSaleB;
-            return finalDateA - finalDateB;
-          }).map((record, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            TableRow,
-            {
-              style: { backgroundColor: record.type === "sale" ? "#d1e7dd" : "#f8d7da" },
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date || record.sale_date).toLocaleString() }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? "Продаж" : "Закупка" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.customer : record.supplier }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_price_per_item }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.quantity_sold : record.quantity_purchase }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_total_price })
-              ]
-            },
-            index
-          )) }),
-          productHistory && productHistory.purchase && productHistory.sales && /* @__PURE__ */ jsxRuntimeExports.jsxs(TableFooter, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість продажів:" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
-                }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
-                }
-              ) })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість закупок:" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)
-                }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
-                }
-              ) })
-            ] })
-          ] })
-        ] }) }) })
-      ] })
-    }
-  );
-};
 console.log("production");
 const api = axios.create();
 api.defaults.baseURL = "http://localhost:5000/api";
@@ -32774,6 +32380,712 @@ const fetchGetAllSuppliers = () => {
     return [];
   });
 };
+const fetchAllCustomers = () => {
+  return api.get("/customers").then((response) => response.data).catch((error) => {
+    console.error("Error fetching customers:", error);
+    return [];
+  });
+};
+const ProductContext = reactExports.createContext(void 0);
+const ProductProvider = ({ children }) => {
+  const [products, setProducts] = reactExports.useState([]);
+  const [loadingState, setLoadingState] = reactExports.useState({
+    isLoading: true,
+    error: null
+  });
+  const fetchProductsFunc = async () => {
+    try {
+      setLoadingState({ isLoading: true, error: null });
+      const data = await fetchProducts();
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        throw new Error("Fetched data is not an array");
+      }
+    } catch (error) {
+      setLoadingState({ isLoading: false, error: "There was an error fetching the products!" });
+    } finally {
+      setLoadingState({ isLoading: false, error: null });
+    }
+  };
+  reactExports.useEffect(() => {
+    fetchProductsFunc();
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ProductContext.Provider, { value: { products, fetchProductsFunc, loadingState }, children });
+};
+const useProducts = () => {
+  const context = reactExports.useContext(ProductContext);
+  if (!context) {
+    throw new Error("useProducts must be used within a ProductProvider");
+  }
+  return context;
+};
+const modalNames = [
+  "openAdd",
+  "openSale",
+  "openEdit",
+  "openPurchase",
+  "openDrawer",
+  "openDelete",
+  "openHistory",
+  "openCategoryCreate",
+  "openAddSupplierOpen",
+  "openNotificationDrawer",
+  "snackbarNotifyOpen"
+];
+function roundToDecimalPlaces(num, decimalPlaces) {
+  const factor = Math.pow(10, decimalPlaces);
+  return Math.round(num * factor) / factor;
+}
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+const formatDateToBack = (dateString) => {
+  const createdDate = new Date(dateString);
+  if (!isNaN(createdDate.getTime())) {
+    const formattedDate = createdDate.toISOString().slice(0, 10);
+    console.log(formattedDate);
+    return formattedDate;
+  } else {
+    console.log("Неправильний формат дати.");
+    return false;
+  }
+};
+const CategoryFilter = ({
+  selectedFilterCategories,
+  handleCategoryFilterChange,
+  categories
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    FormControlLabel,
+    {
+      control: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Checkbox,
+        {
+          checked: selectedFilterCategories.includes(category.id),
+          onChange: () => handleCategoryFilterChange(category.id)
+        }
+      ),
+      label: category.name
+    },
+    category.id
+  )) });
+};
+const SupplierFilter = ({
+  selectedFilterSuppliers,
+  handleSupplierFilterChange,
+  suppliers
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+    FormControlLabel,
+    {
+      control: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Checkbox,
+        {
+          checked: selectedFilterSuppliers.includes(supplier.id),
+          onChange: () => handleSupplierFilterChange(supplier.id)
+        }
+      ),
+      label: supplier.name
+    },
+    supplier.id
+  )) });
+};
+const CategoryContext = reactExports.createContext(void 0);
+const CategoryProvider = ({ children }) => {
+  const [categories, setCategories] = reactExports.useState([]);
+  const fetchCategoriesFunc = async () => {
+    try {
+      const data = await fetchGetAllCategories();
+      if (Array.isArray(data)) {
+        setCategories(data);
+      } else {
+        throw new Error("Fetched data is not an array");
+      }
+    } catch (error) {
+      console.error("Error fetching categories", error);
+    }
+  };
+  reactExports.useEffect(() => {
+    fetchCategoriesFunc();
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryContext.Provider, { value: { categories, fetchCategoriesFunc }, children });
+};
+const useCategories = () => {
+  const context = reactExports.useContext(CategoryContext);
+  if (!context) {
+    throw new Error("useCategories must be used within a CategoryProvider");
+  }
+  return context;
+};
+const SupplierContext = reactExports.createContext(void 0);
+const SupplierProvider = ({ children }) => {
+  const [suppliers, setSuppliers] = reactExports.useState([]);
+  const fetchSuppliersFunc = async () => {
+    try {
+      const data = await fetchGetAllSuppliers();
+      if (Array.isArray(data)) {
+        setSuppliers(data);
+      } else {
+        throw new Error("Fetched data is not an array");
+      }
+    } catch (error) {
+      console.error("Error fetching suppliers", error);
+    }
+  };
+  reactExports.useEffect(() => {
+    fetchSuppliersFunc();
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierContext.Provider, { value: { suppliers, fetchSuppliersFunc }, children });
+};
+const useSuppliers = () => {
+  const context = reactExports.useContext(SupplierContext);
+  if (!context) {
+    throw new Error("useSuppliers must be used within a SupplierProvider");
+  }
+  return context;
+};
+const FilterComponent = ({
+  resetFilters,
+  filterArrayLength,
+  setFilteredProducts,
+  filters,
+  setFilters
+}) => {
+  const [priceMax, setPriceMax] = reactExports.useState(0);
+  const { products } = useProducts();
+  const { categories } = useCategories();
+  const { suppliers } = useSuppliers();
+  const applyFilters = (callback) => {
+    let filtered = products;
+    const { categories: categories2, suppliers: suppliers2, priceRange } = filters;
+    if (categories2.length > 0) {
+      filtered = filtered.filter(
+        (product) => product.category_ids.some((categoryId) => categories2.includes(categoryId))
+      );
+    }
+    if (suppliers2.length > 0) {
+      filtered = filtered.filter((product) => product.supplier && suppliers2.includes(product.supplier.id));
+    }
+    filtered = filtered.filter(
+      (product) => product.selling_price_per_item >= priceRange[0] && product.selling_price_per_item <= priceRange[1]
+    );
+    setFilteredProducts(filtered);
+  };
+  reactExports.useEffect(() => {
+    if (products.length > 0) {
+      const prices = products.map((product) => product.selling_price_per_item);
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
+      setFilters((prevState) => ({
+        ...prevState,
+        priceRange: [minPrice, maxPrice]
+      }));
+      const max2 = Math.max(...products.map((product) => product.selling_price_per_item));
+      setPriceMax(max2);
+    }
+  }, [products]);
+  const handleFilterChange = (filterType, newValue) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: newValue
+    }));
+  };
+  const handleCategoryFilterChange = (categoryID) => {
+    const updatedCategories = toggleFilter(filters.categories, categoryID);
+    handleFilterChange("categories", updatedCategories);
+  };
+  const handleSupplierFilterChange = (supplierID) => {
+    const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
+    handleFilterChange("suppliers", updatedSuppliers);
+  };
+  const handlePriceRangeChange = (event, newValue) => {
+    handleFilterChange("priceRange", newValue);
+  };
+  const toggleFilter = (currentFilters, id2) => {
+    return currentFilters.includes(id2) ? currentFilters.filter((filterId) => filterId !== id2) : [...currentFilters, id2];
+  };
+  reactExports.useEffect(() => {
+    applyFilters();
+  }, [filters]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, px: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Категорії" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          CategoryFilter,
+          {
+            selectedFilterCategories: filters.categories,
+            handleCategoryFilterChange,
+            categories
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Постачальники" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SupplierFilter,
+          {
+            selectedFilterSuppliers: filters.suppliers,
+            handleSupplierFilterChange,
+            suppliers
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { gutterBottom: true, children: "Фільтрувати по ціні" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", gutterBottom: true, children: [
+        "Діапазон ціни: ",
+        filters.priceRange[0],
+        " - ",
+        filters.priceRange[1],
+        " грн"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Slider,
+        {
+          value: filters.priceRange,
+          onChange: handlePriceRangeChange,
+          valueLabelDisplay: "auto",
+          min: 0,
+          max: priceMax,
+          step: 10
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+      "Знайдено ",
+      filterArrayLength
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: resetFilters, children: "Очистити" })
+  ] }) });
+};
+const EditIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"
+}), "Edit");
+const DeleteIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"
+}), "Delete");
+const ShoppingCart = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2M1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2"
+}), "ShoppingCart");
+const SellIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "m21.41 11.41-8.83-8.83c-.37-.37-.88-.58-1.41-.58H4c-1.1 0-2 .9-2 2v7.17c0 .53.21 1.04.59 1.41l8.83 8.83c.78.78 2.05.78 2.83 0l7.17-7.17c.78-.78.78-2.04-.01-2.83M6.5 8C5.67 8 5 7.33 5 6.5S5.67 5 6.5 5 8 5.67 8 6.5 7.33 8 6.5 8"
+}), "Sell");
+const HistoryIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9m-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8z"
+}), "History");
+const ProductCardView = ({
+  filteredProducts,
+  order: order2,
+  orderBy,
+  handleSort,
+  sortProducts,
+  getComparator,
+  handleOpenEdit,
+  handleDelete,
+  handlePurchase,
+  handleOpenSale,
+  handleOpenHistoryModal,
+  searchTerm,
+  filteredAndSearchedProducts,
+  currentPage,
+  itemsPerPage
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 2, children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
+    var _a;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "ID: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.id
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Постачальник: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Кількість: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.quantity
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Ціна за 1 шт: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.purchase_price_per_item
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+        "Сума: ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            component: "span",
+            variant: "body1",
+            color: "textPrimary",
+            children: product.purchase_total_price
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "error", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "success", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCart, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "warning", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "info", onClick: () => handleOpenHistoryModal(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
+      ] })
+    ] }) }) }, `${product.id}${index}${product.purchase_total_price}`);
+  }) }) });
+};
+const ProductTable = reactExports.forwardRef(({
+  filteredProducts,
+  order: order2,
+  orderBy,
+  handleSort,
+  sortProducts,
+  getComparator,
+  handleOpenEdit,
+  handleDelete,
+  handlePurchase,
+  handleOpenSale,
+  handleOpenHistoryModal,
+  searchTerm,
+  filteredAndSearchedProducts,
+  itemsPerPage,
+  currentPage,
+  selectedLowProductId
+}, ref) => {
+  const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
+  const totalSumPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.purchase_total_price, 0);
+  const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_quantity, 0);
+  const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_total_price, 0);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "name",
+          direction: orderBy === "name" ? order2 : "asc",
+          onClick: () => handleSort("name"),
+          children: "Назва"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "supplier",
+          direction: orderBy === "supplier" ? order2 : "asc",
+          onClick: () => handleSort("supplier"),
+          children: "Постачальник"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "quantity",
+          direction: orderBy === "quantity" ? order2 : "asc",
+          onClick: () => handleSort("quantity"),
+          children: "Кількість"
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "purchase_price_per_item",
+          direction: orderBy === "purchase_price_per_item" ? order2 : "asc",
+          onClick: () => handleSort("purchase_price_per_item"),
+          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: " Ціна за 1шт" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: "Закупка" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: "Продаж" })
+          ] })
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TableSortLabel,
+        {
+          active: orderBy === "purchase_total_price",
+          direction: orderBy === "purchase_total_price" ? order2 : "asc",
+          onClick: () => handleSort("purchase_total_price"),
+          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Сумма",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: "Закупка" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: "Продаж" })
+          ] })
+        }
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дія" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length >= 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
+      var _a;
+      const lowQuantity = product.quantity < 5;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        TableRow,
+        {
+          ref: (el2) => {
+            if (ref && typeof ref === "function") {
+              ref(el2, index + currentPage * itemsPerPage);
+            } else if (ref && ref.current) {
+              ref.current[index + currentPage * itemsPerPage] = el2;
+            }
+          },
+          className: clsx({ "low-quantity-row": lowQuantity }, { "selected-row": selectedLowProductId === product.id }),
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              TableCell,
+              {
+                children: [
+                  " ",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Typography,
+                    {
+                      className: clsx(
+                        { "low-quantity": lowQuantity }
+                      ),
+                      children: product.quantity
+                    }
+                  )
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: product.purchase_price_per_item.toFixed(2) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_price_per_item.toFixed(2) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: product.purchase_total_price.toFixed(2) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_total_price.toFixed(2) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                IconButton,
+                {
+                  color: "secondary",
+                  onClick: () => handleDelete(product.id),
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCart, { fontSize: "small" }) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", onClick: () => {
+                handleOpenHistoryModal(product.id);
+              }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
+            ] }) })
+          ]
+        },
+        `${product.id}${index}${product.purchase_total_price}`
+      );
+    }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", color: "secondary", children: totalQuantityPurchase }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", color: "primary", children: totalQuantitySelling })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 1, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна сума:" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            color: "secondary",
+            variant: "subtitle2",
+            children: totalSumPurchase.toFixed(2)
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Typography,
+          {
+            color: "primary",
+            variant: "subtitle2",
+            children: totalSumSelling.toFixed(2)
+          }
+        )
+      ] })
+    ] }) })
+  ] }) }) });
+});
+const ResponsiveProductView = reactExports.forwardRef(({
+  filteredProducts,
+  order: order2,
+  orderBy,
+  handleSort,
+  sortProducts,
+  getComparator,
+  handleOpenEdit,
+  handleDelete,
+  handlePurchase,
+  handleOpenSale,
+  handleOpenHistoryModal,
+  searchTerm,
+  setSearchTerm,
+  setCurrentPage,
+  currentPage,
+  itemsPerPage,
+  setItemsPerPage,
+  filteredAndSearchedProducts,
+  selectedLowProductId
+}, ref) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  console.log("filteredAndSearchedProducts", filteredAndSearchedProducts);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "flex-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TextField,
+      {
+        label: "Пошук товару",
+        variant: "outlined",
+        fullWidth: true,
+        margin: "normal",
+        value: searchTerm,
+        onChange: (e2) => setSearchTerm(e2.target.value)
+      }
+    ) }) }),
+    isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ProductCardView,
+      {
+        itemsPerPage,
+        currentPage,
+        searchTerm,
+        filteredAndSearchedProducts,
+        filteredProducts,
+        order: order2,
+        orderBy,
+        handleSort,
+        sortProducts,
+        getComparator,
+        handleOpenEdit,
+        handleDelete,
+        handlePurchase,
+        handleOpenSale,
+        handleOpenHistoryModal
+      }
+    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ProductTable,
+      {
+        selectedLowProductId,
+        ref,
+        itemsPerPage,
+        currentPage,
+        searchTerm,
+        filteredAndSearchedProducts,
+        filteredProducts,
+        order: order2,
+        orderBy,
+        handleSort,
+        sortProducts,
+        getComparator,
+        handleOpenEdit,
+        handleDelete,
+        handlePurchase,
+        handleOpenSale,
+        handleOpenHistoryModal
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TablePagination,
+      {
+        rowsPerPageOptions: [5, 10, 25],
+        component: "div",
+        count: filteredAndSearchedProducts.length,
+        rowsPerPage: itemsPerPage,
+        page: currentPage,
+        onPageChange: (event, newPage) => setCurrentPage(newPage),
+        onRowsPerPageChange: (event) => {
+          setItemsPerPage(parseInt(event.target.value, 10));
+          setCurrentPage(0);
+        }
+      }
+    )
+  ] });
+});
+const CloseIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+}), "Close");
+const Transition = React.forwardRef(function Transition2(props, ref) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { direction: "up", ref, ...props });
+});
+const CustomDialog = ({
+  open,
+  title,
+  handleClose,
+  children,
+  maxWidth: maxWidth2 = "sm",
+  fullWidth = true,
+  ...rest
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    Dialog,
+    {
+      TransitionComponent: Transition,
+      keepMounted: true,
+      open,
+      onClose: handleClose,
+      "aria-labelledby": "custom-dialog-title",
+      "aria-describedby": "custom-dialog-description",
+      maxWidth: maxWidth2,
+      fullWidth,
+      ...rest,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { id: "custom-dialog-title", children: [
+          title,
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            IconButton,
+            {
+              "aria-label": "close",
+              onClick: handleClose,
+              sx: (theme) => ({
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: theme.palette.grey[500]
+              }),
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(CloseIcon, {})
+            }
+          )
+        ] }),
+        children
+      ]
+    }
+  );
+};
 const ProductNameField = ({ value, onChange, error }) => /* @__PURE__ */ jsxRuntimeExports.jsx(
   TextField,
   {
@@ -32816,24 +33128,27 @@ const TotalPriceField = ({ value, label = "Загальна сума (Закуп
 const Add = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
 }), "Add");
-const DeleteIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"
-}), "Delete");
-const EditIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75z"
-}), "Edit");
-const HistoryIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9m-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8z"
-}), "History");
+const BarChart = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z"
+}), "BarChart");
+const Home = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
+}), "Home");
+const NotificationImportantIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M18 16v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-5 0h-2v-2h2zm0-4h-2V8h2zm-1 10c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2"
+}), "NotificationImportant");
+const People = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3m-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3m0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5m8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5"
+}), "People");
+const Receipt = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M18 17H6v-2h12zm0-4H6v-2h12zm0-4H6V7h12zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2z"
+}), "Receipt");
 const Remove = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 13H5v-2h14z"
 }), "Remove");
-const SellIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "m21.41 11.41-8.83-8.83c-.37-.37-.88-.58-1.41-.58H4c-1.1 0-2 .9-2 2v7.17c0 .53.21 1.04.59 1.41l8.83 8.83c.78.78 2.05.78 2.83 0l7.17-7.17c.78-.78.78-2.04-.01-2.83M6.5 8C5.67 8 5 7.33 5 6.5S5.67 5 6.5 5 8 5.67 8 6.5 7.33 8 6.5 8"
-}), "Sell");
-const ShoppingCartIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
-  d: "M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2M1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2"
-}), "ShoppingCart");
+const Store = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M20 4H4v2h16zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6zm-9 4H6v-4h6z"
+}), "Store");
 const QuantityField = ({ value, onChange, error, onIncrement, onDecrement }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { display: "flex", alignItems: "center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
     TextField,
@@ -32890,28 +33205,6 @@ const CategoriesSelect = ({
     label: category.name
   }
 ) }, category.id + category.name)) }) });
-function roundToDecimalPlaces(num, decimalPlaces) {
-  const factor = Math.pow(10, decimalPlaces);
-  return Math.round(num * factor) / factor;
-}
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-const formatDateToBack = (dateString) => {
-  const createdDate = new Date(dateString);
-  if (!isNaN(createdDate.getTime())) {
-    const formattedDate = createdDate.toISOString().slice(0, 10);
-    console.log(formattedDate);
-    return formattedDate;
-  } else {
-    console.log("Неправильний формат дати.");
-    return false;
-  }
-};
 const SupplierSelect = ({
   disabled = false,
   suppliers,
@@ -32937,11 +33230,9 @@ const AddProductModal = ({
   handleCloseAdd,
   newProduct,
   setNewProduct,
-  categories,
   selectedCategories,
   handleCategoryChange,
-  handleAdd,
-  suppliers
+  handleAdd
 }) => {
   const [errors, setErrors] = reactExports.useState({
     name: "",
@@ -32949,6 +33240,8 @@ const AddProductModal = ({
     quantity: "",
     price_per_item: ""
   });
+  const { categories } = useCategories();
+  const { suppliers } = useSuppliers();
   const [diffWithPrice, setDiffWithPrice] = reactExports.useState(0);
   const validateFields = () => {
     const newErrors = {
@@ -33117,13 +33410,11 @@ const AddProductModal = ({
   );
 };
 const EditProductModal = ({
-  suppliers,
   openEdit,
   handleCloseEdit,
   editProduct,
   setEditProduct,
   handleEditSave,
-  categories,
   selectedCategories,
   handleCategoryChange
 }) => {
@@ -33134,10 +33425,18 @@ const EditProductModal = ({
     price_per_item: "",
     created_date: ""
   });
+  const { categories } = useCategories();
+  const { suppliers } = useSuppliers();
   const [diffWithPrice, setDiffWithPrice] = reactExports.useState(0);
   console.log("editProduct", editProduct);
   reactExports.useEffect(() => {
-    const totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+    let totalPrice = 0;
+    if (editProduct.quantity > 0) {
+      totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+    } else {
+      totalPrice = editProduct.purchase_price_per_item;
+    }
+    debugger;
     handleFieldChange("purchase_total_price", roundToDecimalPlaces(totalPrice, 2));
   }, [editProduct.quantity, editProduct.purchase_price_per_item]);
   const validateFields = () => {
@@ -33180,17 +33479,51 @@ const EditProductModal = ({
     setOriginalProduct(editProduct);
     setIsModified(false);
   }, []);
+  const compareCategories = (originalCategories, updatedCategories) => {
+    const differences = [];
+    if (originalCategories.length !== updatedCategories.length) {
+      return true;
+    }
+    for (let i = 0; i < originalCategories.length; i++) {
+      if (!updatedCategories.includes(originalCategories[i])) {
+        differences.push(originalCategories[i]);
+      }
+    }
+    if (differences.length > 0) {
+      console.log("Категорії, які відрізняються:", differences);
+      return true;
+    }
+    return false;
+  };
   handleCategoryChange = (categoryId) => {
     setEditProduct((prevProduct) => {
       if (!prevProduct) return prevProduct;
       const updatedCategories = prevProduct.category_ids.includes(categoryId) ? prevProduct.category_ids.filter((id2) => id2 !== categoryId) : [...prevProduct.category_ids, categoryId];
-      setIsModified(JSON.stringify(originalProduct.category_ids) !== JSON.stringify(updatedCategories));
+      const isModified2 = compareCategories(originalProduct.category_ids, updatedCategories);
+      setIsModified(isModified2);
       return {
         ...prevProduct,
         category_ids: updatedCategories
         // Оновлення категорій
       };
     });
+  };
+  const compareObjects = (originalProduct2, updatedProduct) => {
+    const differences = {};
+    const allKeys = /* @__PURE__ */ new Set([...Object.keys(originalProduct2), ...Object.keys(updatedProduct)]);
+    allKeys.forEach((key) => {
+      if (originalProduct2[key] !== updatedProduct[key]) {
+        differences[key] = {
+          original: originalProduct2[key],
+          updated: updatedProduct[key]
+        };
+      }
+    });
+    if (Object.keys(differences).length > 0) {
+      console.log("Знайдені відмінності:", differences);
+      return true;
+    }
+    return false;
   };
   const handleFieldChange = (field, value) => {
     setEditProduct((prevEd) => {
@@ -33201,7 +33534,8 @@ const EditProductModal = ({
         [field]: value
         // Оновлюємо конкретне поле
       };
-      setIsModified(JSON.stringify(originalProduct) !== JSON.stringify(updatedProduct));
+      const isModified2 = compareObjects(originalProduct, updatedProduct);
+      setIsModified(isModified2);
       return updatedProduct;
     });
   };
@@ -33338,8 +33672,211 @@ const EditProductModal = ({
     }
   );
 };
+const TabPanel = ({ value, index, children }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { role: "tabpanel", hidden: value !== index, children: value === index && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children }) });
+};
+const ProductHistoryModal = ({ productId, openHistory, onClose, productName }) => {
+  const [productHistory, setProductHistory] = reactExports.useState({ stock: [], purchase: [], sales: [] });
+  const [tabIndex, setTabIndex] = reactExports.useState(0);
+  reactExports.useEffect(() => {
+    if (openHistory) {
+      fetchProductHistory(productId);
+    }
+  }, [openHistory, productId]);
+  const fetchProductHistory = (productId2) => {
+    axios.get(`http://localhost:5000/api/product/${productId2}/history`).then((response) => {
+      setProductHistory({
+        stock: response.data.stock_history,
+        purchase: response.data.purchase_history,
+        sales: response.data.sale_history
+      });
+    }).catch((error) => {
+      console.error("There was an error fetching the product history!", error);
+    });
+  };
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue);
+  };
+  const sortByDate = (history, dateKey) => {
+    return history.slice().sort((a, b2) => {
+      const dateA = new Date(a[dateKey]).getTime();
+      const dateB = new Date(b2[dateKey]).getTime();
+      return dateB - dateA;
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    CustomDialog,
+    {
+      open: openHistory,
+      handleClose: onClose,
+      title: `Історія товару ${productName}`,
+      maxWidth: "xl",
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { value: tabIndex, onChange: handleTabChange, indicatorColor: "primary", textColor: "primary", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія змін" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія закупівель" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія продажів" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "закупівель && продажів" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 0, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип зміни" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Зміни по Кількості" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.stock && productHistory.stock.length > 0 && sortByDate(productHistory.stock, "timestamp").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.timestamp).toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_type }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_amount })
+          ] }, record.id)) })
+        ] }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 1, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість закупівлі" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.purchase && productHistory.purchase.length > 0 && sortByDate(productHistory.purchase, "purchase_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date).toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.supplier.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_price_per_item }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_purchase }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_total_price })
+          ] }, record.id + record.purchase_date)) }),
+          productHistory.purchase && productHistory.purchase.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Typography,
+              {
+                variant: "subtitle2",
+                children: [
+                  " ",
+                  productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)
+                ]
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle2", children: [
+              "  ",
+              productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
+            ] }) })
+          ] }) })
+        ] }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Клієнт" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість проданих одиниць" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.sales && productHistory.sales.length > 0 && sortByDate(productHistory.sales, "sale_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.sale_date).toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.customer.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_price_per_item }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_sold }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_total_price })
+          ] }, record.id + record.sale_date)) }),
+          productHistory.sales && productHistory.sales.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Загальна кількість:" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                variant: "subtitle2",
+                children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Typography,
+              {
+                variant: "subtitle2",
+                children: [
+                  " ",
+                  productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
+                ]
+              }
+            ) })
+          ] }) })
+        ] }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Контрагент" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory && productHistory.purchase && productHistory.sales && // Об'єднання та сортування закупівель і продажів
+          [
+            ...productHistory.purchase.map((record) => ({ ...record, type: "purchase" })),
+            ...productHistory.sales.map((record) => ({ ...record, type: "sale" }))
+          ].sort((a, b2) => {
+            const dateA = a.purchase_date ? new Date(a.purchase_date).getTime() : 0;
+            const dateB = b2.purchase_date ? new Date(b2.purchase_date).getTime() : 0;
+            const dateSaleA = a.sale_date ? new Date(a.sale_date).getTime() : 0;
+            const dateSaleB = b2.sale_date ? new Date(b2.sale_date).getTime() : 0;
+            const finalDateA = dateA || dateSaleA;
+            const finalDateB = dateB || dateSaleB;
+            return finalDateA - finalDateB;
+          }).map((record, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            TableRow,
+            {
+              style: { backgroundColor: record.type === "sale" ? "#d1e7dd" : "#f8d7da" },
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date || record.sale_date).toLocaleString() }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? "Продаж" : "Закупка" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.customer.name : record.supplier.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_price_per_item }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.quantity_sold : record.quantity_purchase }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_total_price })
+              ]
+            },
+            record.id
+          )) }),
+          productHistory && productHistory.purchase && productHistory.sales && /* @__PURE__ */ jsxRuntimeExports.jsxs(TableFooter, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість продажів:" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
+                }
+              ) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість закупок:" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  variant: "subtitle2",
+                  children: productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
+                }
+              ) })
+            ] })
+          ] })
+        ] }) }) })
+      ] })
+    }
+  );
+};
 const PurchaseProductModal = ({
-  suppliers,
   openPurchase,
   handleClosePurchase,
   purchaseDetails,
@@ -33354,6 +33891,7 @@ const PurchaseProductModal = ({
     supplier: "",
     purchase_date: ""
   });
+  const { suppliers } = useSuppliers();
   const validateFields = () => {
     const newErrors = {
       quantity: purchaseDetails.quantity <= 0 ? "Quantity must be greater than 0" : "",
@@ -33474,6 +34012,496 @@ const PurchaseProductModal = ({
     }
   );
 };
+const CustomerContext = reactExports.createContext(void 0);
+const CustomerProvider = ({ children }) => {
+  const [customers, setCustomers] = reactExports.useState([]);
+  const fetchCustomersFunc = async () => {
+    try {
+      const data = await fetchAllCustomers();
+      if (Array.isArray(data)) {
+        setCustomers(data);
+      } else {
+        throw new Error("Fetched data is not an array");
+      }
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
+  reactExports.useEffect(() => {
+    fetchCustomersFunc();
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerContext.Provider, { value: { customers, fetchCustomersFunc }, children });
+};
+const useCustomers = () => {
+  const context = reactExports.useContext(CustomerContext);
+  if (!context) {
+    throw new Error("useCustomers must be used within a CustomerProvider");
+  }
+  return context;
+};
+var reactDomTestUtils_production_min = {};
+/**
+ * @license React
+ * react-dom-test-utils.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+var k = reactExports, l = reactDomExports;
+function m(a) {
+  var b2 = a, c2 = a;
+  if (a.alternate) for (; b2.return; ) b2 = b2.return;
+  else {
+    a = b2;
+    do
+      b2 = a, 0 !== (b2.flags & 4098) && (c2 = b2.return), a = b2.return;
+    while (a);
+  }
+  return 3 === b2.tag ? c2 : null;
+}
+function n(a) {
+  if (m(a) !== a) throw Error("Unable to find node on an unmounted component.");
+}
+function p(a) {
+  var b2 = a.alternate;
+  if (!b2) {
+    b2 = m(a);
+    if (null === b2) throw Error("Unable to find node on an unmounted component.");
+    return b2 !== a ? null : a;
+  }
+  for (var c2 = a, d2 = b2; ; ) {
+    var f2 = c2.return;
+    if (null === f2) break;
+    var g2 = f2.alternate;
+    if (null === g2) {
+      d2 = f2.return;
+      if (null !== d2) {
+        c2 = d2;
+        continue;
+      }
+      break;
+    }
+    if (f2.child === g2.child) {
+      for (g2 = f2.child; g2; ) {
+        if (g2 === c2) return n(f2), a;
+        if (g2 === d2) return n(f2), b2;
+        g2 = g2.sibling;
+      }
+      throw Error("Unable to find node on an unmounted component.");
+    }
+    if (c2.return !== d2.return) c2 = f2, d2 = g2;
+    else {
+      for (var e2 = false, h2 = f2.child; h2; ) {
+        if (h2 === c2) {
+          e2 = true;
+          c2 = f2;
+          d2 = g2;
+          break;
+        }
+        if (h2 === d2) {
+          e2 = true;
+          d2 = f2;
+          c2 = g2;
+          break;
+        }
+        h2 = h2.sibling;
+      }
+      if (!e2) {
+        for (h2 = g2.child; h2; ) {
+          if (h2 === c2) {
+            e2 = true;
+            c2 = g2;
+            d2 = f2;
+            break;
+          }
+          if (h2 === d2) {
+            e2 = true;
+            d2 = g2;
+            c2 = f2;
+            break;
+          }
+          h2 = h2.sibling;
+        }
+        if (!e2) throw Error("Child was not found in either parent set. This indicates a bug in React related to the return pointer. Please file an issue.");
+      }
+    }
+    if (c2.alternate !== d2) throw Error("Return fibers should always be each others' alternates. This error is likely caused by a bug in React. Please file an issue.");
+  }
+  if (3 !== c2.tag) throw Error("Unable to find node on an unmounted component.");
+  return c2.stateNode.current === c2 ? a : b2;
+}
+var q = Object.assign;
+function r(a) {
+  var b2 = a.keyCode;
+  "charCode" in a ? (a = a.charCode, 0 === a && 13 === b2 && (a = 13)) : a = b2;
+  10 === a && (a = 13);
+  return 32 <= a || 13 === a ? a : 0;
+}
+function t() {
+  return true;
+}
+function u() {
+  return false;
+}
+function v(a) {
+  function b2(c2, b3, f2, g2, e2) {
+    this._reactName = c2;
+    this._targetInst = f2;
+    this.type = b3;
+    this.nativeEvent = g2;
+    this.target = e2;
+    this.currentTarget = null;
+    for (var d2 in a) a.hasOwnProperty(d2) && (c2 = a[d2], this[d2] = c2 ? c2(g2) : g2[d2]);
+    this.isDefaultPrevented = (null != g2.defaultPrevented ? g2.defaultPrevented : false === g2.returnValue) ? t : u;
+    this.isPropagationStopped = u;
+    return this;
+  }
+  q(b2.prototype, { preventDefault: function() {
+    this.defaultPrevented = true;
+    var a2 = this.nativeEvent;
+    a2 && (a2.preventDefault ? a2.preventDefault() : "unknown" !== typeof a2.returnValue && (a2.returnValue = false), this.isDefaultPrevented = t);
+  }, stopPropagation: function() {
+    var a2 = this.nativeEvent;
+    a2 && (a2.stopPropagation ? a2.stopPropagation() : "unknown" !== typeof a2.cancelBubble && (a2.cancelBubble = true), this.isPropagationStopped = t);
+  }, persist: function() {
+  }, isPersistent: t });
+  return b2;
+}
+var w = { eventPhase: 0, bubbles: 0, cancelable: 0, timeStamp: function(a) {
+  return a.timeStamp || Date.now();
+}, defaultPrevented: 0, isTrusted: 0 }, x = v(w), y = q({}, w, { view: 0, detail: 0 });
+v(y);
+var z, A, B, D = q({}, y, { screenX: 0, screenY: 0, clientX: 0, clientY: 0, pageX: 0, pageY: 0, ctrlKey: 0, shiftKey: 0, altKey: 0, metaKey: 0, getModifierState: C, button: 0, buttons: 0, relatedTarget: function(a) {
+  return void 0 === a.relatedTarget ? a.fromElement === a.srcElement ? a.toElement : a.fromElement : a.relatedTarget;
+}, movementX: function(a) {
+  if ("movementX" in a) return a.movementX;
+  a !== B && (B && "mousemove" === a.type ? (z = a.screenX - B.screenX, A = a.screenY - B.screenY) : A = z = 0, B = a);
+  return z;
+}, movementY: function(a) {
+  return "movementY" in a ? a.movementY : A;
+} });
+v(D);
+var E = q({}, D, { dataTransfer: 0 });
+v(E);
+var F = q({}, y, { relatedTarget: 0 });
+v(F);
+var aa = q({}, w, { animationName: 0, elapsedTime: 0, pseudoElement: 0 });
+v(aa);
+var ba = q({}, w, { clipboardData: function(a) {
+  return "clipboardData" in a ? a.clipboardData : window.clipboardData;
+} });
+v(ba);
+var ca = q({}, w, { data: 0 });
+v(ca);
+var da = { Esc: "Escape", Spacebar: " ", Left: "ArrowLeft", Up: "ArrowUp", Right: "ArrowRight", Down: "ArrowDown", Del: "Delete", Win: "OS", Menu: "ContextMenu", Apps: "ContextMenu", Scroll: "ScrollLock", MozPrintableKey: "Unidentified" }, ea = {
+  8: "Backspace",
+  9: "Tab",
+  12: "Clear",
+  13: "Enter",
+  16: "Shift",
+  17: "Control",
+  18: "Alt",
+  19: "Pause",
+  20: "CapsLock",
+  27: "Escape",
+  32: " ",
+  33: "PageUp",
+  34: "PageDown",
+  35: "End",
+  36: "Home",
+  37: "ArrowLeft",
+  38: "ArrowUp",
+  39: "ArrowRight",
+  40: "ArrowDown",
+  45: "Insert",
+  46: "Delete",
+  112: "F1",
+  113: "F2",
+  114: "F3",
+  115: "F4",
+  116: "F5",
+  117: "F6",
+  118: "F7",
+  119: "F8",
+  120: "F9",
+  121: "F10",
+  122: "F11",
+  123: "F12",
+  144: "NumLock",
+  145: "ScrollLock",
+  224: "Meta"
+}, fa = { Alt: "altKey", Control: "ctrlKey", Meta: "metaKey", Shift: "shiftKey" };
+function ha(a) {
+  var b2 = this.nativeEvent;
+  return b2.getModifierState ? b2.getModifierState(a) : (a = fa[a]) ? !!b2[a] : false;
+}
+function C() {
+  return ha;
+}
+var ia = q({}, y, { key: function(a) {
+  if (a.key) {
+    var b2 = da[a.key] || a.key;
+    if ("Unidentified" !== b2) return b2;
+  }
+  return "keypress" === a.type ? (a = r(a), 13 === a ? "Enter" : String.fromCharCode(a)) : "keydown" === a.type || "keyup" === a.type ? ea[a.keyCode] || "Unidentified" : "";
+}, code: 0, location: 0, ctrlKey: 0, shiftKey: 0, altKey: 0, metaKey: 0, repeat: 0, locale: 0, getModifierState: C, charCode: function(a) {
+  return "keypress" === a.type ? r(a) : 0;
+}, keyCode: function(a) {
+  return "keydown" === a.type || "keyup" === a.type ? a.keyCode : 0;
+}, which: function(a) {
+  return "keypress" === a.type ? r(a) : "keydown" === a.type || "keyup" === a.type ? a.keyCode : 0;
+} });
+v(ia);
+var ja = q({}, D, { pointerId: 0, width: 0, height: 0, pressure: 0, tangentialPressure: 0, tiltX: 0, tiltY: 0, twist: 0, pointerType: 0, isPrimary: 0 });
+v(ja);
+var ka = q({}, y, { touches: 0, targetTouches: 0, changedTouches: 0, altKey: 0, metaKey: 0, ctrlKey: 0, shiftKey: 0, getModifierState: C });
+v(ka);
+var la = q({}, w, { propertyName: 0, elapsedTime: 0, pseudoElement: 0 });
+v(la);
+var ma = q({}, D, { deltaX: function(a) {
+  return "deltaX" in a ? a.deltaX : "wheelDeltaX" in a ? -a.wheelDeltaX : 0;
+}, deltaY: function(a) {
+  return "deltaY" in a ? a.deltaY : "wheelDeltaY" in a ? -a.wheelDeltaY : "wheelDelta" in a ? -a.wheelDelta : 0;
+}, deltaZ: 0, deltaMode: 0 });
+v(ma);
+function na(a, b2, c2, d2, f2, g2, e2, h2, N2) {
+  var G2 = Array.prototype.slice.call(arguments, 3);
+  try {
+    b2.apply(c2, G2);
+  } catch (oa2) {
+    this.onError(oa2);
+  }
+}
+var H = false, I = null, J = false, K = null, pa = { onError: function(a) {
+  H = true;
+  I = a;
+} };
+function qa(a, b2, c2, d2, f2, g2, e2, h2, N2) {
+  H = false;
+  I = null;
+  na.apply(pa, arguments);
+}
+function ra(a, b2, c2, d2, f2, g2, e2, h2, N2) {
+  qa.apply(this, arguments);
+  if (H) {
+    if (H) {
+      var G2 = I;
+      H = false;
+      I = null;
+    } else throw Error("clearCaughtError was called but no error was captured. This error is likely caused by a bug in React. Please file an issue.");
+    J || (J = true, K = G2);
+  }
+}
+var L = Array.isArray, M = l.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.Events, sa = M[0], ta = M[1], ua = M[2], va = M[3], wa = M[4], xa = k.unstable_act;
+function ya() {
+}
+function za(a, b2) {
+  if (!a) return [];
+  a = p(a);
+  if (!a) return [];
+  for (var c2 = a, d2 = []; ; ) {
+    if (5 === c2.tag || 6 === c2.tag || 1 === c2.tag || 0 === c2.tag) {
+      var f2 = c2.stateNode;
+      b2(f2) && d2.push(f2);
+    }
+    if (c2.child) c2.child.return = c2, c2 = c2.child;
+    else {
+      if (c2 === a) return d2;
+      for (; !c2.sibling; ) {
+        if (!c2.return || c2.return === a) return d2;
+        c2 = c2.return;
+      }
+      c2.sibling.return = c2.return;
+      c2 = c2.sibling;
+    }
+  }
+}
+function O(a, b2) {
+  if (a && !a._reactInternals) {
+    var c2 = String(a);
+    a = L(a) ? "an array" : a && 1 === a.nodeType && a.tagName ? "a DOM node" : "[object Object]" === c2 ? "object with keys {" + Object.keys(a).join(", ") + "}" : c2;
+    throw Error(b2 + "(...): the first argument must be a React class instance. Instead received: " + (a + "."));
+  }
+}
+function P(a) {
+  return !(!a || 1 !== a.nodeType || !a.tagName);
+}
+function Q(a) {
+  return P(a) ? false : null != a && "function" === typeof a.render && "function" === typeof a.setState;
+}
+function R(a, b2) {
+  return Q(a) ? a._reactInternals.type === b2 : false;
+}
+function S(a, b2) {
+  O(a, "findAllInRenderedTree");
+  return a ? za(a._reactInternals, b2) : [];
+}
+function T(a, b2) {
+  O(a, "scryRenderedDOMComponentsWithClass");
+  return S(a, function(a2) {
+    if (P(a2)) {
+      var c2 = a2.className;
+      "string" !== typeof c2 && (c2 = a2.getAttribute("class") || "");
+      var f2 = c2.split(/\s+/);
+      if (!L(b2)) {
+        if (void 0 === b2) throw Error("TestUtils.scryRenderedDOMComponentsWithClass expects a className as a second argument.");
+        b2 = b2.split(/\s+/);
+      }
+      return b2.every(function(a3) {
+        return -1 !== f2.indexOf(a3);
+      });
+    }
+    return false;
+  });
+}
+function U(a, b2) {
+  O(a, "scryRenderedDOMComponentsWithTag");
+  return S(a, function(a2) {
+    return P(a2) && a2.tagName.toUpperCase() === b2.toUpperCase();
+  });
+}
+function V(a, b2) {
+  O(a, "scryRenderedComponentsWithType");
+  return S(a, function(a2) {
+    return R(a2, b2);
+  });
+}
+function W(a, b2, c2) {
+  var d2 = a.type || "unknown-event";
+  a.currentTarget = ta(c2);
+  ra(d2, b2, void 0, a);
+  a.currentTarget = null;
+}
+function X(a, b2, c2) {
+  for (var d2 = []; a; ) {
+    d2.push(a);
+    do
+      a = a.return;
+    while (a && 5 !== a.tag);
+    a = a ? a : null;
+  }
+  for (a = d2.length; 0 < a--; ) b2(d2[a], "captured", c2);
+  for (a = 0; a < d2.length; a++) b2(d2[a], "bubbled", c2);
+}
+function Y(a, b2) {
+  var c2 = a.stateNode;
+  if (!c2) return null;
+  var d2 = ua(c2);
+  if (!d2) return null;
+  c2 = d2[b2];
+  a: switch (b2) {
+    case "onClick":
+    case "onClickCapture":
+    case "onDoubleClick":
+    case "onDoubleClickCapture":
+    case "onMouseDown":
+    case "onMouseDownCapture":
+    case "onMouseMove":
+    case "onMouseMoveCapture":
+    case "onMouseUp":
+    case "onMouseUpCapture":
+    case "onMouseEnter":
+      (d2 = !d2.disabled) || (a = a.type, d2 = !("button" === a || "input" === a || "select" === a || "textarea" === a));
+      a = !d2;
+      break a;
+    default:
+      a = false;
+  }
+  if (a) return null;
+  if (c2 && "function" !== typeof c2) throw Error("Expected `" + b2 + "` listener to be a function, instead got a value of `" + typeof c2 + "` type.");
+  return c2;
+}
+function Aa(a, b2, c2) {
+  a && c2 && c2._reactName && (b2 = Y(a, c2._reactName)) && (null == c2._dispatchListeners && (c2._dispatchListeners = []), null == c2._dispatchInstances && (c2._dispatchInstances = []), c2._dispatchListeners.push(b2), c2._dispatchInstances.push(a));
+}
+function Ba(a, b2, c2) {
+  var d2 = c2._reactName;
+  "captured" === b2 && (d2 += "Capture");
+  if (b2 = Y(a, d2)) null == c2._dispatchListeners && (c2._dispatchListeners = []), null == c2._dispatchInstances && (c2._dispatchInstances = []), c2._dispatchListeners.push(b2), c2._dispatchInstances.push(a);
+}
+var Z = {}, Ca = /* @__PURE__ */ new Set(["mouseEnter", "mouseLeave", "pointerEnter", "pointerLeave"]);
+function Da(a) {
+  return function(b2, c2) {
+    if (k.isValidElement(b2)) throw Error("TestUtils.Simulate expected a DOM node as the first argument but received a React element. Pass the DOM node you wish to simulate the event on instead. Note that TestUtils.Simulate will not work if you are using shallow rendering.");
+    if (Q(b2)) throw Error("TestUtils.Simulate expected a DOM node as the first argument but received a component instance. Pass the DOM node you wish to simulate the event on instead.");
+    var d2 = "on" + a[0].toUpperCase() + a.slice(1), f2 = new ya();
+    f2.target = b2;
+    f2.type = a.toLowerCase();
+    var g2 = sa(b2), e2 = new x(d2, f2.type, g2, f2, b2);
+    e2.persist();
+    q(e2, c2);
+    Ca.has(a) ? e2 && e2._reactName && Aa(e2._targetInst, null, e2) : e2 && e2._reactName && X(e2._targetInst, Ba, e2);
+    l.unstable_batchedUpdates(function() {
+      va(b2);
+      if (e2) {
+        var a2 = e2._dispatchListeners, c3 = e2._dispatchInstances;
+        if (L(a2)) for (var d3 = 0; d3 < a2.length && !e2.isPropagationStopped(); d3++) W(e2, a2[d3], c3[d3]);
+        else a2 && W(e2, a2, c3);
+        e2._dispatchListeners = null;
+        e2._dispatchInstances = null;
+        e2.isPersistent() || e2.constructor.release(e2);
+      }
+      if (J) throw a2 = K, J = false, K = null, a2;
+    });
+    wa();
+  };
+}
+"blur cancel click close contextMenu copy cut auxClick doubleClick dragEnd dragStart drop focus input invalid keyDown keyPress keyUp mouseDown mouseUp paste pause play pointerCancel pointerDown pointerUp rateChange reset resize seeked submit touchCancel touchEnd touchStart volumeChange drag dragEnter dragExit dragLeave dragOver mouseMove mouseOut mouseOver pointerMove pointerOut pointerOver scroll toggle touchMove wheel abort animationEnd animationIteration animationStart canPlay canPlayThrough durationChange emptied encrypted ended error gotPointerCapture load loadedData loadedMetadata loadStart lostPointerCapture playing progress seeking stalled suspend timeUpdate transitionEnd waiting mouseEnter mouseLeave pointerEnter pointerLeave change select beforeInput compositionEnd compositionStart compositionUpdate".split(" ").forEach(function(a) {
+  Z[a] = Da(a);
+});
+reactDomTestUtils_production_min.Simulate = Z;
+reactDomTestUtils_production_min.act = xa;
+reactDomTestUtils_production_min.findAllInRenderedTree = S;
+reactDomTestUtils_production_min.findRenderedComponentWithType = function(a, b2) {
+  O(a, "findRenderedComponentWithType");
+  a = V(a, b2);
+  if (1 !== a.length) throw Error("Did not find exactly one match (found: " + a.length + ") for componentType:" + b2);
+  return a[0];
+};
+reactDomTestUtils_production_min.findRenderedDOMComponentWithClass = function(a, b2) {
+  O(a, "findRenderedDOMComponentWithClass");
+  a = T(a, b2);
+  if (1 !== a.length) throw Error("Did not find exactly one match (found: " + a.length + ") for class:" + b2);
+  return a[0];
+};
+reactDomTestUtils_production_min.findRenderedDOMComponentWithTag = function(a, b2) {
+  O(a, "findRenderedDOMComponentWithTag");
+  a = U(a, b2);
+  if (1 !== a.length) throw Error("Did not find exactly one match (found: " + a.length + ") for tag:" + b2);
+  return a[0];
+};
+reactDomTestUtils_production_min.isCompositeComponent = Q;
+reactDomTestUtils_production_min.isCompositeComponentWithType = R;
+reactDomTestUtils_production_min.isDOMComponent = P;
+reactDomTestUtils_production_min.isDOMComponentElement = function(a) {
+  return !!(a && k.isValidElement(a) && a.tagName);
+};
+reactDomTestUtils_production_min.isElement = function(a) {
+  return k.isValidElement(a);
+};
+reactDomTestUtils_production_min.isElementOfType = function(a, b2) {
+  return k.isValidElement(a) && a.type === b2;
+};
+reactDomTestUtils_production_min.mockComponent = function(a, b2) {
+  b2 = b2 || a.mockTagName || "div";
+  a.prototype.render.mockImplementation(function() {
+    return k.createElement(b2, null, this.props.children);
+  });
+  return this;
+};
+reactDomTestUtils_production_min.nativeTouchData = function(a, b2) {
+  return { touches: [{ pageX: a, pageY: b2 }] };
+};
+reactDomTestUtils_production_min.renderIntoDocument = function(a) {
+  var b2 = document.createElement("div");
+  return l.render(a, b2);
+};
+reactDomTestUtils_production_min.scryRenderedComponentsWithType = V;
+reactDomTestUtils_production_min.scryRenderedDOMComponentsWithClass = T;
+reactDomTestUtils_production_min.scryRenderedDOMComponentsWithTag = U;
+reactDomTestUtils_production_min.traverseTwoPhase = X;
 const SaleProductModal = ({
   openSale,
   handleCloseSale,
@@ -33484,6 +34512,7 @@ const SaleProductModal = ({
   purchasePricePerItem,
   quantityOnStock
 }) => {
+  const { customers } = useCustomers();
   const [errors, setErrors] = reactExports.useState({
     customer: "",
     sale_date: "",
@@ -33492,13 +34521,13 @@ const SaleProductModal = ({
   });
   const validateFields = () => {
     const newErrors = {
-      customer: saleData.customer.trim() === "" ? "Customer name is required" : "",
+      customer: saleData.customer === "" ? "Customer name is required" : "",
       sale_date: saleData.sale_date === "" ? "Sale date is required" : "",
       price_per_item: saleData.selling_price_per_item <= 0 ? "Price per item must be greater than 0" : "",
       quantity: saleData.quantity <= 0 || saleData.quantity > quantityOnStock ? "Quantity must be greater than 0" : ""
     };
     setErrors(newErrors);
-    return Object.values(newErrors).every((error) => error === "");
+    return Object.values(newErrors).every((error2) => error2 === "");
   };
   const handleSubmit = () => {
     if (validateFields()) {
@@ -33527,7 +34556,7 @@ const SaleProductModal = ({
     }
   };
   const isSubmitDisabled = () => {
-    return saleData.customer.trim() === "" || saleData.selling_price_per_item <= 0 || saleData.quantity <= 0 || saleData.quantity > quantityOnStock;
+    return saleData.customer === "" || saleData.selling_price_per_item <= 0 || saleData.quantity <= 0 || saleData.quantity > quantityOnStock;
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
@@ -33539,19 +34568,20 @@ const SaleProductModal = ({
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TextField,
-              {
-                label: "Покупець",
-                value: saleData.customer,
-                onChange: (e2) => setSaleData({ ...saleData, customer: e2.target.value }),
-                fullWidth: true,
-                margin: "normal",
-                error: !!errors.customer,
-                helperText: errors.customer,
-                inputProps: { maxLength: 100 }
-              }
-            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { fullWidth: true, margin: "normal", error: !!errors.customer, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { id: "supplier-select-label", children: "Покупець" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Select,
+                {
+                  label: "Покупець",
+                  value: saleData.customer,
+                  onChange: (e2) => setSaleData({ ...saleData, customer: e2.target.value }),
+                  fullWidth: true,
+                  children: customers.map((customer) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: customer.id, children: customer.name }, customer.id))
+                }
+              ),
+              errors.customer && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "error", children: errors.customer })
+            ] }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               TextField,
               {
@@ -33669,6 +34699,23 @@ const CreateNewCategoryModal = ({
     }
   );
 };
+const ConfirmDeleteModal = ({
+  openConfirmDeleteModal,
+  handleCloseDeleteModal,
+  selectedDeleteModalProductId,
+  handleDelete
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: openConfirmDeleteModal, onClose: handleCloseDeleteModal, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Confirm Delete" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Are you sure you want to delete this product?" }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseDeleteModal, color: "primary", children: "Cancel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => {
+        selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId);
+      }, color: "secondary", children: "Delete" })
+    ] })
+  ] });
+};
 const AddSupplierModal = ({ open, handleClose, handleAddSupplier }) => {
   const [name, setName] = reactExports.useState("");
   const [contactInfo, setContactInfo] = reactExports.useState("");
@@ -33739,566 +34786,20 @@ const AddSupplierModal = ({ open, handleClose, handleAddSupplier }) => {
     ] })
   ] });
 };
-const CategoryFilter = ({
-  selectedFilterCategories,
-  handleCategoryFilterChange,
-  categories
-}) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-    FormControlLabel,
-    {
-      control: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Checkbox,
-        {
-          checked: selectedFilterCategories.includes(category.id),
-          onChange: () => handleCategoryFilterChange(category.id)
-        }
-      ),
-      label: category.name
-    },
-    category.id
-  )) });
-};
-const SupplierFilter = ({
-  selectedFilterSuppliers,
-  handleSupplierFilterChange,
-  suppliers
-}) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-    FormControlLabel,
-    {
-      control: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Checkbox,
-        {
-          checked: selectedFilterSuppliers.includes(supplier.id),
-          onChange: () => handleSupplierFilterChange(supplier.id)
-        }
-      ),
-      label: supplier.name
-    },
-    supplier.id
-  )) });
-};
-const FilterComponent = ({
-  categories,
-  suppliers,
-  resetFilters,
-  filterArrayLength,
-  products,
-  setFilteredProducts,
-  filters,
-  setFilters
-}) => {
-  const [priceMax, setPriceMax] = reactExports.useState(0);
-  const applyFilters = (callback) => {
-    let filtered = products;
-    const { categories: categories2, suppliers: suppliers2, priceRange } = filters;
-    if (categories2.length > 0) {
-      filtered = filtered.filter(
-        (product) => product.category_ids.some((categoryId) => categories2.includes(categoryId))
-      );
-    }
-    if (suppliers2.length > 0) {
-      filtered = filtered.filter((product) => product.supplier && suppliers2.includes(product.supplier.id));
-    }
-    filtered = filtered.filter(
-      (product) => product.selling_price_per_item >= priceRange[0] && product.selling_price_per_item <= priceRange[1]
-    );
-    setFilteredProducts(filtered);
-  };
-  reactExports.useEffect(() => {
-    if (products.length > 0) {
-      const prices = products.map((product) => product.selling_price_per_item);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      setFilters((prevState) => ({
-        ...prevState,
-        priceRange: [minPrice, maxPrice]
-      }));
-      const max2 = Math.max(...products.map((product) => product.selling_price_per_item));
-      setPriceMax(max2);
-    }
-  }, [products]);
-  const handleFilterChange = (filterType, newValue) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [filterType]: newValue
-    }));
-  };
-  const handleCategoryFilterChange = (categoryID) => {
-    const updatedCategories = toggleFilter(filters.categories, categoryID);
-    handleFilterChange("categories", updatedCategories);
-  };
-  const handleSupplierFilterChange = (supplierID) => {
-    const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
-    handleFilterChange("suppliers", updatedSuppliers);
-  };
-  const handlePriceRangeChange = (event, newValue) => {
-    handleFilterChange("priceRange", newValue);
-  };
-  const toggleFilter = (currentFilters, id2) => {
-    return currentFilters.includes(id2) ? currentFilters.filter((filterId) => filterId !== id2) : [...currentFilters, id2];
-  };
-  reactExports.useEffect(() => {
-    applyFilters();
-  }, [filters]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, px: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Категорії" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          CategoryFilter,
-          {
-            selectedFilterCategories: filters.categories,
-            handleCategoryFilterChange,
-            categories
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { children: "Постачальники" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          SupplierFilter,
-          {
-            selectedFilterSuppliers: filters.suppliers,
-            handleSupplierFilterChange,
-            suppliers
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { gutterBottom: true, children: "Фільтрувати по ціні" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", gutterBottom: true, children: [
-        "Діапазон ціни: ",
-        filters.priceRange[0],
-        " - ",
-        filters.priceRange[1],
-        " грн"
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Slider,
-        {
-          value: filters.priceRange,
-          onChange: handlePriceRangeChange,
-          valueLabelDisplay: "auto",
-          min: 0,
-          max: priceMax,
-          step: 10
-        }
-      )
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
-      "Знайдено ",
-      filterArrayLength
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: resetFilters, children: "Очистити" })
-  ] }) });
-};
-const modalNames = [
-  "openAdd",
-  "openSale",
-  "openEdit",
-  "openPurchase",
-  "openDrawer",
-  "openDelete",
-  "openHistory",
-  "openCategoryCreate",
-  "openAddSupplierOpen",
-  "openNotificationDrawer",
-  "snackbarNotifyOpen"
-];
-const ProductCardView = ({
-  filteredProducts,
-  order: order2,
-  orderBy,
-  handleSort,
-  sortProducts,
-  getComparator,
-  handleOpenEdit,
-  handleDelete,
-  handlePurchase,
-  handleOpenSale,
-  handleOpenHistoryModal,
-  searchTerm,
-  filteredAndSearchedProducts,
-  currentPage,
-  itemsPerPage
-}) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 2, children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
-    var _a;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "ID: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: product.id
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "Постачальник: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A"
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "Кількість: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: product.quantity
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "Ціна за 1 шт: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: product.purchase_price_per_item
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "Сума: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: product.purchase_total_price
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "error", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "success", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "warning", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "info", onClick: () => handleOpenHistoryModal(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
-      ] })
-    ] }) }) }, `${product.id}${index}${product.purchase_total_price}`);
-  }) }) });
-};
-const ProductTable = reactExports.forwardRef(({
-  filteredProducts,
-  order: order2,
-  orderBy,
-  handleSort,
-  sortProducts,
-  getComparator,
-  handleOpenEdit,
-  handleDelete,
-  handlePurchase,
-  handleOpenSale,
-  handleOpenHistoryModal,
-  searchTerm,
-  filteredAndSearchedProducts,
-  itemsPerPage,
-  currentPage,
-  selectedLowProductId
-}, ref) => {
-  const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
-  const totalSumPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.purchase_total_price, 0);
-  const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_quantity, 0);
-  const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_total_price, 0);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "ID" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TableSortLabel,
-        {
-          active: orderBy === "name",
-          direction: orderBy === "name" ? order2 : "asc",
-          onClick: () => handleSort("name"),
-          children: "Назва"
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TableSortLabel,
-        {
-          active: orderBy === "supplier",
-          direction: orderBy === "supplier" ? order2 : "asc",
-          onClick: () => handleSort("supplier"),
-          children: "Постачальник"
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TableSortLabel,
-        {
-          active: orderBy === "quantity",
-          direction: orderBy === "quantity" ? order2 : "asc",
-          onClick: () => handleSort("quantity"),
-          children: "Кількість"
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TableSortLabel,
-        {
-          active: orderBy === "purchase_price_per_item",
-          direction: orderBy === "purchase_price_per_item" ? order2 : "asc",
-          onClick: () => handleSort("purchase_price_per_item"),
-          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: " Ціна за 1шт" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: "Закупка" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: "Продаж" })
-          ] })
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TableSortLabel,
-        {
-          active: orderBy === "purchase_total_price",
-          direction: orderBy === "purchase_total_price" ? order2 : "asc",
-          onClick: () => handleSort("purchase_total_price"),
-          children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            "Сумма",
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: "Закупка" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: "Продаж" })
-          ] })
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дія" })
-    ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length >= 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
-      var _a;
-      const lowQuantity = product.quantity < 5;
-      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        TableRow,
-        {
-          ref: (el2) => {
-            if (ref && typeof ref === "function") {
-              ref(el2, index + currentPage * itemsPerPage);
-            } else if (ref && ref.current) {
-              ref.current[index + currentPage * itemsPerPage] = el2;
-            }
-          },
-          className: clsx({ "low-quantity-row": lowQuantity }, { "selected-row": selectedLowProductId === product.id }),
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.id }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a = product.supplier) == null ? void 0 : _a.name) || "N/A" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              TableCell,
-              {
-                children: [
-                  " ",
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    Typography,
-                    {
-                      className: clsx(
-                        { "low-quantity": lowQuantity }
-                      ),
-                      children: product.quantity
-                    }
-                  ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_quantity })
-                ]
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: product.purchase_price_per_item.toFixed(2) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_price_per_item.toFixed(2) })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "secondary", children: product.purchase_total_price.toFixed(2) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_total_price.toFixed(2) })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                IconButton,
-                {
-                  color: "secondary",
-                  onClick: () => handleDelete(product.id),
-                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
-                }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handlePurchase(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenSale(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", onClick: () => {
-                handleOpenHistoryModal(product.id);
-              }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
-            ] }) })
-          ]
-        },
-        `${product.id}${index}${product.purchase_total_price}`
-      );
-    }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", color: "secondary", children: totalQuantityPurchase }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", color: "primary", children: totalQuantitySelling })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 1, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна сума:" }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            color: "secondary",
-            variant: "subtitle2",
-            children: totalSumPurchase.toFixed(2)
-          }
-        ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            color: "primary",
-            variant: "subtitle2",
-            children: totalSumSelling.toFixed(2)
-          }
-        )
-      ] })
-    ] }) })
-  ] }) }) });
-});
-const ResponsiveProductView = reactExports.forwardRef(({
-  filteredProducts,
-  order: order2,
-  orderBy,
-  handleSort,
-  sortProducts,
-  getComparator,
-  handleOpenEdit,
-  handleDelete,
-  handlePurchase,
-  handleOpenSale,
-  handleOpenHistoryModal,
-  searchTerm,
-  setSearchTerm,
-  setCurrentPage,
-  currentPage,
-  itemsPerPage,
-  setItemsPerPage,
-  filteredAndSearchedProducts,
-  selectedLowProductId
-}, ref) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "flex-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TextField,
-      {
-        label: "Пошук товару",
-        variant: "outlined",
-        fullWidth: true,
-        margin: "normal",
-        value: searchTerm,
-        onChange: (e2) => setSearchTerm(e2.target.value)
-      }
-    ) }) }),
-    isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-      ProductCardView,
-      {
-        itemsPerPage,
-        currentPage,
-        searchTerm,
-        filteredAndSearchedProducts,
-        filteredProducts,
-        order: order2,
-        orderBy,
-        handleSort,
-        sortProducts,
-        getComparator,
-        handleOpenEdit,
-        handleDelete,
-        handlePurchase,
-        handleOpenSale,
-        handleOpenHistoryModal
-      }
-    ) : /* @__PURE__ */ jsxRuntimeExports.jsx(
-      ProductTable,
-      {
-        selectedLowProductId,
-        ref,
-        itemsPerPage,
-        currentPage,
-        searchTerm,
-        filteredAndSearchedProducts,
-        filteredProducts,
-        order: order2,
-        orderBy,
-        handleSort,
-        sortProducts,
-        getComparator,
-        handleOpenEdit,
-        handleDelete,
-        handlePurchase,
-        handleOpenSale,
-        handleOpenHistoryModal
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TablePagination,
-      {
-        rowsPerPageOptions: [5, 10, 25],
-        component: "div",
-        count: filteredAndSearchedProducts.length,
-        rowsPerPage: itemsPerPage,
-        page: currentPage,
-        onPageChange: (event, newPage) => setCurrentPage(newPage),
-        onRowsPerPageChange: (event) => {
-          setItemsPerPage(parseInt(event.target.value, 10));
-          setCurrentPage(0);
-        }
-      }
-    )
-  ] });
-});
 const NotificationPanel = ({ lowQuantityProducts, handleListItemClick }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(List, { children: lowQuantityProducts.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs(ListItemButton, { onClick: () => handleListItemClick(product.id), children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemIcon, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationImportantIcon, {}) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemText, { primary: product.name, secondary: `Кількість: ${product.quantity}` })
   ] }, product.id + product.name)) });
 };
-const ConfirmDeleteModal = ({
-  openConfirmDeleteModal,
-  handleCloseDeleteModal,
-  selectedDeleteModalProductId,
-  handleDelete
-}) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: openConfirmDeleteModal, onClose: handleCloseDeleteModal, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Confirm Delete" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Are you sure you want to delete this product?" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseDeleteModal, color: "primary", children: "Cancel" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => {
-        selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId);
-      }, color: "secondary", children: "Delete" })
-    ] })
-  ] });
-};
-function App() {
-  const [products, setProducts] = reactExports.useState([]);
+const ProductsCatalog = () => {
+  const { products, loadingState, fetchProductsFunc } = useProducts();
   const [lowQuantityProducts, setLowQuantityProducts] = reactExports.useState([]);
   const [filteredProducts, setFilteredProducts] = reactExports.useState([]);
   const [suppliers, setSuppliers] = reactExports.useState([]);
   const [categories, setCategories] = reactExports.useState([]);
   const tableRowRefs = reactExports.useRef([]);
   const [selectedLowProductId, setSelectedLowProductId] = reactExports.useState(null);
-  const [loadingState, setLoadingState] = reactExports.useState({
-    isLoading: true,
-    error: null
-  });
   const [newProduct, setNewProduct] = reactExports.useState({
     name: "",
     supplier_id: "",
@@ -34343,29 +34844,12 @@ function App() {
     priceRange: [0, 1e3]
   });
   reactExports.useEffect(() => {
-    fetchProductsFunc();
     fetchSuppliersFunc();
     fetchCategoriesFunc();
   }, []);
-  const fetchProductsFunc = async () => {
-    try {
-      setLoadingState({ isLoading: true, error: null });
-      const data = await fetchProducts();
-      if (Array.isArray(data)) {
-        setProducts(data);
-        setFilteredProducts(data);
-      } else {
-        throw new Error("Fetched data is not an array");
-      }
-    } catch (error) {
-      console.error("There was an error fetching the products!", error);
-      setLoadingState({ isLoading: false, error: "There was an error fetching the products!" });
-      setProducts([]);
-      setFilteredProducts([]);
-    } finally {
-      setLoadingState((prev2) => ({ ...prev2, isLoading: false }));
-    }
-  };
+  reactExports.useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
   const fetchSuppliersFunc = async () => {
     try {
       const data = await fetchGetAllSuppliers();
@@ -34486,6 +34970,7 @@ function App() {
     }
   };
   const handlePurchase = (product) => {
+    setEditProduct(null);
     setEditProduct(mapProductToEditProduct(product));
     setPurchaseDetails((prevDetails) => ({
       ...prevDetails,
@@ -34538,17 +35023,10 @@ function App() {
     });
   };
   const handleOpenEdit = (product) => {
+    setEditProduct(null);
     setEditProduct(mapProductToEditProduct(product));
     setSelectedCategories(product.category_ids);
     handleModalOpen("openEdit");
-  };
-  const handleOpenAdd = () => {
-    handleModalOpen("openAdd");
-    setNewProduct((newProduct2) => {
-      return {
-        ...newProduct2
-      };
-    });
   };
   const mapProductToEditProduct = (product) => ({
     id: product.id,
@@ -34717,47 +35195,16 @@ function App() {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", sx: { mt: 2 }, children: "Loading..." })
         ] })
       }
-    ) : loadingState.error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: loadingState.error }) : /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Container, { maxWidth: "xl", children: [
+    ) : loadingState.error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: loadingState.error }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Список товарів" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, justifyContent: "space-between", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Button,
-          {
-            variant: "contained",
-            onClick: () => handleModalOpen("openDrawer"),
-            children: "Фільтр"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, gap: 1, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              variant: "outlined",
-              color: "primary",
-              onClick: handleOpenAdd,
-              children: "Купити Новий Товар"
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              variant: "outlined",
-              color: "primary",
-              onClick: () => handleModalOpen("openCategoryCreate"),
-              children: "Створити Категорію"
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              variant: "outlined",
-              color: "primary",
-              onClick: () => handleModalOpen("openAddSupplierOpen"),
-              children: "Створити Постачальника"
-            }
-          ) })
-        ] }) })
-      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "space-between", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          variant: "contained",
+          onClick: () => handleModalOpen("openDrawer"),
+          children: "Фільтр"
+        }
+      ) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Drawer, { open: modalState.openDrawer, onClose: () => handleModalClose("openDrawer"), children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: () => handleModalClose("openDrawer"), children: "Закрити" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -34807,7 +35254,7 @@ function App() {
           handleOpenHistoryModal
         }
       )
-    ] }) }),
+    ] }),
     modalState.openAdd && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddProductModal,
       {
@@ -34943,10 +35390,1630 @@ function App() {
       }
     )
   ] });
+};
+const ReportsAnalytics = () => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Аналітика та звіти" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Аналітичні дані по магазинах." })
+  ] });
+};
+const Sales = () => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Продажі" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Перегляд і керування продажами." })
+  ] });
+};
+const ClientsManagement = () => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Управління клієнтами" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Інформація про клієнтів." })
+  ] });
+};
+const Purchases = () => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Закупівлі" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Управління закупівлями." })
+  ] });
+};
+/**
+ * @remix-run/router v1.19.2
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
+function _extends$2() {
+  _extends$2 = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$2.apply(this, arguments);
+}
+var Action;
+(function(Action2) {
+  Action2["Pop"] = "POP";
+  Action2["Push"] = "PUSH";
+  Action2["Replace"] = "REPLACE";
+})(Action || (Action = {}));
+const PopStateEventType = "popstate";
+function createBrowserHistory(options) {
+  if (options === void 0) {
+    options = {};
+  }
+  function createBrowserLocation(window2, globalHistory) {
+    let {
+      pathname,
+      search,
+      hash: hash2
+    } = window2.location;
+    return createLocation(
+      "",
+      {
+        pathname,
+        search,
+        hash: hash2
+      },
+      // state defaults to `null` because `window.history.state` does
+      globalHistory.state && globalHistory.state.usr || null,
+      globalHistory.state && globalHistory.state.key || "default"
+    );
+  }
+  function createBrowserHref(window2, to) {
+    return typeof to === "string" ? to : createPath(to);
+  }
+  return getUrlBasedHistory(createBrowserLocation, createBrowserHref, null, options);
+}
+function invariant(value, message) {
+  if (value === false || value === null || typeof value === "undefined") {
+    throw new Error(message);
+  }
+}
+function warning(cond, message) {
+  if (!cond) {
+    if (typeof console !== "undefined") console.warn(message);
+    try {
+      throw new Error(message);
+    } catch (e2) {
+    }
+  }
+}
+function createKey() {
+  return Math.random().toString(36).substr(2, 8);
+}
+function getHistoryState(location, index) {
+  return {
+    usr: location.state,
+    key: location.key,
+    idx: index
+  };
+}
+function createLocation(current, to, state, key) {
+  if (state === void 0) {
+    state = null;
+  }
+  let location = _extends$2({
+    pathname: typeof current === "string" ? current : current.pathname,
+    search: "",
+    hash: ""
+  }, typeof to === "string" ? parsePath(to) : to, {
+    state,
+    // TODO: This could be cleaned up.  push/replace should probably just take
+    // full Locations now and avoid the need to run through this flow at all
+    // But that's a pretty big refactor to the current test suite so going to
+    // keep as is for the time being and just let any incoming keys take precedence
+    key: to && to.key || key || createKey()
+  });
+  return location;
+}
+function createPath(_ref) {
+  let {
+    pathname = "/",
+    search = "",
+    hash: hash2 = ""
+  } = _ref;
+  if (search && search !== "?") pathname += search.charAt(0) === "?" ? search : "?" + search;
+  if (hash2 && hash2 !== "#") pathname += hash2.charAt(0) === "#" ? hash2 : "#" + hash2;
+  return pathname;
+}
+function parsePath(path) {
+  let parsedPath = {};
+  if (path) {
+    let hashIndex = path.indexOf("#");
+    if (hashIndex >= 0) {
+      parsedPath.hash = path.substr(hashIndex);
+      path = path.substr(0, hashIndex);
+    }
+    let searchIndex = path.indexOf("?");
+    if (searchIndex >= 0) {
+      parsedPath.search = path.substr(searchIndex);
+      path = path.substr(0, searchIndex);
+    }
+    if (path) {
+      parsedPath.pathname = path;
+    }
+  }
+  return parsedPath;
+}
+function getUrlBasedHistory(getLocation, createHref, validateLocation, options) {
+  if (options === void 0) {
+    options = {};
+  }
+  let {
+    window: window2 = document.defaultView,
+    v5Compat = false
+  } = options;
+  let globalHistory = window2.history;
+  let action = Action.Pop;
+  let listener = null;
+  let index = getIndex();
+  if (index == null) {
+    index = 0;
+    globalHistory.replaceState(_extends$2({}, globalHistory.state, {
+      idx: index
+    }), "");
+  }
+  function getIndex() {
+    let state = globalHistory.state || {
+      idx: null
+    };
+    return state.idx;
+  }
+  function handlePop() {
+    action = Action.Pop;
+    let nextIndex = getIndex();
+    let delta = nextIndex == null ? null : nextIndex - index;
+    index = nextIndex;
+    if (listener) {
+      listener({
+        action,
+        location: history.location,
+        delta
+      });
+    }
+  }
+  function push(to, state) {
+    action = Action.Push;
+    let location = createLocation(history.location, to, state);
+    index = getIndex() + 1;
+    let historyState = getHistoryState(location, index);
+    let url = history.createHref(location);
+    try {
+      globalHistory.pushState(historyState, "", url);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "DataCloneError") {
+        throw error;
+      }
+      window2.location.assign(url);
+    }
+    if (v5Compat && listener) {
+      listener({
+        action,
+        location: history.location,
+        delta: 1
+      });
+    }
+  }
+  function replace2(to, state) {
+    action = Action.Replace;
+    let location = createLocation(history.location, to, state);
+    index = getIndex();
+    let historyState = getHistoryState(location, index);
+    let url = history.createHref(location);
+    globalHistory.replaceState(historyState, "", url);
+    if (v5Compat && listener) {
+      listener({
+        action,
+        location: history.location,
+        delta: 0
+      });
+    }
+  }
+  function createURL(to) {
+    let base = window2.location.origin !== "null" ? window2.location.origin : window2.location.href;
+    let href = typeof to === "string" ? to : createPath(to);
+    href = href.replace(/ $/, "%20");
+    invariant(base, "No window.location.(origin|href) available to create URL for href: " + href);
+    return new URL(href, base);
+  }
+  let history = {
+    get action() {
+      return action;
+    },
+    get location() {
+      return getLocation(window2, globalHistory);
+    },
+    listen(fn2) {
+      if (listener) {
+        throw new Error("A history only accepts one active listener");
+      }
+      window2.addEventListener(PopStateEventType, handlePop);
+      listener = fn2;
+      return () => {
+        window2.removeEventListener(PopStateEventType, handlePop);
+        listener = null;
+      };
+    },
+    createHref(to) {
+      return createHref(window2, to);
+    },
+    createURL,
+    encodeLocation(to) {
+      let url = createURL(to);
+      return {
+        pathname: url.pathname,
+        search: url.search,
+        hash: url.hash
+      };
+    },
+    push,
+    replace: replace2,
+    go(n2) {
+      return globalHistory.go(n2);
+    }
+  };
+  return history;
+}
+var ResultType;
+(function(ResultType2) {
+  ResultType2["data"] = "data";
+  ResultType2["deferred"] = "deferred";
+  ResultType2["redirect"] = "redirect";
+  ResultType2["error"] = "error";
+})(ResultType || (ResultType = {}));
+function matchRoutes(routes, locationArg, basename) {
+  if (basename === void 0) {
+    basename = "/";
+  }
+  return matchRoutesImpl(routes, locationArg, basename, false);
+}
+function matchRoutesImpl(routes, locationArg, basename, allowPartial) {
+  let location = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
+  let pathname = stripBasename(location.pathname || "/", basename);
+  if (pathname == null) {
+    return null;
+  }
+  let branches = flattenRoutes(routes);
+  rankRouteBranches(branches);
+  let matches = null;
+  for (let i = 0; matches == null && i < branches.length; ++i) {
+    let decoded = decodePath(pathname);
+    matches = matchRouteBranch(branches[i], decoded, allowPartial);
+  }
+  return matches;
+}
+function flattenRoutes(routes, branches, parentsMeta, parentPath) {
+  if (branches === void 0) {
+    branches = [];
+  }
+  if (parentsMeta === void 0) {
+    parentsMeta = [];
+  }
+  if (parentPath === void 0) {
+    parentPath = "";
+  }
+  let flattenRoute = (route, index, relativePath) => {
+    let meta = {
+      relativePath: relativePath === void 0 ? route.path || "" : relativePath,
+      caseSensitive: route.caseSensitive === true,
+      childrenIndex: index,
+      route
+    };
+    if (meta.relativePath.startsWith("/")) {
+      invariant(meta.relativePath.startsWith(parentPath), 'Absolute route path "' + meta.relativePath + '" nested under path ' + ('"' + parentPath + '" is not valid. An absolute child route path ') + "must start with the combined path of all its parent routes.");
+      meta.relativePath = meta.relativePath.slice(parentPath.length);
+    }
+    let path = joinPaths([parentPath, meta.relativePath]);
+    let routesMeta = parentsMeta.concat(meta);
+    if (route.children && route.children.length > 0) {
+      invariant(
+        // Our types know better, but runtime JS may not!
+        // @ts-expect-error
+        route.index !== true,
+        "Index routes must not have child routes. Please remove " + ('all child routes from route path "' + path + '".')
+      );
+      flattenRoutes(route.children, branches, routesMeta, path);
+    }
+    if (route.path == null && !route.index) {
+      return;
+    }
+    branches.push({
+      path,
+      score: computeScore(path, route.index),
+      routesMeta
+    });
+  };
+  routes.forEach((route, index) => {
+    var _route$path;
+    if (route.path === "" || !((_route$path = route.path) != null && _route$path.includes("?"))) {
+      flattenRoute(route, index);
+    } else {
+      for (let exploded of explodeOptionalSegments(route.path)) {
+        flattenRoute(route, index, exploded);
+      }
+    }
+  });
+  return branches;
+}
+function explodeOptionalSegments(path) {
+  let segments = path.split("/");
+  if (segments.length === 0) return [];
+  let [first, ...rest] = segments;
+  let isOptional = first.endsWith("?");
+  let required = first.replace(/\?$/, "");
+  if (rest.length === 0) {
+    return isOptional ? [required, ""] : [required];
+  }
+  let restExploded = explodeOptionalSegments(rest.join("/"));
+  let result = [];
+  result.push(...restExploded.map((subpath) => subpath === "" ? required : [required, subpath].join("/")));
+  if (isOptional) {
+    result.push(...restExploded);
+  }
+  return result.map((exploded) => path.startsWith("/") && exploded === "" ? "/" : exploded);
+}
+function rankRouteBranches(branches) {
+  branches.sort((a, b2) => a.score !== b2.score ? b2.score - a.score : compareIndexes(a.routesMeta.map((meta) => meta.childrenIndex), b2.routesMeta.map((meta) => meta.childrenIndex)));
+}
+const paramRe = /^:[\w-]+$/;
+const dynamicSegmentValue = 3;
+const indexRouteValue = 2;
+const emptySegmentValue = 1;
+const staticSegmentValue = 10;
+const splatPenalty = -2;
+const isSplat = (s) => s === "*";
+function computeScore(path, index) {
+  let segments = path.split("/");
+  let initialScore = segments.length;
+  if (segments.some(isSplat)) {
+    initialScore += splatPenalty;
+  }
+  if (index) {
+    initialScore += indexRouteValue;
+  }
+  return segments.filter((s) => !isSplat(s)).reduce((score, segment) => score + (paramRe.test(segment) ? dynamicSegmentValue : segment === "" ? emptySegmentValue : staticSegmentValue), initialScore);
+}
+function compareIndexes(a, b2) {
+  let siblings = a.length === b2.length && a.slice(0, -1).every((n2, i) => n2 === b2[i]);
+  return siblings ? (
+    // If two routes are siblings, we should try to match the earlier sibling
+    // first. This allows people to have fine-grained control over the matching
+    // behavior by simply putting routes with identical paths in the order they
+    // want them tried.
+    a[a.length - 1] - b2[b2.length - 1]
+  ) : (
+    // Otherwise, it doesn't really make sense to rank non-siblings by index,
+    // so they sort equally.
+    0
+  );
+}
+function matchRouteBranch(branch, pathname, allowPartial) {
+  let {
+    routesMeta
+  } = branch;
+  let matchedParams = {};
+  let matchedPathname = "/";
+  let matches = [];
+  for (let i = 0; i < routesMeta.length; ++i) {
+    let meta = routesMeta[i];
+    let end2 = i === routesMeta.length - 1;
+    let remainingPathname = matchedPathname === "/" ? pathname : pathname.slice(matchedPathname.length) || "/";
+    let match2 = matchPath({
+      path: meta.relativePath,
+      caseSensitive: meta.caseSensitive,
+      end: end2
+    }, remainingPathname);
+    let route = meta.route;
+    if (!match2 && end2 && allowPartial && !routesMeta[routesMeta.length - 1].route.index) {
+      match2 = matchPath({
+        path: meta.relativePath,
+        caseSensitive: meta.caseSensitive,
+        end: false
+      }, remainingPathname);
+    }
+    if (!match2) {
+      return null;
+    }
+    Object.assign(matchedParams, match2.params);
+    matches.push({
+      // TODO: Can this as be avoided?
+      params: matchedParams,
+      pathname: joinPaths([matchedPathname, match2.pathname]),
+      pathnameBase: normalizePathname(joinPaths([matchedPathname, match2.pathnameBase])),
+      route
+    });
+    if (match2.pathnameBase !== "/") {
+      matchedPathname = joinPaths([matchedPathname, match2.pathnameBase]);
+    }
+  }
+  return matches;
+}
+function matchPath(pattern, pathname) {
+  if (typeof pattern === "string") {
+    pattern = {
+      path: pattern,
+      caseSensitive: false,
+      end: true
+    };
+  }
+  let [matcher, compiledParams] = compilePath(pattern.path, pattern.caseSensitive, pattern.end);
+  let match2 = pathname.match(matcher);
+  if (!match2) return null;
+  let matchedPathname = match2[0];
+  let pathnameBase = matchedPathname.replace(/(.)\/+$/, "$1");
+  let captureGroups = match2.slice(1);
+  let params = compiledParams.reduce((memo, _ref, index) => {
+    let {
+      paramName,
+      isOptional
+    } = _ref;
+    if (paramName === "*") {
+      let splatValue = captureGroups[index] || "";
+      pathnameBase = matchedPathname.slice(0, matchedPathname.length - splatValue.length).replace(/(.)\/+$/, "$1");
+    }
+    const value = captureGroups[index];
+    if (isOptional && !value) {
+      memo[paramName] = void 0;
+    } else {
+      memo[paramName] = (value || "").replace(/%2F/g, "/");
+    }
+    return memo;
+  }, {});
+  return {
+    params,
+    pathname: matchedPathname,
+    pathnameBase,
+    pattern
+  };
+}
+function compilePath(path, caseSensitive, end2) {
+  if (caseSensitive === void 0) {
+    caseSensitive = false;
+  }
+  if (end2 === void 0) {
+    end2 = true;
+  }
+  warning(path === "*" || !path.endsWith("*") || path.endsWith("/*"), 'Route path "' + path + '" will be treated as if it were ' + ('"' + path.replace(/\*$/, "/*") + '" because the `*` character must ') + "always follow a `/` in the pattern. To get rid of this warning, " + ('please change the route path to "' + path.replace(/\*$/, "/*") + '".'));
+  let params = [];
+  let regexpSource = "^" + path.replace(/\/*\*?$/, "").replace(/^\/*/, "/").replace(/[\\.*+^${}|()[\]]/g, "\\$&").replace(/\/:([\w-]+)(\?)?/g, (_, paramName, isOptional) => {
+    params.push({
+      paramName,
+      isOptional: isOptional != null
+    });
+    return isOptional ? "/?([^\\/]+)?" : "/([^\\/]+)";
+  });
+  if (path.endsWith("*")) {
+    params.push({
+      paramName: "*"
+    });
+    regexpSource += path === "*" || path === "/*" ? "(.*)$" : "(?:\\/(.+)|\\/*)$";
+  } else if (end2) {
+    regexpSource += "\\/*$";
+  } else if (path !== "" && path !== "/") {
+    regexpSource += "(?:(?=\\/|$))";
+  } else ;
+  let matcher = new RegExp(regexpSource, caseSensitive ? void 0 : "i");
+  return [matcher, params];
+}
+function decodePath(value) {
+  try {
+    return value.split("/").map((v2) => decodeURIComponent(v2).replace(/\//g, "%2F")).join("/");
+  } catch (error) {
+    warning(false, 'The URL path "' + value + '" could not be decoded because it is is a malformed URL segment. This is probably due to a bad percent ' + ("encoding (" + error + ")."));
+    return value;
+  }
+}
+function stripBasename(pathname, basename) {
+  if (basename === "/") return pathname;
+  if (!pathname.toLowerCase().startsWith(basename.toLowerCase())) {
+    return null;
+  }
+  let startIndex = basename.endsWith("/") ? basename.length - 1 : basename.length;
+  let nextChar = pathname.charAt(startIndex);
+  if (nextChar && nextChar !== "/") {
+    return null;
+  }
+  return pathname.slice(startIndex) || "/";
+}
+function resolvePath(to, fromPathname) {
+  if (fromPathname === void 0) {
+    fromPathname = "/";
+  }
+  let {
+    pathname: toPathname,
+    search = "",
+    hash: hash2 = ""
+  } = typeof to === "string" ? parsePath(to) : to;
+  let pathname = toPathname ? toPathname.startsWith("/") ? toPathname : resolvePathname(toPathname, fromPathname) : fromPathname;
+  return {
+    pathname,
+    search: normalizeSearch(search),
+    hash: normalizeHash(hash2)
+  };
+}
+function resolvePathname(relativePath, fromPathname) {
+  let segments = fromPathname.replace(/\/+$/, "").split("/");
+  let relativeSegments = relativePath.split("/");
+  relativeSegments.forEach((segment) => {
+    if (segment === "..") {
+      if (segments.length > 1) segments.pop();
+    } else if (segment !== ".") {
+      segments.push(segment);
+    }
+  });
+  return segments.length > 1 ? segments.join("/") : "/";
+}
+function getInvalidPathError(char2, field, dest, path) {
+  return "Cannot include a '" + char2 + "' character in a manually specified " + ("`to." + field + "` field [" + JSON.stringify(path) + "].  Please separate it out to the ") + ("`to." + dest + "` field. Alternatively you may provide the full path as ") + 'a string in <Link to="..."> and the router will parse it for you.';
+}
+function getPathContributingMatches(matches) {
+  return matches.filter((match2, index) => index === 0 || match2.route.path && match2.route.path.length > 0);
+}
+function getResolveToMatches(matches, v7_relativeSplatPath) {
+  let pathMatches = getPathContributingMatches(matches);
+  if (v7_relativeSplatPath) {
+    return pathMatches.map((match2, idx) => idx === pathMatches.length - 1 ? match2.pathname : match2.pathnameBase);
+  }
+  return pathMatches.map((match2) => match2.pathnameBase);
+}
+function resolveTo(toArg, routePathnames, locationPathname, isPathRelative) {
+  if (isPathRelative === void 0) {
+    isPathRelative = false;
+  }
+  let to;
+  if (typeof toArg === "string") {
+    to = parsePath(toArg);
+  } else {
+    to = _extends$2({}, toArg);
+    invariant(!to.pathname || !to.pathname.includes("?"), getInvalidPathError("?", "pathname", "search", to));
+    invariant(!to.pathname || !to.pathname.includes("#"), getInvalidPathError("#", "pathname", "hash", to));
+    invariant(!to.search || !to.search.includes("#"), getInvalidPathError("#", "search", "hash", to));
+  }
+  let isEmptyPath = toArg === "" || to.pathname === "";
+  let toPathname = isEmptyPath ? "/" : to.pathname;
+  let from2;
+  if (toPathname == null) {
+    from2 = locationPathname;
+  } else {
+    let routePathnameIndex = routePathnames.length - 1;
+    if (!isPathRelative && toPathname.startsWith("..")) {
+      let toSegments = toPathname.split("/");
+      while (toSegments[0] === "..") {
+        toSegments.shift();
+        routePathnameIndex -= 1;
+      }
+      to.pathname = toSegments.join("/");
+    }
+    from2 = routePathnameIndex >= 0 ? routePathnames[routePathnameIndex] : "/";
+  }
+  let path = resolvePath(to, from2);
+  let hasExplicitTrailingSlash = toPathname && toPathname !== "/" && toPathname.endsWith("/");
+  let hasCurrentTrailingSlash = (isEmptyPath || toPathname === ".") && locationPathname.endsWith("/");
+  if (!path.pathname.endsWith("/") && (hasExplicitTrailingSlash || hasCurrentTrailingSlash)) {
+    path.pathname += "/";
+  }
+  return path;
+}
+const joinPaths = (paths) => paths.join("/").replace(/\/\/+/g, "/");
+const normalizePathname = (pathname) => pathname.replace(/\/+$/, "").replace(/^\/*/, "/");
+const normalizeSearch = (search) => !search || search === "?" ? "" : search.startsWith("?") ? search : "?" + search;
+const normalizeHash = (hash2) => !hash2 || hash2 === "#" ? "" : hash2.startsWith("#") ? hash2 : "#" + hash2;
+function isRouteErrorResponse(error) {
+  return error != null && typeof error.status === "number" && typeof error.statusText === "string" && typeof error.internal === "boolean" && "data" in error;
+}
+const validMutationMethodsArr = ["post", "put", "patch", "delete"];
+new Set(validMutationMethodsArr);
+const validRequestMethodsArr = ["get", ...validMutationMethodsArr];
+new Set(validRequestMethodsArr);
+/**
+ * React Router v6.26.2
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
+function _extends$1() {
+  _extends$1 = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$1.apply(this, arguments);
+}
+const DataRouterContext = /* @__PURE__ */ reactExports.createContext(null);
+const DataRouterStateContext = /* @__PURE__ */ reactExports.createContext(null);
+const NavigationContext = /* @__PURE__ */ reactExports.createContext(null);
+const LocationContext = /* @__PURE__ */ reactExports.createContext(null);
+const RouteContext = /* @__PURE__ */ reactExports.createContext({
+  outlet: null,
+  matches: [],
+  isDataRoute: false
+});
+const RouteErrorContext = /* @__PURE__ */ reactExports.createContext(null);
+function useHref(to, _temp) {
+  let {
+    relative
+  } = _temp === void 0 ? {} : _temp;
+  !useInRouterContext() ? invariant(false) : void 0;
+  let {
+    basename,
+    navigator: navigator2
+  } = reactExports.useContext(NavigationContext);
+  let {
+    hash: hash2,
+    pathname,
+    search
+  } = useResolvedPath(to, {
+    relative
+  });
+  let joinedPathname = pathname;
+  if (basename !== "/") {
+    joinedPathname = pathname === "/" ? basename : joinPaths([basename, pathname]);
+  }
+  return navigator2.createHref({
+    pathname: joinedPathname,
+    search,
+    hash: hash2
+  });
+}
+function useInRouterContext() {
+  return reactExports.useContext(LocationContext) != null;
+}
+function useLocation() {
+  !useInRouterContext() ? invariant(false) : void 0;
+  return reactExports.useContext(LocationContext).location;
+}
+function useIsomorphicLayoutEffect(cb2) {
+  let isStatic = reactExports.useContext(NavigationContext).static;
+  if (!isStatic) {
+    reactExports.useLayoutEffect(cb2);
+  }
+}
+function useNavigate() {
+  let {
+    isDataRoute
+  } = reactExports.useContext(RouteContext);
+  return isDataRoute ? useNavigateStable() : useNavigateUnstable();
+}
+function useNavigateUnstable() {
+  !useInRouterContext() ? invariant(false) : void 0;
+  let dataRouterContext = reactExports.useContext(DataRouterContext);
+  let {
+    basename,
+    future,
+    navigator: navigator2
+  } = reactExports.useContext(NavigationContext);
+  let {
+    matches
+  } = reactExports.useContext(RouteContext);
+  let {
+    pathname: locationPathname
+  } = useLocation();
+  let routePathnamesJson = JSON.stringify(getResolveToMatches(matches, future.v7_relativeSplatPath));
+  let activeRef = reactExports.useRef(false);
+  useIsomorphicLayoutEffect(() => {
+    activeRef.current = true;
+  });
+  let navigate = reactExports.useCallback(function(to, options) {
+    if (options === void 0) {
+      options = {};
+    }
+    if (!activeRef.current) return;
+    if (typeof to === "number") {
+      navigator2.go(to);
+      return;
+    }
+    let path = resolveTo(to, JSON.parse(routePathnamesJson), locationPathname, options.relative === "path");
+    if (dataRouterContext == null && basename !== "/") {
+      path.pathname = path.pathname === "/" ? basename : joinPaths([basename, path.pathname]);
+    }
+    (!!options.replace ? navigator2.replace : navigator2.push)(path, options.state, options);
+  }, [basename, navigator2, routePathnamesJson, locationPathname, dataRouterContext]);
+  return navigate;
+}
+function useResolvedPath(to, _temp2) {
+  let {
+    relative
+  } = _temp2 === void 0 ? {} : _temp2;
+  let {
+    future
+  } = reactExports.useContext(NavigationContext);
+  let {
+    matches
+  } = reactExports.useContext(RouteContext);
+  let {
+    pathname: locationPathname
+  } = useLocation();
+  let routePathnamesJson = JSON.stringify(getResolveToMatches(matches, future.v7_relativeSplatPath));
+  return reactExports.useMemo(() => resolveTo(to, JSON.parse(routePathnamesJson), locationPathname, relative === "path"), [to, routePathnamesJson, locationPathname, relative]);
+}
+function useRoutes(routes, locationArg) {
+  return useRoutesImpl(routes, locationArg);
+}
+function useRoutesImpl(routes, locationArg, dataRouterState, future) {
+  !useInRouterContext() ? invariant(false) : void 0;
+  let {
+    navigator: navigator2
+  } = reactExports.useContext(NavigationContext);
+  let {
+    matches: parentMatches
+  } = reactExports.useContext(RouteContext);
+  let routeMatch = parentMatches[parentMatches.length - 1];
+  let parentParams = routeMatch ? routeMatch.params : {};
+  routeMatch ? routeMatch.pathname : "/";
+  let parentPathnameBase = routeMatch ? routeMatch.pathnameBase : "/";
+  routeMatch && routeMatch.route;
+  let locationFromContext = useLocation();
+  let location;
+  if (locationArg) {
+    var _parsedLocationArg$pa;
+    let parsedLocationArg = typeof locationArg === "string" ? parsePath(locationArg) : locationArg;
+    !(parentPathnameBase === "/" || ((_parsedLocationArg$pa = parsedLocationArg.pathname) == null ? void 0 : _parsedLocationArg$pa.startsWith(parentPathnameBase))) ? invariant(false) : void 0;
+    location = parsedLocationArg;
+  } else {
+    location = locationFromContext;
+  }
+  let pathname = location.pathname || "/";
+  let remainingPathname = pathname;
+  if (parentPathnameBase !== "/") {
+    let parentSegments = parentPathnameBase.replace(/^\//, "").split("/");
+    let segments = pathname.replace(/^\//, "").split("/");
+    remainingPathname = "/" + segments.slice(parentSegments.length).join("/");
+  }
+  let matches = matchRoutes(routes, {
+    pathname: remainingPathname
+  });
+  let renderedMatches = _renderMatches(matches && matches.map((match2) => Object.assign({}, match2, {
+    params: Object.assign({}, parentParams, match2.params),
+    pathname: joinPaths([
+      parentPathnameBase,
+      // Re-encode pathnames that were decoded inside matchRoutes
+      navigator2.encodeLocation ? navigator2.encodeLocation(match2.pathname).pathname : match2.pathname
+    ]),
+    pathnameBase: match2.pathnameBase === "/" ? parentPathnameBase : joinPaths([
+      parentPathnameBase,
+      // Re-encode pathnames that were decoded inside matchRoutes
+      navigator2.encodeLocation ? navigator2.encodeLocation(match2.pathnameBase).pathname : match2.pathnameBase
+    ])
+  })), parentMatches, dataRouterState, future);
+  if (locationArg && renderedMatches) {
+    return /* @__PURE__ */ reactExports.createElement(LocationContext.Provider, {
+      value: {
+        location: _extends$1({
+          pathname: "/",
+          search: "",
+          hash: "",
+          state: null,
+          key: "default"
+        }, location),
+        navigationType: Action.Pop
+      }
+    }, renderedMatches);
+  }
+  return renderedMatches;
+}
+function DefaultErrorComponent() {
+  let error = useRouteError();
+  let message = isRouteErrorResponse(error) ? error.status + " " + error.statusText : error instanceof Error ? error.message : JSON.stringify(error);
+  let stack = error instanceof Error ? error.stack : null;
+  let lightgrey = "rgba(200,200,200, 0.5)";
+  let preStyles = {
+    padding: "0.5rem",
+    backgroundColor: lightgrey
+  };
+  let devInfo = null;
+  return /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, /* @__PURE__ */ reactExports.createElement("h2", null, "Unexpected Application Error!"), /* @__PURE__ */ reactExports.createElement("h3", {
+    style: {
+      fontStyle: "italic"
+    }
+  }, message), stack ? /* @__PURE__ */ reactExports.createElement("pre", {
+    style: preStyles
+  }, stack) : null, devInfo);
+}
+const defaultErrorElement = /* @__PURE__ */ reactExports.createElement(DefaultErrorComponent, null);
+class RenderErrorBoundary extends reactExports.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      location: props.location,
+      revalidation: props.revalidation,
+      error: props.error
+    };
+  }
+  static getDerivedStateFromError(error) {
+    return {
+      error
+    };
+  }
+  static getDerivedStateFromProps(props, state) {
+    if (state.location !== props.location || state.revalidation !== "idle" && props.revalidation === "idle") {
+      return {
+        error: props.error,
+        location: props.location,
+        revalidation: props.revalidation
+      };
+    }
+    return {
+      error: props.error !== void 0 ? props.error : state.error,
+      location: state.location,
+      revalidation: props.revalidation || state.revalidation
+    };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("React Router caught the following error during render", error, errorInfo);
+  }
+  render() {
+    return this.state.error !== void 0 ? /* @__PURE__ */ reactExports.createElement(RouteContext.Provider, {
+      value: this.props.routeContext
+    }, /* @__PURE__ */ reactExports.createElement(RouteErrorContext.Provider, {
+      value: this.state.error,
+      children: this.props.component
+    })) : this.props.children;
+  }
+}
+function RenderedRoute(_ref) {
+  let {
+    routeContext,
+    match: match2,
+    children
+  } = _ref;
+  let dataRouterContext = reactExports.useContext(DataRouterContext);
+  if (dataRouterContext && dataRouterContext.static && dataRouterContext.staticContext && (match2.route.errorElement || match2.route.ErrorBoundary)) {
+    dataRouterContext.staticContext._deepestRenderedBoundaryId = match2.route.id;
+  }
+  return /* @__PURE__ */ reactExports.createElement(RouteContext.Provider, {
+    value: routeContext
+  }, children);
+}
+function _renderMatches(matches, parentMatches, dataRouterState, future) {
+  var _dataRouterState;
+  if (parentMatches === void 0) {
+    parentMatches = [];
+  }
+  if (dataRouterState === void 0) {
+    dataRouterState = null;
+  }
+  if (future === void 0) {
+    future = null;
+  }
+  if (matches == null) {
+    var _future;
+    if (!dataRouterState) {
+      return null;
+    }
+    if (dataRouterState.errors) {
+      matches = dataRouterState.matches;
+    } else if ((_future = future) != null && _future.v7_partialHydration && parentMatches.length === 0 && !dataRouterState.initialized && dataRouterState.matches.length > 0) {
+      matches = dataRouterState.matches;
+    } else {
+      return null;
+    }
+  }
+  let renderedMatches = matches;
+  let errors = (_dataRouterState = dataRouterState) == null ? void 0 : _dataRouterState.errors;
+  if (errors != null) {
+    let errorIndex = renderedMatches.findIndex((m2) => m2.route.id && (errors == null ? void 0 : errors[m2.route.id]) !== void 0);
+    !(errorIndex >= 0) ? invariant(false) : void 0;
+    renderedMatches = renderedMatches.slice(0, Math.min(renderedMatches.length, errorIndex + 1));
+  }
+  let renderFallback = false;
+  let fallbackIndex = -1;
+  if (dataRouterState && future && future.v7_partialHydration) {
+    for (let i = 0; i < renderedMatches.length; i++) {
+      let match2 = renderedMatches[i];
+      if (match2.route.HydrateFallback || match2.route.hydrateFallbackElement) {
+        fallbackIndex = i;
+      }
+      if (match2.route.id) {
+        let {
+          loaderData,
+          errors: errors2
+        } = dataRouterState;
+        let needsToRunLoader = match2.route.loader && loaderData[match2.route.id] === void 0 && (!errors2 || errors2[match2.route.id] === void 0);
+        if (match2.route.lazy || needsToRunLoader) {
+          renderFallback = true;
+          if (fallbackIndex >= 0) {
+            renderedMatches = renderedMatches.slice(0, fallbackIndex + 1);
+          } else {
+            renderedMatches = [renderedMatches[0]];
+          }
+          break;
+        }
+      }
+    }
+  }
+  return renderedMatches.reduceRight((outlet, match2, index) => {
+    let error;
+    let shouldRenderHydrateFallback = false;
+    let errorElement = null;
+    let hydrateFallbackElement = null;
+    if (dataRouterState) {
+      error = errors && match2.route.id ? errors[match2.route.id] : void 0;
+      errorElement = match2.route.errorElement || defaultErrorElement;
+      if (renderFallback) {
+        if (fallbackIndex < 0 && index === 0) {
+          shouldRenderHydrateFallback = true;
+          hydrateFallbackElement = null;
+        } else if (fallbackIndex === index) {
+          shouldRenderHydrateFallback = true;
+          hydrateFallbackElement = match2.route.hydrateFallbackElement || null;
+        }
+      }
+    }
+    let matches2 = parentMatches.concat(renderedMatches.slice(0, index + 1));
+    let getChildren = () => {
+      let children;
+      if (error) {
+        children = errorElement;
+      } else if (shouldRenderHydrateFallback) {
+        children = hydrateFallbackElement;
+      } else if (match2.route.Component) {
+        children = /* @__PURE__ */ reactExports.createElement(match2.route.Component, null);
+      } else if (match2.route.element) {
+        children = match2.route.element;
+      } else {
+        children = outlet;
+      }
+      return /* @__PURE__ */ reactExports.createElement(RenderedRoute, {
+        match: match2,
+        routeContext: {
+          outlet,
+          matches: matches2,
+          isDataRoute: dataRouterState != null
+        },
+        children
+      });
+    };
+    return dataRouterState && (match2.route.ErrorBoundary || match2.route.errorElement || index === 0) ? /* @__PURE__ */ reactExports.createElement(RenderErrorBoundary, {
+      location: dataRouterState.location,
+      revalidation: dataRouterState.revalidation,
+      component: errorElement,
+      error,
+      children: getChildren(),
+      routeContext: {
+        outlet: null,
+        matches: matches2,
+        isDataRoute: true
+      }
+    }) : getChildren();
+  }, null);
+}
+var DataRouterHook$1 = /* @__PURE__ */ function(DataRouterHook2) {
+  DataRouterHook2["UseBlocker"] = "useBlocker";
+  DataRouterHook2["UseRevalidator"] = "useRevalidator";
+  DataRouterHook2["UseNavigateStable"] = "useNavigate";
+  return DataRouterHook2;
+}(DataRouterHook$1 || {});
+var DataRouterStateHook$1 = /* @__PURE__ */ function(DataRouterStateHook2) {
+  DataRouterStateHook2["UseBlocker"] = "useBlocker";
+  DataRouterStateHook2["UseLoaderData"] = "useLoaderData";
+  DataRouterStateHook2["UseActionData"] = "useActionData";
+  DataRouterStateHook2["UseRouteError"] = "useRouteError";
+  DataRouterStateHook2["UseNavigation"] = "useNavigation";
+  DataRouterStateHook2["UseRouteLoaderData"] = "useRouteLoaderData";
+  DataRouterStateHook2["UseMatches"] = "useMatches";
+  DataRouterStateHook2["UseRevalidator"] = "useRevalidator";
+  DataRouterStateHook2["UseNavigateStable"] = "useNavigate";
+  DataRouterStateHook2["UseRouteId"] = "useRouteId";
+  return DataRouterStateHook2;
+}(DataRouterStateHook$1 || {});
+function useDataRouterContext(hookName) {
+  let ctx = reactExports.useContext(DataRouterContext);
+  !ctx ? invariant(false) : void 0;
+  return ctx;
+}
+function useDataRouterState(hookName) {
+  let state = reactExports.useContext(DataRouterStateContext);
+  !state ? invariant(false) : void 0;
+  return state;
+}
+function useRouteContext(hookName) {
+  let route = reactExports.useContext(RouteContext);
+  !route ? invariant(false) : void 0;
+  return route;
+}
+function useCurrentRouteId(hookName) {
+  let route = useRouteContext();
+  let thisRoute = route.matches[route.matches.length - 1];
+  !thisRoute.route.id ? invariant(false) : void 0;
+  return thisRoute.route.id;
+}
+function useRouteError() {
+  var _state$errors;
+  let error = reactExports.useContext(RouteErrorContext);
+  let state = useDataRouterState(DataRouterStateHook$1.UseRouteError);
+  let routeId = useCurrentRouteId(DataRouterStateHook$1.UseRouteError);
+  if (error !== void 0) {
+    return error;
+  }
+  return (_state$errors = state.errors) == null ? void 0 : _state$errors[routeId];
+}
+function useNavigateStable() {
+  let {
+    router
+  } = useDataRouterContext(DataRouterHook$1.UseNavigateStable);
+  let id2 = useCurrentRouteId(DataRouterStateHook$1.UseNavigateStable);
+  let activeRef = reactExports.useRef(false);
+  useIsomorphicLayoutEffect(() => {
+    activeRef.current = true;
+  });
+  let navigate = reactExports.useCallback(function(to, options) {
+    if (options === void 0) {
+      options = {};
+    }
+    if (!activeRef.current) return;
+    if (typeof to === "number") {
+      router.navigate(to);
+    } else {
+      router.navigate(to, _extends$1({
+        fromRouteId: id2
+      }, options));
+    }
+  }, [router, id2]);
+  return navigate;
+}
+function Route(_props) {
+  invariant(false);
+}
+function Router(_ref5) {
+  let {
+    basename: basenameProp = "/",
+    children = null,
+    location: locationProp,
+    navigationType = Action.Pop,
+    navigator: navigator2,
+    static: staticProp = false,
+    future
+  } = _ref5;
+  !!useInRouterContext() ? invariant(false) : void 0;
+  let basename = basenameProp.replace(/^\/*/, "/");
+  let navigationContext = reactExports.useMemo(() => ({
+    basename,
+    navigator: navigator2,
+    static: staticProp,
+    future: _extends$1({
+      v7_relativeSplatPath: false
+    }, future)
+  }), [basename, future, navigator2, staticProp]);
+  if (typeof locationProp === "string") {
+    locationProp = parsePath(locationProp);
+  }
+  let {
+    pathname = "/",
+    search = "",
+    hash: hash2 = "",
+    state = null,
+    key = "default"
+  } = locationProp;
+  let locationContext = reactExports.useMemo(() => {
+    let trailingPathname = stripBasename(pathname, basename);
+    if (trailingPathname == null) {
+      return null;
+    }
+    return {
+      location: {
+        pathname: trailingPathname,
+        search,
+        hash: hash2,
+        state,
+        key
+      },
+      navigationType
+    };
+  }, [basename, pathname, search, hash2, state, key, navigationType]);
+  if (locationContext == null) {
+    return null;
+  }
+  return /* @__PURE__ */ reactExports.createElement(NavigationContext.Provider, {
+    value: navigationContext
+  }, /* @__PURE__ */ reactExports.createElement(LocationContext.Provider, {
+    children,
+    value: locationContext
+  }));
+}
+function Routes(_ref6) {
+  let {
+    children,
+    location
+  } = _ref6;
+  return useRoutes(createRoutesFromChildren(children), location);
+}
+new Promise(() => {
+});
+function createRoutesFromChildren(children, parentPath) {
+  if (parentPath === void 0) {
+    parentPath = [];
+  }
+  let routes = [];
+  reactExports.Children.forEach(children, (element, index) => {
+    if (!/* @__PURE__ */ reactExports.isValidElement(element)) {
+      return;
+    }
+    let treePath = [...parentPath, index];
+    if (element.type === reactExports.Fragment) {
+      routes.push.apply(routes, createRoutesFromChildren(element.props.children, treePath));
+      return;
+    }
+    !(element.type === Route) ? invariant(false) : void 0;
+    !(!element.props.index || !element.props.children) ? invariant(false) : void 0;
+    let route = {
+      id: element.props.id || treePath.join("-"),
+      caseSensitive: element.props.caseSensitive,
+      element: element.props.element,
+      Component: element.props.Component,
+      index: element.props.index,
+      path: element.props.path,
+      loader: element.props.loader,
+      action: element.props.action,
+      errorElement: element.props.errorElement,
+      ErrorBoundary: element.props.ErrorBoundary,
+      hasErrorBoundary: element.props.ErrorBoundary != null || element.props.errorElement != null,
+      shouldRevalidate: element.props.shouldRevalidate,
+      handle: element.props.handle,
+      lazy: element.props.lazy
+    };
+    if (element.props.children) {
+      route.children = createRoutesFromChildren(element.props.children, treePath);
+    }
+    routes.push(route);
+  });
+  return routes;
+}
+/**
+ * React Router DOM v6.26.2
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
+function _extends() {
+  _extends = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends.apply(this, arguments);
+}
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+  return target;
+}
+function isModifiedEvent(event) {
+  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+}
+function shouldProcessLinkClick(event, target) {
+  return event.button === 0 && // Ignore everything but left clicks
+  (!target || target === "_self") && // Let browser handle "target=_blank" etc.
+  !isModifiedEvent(event);
+}
+const _excluded = ["onClick", "relative", "reloadDocument", "replace", "state", "target", "to", "preventScrollReset", "unstable_viewTransition"];
+const REACT_ROUTER_VERSION = "6";
+try {
+  window.__reactRouterVersion = REACT_ROUTER_VERSION;
+} catch (e2) {
+}
+const START_TRANSITION = "startTransition";
+const startTransitionImpl = React$1[START_TRANSITION];
+function BrowserRouter(_ref4) {
+  let {
+    basename,
+    children,
+    future,
+    window: window2
+  } = _ref4;
+  let historyRef = reactExports.useRef();
+  if (historyRef.current == null) {
+    historyRef.current = createBrowserHistory({
+      window: window2,
+      v5Compat: true
+    });
+  }
+  let history = historyRef.current;
+  let [state, setStateImpl] = reactExports.useState({
+    action: history.action,
+    location: history.location
+  });
+  let {
+    v7_startTransition
+  } = future || {};
+  let setState = reactExports.useCallback((newState) => {
+    v7_startTransition && startTransitionImpl ? startTransitionImpl(() => setStateImpl(newState)) : setStateImpl(newState);
+  }, [setStateImpl, v7_startTransition]);
+  reactExports.useLayoutEffect(() => history.listen(setState), [history, setState]);
+  return /* @__PURE__ */ reactExports.createElement(Router, {
+    basename,
+    children,
+    location: state.location,
+    navigationType: state.action,
+    navigator: history,
+    future
+  });
+}
+const isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
+const ABSOLUTE_URL_REGEX = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
+const Link = /* @__PURE__ */ reactExports.forwardRef(function LinkWithRef(_ref7, ref) {
+  let {
+    onClick,
+    relative,
+    reloadDocument,
+    replace: replace2,
+    state,
+    target,
+    to,
+    preventScrollReset,
+    unstable_viewTransition
+  } = _ref7, rest = _objectWithoutPropertiesLoose(_ref7, _excluded);
+  let {
+    basename
+  } = reactExports.useContext(NavigationContext);
+  let absoluteHref;
+  let isExternal = false;
+  if (typeof to === "string" && ABSOLUTE_URL_REGEX.test(to)) {
+    absoluteHref = to;
+    if (isBrowser) {
+      try {
+        let currentUrl = new URL(window.location.href);
+        let targetUrl = to.startsWith("//") ? new URL(currentUrl.protocol + to) : new URL(to);
+        let path = stripBasename(targetUrl.pathname, basename);
+        if (targetUrl.origin === currentUrl.origin && path != null) {
+          to = path + targetUrl.search + targetUrl.hash;
+        } else {
+          isExternal = true;
+        }
+      } catch (e2) {
+      }
+    }
+  }
+  let href = useHref(to, {
+    relative
+  });
+  let internalOnClick = useLinkClickHandler(to, {
+    replace: replace2,
+    state,
+    target,
+    preventScrollReset,
+    relative,
+    unstable_viewTransition
+  });
+  function handleClick(event) {
+    if (onClick) onClick(event);
+    if (!event.defaultPrevented) {
+      internalOnClick(event);
+    }
+  }
+  return (
+    // eslint-disable-next-line jsx-a11y/anchor-has-content
+    /* @__PURE__ */ reactExports.createElement("a", _extends({}, rest, {
+      href: absoluteHref || href,
+      onClick: isExternal || reloadDocument ? onClick : handleClick,
+      ref,
+      target
+    }))
+  );
+});
+var DataRouterHook;
+(function(DataRouterHook2) {
+  DataRouterHook2["UseScrollRestoration"] = "useScrollRestoration";
+  DataRouterHook2["UseSubmit"] = "useSubmit";
+  DataRouterHook2["UseSubmitFetcher"] = "useSubmitFetcher";
+  DataRouterHook2["UseFetcher"] = "useFetcher";
+  DataRouterHook2["useViewTransitionState"] = "useViewTransitionState";
+})(DataRouterHook || (DataRouterHook = {}));
+var DataRouterStateHook;
+(function(DataRouterStateHook2) {
+  DataRouterStateHook2["UseFetcher"] = "useFetcher";
+  DataRouterStateHook2["UseFetchers"] = "useFetchers";
+  DataRouterStateHook2["UseScrollRestoration"] = "useScrollRestoration";
+})(DataRouterStateHook || (DataRouterStateHook = {}));
+function useLinkClickHandler(to, _temp) {
+  let {
+    target,
+    replace: replaceProp,
+    state,
+    preventScrollReset,
+    relative,
+    unstable_viewTransition
+  } = _temp === void 0 ? {} : _temp;
+  let navigate = useNavigate();
+  let location = useLocation();
+  let path = useResolvedPath(to, {
+    relative
+  });
+  return reactExports.useCallback((event) => {
+    if (shouldProcessLinkClick(event, target)) {
+      event.preventDefault();
+      let replace2 = replaceProp !== void 0 ? replaceProp : createPath(location) === createPath(path);
+      navigate(to, {
+        replace: replace2,
+        state,
+        preventScrollReset,
+        relative,
+        unstable_viewTransition
+      });
+    }
+  }, [location, navigate, path, replaceProp, state, target, to, preventScrollReset, relative, unstable_viewTransition]);
+}
+const AddButtonWithMenu = () => {
+  const [anchorEl, setAnchorEl] = reactExports.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id2 = open ? "simple-popover" : void 0;
+  const [newProduct, setNewProduct] = reactExports.useState({
+    name: "",
+    supplier_id: "",
+    quantity: 1,
+    purchase_total_price: 0,
+    purchase_price_per_item: 0,
+    category_ids: [],
+    created_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+    selling_price_per_item: 0,
+    selling_total_price: 0,
+    selling_quantity: 0
+  });
+  const [modalState, setModalState] = reactExports.useState(
+    Object.fromEntries(modalNames.map((modal) => [modal, false]))
+  );
+  const handleModalOpen = (modal) => {
+    setModalState((prevState) => ({ ...prevState, [modal]: true }));
+    handleClose();
+  };
+  const [snackbar, setSnackbar] = reactExports.useState({
+    message: "",
+    severity: void 0
+  });
+  const [openSnackbar, setOpenSnackbar] = reactExports.useState(false);
+  const [selectedCategories, setSelectedCategories] = reactExports.useState([]);
+  reactExports.useState([]);
+  reactExports.useState([]);
+  const handleOpenAdd = () => {
+    handleModalOpen("openAdd");
+    setNewProduct((newProduct2) => {
+      return {
+        ...newProduct2
+      };
+    });
+  };
+  const resetNewProduct = () => {
+    setNewProduct({
+      name: "",
+      supplier_id: "",
+      quantity: 1,
+      purchase_total_price: 0,
+      purchase_price_per_item: 0,
+      category_ids: [],
+      created_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+      selling_total_price: 0,
+      selling_price_per_item: 0,
+      selling_quantity: 0
+    });
+  };
+  const resetStatesMap = {
+    openAdd: resetNewProduct
+  };
+  const { products, loadingState, fetchProductsFunc } = useProducts();
+  const { fetchCategoriesFunc } = useCategories();
+  const { fetchSuppliersFunc } = useSuppliers();
+  const handleModalClose = (modal) => {
+    var _a;
+    setModalState((prevState) => ({ ...prevState, [modal]: false }));
+    (_a = resetStatesMap[modal]) == null ? void 0 : _a.call(resetStatesMap);
+  };
+  const showSnackbar = (message, severity) => {
+    setSnackbar({ message, severity });
+    setOpenSnackbar(true);
+  };
+  const handleAddProduct = async () => {
+    try {
+      await addProduct(newProduct);
+      await fetchProductsFunc();
+      handleModalClose("openAdd");
+      showSnackbar("Product added successfully!", "success");
+    } catch (error) {
+      console.error("There was an error adding the product!", error);
+      showSnackbar("Failed to add the product!", "error");
+    }
+  };
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategories((prevState) => {
+      if (prevState.includes(categoryId)) {
+        return prevState.filter((id22) => id22 !== categoryId);
+      } else {
+        return [...prevState, categoryId];
+      }
+    });
+    setNewProduct((prevProduct) => {
+      const updatedCategories = prevProduct.category_ids.includes(categoryId) ? prevProduct.category_ids.filter((id22) => id22 !== categoryId) : [...prevProduct.category_ids, categoryId];
+      return {
+        ...prevProduct,
+        category_ids: updatedCategories
+        // Оновлення категорій
+      };
+    });
+  };
+  const createNewCategory = (categoryName) => {
+    addNewCategory(categoryName).then(() => {
+      fetchCategoriesFunc();
+      handleModalClose("openCategoryCreate");
+      showSnackbar("Category added successfully!", "success");
+    }).catch((error) => {
+      showSnackbar("Failed to add the Category!", "error");
+      console.error("There was an error adding the product!", error);
+    });
+  };
+  const handleAddSupplier = (newSupplier) => {
+    addSupplier(newSupplier).then(() => {
+      handleModalClose("openAddSupplierOpen");
+      fetchSuppliersFunc();
+      showSnackbar("Supplier completed successfully!", "success");
+    }).catch((error) => {
+      console.error("There was an error saving the supplier!", error);
+      showSnackbar("There was an error saving the supplier!", "error");
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Додати", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: handleClick, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Add, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Popover,
+      {
+        id: id2,
+        open,
+        anchorEl,
+        onClose: handleClose,
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right"
+        },
+        transformOrigin: {
+          vertical: "top",
+          horizontal: "left"
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { sx: { p: 2 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", fullWidth: true, onClick: handleOpenAdd, children: "Товар" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              fullWidth: true,
+              onClick: () => handleModalOpen("openCategoryCreate"),
+              children: "Категорію"
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              fullWidth: true,
+              onClick: () => handleModalOpen("openAddSupplierOpen"),
+              children: "Постачальника"
+            }
+          ) })
+        ] }) })
+      }
+    ),
+    modalState.openAdd && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddProductModal,
+      {
+        setNewProduct,
+        newProduct,
+        openAdd: modalState.openAdd,
+        handleAdd: handleAddProduct,
+        handleCategoryChange,
+        handleCloseAdd: () => handleModalClose("openAdd"),
+        selectedCategories
+      }
+    ),
+    modalState.openCategoryCreate && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      CreateNewCategoryModal,
+      {
+        createNewCategory,
+        openCategoryCreateModal: modalState.openCategoryCreate,
+        handleCloseCategoryModal: () => handleModalClose("openCategoryCreate")
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddSupplierModal,
+      {
+        handleAddSupplier,
+        open: modalState.openAddSupplierOpen,
+        handleClose: () => handleModalClose("openAddSupplierOpen")
+      }
+    )
+  ] });
+};
+const Sidebar = () => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    Box,
+    {
+      sx: {
+        width: 80,
+        // Ширина сайдбару
+        height: "auto",
+        position: "fixed",
+        top: "50%",
+        transform: "translateY(-50%)",
+        left: 0,
+        backgroundColor: "#fff",
+        padding: 2,
+        boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 2
+        // Проміжок між іконками
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Головна", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Home, {}) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Управління клієнтами", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/clients", children: /* @__PURE__ */ jsxRuntimeExports.jsx(People, {}) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продажі", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/sales", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCart, {}) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Каталог товарів", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/products", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Store, {}) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Закупівлі", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/purchases", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Receipt, {}) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Аналітика та звіти", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/analytics", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart, {}) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(AddButtonWithMenu, {})
+      ]
+    }
+  );
+};
+function App() {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(BrowserRouter, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CssBaseline, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", sx: { backgroundColor: "#f5f6fa", minHeight: "100vh" }, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { sx: { flex: 1, marginLeft: "calc(80px)", padding: 3, paddingBottom: 6 }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Routes, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/crm_front_react/", element: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductsCatalog, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/crm_front_react/clients", element: /* @__PURE__ */ jsxRuntimeExports.jsx(ClientsManagement, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/crm_front_react/sales", element: /* @__PURE__ */ jsxRuntimeExports.jsx(Sales, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/crm_front_react/products", element: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductsCatalog, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/crm_front_react/purchases", element: /* @__PURE__ */ jsxRuntimeExports.jsx(Purchases, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/crm_front_react/analytics", element: /* @__PURE__ */ jsxRuntimeExports.jsx(ReportsAnalytics, {}) })
+      ] }) })
+    ] })
+  ] });
 }
 client.createRoot(document.getElementById("root")).render(
-  /* @__PURE__ */ jsxRuntimeExports.jsxs(React.StrictMode, { children: [
+  /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CustomerProvider, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(CssBaseline, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsx(App, {})
-  ] })
+  ] }) }) }) }) })
 );
