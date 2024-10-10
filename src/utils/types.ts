@@ -122,7 +122,7 @@ export interface ICustomer {
 
 export  interface ISupplier {
     id: number;              // Унікальний ідентифікатор постачальника
-    name: string;            // Ім'я постачальника, унікальне, обов'язкове
+    name: string;            // Ім'я постачальника, унікальне,
     contact_info?: string;   // Контактна інформація, може бути відсутня
     email?: string;          // Email, може бути відсутнім
     phone_number?: string;   // Номер телефону, може бути відсутнім

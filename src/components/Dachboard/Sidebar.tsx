@@ -1,0 +1,70 @@
+import React from 'react';
+import {Box, IconButton, Tooltip} from '@mui/material';
+import {Home, People, ShoppingCart, Store, BarChart, Receipt} from '@mui/icons-material';
+import {Link} from 'react-router-dom';
+import AddButtonWithMenu from "../MainMenu/AddButtonWithMenu";
+
+export const Sidebar: React.FC = () => {
+    return (
+        <Box
+            sx={{
+                width: 80, // Ширина сайдбару
+                height: 'auto',
+                position: 'fixed',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                left: 0,
+                backgroundColor: '#fff',
+                padding: 2,
+                boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2, // Проміжок між іконками
+            }}
+        >
+            {/* Головна */}
+            <Tooltip title="Головна" placement="right">
+                <IconButton color="inherit" component={Link} to="/crm_front_react/">
+                    <Home/>
+                </IconButton>
+            </Tooltip>
+
+            {/* Управління клієнтами */}
+            <Tooltip title="Управління клієнтами" placement="right">
+                <IconButton color="inherit" component={Link} to="/crm_front_react/clients">
+                    <People/>
+                </IconButton>
+            </Tooltip>
+
+            {/* Продажі */}
+            <Tooltip title="Продажі" placement="right">
+                <IconButton color="inherit" component={Link} to="/crm_front_react/sales">
+                    <ShoppingCart/>
+                </IconButton>
+            </Tooltip>
+
+            {/* Каталог товарів */}
+            <Tooltip title="Каталог товарів" placement="right">
+                <IconButton color="inherit" component={Link} to="/crm_front_react/products">
+                    <Store/>
+                </IconButton>
+            </Tooltip>
+
+            {/* Закупівлі */}
+            <Tooltip title="Закупівлі" placement="right">
+                <IconButton color="inherit" component={Link} to="/crm_front_react/purchases">
+                    <Receipt/>
+                </IconButton>
+            </Tooltip>
+
+            {/* Аналітика та звіти */}
+            <Tooltip title="Аналітика та звіти" placement="right">
+                <IconButton color="inherit" component={Link} to="/crm_front_react/analytics">
+                    <BarChart/>
+                </IconButton>
+            </Tooltip>
+            <AddButtonWithMenu/>
+        </Box>
+    );
+};
