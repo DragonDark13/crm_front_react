@@ -1,19 +1,22 @@
 import {Add} from "@mui/icons-material";
 import {Box, Button, Grid, IconButton, Popover, Tooltip} from "@mui/material";
 import React, {useState} from "react";
-import {ICategory, INewProduct, INewSupplier, ISupplier, modalNames, ModalNames} from "../../utils/types";
+import {INewProduct, INewSupplier, modalNames, ModalNames} from "../../utils/types";
 import AddProductModal from "../dialogs/AddProductModal/AddProductModal";
-import {addNewCategory, addProduct, addSupplier, fetchGetAllCategories, fetchGetAllSuppliers} from "../../api/api";
+import {addNewCategory, addProduct, addSupplier} from "../../api/api";
 import {useProducts} from "../Provider/ProductContext";
 import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import {useCategories} from "../Provider/CategoryContext";
 import {useSuppliers} from "../Provider/SupplierContext";
+import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 
 //TODO Додати опцію Зберігти і додати ще
 
 const AddButtonWithMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const {showSnackbarMessage} = useSnackbarMessage()
+
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -49,15 +52,7 @@ const AddButtonWithMenu = () => {
         handleClose()
     };
 
-    const [snackbar, setSnackbar] = useState<{ message: string; severity: 'success' | 'error' | 'info' | 'warning' | undefined }>({
-        message: '',
-        severity: undefined,
-    });
-
-    const [openSnackbar, setOpenSnackbar] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-    const [categories, setCategories] = useState<ICategory[]>([]);
-    const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
 
 
     const handleOpenAdd = () => {
@@ -90,7 +85,7 @@ const AddButtonWithMenu = () => {
         openAdd: resetNewProduct,
     };
 
-    const {products, loadingState, fetchProductsFunc} = useProducts();
+    const {fetchProductsFunc} = useProducts();
     const {fetchCategoriesFunc} = useCategories()
     const {fetchSuppliersFunc} = useSuppliers()
 
@@ -99,20 +94,16 @@ const AddButtonWithMenu = () => {
         resetStatesMap[modal]?.(); // Виклик відповідної функції скидання
     };
 
-    const showSnackbar = (message: string, severity: 'success' | 'error' | 'info' | 'warning') => {
-        setSnackbar({message, severity});
-        setOpenSnackbar(true);
-    };
 
     const handleAddProduct = async () => {
         try {
             await addProduct(newProduct);
             await fetchProductsFunc();
             handleModalClose('openAdd');
-            showSnackbar('Product added successfully!', 'success'); // Show success message
+            showSnackbarMessage('Product added successfully!', 'success'); // Show success message
         } catch (error) {
             console.error('There was an error adding the product!', error);
-            showSnackbar('Failed to add the product!', 'error'); // Show error message
+            showSnackbarMessage('Failed to add the product!', 'error'); // Show error message
         }
     };
 
@@ -144,11 +135,11 @@ const AddButtonWithMenu = () => {
             fetchCategoriesFunc();
 
             handleModalClose("openCategoryCreate"); // Закрити модальне вікно після додавання
-            showSnackbar('Category added successfully!', 'success'); // Show success message
+            showSnackbarMessage('Category added successfully!', 'success'); // Show success message
 
         })
             .catch(error => {
-                showSnackbar('Failed to add the Category!', 'error'); // Show error message
+                showSnackbarMessage('Failed to add the Category!', 'error'); // Show error message
 
                 console.error('There was an error adding the product!', error);
             });
@@ -161,12 +152,12 @@ const AddButtonWithMenu = () => {
             .then(() => {
                 handleModalClose("openAddSupplierOpen");
                 fetchSuppliersFunc(); // Оновити список постачальників після додавання
-                showSnackbar('Supplier completed successfully!', 'success'); // Show success message
+                showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
 
             })
             .catch((error) => {
                 console.error('There was an error saving the supplier!', error);
-                showSnackbar('There was an error saving the supplier!', "error");
+                showSnackbarMessage('There was an error saving the supplier!', "error");
             });
     };
 
@@ -211,6 +202,13 @@ const AddButtonWithMenu = () => {
                                 Постачальника
                             </Button>
                         </Grid>
+                        <Grid item xs={12}>
+                            <Button variant={"contained"} color="primary" fullWidth
+                                    onClick={() => handleModalOpen("openCategoryCreate")}>
+                                Покупця
+                            </Button>
+                        </Grid>
+
                     </Grid>
                 </Box>
             </Popover>
@@ -234,11 +232,11 @@ const AddButtonWithMenu = () => {
                 />
             }
 
-            <AddSupplierModal
+            {modalState.openAddSupplierOpen && <AddSupplierModal
                 handleAddSupplier={handleAddSupplier}
                 open={modalState.openAddSupplierOpen}
                 handleClose={() => handleModalClose("openAddSupplierOpen")}
-            />
+            />}
 
 
         </Box>

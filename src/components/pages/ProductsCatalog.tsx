@@ -741,16 +741,16 @@ const ProductsCatalog = () => {
                 handleClose={() => handleModalClose("openAddSupplierOpen")}
             />
 
-            <Snackbar
-                open={openSnackbar}
-                autoHideDuration={1000}
-                onClose={handleCloseSnackbar}
-                anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-            >
-                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
+            {/*<Snackbar*/}
+            {/*    open={openSnackbar}*/}
+            {/*    autoHideDuration={1000}*/}
+            {/*    onClose={handleCloseSnackbar}*/}
+            {/*    anchorOrigin={{vertical: 'top', horizontal: 'right'}}*/}
+            {/*>*/}
+            {/*    <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>*/}
+            {/*        {snackbar.message}*/}
+            {/*    </Alert>*/}
+            {/*</Snackbar>*/}
 
             {lowQuantityProducts.length > 0 && (
                 <IconButton onClick={() => handleModalOpen("openNotificationDrawer")}

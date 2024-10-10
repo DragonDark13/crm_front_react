@@ -1,11 +1,13 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
-import {fetchAllCustomers} from "../../api/api";
+import {fetchGetAllCustomers} from "../../api/api";
 
 // Типізація клієнтів
 interface ICustomer {
     id: number;
     name: string;
     email: string;
+    address: string;
+    phone_number: string;
 }
 
 // Типізація для контексту
@@ -21,9 +23,9 @@ const CustomerContext = createContext<CustomerContextProps | undefined>(undefine
 export const CustomerProvider: React.FC = ({children}) => {
     const [customers, setCustomers] = useState<ICustomer[]>([]);
 
-    const fetchCustomersFunc = async () => {
+    const fetchGetAllCustomersFunc = async () => {
         try {
-            const data = await fetchAllCustomers();
+            const data = await fetchGetAllCustomers();
             if (Array.isArray(data)) {
                 setCustomers(data);
             } else {
@@ -35,11 +37,11 @@ export const CustomerProvider: React.FC = ({children}) => {
     };
 
     useEffect(() => {
-        fetchCustomersFunc();
+        fetchGetAllCustomersFunc();
     }, []);
 
     return (
-        <CustomerContext.Provider value={{customers, fetchCustomersFunc}}>
+        <CustomerContext.Provider value={{customers, fetchCustomersFunc: fetchGetAllCustomersFunc}}>
             {children}
         </CustomerContext.Provider>
     );

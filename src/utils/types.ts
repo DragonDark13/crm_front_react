@@ -77,6 +77,7 @@ export type ModalNames =
     | 'openAddSupplierOpen'
     | 'openNotificationDrawer'
     | 'snackbarNotifyOpen'
+    | 'createCustomerDialog'
     ;
 
 export const modalNames: ModalNames[] = [
@@ -90,7 +91,8 @@ export const modalNames: ModalNames[] = [
     'openCategoryCreate',
     'openAddSupplierOpen',
     'openNotificationDrawer',
-    'snackbarNotifyOpen'
+    'snackbarNotifyOpen',
+    'createCustomerDialog'
 ];
 
 export interface INotificationPanel {
@@ -120,11 +122,30 @@ export interface ICustomer {
     phone_number?: string;   // Номер телефону, може бути відсутній
 }
 
-export  interface ISupplier {
+export interface ISupplier {
     id: number;              // Унікальний ідентифікатор постачальника
     name: string;            // Ім'я постачальника, унікальне,
     contact_info?: string;   // Контактна інформація, може бути відсутня
     email?: string;          // Email, може бути відсутнім
     phone_number?: string;   // Номер телефону, може бути відсутнім
     address?: string;        // Адреса, може бути відсутня
+}
+
+export interface ICustomerDetails {
+    id: number;
+    name: string;
+    contact_info?: string;
+    email?: string;
+    phone_number?: string;
+    address?: string;
+    sales?: ISaleHistory[];
+}
+
+export interface ISaleHistory {
+    id: number;
+    product: string;
+    quantity_sold: number;
+    selling_price_per_item: number;
+    selling_total_price: number;
+    sale_date: string;
 }

@@ -1,37 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { createCustomer, fetchAllCustomers, fetchCustomerDetails } from '../../api/api';
+import React, {useEffect, useState} from 'react';
+import {createCustomer, fetchGetAllCustomers, fetchCustomerDetails} from '../../api/api';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
     Accordion, AccordionSummary, AccordionDetails, Button, Dialog, DialogActions,
     DialogContent, DialogTitle, TextField, Typography
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {useCustomers} from "../Provider/CustomerContext";
+import {ICustomerDetails} from "../../utils/types";
+import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
+//TODO перенести у запити у відповідні контексти
 
-// Типи даних для покупців та історії продажів
-interface Customer {
-    id: number;
-    name: string;
-    contact_info?: string;
-    email?: string;
-    phone_number?: string;
-    address?: string;
-    sales?: SaleHistory[];
-}
 
-interface SaleHistory {
-    id: number;
-    product: string;
-    quantity_sold: number;
-    selling_price_per_item: number;
-    selling_total_price: number;
-    sale_date: string;
-}
 
 const CustomerPage: React.FC = () => {
-    const [customers, setCustomers] = useState<Customer[]>([]);
-    const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-    const [openModal, setOpenModal] = useState(false);
-    const [newCustomerData, setNewCustomerData] = useState<Customer>({
+    const {customers} = useCustomers();
+    const [selectedCustomer, setSelectedCustomer] = useState<ICustomerDetails | null>(null);
+    const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false);
+    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
         id: 0,
         name: '',
         email: '',
@@ -40,19 +26,23 @@ const CustomerPage: React.FC = () => {
     });
 
     // Отримуємо список покупців при завантаженні компоненту
-    useEffect(() => {
-        fetchAllCustomers()
-            .then(customers => setCustomers(customers))
-            .catch(error => {
-                console.error('Error fetching customers:', error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetchGetAllCustomers()
+    //         .then(customers => setCustomers(customers))
+    //         .catch(error => {
+    //             console.error('Error fetching customers:', error);
+    //         });
+    // }, []);
 
     // Функція для отримання деталей покупця
     const handleGetCustomerDetails = (customerId: number) => {
         fetchCustomerDetails(customerId)
-            .then(customer => {
-                setSelectedCustomer(customer);
+            .then(response => {
+                if (response && response.data) {
+                    setSelectedCustomer(response.data); // Витягуємо дані з AxiosResponse
+                } else {
+                    setSelectedCustomer(null); // Якщо відповідь порожня
+                }
             })
             .catch(error => {
                 console.error('Error fetching customer details:', error);
@@ -60,11 +50,18 @@ const CustomerPage: React.FC = () => {
     };
 
     // Функція для створення нового покупця
-    const handleCreateCustomer = () => {
+    const handleCreateCustomer = (newCustomerData:ICustomerDetails) => {
         createCustomer(newCustomerData)
-            .then(customer => {
-                setCustomers([...customers, customer]);  // Додаємо нового покупця до списку
-                setOpenModal(false);  // Закриваємо модальне вікно після створення
+            .then(response => {
+
+                if (response && response.data) {
+                    setOpenAddNewCustomerDialog(false);
+                     fetchGetAllCustomers()
+                } else {
+                    fetchGetAllCustomers()
+                }
+
+                // Закриваємо модальне вікно після створення
             })
             .catch(error => {
                 console.error('Error creating customer:', error);
@@ -73,12 +70,12 @@ const CustomerPage: React.FC = () => {
 
     // Відкриття модального вікна
     const handleOpenModal = () => {
-        setOpenModal(true);
+        setOpenAddNewCustomerDialog(true);
     };
 
     // Закриття модального вікна
-    const handleCloseModal = () => {
-        setOpenModal(false);
+    const handleCloseAddNewCustomerDialog = () => {
+        setOpenAddNewCustomerDialog(false);
     };
 
     // Функція для обробки змін у полях форми
@@ -96,7 +93,7 @@ const CustomerPage: React.FC = () => {
             </Button>
 
             {/* Таблиця з переліком усіх покупців */}
-            <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+            <TableContainer component={Paper} style={{marginTop: '20px'}}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -119,7 +116,7 @@ const CustomerPage: React.FC = () => {
                                         <TableCell colSpan={3}>
                                             <Accordion expanded={true}>
                                                 <AccordionSummary
-                                                    expandIcon={<ExpandMoreIcon />}
+                                                    expandIcon={<ExpandMoreIcon/>}
                                                 >
                                                     <Typography>Purchase History</Typography>
                                                 </AccordionSummary>
@@ -128,7 +125,8 @@ const CustomerPage: React.FC = () => {
                                                         <ul>
                                                             {selectedCustomer.sales.map((sale) => (
                                                                 <li key={sale.id}>
-                                                                    {sale.product} - {sale.quantity_sold} units sold at {sale.selling_price_per_item} per item
+                                                                    {sale.product} - {sale.quantity_sold} units sold
+                                                                    at {sale.selling_price_per_item} per item
                                                                 </li>
                                                             ))}
                                                         </ul>
@@ -147,56 +145,7 @@ const CustomerPage: React.FC = () => {
             </TableContainer>
 
             {/* Модальне вікно для додавання нового покупця */}
-            <Dialog open={openModal} onClose={handleCloseModal}>
-                <DialogTitle>Add New Customer</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        name="name"
-                        label="Name"
-                        type="text"
-                        fullWidth
-                        value={newCustomerData.name}
-                        onChange={handleInputChange}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="email"
-                        label="Email"
-                        type="email"
-                        fullWidth
-                        value={newCustomerData.email}
-                        onChange={handleInputChange}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="phone_number"
-                        label="Phone Number"
-                        type="text"
-                        fullWidth
-                        value={newCustomerData.phone_number}
-                        onChange={handleInputChange}
-                    />
-                    <TextField
-                        margin="dense"
-                        name="address"
-                        label="Address"
-                        type="text"
-                        fullWidth
-                        value={newCustomerData.address}
-                        onChange={handleInputChange}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseModal} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleCreateCustomer} color="primary">
-                        Create
-                    </Button>
-                </DialogActions>
-            </Dialog>
+<AddNewCustomerDialog openAddNewCustomerDialog={openAddNewCustomerDialog} handleCloseAddNewCustomerDialog={handleCloseAddNewCustomerDialog} handleAddCustomer={handleCreateCustomer}  />
         </div>
     );
 };

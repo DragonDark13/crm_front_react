@@ -612,7 +612,7 @@ export const createCustomer = (customerData) => {
 };
 
 // Запит для отримання списку всіх покупців
-export const fetchAllCustomers = () => {
+export const fetchGetAllCustomers = () => {
     return api.get('/customers')
         .then(response => response.data)
         .catch(error => {
