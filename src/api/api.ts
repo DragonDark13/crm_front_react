@@ -1,5 +1,5 @@
-import axios from 'axios';
-import {IEditProduct, INewProduct, IPurchaseData, ISaleData} from "../utils/types";
+import axios, {AxiosError} from 'axios';
+import {ICustomer, ICustomerDetails, IEditProduct, INewProduct, IPurchaseData, ISaleData} from "../utils/types";
 
 
 // Створення екземпляра axios з правильним типом конфігурації
@@ -602,14 +602,15 @@ export const fetchGetSupplierProducts = (supplierId) => {
 
 
 // Запит для створення нового покупця
-export const createCustomer = (customerData) => {
+export const createCustomer = (customerData: ICustomerDetails): Promise<ICustomer> => {
     return api.post('/customers', customerData)
-        .then(response => response.data)
-        .catch(error => {
+        .then(response => response.data as ICustomer)
+        .catch((error: AxiosError) => {
             console.error('Error creating customer:', error);
-            throw error;
+            return Promise.reject(error); // Явно вказуємо, що в разі помилки повертається відхилений Promise
         });
 };
+
 
 // Запит для отримання списку всіх покупців
 export const fetchGetAllCustomers = () => {

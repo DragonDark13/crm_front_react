@@ -1,21 +1,25 @@
 import {Add} from "@mui/icons-material";
 import {Box, Button, Grid, IconButton, Popover, Tooltip} from "@mui/material";
 import React, {useState} from "react";
-import {INewProduct, INewSupplier, modalNames, ModalNames} from "../../utils/types";
+import {ICustomerDetails, INewProduct, INewSupplier, modalNames, ModalNames} from "../../utils/types";
 import AddProductModal from "../dialogs/AddProductModal/AddProductModal";
-import {addNewCategory, addProduct, addSupplier} from "../../api/api";
+import {addNewCategory, addProduct, addSupplier, createCustomer, fetchGetAllCustomers} from "../../api/api";
 import {useProducts} from "../Provider/ProductContext";
 import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import {useCategories} from "../Provider/CategoryContext";
 import {useSuppliers} from "../Provider/SupplierContext";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
+import {AxiosError} from "axios";
+import {useCustomers} from "../Provider/CustomerContext";
 
 //TODO Додати опцію Зберігти і додати ще
 
 const AddButtonWithMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const {showSnackbarMessage} = useSnackbarMessage()
+        const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
 
 
     const handleClick = (event) => {
@@ -161,6 +165,25 @@ const AddButtonWithMenu = () => {
             });
     };
 
+    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
+        id: 0,
+        name: '',
+        email: '',
+        phone_number: '',
+        address: '',
+    });
+
+    const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
+
+        createCustomerFunc(newCustomerData)
+            .then(() => {
+                handleModalClose('createCustomerDialog'); // Закриваємо діалогове вікно
+            })
+            .catch((error: AxiosError) => {
+                console.error('Error creating customer:', error);
+                showSnackbarMessage('Error creating customer: ' + error.response?.data?.error || 'Unknown error', 'error');
+            });
+    };
 
     return (
         <Box>
@@ -204,7 +227,7 @@ const AddButtonWithMenu = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <Button variant={"contained"} color="primary" fullWidth
-                                    onClick={() => handleModalOpen("openCategoryCreate")}>
+                                    onClick={() => handleModalOpen("createCustomerDialog")}>
                                 Покупця
                             </Button>
                         </Grid>
@@ -237,6 +260,13 @@ const AddButtonWithMenu = () => {
                 open={modalState.openAddSupplierOpen}
                 handleClose={() => handleModalClose("openAddSupplierOpen")}
             />}
+
+            {modalState.createCustomerDialog && <AddNewCustomerDialog
+                setNewCustomerData={setNewCustomerData}
+                newCustomerData={newCustomerData}
+                openAddNewCustomerDialog={modalState.createCustomerDialog}
+                handleCloseAddNewCustomerDialog={() => handleModalClose("createCustomerDialog")}
+                handleAddCustomer={handleCreateCustomer}/>}
 
 
         </Box>

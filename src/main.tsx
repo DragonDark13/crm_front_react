@@ -10,17 +10,19 @@ import {SnackbarMessageProvider} from "./components/Provider/SnackbarMessageCont
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <ProductProvider>
-            <SupplierProvider>
-                <CategoryProvider>
-                    <CustomerProvider>
-                        <SnackbarMessageProvider>
+        <SnackbarMessageProvider>
+            <ProductProvider>
+                <SupplierProvider>
+                    <CategoryProvider>
+                        <CustomerProvider>
+
                             <App/>
-                        </SnackbarMessageProvider>
-                    </CustomerProvider>
-                </CategoryProvider>
-            </SupplierProvider>
-        </ProductProvider>
+
+                        </CustomerProvider>
+                    </CategoryProvider>
+                </SupplierProvider>
+            </ProductProvider>
+        </SnackbarMessageProvider>
     </React.StrictMode>
     ,
 )

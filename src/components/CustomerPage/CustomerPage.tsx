@@ -9,11 +9,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useCustomers} from "../Provider/CustomerContext";
 import {ICustomerDetails} from "../../utils/types";
 import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
+import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import {AxiosError} from "axios";
 //TODO перенести у запити у відповідні контексти
 
 
-
 const CustomerPage: React.FC = () => {
+    const {showSnackbarMessage} = useSnackbarMessage()
     const {customers} = useCustomers();
     const [selectedCustomer, setSelectedCustomer] = useState<ICustomerDetails | null>(null);
     const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false);
@@ -50,20 +52,23 @@ const CustomerPage: React.FC = () => {
     };
 
     // Функція для створення нового покупця
-    const handleCreateCustomer = (newCustomerData:ICustomerDetails) => {
+    const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
         createCustomer(newCustomerData)
             .then(response => {
+                console.log('Response:', response); // Лог для перевірки відповіді
 
-                if (response && response.data) {
-                    setOpenAddNewCustomerDialog(false);
-                     fetchGetAllCustomers()
-                } else {
-                    fetchGetAllCustomers()
-                }
+
+                setOpenAddNewCustomerDialog(false);
+                fetchGetAllCustomers()
+                showSnackbarMessage('Customer created successfully!', 'success')
+
 
                 // Закриваємо модальне вікно після створення
             })
-            .catch(error => {
+            .catch((error: AxiosError) => {
+                console.log('Error Response:', error.response); // Лог для перевірки помилки
+
+                showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
                 console.error('Error creating customer:', error);
             });
     };
@@ -89,7 +94,7 @@ const CustomerPage: React.FC = () => {
     return (
         <div>
             <Button variant="contained" color="primary" onClick={handleOpenModal}>
-                Add New Customer
+               Додати нового Кліента
             </Button>
 
             {/* Таблиця з переліком усіх покупців */}
@@ -97,14 +102,14 @@ const CustomerPage: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Phone Number</TableCell>
+                            <TableCell>Ім'я</TableCell>
+                            <TableCell>Єлектронна пошта</TableCell>
+                            <TableCell>Телефонний номер</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {customers.map((customer) => (
-                            <React.Fragment key={customer.id}>
+                        {customers.map((customer,index) => (
+                            <React.Fragment key={customer.id+customer.name}>
                                 <TableRow onClick={() => handleGetCustomerDetails(customer.id)}>
                                     <TableCell>{customer.name}</TableCell>
                                     <TableCell>{customer.email}</TableCell>
@@ -145,7 +150,12 @@ const CustomerPage: React.FC = () => {
             </TableContainer>
 
             {/* Модальне вікно для додавання нового покупця */}
-<AddNewCustomerDialog openAddNewCustomerDialog={openAddNewCustomerDialog} handleCloseAddNewCustomerDialog={handleCloseAddNewCustomerDialog} handleAddCustomer={handleCreateCustomer}  />
+            <AddNewCustomerDialog
+                setNewCustomerData={setNewCustomerData}
+                newCustomerData={newCustomerData}
+                openAddNewCustomerDialog={openAddNewCustomerDialog}
+                handleCloseAddNewCustomerDialog={handleCloseAddNewCustomerDialog}
+                handleAddCustomer={handleCreateCustomer}/>
         </div>
     );
 };
