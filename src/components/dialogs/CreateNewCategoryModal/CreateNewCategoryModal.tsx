@@ -1,6 +1,6 @@
 import {Button, DialogActions, DialogContent, TextField} from "@mui/material";
 import CustomDialog from "../CustomDialog/CustomDialog";
-import {useState} from "react";
+import React, {useState} from "react";
 
 interface ICreateNewCategoryModal {
     openCategoryCreateModal: boolean;
@@ -16,6 +16,14 @@ const CreateNewCategoryModal = ({
 
     const [categoryName, setCategoryName] = useState<string>('');
 
+    // Обробник натискання Enter
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Запобігає стандартній поведінці, якщо потрібно
+            createNewCategory(categoryName);
+        }
+    };
+
 
     return (
         <CustomDialog
@@ -30,6 +38,7 @@ const CreateNewCategoryModal = ({
                     label="Назва категорії"
                     value={categoryName}
                     onChange={(e) => setCategoryName(e.target.value)}
+                    onKeyDown={handleKeyDown} // Додаємо обробник для Enter
                 />
             </DialogContent>
             <DialogActions>
