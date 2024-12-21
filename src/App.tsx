@@ -20,7 +20,8 @@ import {CircularProgress, Typography} from '@mui/material'; // Імпорт ко
 //TODO сторінкі Товари Продажі Упаковки
 
 
-import './App.css'
+import './scss/main.scss';
+
 import {
     addNewCategory,
     addProduct,
@@ -77,7 +78,7 @@ function App() {
                 {/* Бічна панель */}
                 <Sidebar/>
 
-                <Box sx={{flex: 1, marginLeft: 'calc(80px)', padding: 3,paddingBottom:6}}>
+                <Box sx={{flex: 1, marginLeft: 'calc(80px)', padding: 3, paddingBottom: 6}}>
                     {/*<SpeedDial/>*/}
                     <Routes>
                         <Route path="/crm_front_react/" element={<ProductsCatalog/>}/>
