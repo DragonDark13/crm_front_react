@@ -12419,7 +12419,7 @@ function getSvgIconUtilityClass(slot) {
   return generateUtilityClass("MuiSvgIcon", slot);
 }
 generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
-const useUtilityClasses$Z = (ownerState) => {
+const useUtilityClasses$11 = (ownerState) => {
   const {
     color: color2,
     fontSize,
@@ -12564,7 +12564,7 @@ const SvgIcon = /* @__PURE__ */ reactExports.forwardRef(function SvgIcon2(inProp
   if (!inheritViewBox) {
     more.viewBox = viewBox;
   }
-  const classes = useUtilityClasses$Z(ownerState);
+  const classes = useUtilityClasses$11(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SvgIconRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -13064,11 +13064,299 @@ function getTransitionProps(props, options) {
     delay: style2.transitionDelay
   };
 }
+function getCollapseUtilityClass(slot) {
+  return generateUtilityClass("MuiCollapse", slot);
+}
+generateUtilityClasses("MuiCollapse", ["root", "horizontal", "vertical", "entered", "hidden", "wrapper", "wrapperInner"]);
+const useUtilityClasses$10 = (ownerState) => {
+  const {
+    orientation,
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root", `${orientation}`],
+    entered: ["entered"],
+    hidden: ["hidden"],
+    wrapper: ["wrapper", `${orientation}`],
+    wrapperInner: ["wrapperInner", `${orientation}`]
+  };
+  return composeClasses(slots, getCollapseUtilityClass, classes);
+};
+const CollapseRoot = styled("div", {
+  name: "MuiCollapse",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.root, styles2[ownerState.orientation], ownerState.state === "entered" && styles2.entered, ownerState.state === "exited" && !ownerState.in && ownerState.collapsedSize === "0px" && styles2.hidden];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  height: 0,
+  overflow: "hidden",
+  transition: theme.transitions.create("height"),
+  variants: [{
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      height: "auto",
+      width: 0,
+      transition: theme.transitions.create("width")
+    }
+  }, {
+    props: {
+      state: "entered"
+    },
+    style: {
+      height: "auto",
+      overflow: "visible"
+    }
+  }, {
+    props: {
+      state: "entered",
+      orientation: "horizontal"
+    },
+    style: {
+      width: "auto"
+    }
+  }, {
+    props: ({
+      ownerState
+    }) => ownerState.state === "exited" && !ownerState.in && ownerState.collapsedSize === "0px",
+    style: {
+      visibility: "hidden"
+    }
+  }]
+})));
+const CollapseWrapper = styled("div", {
+  name: "MuiCollapse",
+  slot: "Wrapper",
+  overridesResolver: (props, styles2) => styles2.wrapper
+})({
+  // Hack to get children with a negative margin to not falsify the height computation.
+  display: "flex",
+  width: "100%",
+  variants: [{
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      width: "auto",
+      height: "100%"
+    }
+  }]
+});
+const CollapseWrapperInner = styled("div", {
+  name: "MuiCollapse",
+  slot: "WrapperInner",
+  overridesResolver: (props, styles2) => styles2.wrapperInner
+})({
+  width: "100%",
+  variants: [{
+    props: {
+      orientation: "horizontal"
+    },
+    style: {
+      width: "auto",
+      height: "100%"
+    }
+  }]
+});
+const Collapse = /* @__PURE__ */ reactExports.forwardRef(function Collapse2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiCollapse"
+  });
+  const {
+    addEndListener,
+    children,
+    className,
+    collapsedSize: collapsedSizeProp = "0px",
+    component,
+    easing: easing2,
+    in: inProp,
+    onEnter,
+    onEntered,
+    onEntering,
+    onExit,
+    onExited,
+    onExiting,
+    orientation = "vertical",
+    style: style2,
+    timeout = duration.standard,
+    // eslint-disable-next-line react/prop-types
+    TransitionComponent = Transition$1,
+    ...other
+  } = props;
+  const ownerState = {
+    ...props,
+    orientation,
+    collapsedSize: collapsedSizeProp
+  };
+  const classes = useUtilityClasses$10(ownerState);
+  const theme = useTheme();
+  const timer = useTimeout();
+  const wrapperRef = reactExports.useRef(null);
+  const autoTransitionDuration = reactExports.useRef();
+  const collapsedSize = typeof collapsedSizeProp === "number" ? `${collapsedSizeProp}px` : collapsedSizeProp;
+  const isHorizontal2 = orientation === "horizontal";
+  const size = isHorizontal2 ? "width" : "height";
+  const nodeRef = reactExports.useRef(null);
+  const handleRef = useForkRef(ref, nodeRef);
+  const normalizedTransitionCallback = (callback) => (maybeIsAppearing) => {
+    if (callback) {
+      const node2 = nodeRef.current;
+      if (maybeIsAppearing === void 0) {
+        callback(node2);
+      } else {
+        callback(node2, maybeIsAppearing);
+      }
+    }
+  };
+  const getWrapperSize = () => wrapperRef.current ? wrapperRef.current[isHorizontal2 ? "clientWidth" : "clientHeight"] : 0;
+  const handleEnter = normalizedTransitionCallback((node2, isAppearing) => {
+    if (wrapperRef.current && isHorizontal2) {
+      wrapperRef.current.style.position = "absolute";
+    }
+    node2.style[size] = collapsedSize;
+    if (onEnter) {
+      onEnter(node2, isAppearing);
+    }
+  });
+  const handleEntering = normalizedTransitionCallback((node2, isAppearing) => {
+    const wrapperSize = getWrapperSize();
+    if (wrapperRef.current && isHorizontal2) {
+      wrapperRef.current.style.position = "";
+    }
+    const {
+      duration: transitionDuration,
+      easing: transitionTimingFunction
+    } = getTransitionProps({
+      style: style2,
+      timeout,
+      easing: easing2
+    }, {
+      mode: "enter"
+    });
+    if (timeout === "auto") {
+      const duration2 = theme.transitions.getAutoHeightDuration(wrapperSize);
+      node2.style.transitionDuration = `${duration2}ms`;
+      autoTransitionDuration.current = duration2;
+    } else {
+      node2.style.transitionDuration = typeof transitionDuration === "string" ? transitionDuration : `${transitionDuration}ms`;
+    }
+    node2.style[size] = `${wrapperSize}px`;
+    node2.style.transitionTimingFunction = transitionTimingFunction;
+    if (onEntering) {
+      onEntering(node2, isAppearing);
+    }
+  });
+  const handleEntered = normalizedTransitionCallback((node2, isAppearing) => {
+    node2.style[size] = "auto";
+    if (onEntered) {
+      onEntered(node2, isAppearing);
+    }
+  });
+  const handleExit = normalizedTransitionCallback((node2) => {
+    node2.style[size] = `${getWrapperSize()}px`;
+    if (onExit) {
+      onExit(node2);
+    }
+  });
+  const handleExited = normalizedTransitionCallback(onExited);
+  const handleExiting = normalizedTransitionCallback((node2) => {
+    const wrapperSize = getWrapperSize();
+    const {
+      duration: transitionDuration,
+      easing: transitionTimingFunction
+    } = getTransitionProps({
+      style: style2,
+      timeout,
+      easing: easing2
+    }, {
+      mode: "exit"
+    });
+    if (timeout === "auto") {
+      const duration2 = theme.transitions.getAutoHeightDuration(wrapperSize);
+      node2.style.transitionDuration = `${duration2}ms`;
+      autoTransitionDuration.current = duration2;
+    } else {
+      node2.style.transitionDuration = typeof transitionDuration === "string" ? transitionDuration : `${transitionDuration}ms`;
+    }
+    node2.style[size] = collapsedSize;
+    node2.style.transitionTimingFunction = transitionTimingFunction;
+    if (onExiting) {
+      onExiting(node2);
+    }
+  });
+  const handleAddEndListener = (next2) => {
+    if (timeout === "auto") {
+      timer.start(autoTransitionDuration.current || 0, next2);
+    }
+    if (addEndListener) {
+      addEndListener(nodeRef.current, next2);
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TransitionComponent, {
+    in: inProp,
+    onEnter: handleEnter,
+    onEntered: handleEntered,
+    onEntering: handleEntering,
+    onExit: handleExit,
+    onExited: handleExited,
+    onExiting: handleExiting,
+    addEndListener: handleAddEndListener,
+    nodeRef,
+    timeout: timeout === "auto" ? null : timeout,
+    ...other,
+    children: (state, childProps) => /* @__PURE__ */ jsxRuntimeExports.jsx(CollapseRoot, {
+      as: component,
+      className: clsx(classes.root, className, {
+        "entered": classes.entered,
+        "exited": !inProp && collapsedSize === "0px" && classes.hidden
+      }[state]),
+      style: {
+        [isHorizontal2 ? "minWidth" : "minHeight"]: collapsedSize,
+        ...style2
+      },
+      ref: handleRef,
+      ...childProps,
+      // `ownerState` is set after `childProps` to override any existing `ownerState` property in `childProps`
+      // that might have been forwarded from the Transition component.
+      ownerState: {
+        ...ownerState,
+        state
+      },
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(CollapseWrapper, {
+        ownerState: {
+          ...ownerState,
+          state
+        },
+        className: classes.wrapper,
+        ref: wrapperRef,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(CollapseWrapperInner, {
+          ownerState: {
+            ...ownerState,
+            state
+          },
+          className: classes.wrapperInner,
+          children
+        })
+      })
+    })
+  });
+});
+if (Collapse) {
+  Collapse.muiSupportAuto = true;
+}
 function getPaperUtilityClass(slot) {
   return generateUtilityClass("MuiPaper", slot);
 }
 generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
-const useUtilityClasses$Y = (ownerState) => {
+const useUtilityClasses$$ = (ownerState) => {
   const {
     square,
     elevation,
@@ -13141,7 +13429,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     square,
     variant
   };
-  const classes = useUtilityClasses$Y(ownerState);
+  const classes = useUtilityClasses$$(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(PaperRoot, {
     as: component,
     ownerState,
@@ -13162,6 +13450,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     }
   });
 });
+const AccordionContext = /* @__PURE__ */ reactExports.createContext({});
 function useSlot(name, parameters) {
   const {
     className,
@@ -13217,6 +13506,256 @@ function useSlot(name, parameters) {
   });
   return [elementType, props];
 }
+function getAccordionUtilityClass(slot) {
+  return generateUtilityClass("MuiAccordion", slot);
+}
+const accordionClasses = generateUtilityClasses("MuiAccordion", ["root", "heading", "rounded", "expanded", "disabled", "gutters", "region"]);
+const useUtilityClasses$_ = (ownerState) => {
+  const {
+    classes,
+    square,
+    expanded,
+    disabled,
+    disableGutters
+  } = ownerState;
+  const slots = {
+    root: ["root", !square && "rounded", expanded && "expanded", disabled && "disabled", !disableGutters && "gutters"],
+    heading: ["heading"],
+    region: ["region"]
+  };
+  return composeClasses(slots, getAccordionUtilityClass, classes);
+};
+const AccordionRoot = styled(Paper, {
+  name: "MuiAccordion",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [{
+      [`& .${accordionClasses.region}`]: styles2.region
+    }, styles2.root, !ownerState.square && styles2.rounded, !ownerState.disableGutters && styles2.gutters];
+  }
+})(memoTheme(({
+  theme
+}) => {
+  const transition = {
+    duration: theme.transitions.duration.shortest
+  };
+  return {
+    position: "relative",
+    transition: theme.transitions.create(["margin"], transition),
+    overflowAnchor: "none",
+    // Keep the same scrolling position
+    "&::before": {
+      position: "absolute",
+      left: 0,
+      top: -1,
+      right: 0,
+      height: 1,
+      content: '""',
+      opacity: 1,
+      backgroundColor: (theme.vars || theme).palette.divider,
+      transition: theme.transitions.create(["opacity", "background-color"], transition)
+    },
+    "&:first-of-type": {
+      "&::before": {
+        display: "none"
+      }
+    },
+    [`&.${accordionClasses.expanded}`]: {
+      "&::before": {
+        opacity: 0
+      },
+      "&:first-of-type": {
+        marginTop: 0
+      },
+      "&:last-of-type": {
+        marginBottom: 0
+      },
+      "& + &": {
+        "&::before": {
+          display: "none"
+        }
+      }
+    },
+    [`&.${accordionClasses.disabled}`]: {
+      backgroundColor: (theme.vars || theme).palette.action.disabledBackground
+    }
+  };
+}), memoTheme(({
+  theme
+}) => ({
+  variants: [{
+    props: (props) => !props.square,
+    style: {
+      borderRadius: 0,
+      "&:first-of-type": {
+        borderTopLeftRadius: (theme.vars || theme).shape.borderRadius,
+        borderTopRightRadius: (theme.vars || theme).shape.borderRadius
+      },
+      "&:last-of-type": {
+        borderBottomLeftRadius: (theme.vars || theme).shape.borderRadius,
+        borderBottomRightRadius: (theme.vars || theme).shape.borderRadius,
+        // Fix a rendering issue on Edge
+        "@supports (-ms-ime-align: auto)": {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0
+        }
+      }
+    }
+  }, {
+    props: (props) => !props.disableGutters,
+    style: {
+      [`&.${accordionClasses.expanded}`]: {
+        margin: "16px 0"
+      }
+    }
+  }]
+})));
+const AccordionHeading = styled("h3", {
+  name: "MuiAccordion",
+  slot: "Heading",
+  overridesResolver: (props, styles2) => styles2.heading
+})({
+  all: "unset"
+});
+const Accordion = /* @__PURE__ */ reactExports.forwardRef(function Accordion2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiAccordion"
+  });
+  const {
+    children: childrenProp,
+    className,
+    defaultExpanded = false,
+    disabled = false,
+    disableGutters = false,
+    expanded: expandedProp,
+    onChange,
+    square = false,
+    slots = {},
+    slotProps = {},
+    TransitionComponent: TransitionComponentProp,
+    TransitionProps: TransitionPropsProp,
+    ...other
+  } = props;
+  const [expanded, setExpandedState] = useControlled({
+    controlled: expandedProp,
+    default: defaultExpanded,
+    name: "Accordion",
+    state: "expanded"
+  });
+  const handleChange = reactExports.useCallback((event) => {
+    setExpandedState(!expanded);
+    if (onChange) {
+      onChange(event, !expanded);
+    }
+  }, [expanded, onChange, setExpandedState]);
+  const [summary, ...children] = reactExports.Children.toArray(childrenProp);
+  const contextValue = reactExports.useMemo(() => ({
+    expanded,
+    disabled,
+    disableGutters,
+    toggle: handleChange
+  }), [expanded, disabled, disableGutters, handleChange]);
+  const ownerState = {
+    ...props,
+    square,
+    disabled,
+    disableGutters,
+    expanded
+  };
+  const classes = useUtilityClasses$_(ownerState);
+  const backwardCompatibleSlots = {
+    transition: TransitionComponentProp,
+    ...slots
+  };
+  const backwardCompatibleSlotProps = {
+    transition: TransitionPropsProp,
+    ...slotProps
+  };
+  const externalForwardedProps = {
+    slots: backwardCompatibleSlots,
+    slotProps: backwardCompatibleSlotProps
+  };
+  const [AccordionHeadingSlot, accordionProps] = useSlot("heading", {
+    elementType: AccordionHeading,
+    externalForwardedProps,
+    className: classes.heading,
+    ownerState
+  });
+  const [TransitionSlot, transitionProps] = useSlot("transition", {
+    elementType: Collapse,
+    externalForwardedProps,
+    ownerState
+  });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(AccordionRoot, {
+    className: clsx(classes.root, className),
+    ref,
+    ownerState,
+    square,
+    ...other,
+    children: [/* @__PURE__ */ jsxRuntimeExports.jsx(AccordionHeadingSlot, {
+      ...accordionProps,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionContext.Provider, {
+        value: contextValue,
+        children: summary
+      })
+    }), /* @__PURE__ */ jsxRuntimeExports.jsx(TransitionSlot, {
+      in: expanded,
+      timeout: "auto",
+      ...transitionProps,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", {
+        "aria-labelledby": summary.props.id,
+        id: summary.props["aria-controls"],
+        role: "region",
+        className: classes.region,
+        children
+      })
+    })]
+  });
+});
+function getAccordionDetailsUtilityClass(slot) {
+  return generateUtilityClass("MuiAccordionDetails", slot);
+}
+generateUtilityClasses("MuiAccordionDetails", ["root"]);
+const useUtilityClasses$Z = (ownerState) => {
+  const {
+    classes
+  } = ownerState;
+  const slots = {
+    root: ["root"]
+  };
+  return composeClasses(slots, getAccordionDetailsUtilityClass, classes);
+};
+const AccordionDetailsRoot = styled("div", {
+  name: "MuiAccordionDetails",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})(memoTheme(({
+  theme
+}) => ({
+  padding: theme.spacing(1, 2, 2)
+})));
+const AccordionDetails = /* @__PURE__ */ reactExports.forwardRef(function AccordionDetails2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiAccordionDetails"
+  });
+  const {
+    className,
+    ...other
+  } = props;
+  const ownerState = props;
+  const classes = useUtilityClasses$Z(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionDetailsRoot, {
+    className: clsx(classes.root, className),
+    ref,
+    ownerState,
+    ...other
+  });
+});
 class LazyRipple {
   constructor() {
     __publicField(this, "mountEffect", () => {
@@ -13607,7 +14146,7 @@ function getButtonBaseUtilityClass(slot) {
   return generateUtilityClass("MuiButtonBase", slot);
 }
 const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]);
-const useUtilityClasses$X = (ownerState) => {
+const useUtilityClasses$Y = (ownerState) => {
   const {
     disabled,
     focusVisible,
@@ -13836,7 +14375,7 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
     tabIndex,
     focusVisible
   };
-  const classes = useUtilityClasses$X(ownerState);
+  const classes = useUtilityClasses$Y(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonBaseRoot, {
     as: ComponentProp,
     className: clsx(classes.root, className),
@@ -13864,6 +14403,155 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
       center: centerRipple,
       ...TouchRippleProps
     }) : null]
+  });
+});
+function getAccordionSummaryUtilityClass(slot) {
+  return generateUtilityClass("MuiAccordionSummary", slot);
+}
+const accordionSummaryClasses = generateUtilityClasses("MuiAccordionSummary", ["root", "expanded", "focusVisible", "disabled", "gutters", "contentGutters", "content", "expandIconWrapper"]);
+const useUtilityClasses$X = (ownerState) => {
+  const {
+    classes,
+    expanded,
+    disabled,
+    disableGutters
+  } = ownerState;
+  const slots = {
+    root: ["root", expanded && "expanded", disabled && "disabled", !disableGutters && "gutters"],
+    focusVisible: ["focusVisible"],
+    content: ["content", expanded && "expanded", !disableGutters && "contentGutters"],
+    expandIconWrapper: ["expandIconWrapper", expanded && "expanded"]
+  };
+  return composeClasses(slots, getAccordionSummaryUtilityClass, classes);
+};
+const AccordionSummaryRoot = styled(ButtonBase, {
+  name: "MuiAccordionSummary",
+  slot: "Root",
+  overridesResolver: (props, styles2) => styles2.root
+})(memoTheme(({
+  theme
+}) => {
+  const transition = {
+    duration: theme.transitions.duration.shortest
+  };
+  return {
+    display: "flex",
+    minHeight: 48,
+    padding: theme.spacing(0, 2),
+    transition: theme.transitions.create(["min-height", "background-color"], transition),
+    [`&.${accordionSummaryClasses.focusVisible}`]: {
+      backgroundColor: (theme.vars || theme).palette.action.focus
+    },
+    [`&.${accordionSummaryClasses.disabled}`]: {
+      opacity: (theme.vars || theme).palette.action.disabledOpacity
+    },
+    [`&:hover:not(.${accordionSummaryClasses.disabled})`]: {
+      cursor: "pointer"
+    },
+    variants: [{
+      props: (props) => !props.disableGutters,
+      style: {
+        [`&.${accordionSummaryClasses.expanded}`]: {
+          minHeight: 64
+        }
+      }
+    }]
+  };
+}));
+const AccordionSummaryContent = styled("div", {
+  name: "MuiAccordionSummary",
+  slot: "Content",
+  overridesResolver: (props, styles2) => styles2.content
+})(memoTheme(({
+  theme
+}) => ({
+  display: "flex",
+  flexGrow: 1,
+  margin: "12px 0",
+  variants: [{
+    props: (props) => !props.disableGutters,
+    style: {
+      transition: theme.transitions.create(["margin"], {
+        duration: theme.transitions.duration.shortest
+      }),
+      [`&.${accordionSummaryClasses.expanded}`]: {
+        margin: "20px 0"
+      }
+    }
+  }]
+})));
+const AccordionSummaryExpandIconWrapper = styled("div", {
+  name: "MuiAccordionSummary",
+  slot: "ExpandIconWrapper",
+  overridesResolver: (props, styles2) => styles2.expandIconWrapper
+})(memoTheme(({
+  theme
+}) => ({
+  display: "flex",
+  color: (theme.vars || theme).palette.action.active,
+  transform: "rotate(0deg)",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest
+  }),
+  [`&.${accordionSummaryClasses.expanded}`]: {
+    transform: "rotate(180deg)"
+  }
+})));
+const AccordionSummary = /* @__PURE__ */ reactExports.forwardRef(function AccordionSummary2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiAccordionSummary"
+  });
+  const {
+    children,
+    className,
+    expandIcon,
+    focusVisibleClassName,
+    onClick,
+    ...other
+  } = props;
+  const {
+    disabled = false,
+    disableGutters,
+    expanded,
+    toggle
+  } = reactExports.useContext(AccordionContext);
+  const handleChange = (event) => {
+    if (toggle) {
+      toggle(event);
+    }
+    if (onClick) {
+      onClick(event);
+    }
+  };
+  const ownerState = {
+    ...props,
+    expanded,
+    disabled,
+    disableGutters
+  };
+  const classes = useUtilityClasses$X(ownerState);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(AccordionSummaryRoot, {
+    focusRipple: false,
+    disableRipple: true,
+    disabled,
+    component: "div",
+    "aria-expanded": expanded,
+    className: clsx(classes.root, className),
+    focusVisibleClassName: clsx(classes.focusVisible, focusVisibleClassName),
+    onClick: handleChange,
+    ref,
+    ownerState,
+    ...other,
+    children: [/* @__PURE__ */ jsxRuntimeExports.jsx(AccordionSummaryContent, {
+      className: classes.content,
+      ownerState,
+      children
+    }), expandIcon && /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionSummaryExpandIconWrapper, {
+      className: classes.expandIconWrapper,
+      ownerState,
+      children: expandIcon
+    })]
   });
 });
 function hasCorrectMainProperty(obj) {
@@ -31857,468 +32545,12 @@ axios.HttpStatusCode = HttpStatusCode;
 axios.default = axios;
 console.log("production");
 const api = axios.create();
-api.defaults.baseURL = "http://localhost:5000/api";
+if (window.location.hostname === "localhost") {
+  api.defaults.baseURL = "http://127.0.0.1:5000/api/";
+} else {
+  api.defaults.baseURL = "https://aleksandrforupwork.pythonanywhere.com/api/";
+}
 axios.defaults.headers.common["Content-Type"] = "application/json";
-const fakeResponse = {
-  data: [
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 1,
-      "name": "Палочка Воландеморта",
-      "purchase_price_per_item": 507.6,
-      "purchase_total_price": 507.6,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 1,
-        "name": "skladoptom.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 2,
-      "name": "Палочка Грюма",
-      "purchase_price_per_item": 507.6,
-      "purchase_total_price": 507.6,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 1,
-        "name": "skladoptom.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 3,
-      "name": "Брелок с гербом Пуффендуя",
-      "purchase_price_per_item": 65.49,
-      "purchase_total_price": 65.49,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 1,
-        "name": "skladoptom.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 4,
-      "name": "Брелок с гербом Когтевран",
-      "purchase_price_per_item": 86,
-      "purchase_total_price": 86,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 5,
-      "name": "Брелок Дары Смерти",
-      "purchase_price_per_item": 81,
-      "purchase_total_price": 81,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 6,
-      "name": "Брелок Грифиндор круглый",
-      "purchase_price_per_item": 333.33333333333337,
-      "purchase_total_price": 1e3,
-      "quantity": 0,
-      "selling_price_per_item": 500,
-      "selling_quantity": 3,
-      "selling_total_price": 500,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 7,
-      "name": "Брелок Слизерин круглый",
-      "purchase_price_per_item": 60,
-      "purchase_total_price": 60,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 8,
-      "name": "Брелок Когтевран круглый",
-      "purchase_price_per_item": 60,
-      "purchase_total_price": 60,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 9,
-      "name": "Брелок Пуфендуй круглый",
-      "purchase_price_per_item": 60,
-      "purchase_total_price": 60,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 10,
-      "name": "Брелок Хогвартс круглый",
-      "purchase_price_per_item": 0,
-      "purchase_total_price": 0,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 11,
-      "name": "Светильник Сова",
-      "purchase_price_per_item": 390,
-      "purchase_total_price": 390,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 2,
-        "name": "misteria.prom.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 12,
-      "name": "Сервиз чайный Хогвартс",
-      "purchase_price_per_item": 3800,
-      "purchase_total_price": 3800,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 3,
-        "name": "Настя @tykkinykki"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 13,
-      "name": "Шарф Гриффиндор",
-      "purchase_price_per_item": 900,
-      "purchase_total_price": 900,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 4,
-        "name": "Татьяна Явтуховская"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 14,
-      "name": "Чашка с молнией",
-      "purchase_price_per_item": 165,
-      "purchase_total_price": 165,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 5,
-        "name": "starsandsky.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 15,
-      "name": "Чашка с гербом Хогвартса",
-      "purchase_price_per_item": 165,
-      "purchase_total_price": 165,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 5,
-        "name": "starsandsky.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 16,
-      "name": "Чашка с оленем",
-      "purchase_price_per_item": 165,
-      "purchase_total_price": 165,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 5,
-        "name": "starsandsky.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 17,
-      "name": "Чашка с совой",
-      "purchase_price_per_item": 135,
-      "purchase_total_price": 135,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 5,
-        "name": "starsandsky.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 18,
-      "name": "Чашка с башней",
-      "purchase_price_per_item": 135,
-      "purchase_total_price": 135,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 5,
-        "name": "starsandsky.com.ua"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 19,
-      "name": "Мешочки тканевые 23х17",
-      "purchase_price_per_item": 23,
-      "purchase_total_price": 92,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 6,
-        "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 20,
-      "name": "Мешочки тканевые 13х10",
-      "purchase_price_per_item": 10,
-      "purchase_total_price": 100,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 6,
-        "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-      }
-    },
-    {
-      "category_ids": [],
-      "created_date": "Sun, 06 Oct 2024 14:56:51 GMT",
-      "id": 21,
-      "name": "Мешочки тканевые 10х8",
-      "purchase_price_per_item": 8,
-      "purchase_total_price": 120,
-      "quantity": 0,
-      "selling_price_per_item": 0,
-      "selling_quantity": 0,
-      "selling_total_price": 0,
-      "supplier": {
-        "contact_info": null,
-        "id": 6,
-        "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-      }
-    }
-  ]
-};
-const fakeCategory = {
-  data: [
-    {
-      "id": 1,
-      "name": "Сувеніри"
-    },
-    {
-      "id": 2,
-      "name": "Гаррі Поттер"
-    },
-    {
-      "id": 3,
-      "name": "Володар Перснів"
-    }
-  ]
-};
-const fakeResponseSuppliers = {
-  data: [
-    {
-      "contact_info": null,
-      "id": 1,
-      "name": "skladoptom.com.ua"
-    },
-    {
-      "contact_info": null,
-      "id": 2,
-      "name": "misteria.prom.ua"
-    },
-    {
-      "contact_info": null,
-      "id": 3,
-      "name": "Настя @tykkinykki"
-    },
-    {
-      "contact_info": null,
-      "id": 4,
-      "name": "Татьяна Явтуховская"
-    },
-    {
-      "contact_info": null,
-      "id": 5,
-      "name": "starsandsky.com.ua"
-    },
-    {
-      "contact_info": null,
-      "id": 6,
-      "name": "https://prom.ua/ua/c2798198-gsl-internet-magazin.html"
-    }
-  ]
-};
-api.interceptors.request.use((config2) => {
-  {
-    if (config2.url === "/products") {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          config2.adapter = () => Promise.resolve({
-            data: fakeResponse.data,
-            status: 200,
-            statusText: "OK",
-            headers: {},
-            config: config2
-          });
-          resolve(config2);
-        }, 500);
-      });
-    }
-    if (config2.url === "/categories") {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          config2.adapter = () => Promise.resolve({
-            data: fakeCategory.data,
-            status: 200,
-            statusText: "OK",
-            headers: {},
-            config: config2
-          });
-          resolve(config2);
-        }, 500);
-      });
-    }
-    if (config2.url === "/suppliers") {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          config2.adapter = () => Promise.resolve({
-            data: fakeResponseSuppliers.data,
-            status: 200,
-            statusText: "OK",
-            headers: {},
-            config: config2
-          });
-          resolve(config2);
-        }, 500);
-      });
-    }
-  }
-  return config2;
-}, (error) => {
-  return Promise.reject(error);
-});
 const fetchProducts = () => {
   return api.get("/products").then((response) => response.data).catch((error) => {
     console.error("Error fetching products:", error);
@@ -32380,10 +32612,22 @@ const fetchGetAllSuppliers = () => {
     return [];
   });
 };
-const fetchAllCustomers = () => {
+const createCustomer = (customerData) => {
+  return api.post("/customers", customerData).then((response) => response.data).catch((error) => {
+    console.error("Error creating customer:", error);
+    return Promise.reject(error);
+  });
+};
+const fetchGetAllCustomers = () => {
   return api.get("/customers").then((response) => response.data).catch((error) => {
     console.error("Error fetching customers:", error);
     return [];
+  });
+};
+const fetchCustomerDetails = (customerId) => {
+  return api.get(`/customers/${customerId}`).then((response) => response.data).catch((error) => {
+    console.error("Error fetching customer details:", error);
+    throw error;
   });
 };
 const ProductContext = reactExports.createContext(void 0);
@@ -32431,7 +32675,8 @@ const modalNames = [
   "openCategoryCreate",
   "openAddSupplierOpen",
   "openNotificationDrawer",
-  "snackbarNotifyOpen"
+  "snackbarNotifyOpen",
+  "createCustomerDialog"
 ];
 function roundToDecimalPlaces(num, decimalPlaces) {
   const factor = Math.pow(10, decimalPlaces);
@@ -33131,6 +33376,12 @@ const Add = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
 const BarChart = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z"
 }), "BarChart");
+const ExpandMoreIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+}), "ExpandMore");
+const FilterListIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M10 18h4v-2h-4zM3 6v2h18V6zm3 7h12v-2H6z"
+}), "FilterList");
 const Home = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"
 }), "Home");
@@ -34012,12 +34263,47 @@ const PurchaseProductModal = ({
     }
   );
 };
+const SnackbarMessageContext = reactExports.createContext(void 0);
+const useSnackbarMessage = () => {
+  const context = reactExports.useContext(SnackbarMessageContext);
+  if (!context) {
+    throw new Error("useSnackbar must be used within a SnackbarProvider");
+  }
+  return context;
+};
+const SnackbarMessageProvider = ({ children }) => {
+  const [openSnackbarMessage, setOpenSnackbarMessage] = reactExports.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = reactExports.useState("");
+  const [severity, setSeverity] = reactExports.useState("info");
+  const showSnackbarMessage = (message, severity2) => {
+    setSnackbarMessage(message);
+    setSeverity(severity2);
+    setOpenSnackbarMessage(true);
+  };
+  const handleClose = () => {
+    setOpenSnackbarMessage(false);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(SnackbarMessageContext.Provider, { value: { showSnackbarMessage }, children: [
+    children,
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Snackbar,
+      {
+        anchorOrigin: { vertical: "top", horizontal: "right" },
+        open: openSnackbarMessage,
+        autoHideDuration: 3e3,
+        onClose: handleClose,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { onClose: handleClose, severity, children: snackbarMessage })
+      }
+    )
+  ] });
+};
 const CustomerContext = reactExports.createContext(void 0);
 const CustomerProvider = ({ children }) => {
   const [customers, setCustomers] = reactExports.useState([]);
-  const fetchCustomersFunc = async () => {
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const fetchGetAllCustomersFunc = async () => {
     try {
-      const data = await fetchAllCustomers();
+      const data = await fetchGetAllCustomers();
       if (Array.isArray(data)) {
         setCustomers(data);
       } else {
@@ -34027,10 +34313,21 @@ const CustomerProvider = ({ children }) => {
       console.error("Error fetching customers:", error);
     }
   };
+  const createCustomerFunc = async (newCustomerData) => {
+    var _a, _b;
+    try {
+      const newCustomer = await createCustomer(newCustomerData);
+      setCustomers((prevCustomers) => [...prevCustomers, newCustomer]);
+      showSnackbarMessage("Customer created successfully!", "success");
+    } catch (error) {
+      console.error("Error creating customer:", error);
+      showSnackbarMessage("Error creating customer: " + ((_b = (_a = error.response) == null ? void 0 : _a.data) == null ? void 0 : _b.error) || "Unknown error", "error");
+    }
+  };
   reactExports.useEffect(() => {
-    fetchCustomersFunc();
+    fetchGetAllCustomersFunc();
   }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerContext.Provider, { value: { customers, fetchCustomersFunc }, children });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerContext.Provider, { value: { customers, fetchCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc }, children });
 };
 const useCustomers = () => {
   const context = reactExports.useContext(CustomerContext);
@@ -34674,6 +34971,12 @@ const CreateNewCategoryModal = ({
   createNewCategory
 }) => {
   const [categoryName, setCategoryName] = reactExports.useState("");
+  const handleKeyDown = (e2) => {
+    if (e2.key === "Enter") {
+      e2.preventDefault();
+      createNewCategory(categoryName);
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -34688,7 +34991,8 @@ const CreateNewCategoryModal = ({
             fullWidth: true,
             label: "Назва категорії",
             value: categoryName,
-            onChange: (e2) => setCategoryName(e2.target.value)
+            onChange: (e2) => setCategoryName(e2.target.value),
+            onKeyDown: handleKeyDown
           }
         ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
@@ -34931,9 +35235,6 @@ const ProductsCatalog = () => {
   const showSnackbar = (message, severity) => {
     setSnackbar({ message, severity });
     setOpenSnackbar(true);
-  };
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
   };
   const handleDelete = async (productId2) => {
     try {
@@ -35200,6 +35501,7 @@ const ProductsCatalog = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "space-between", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
+          startIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(FilterListIcon, {}),
           variant: "contained",
           onClick: () => handleModalOpen("openDrawer"),
           children: "Фільтр"
@@ -35342,16 +35644,6 @@ const ProductsCatalog = () => {
         handleClose: () => handleModalClose("openAddSupplierOpen")
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Snackbar,
-      {
-        open: openSnackbar,
-        autoHideDuration: 1e3,
-        onClose: handleCloseSnackbar,
-        anchorOrigin: { vertical: "top", horizontal: "right" },
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { onClose: handleCloseSnackbar, severity: snackbar.severity, children: snackbar.message })
-      }
-    ),
     lowQuantityProducts.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
       IconButton,
       {
@@ -35403,10 +35695,190 @@ const Sales = () => {
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Перегляд і керування продажами." })
   ] });
 };
+const AddNewCustomerDialog = ({
+  handleAddCustomer,
+  handleCloseAddNewCustomerDialog,
+  openAddNewCustomerDialog,
+  setNewCustomerData,
+  newCustomerData
+}) => {
+  const [errors, setErrors] = reactExports.useState({});
+  const handleInputChange = (e2) => {
+    setNewCustomerData({
+      ...newCustomerData,
+      [e2.target.name]: e2.target.value
+    });
+    if (e2.target.name === "name" && e2.target.value.trim() !== "") {
+      setErrors((prevErrors) => ({ ...prevErrors, name: void 0 }));
+    }
+  };
+  const handleCreate = () => {
+    var _a;
+    if (newCustomerData.name.trim() === "") {
+      setErrors({ name: "Name is required" });
+      return;
+    }
+    if (((_a = newCustomerData.email) == null ? void 0 : _a.trim()) === "") {
+      setErrors({ email: "email is required" });
+      return;
+    }
+    handleAddCustomer(newCustomerData);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: openAddNewCustomerDialog, onClose: handleCloseAddNewCustomerDialog, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Add New Customer" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TextField,
+        {
+          required: true,
+          autoFocus: true,
+          margin: "dense",
+          name: "name",
+          label: "Name",
+          type: "text",
+          fullWidth: true,
+          value: newCustomerData.name,
+          onChange: handleInputChange,
+          error: !!errors.name,
+          helperText: errors.name
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TextField,
+        {
+          margin: "dense",
+          name: "email",
+          label: "Email",
+          type: "email",
+          fullWidth: true,
+          value: newCustomerData.email,
+          onChange: handleInputChange,
+          error: !!errors.email,
+          helperText: errors.email
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TextField,
+        {
+          margin: "dense",
+          name: "phone_number",
+          label: "Phone Number",
+          type: "text",
+          fullWidth: true,
+          value: newCustomerData.phone_number,
+          onChange: handleInputChange
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TextField,
+        {
+          margin: "dense",
+          name: "address",
+          label: "Address",
+          type: "text",
+          fullWidth: true,
+          value: newCustomerData.address,
+          onChange: handleInputChange
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseAddNewCustomerDialog, color: "primary", children: "Cancel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCreate, color: "primary", children: "Create" })
+    ] })
+  ] });
+};
+const CustomerPage = () => {
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const { customers } = useCustomers();
+  const [selectedCustomer, setSelectedCustomer] = reactExports.useState(null);
+  const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = reactExports.useState(false);
+  const [newCustomerData, setNewCustomerData] = reactExports.useState({
+    id: 0,
+    name: "",
+    email: "",
+    phone_number: "",
+    address: ""
+  });
+  const handleGetCustomerDetails = (customerId) => {
+    fetchCustomerDetails(customerId).then((response) => {
+      if (response && response.data) {
+        setSelectedCustomer(response.data);
+      } else {
+        setSelectedCustomer(null);
+      }
+    }).catch((error) => {
+      console.error("Error fetching customer details:", error);
+    });
+  };
+  const handleCreateCustomer = (newCustomerData2) => {
+    createCustomer(newCustomerData2).then((response) => {
+      console.log("Response:", response);
+      setOpenAddNewCustomerDialog(false);
+      fetchGetAllCustomers();
+      showSnackbarMessage("Customer created successfully!", "success");
+    }).catch((error) => {
+      console.log("Error Response:", error.response);
+      showSnackbarMessage("Error creating customer: " + error.response.data.error, "error");
+      console.error("Error creating customer:", error);
+    });
+  };
+  const handleOpenModal = () => {
+    setOpenAddNewCustomerDialog(true);
+  };
+  const handleCloseAddNewCustomerDialog = () => {
+    setOpenAddNewCustomerDialog(false);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenModal, children: "Додати нового Кліента" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, style: { marginTop: "20px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ім'я" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Єлектронна пошта" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Телефонний номер" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: customers.map((customer, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { onClick: () => handleGetCustomerDetails(customer.id), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: customer.name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: customer.email }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: customer.phone_number })
+        ] }),
+        selectedCustomer && selectedCustomer.id === customer.id && /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Accordion, { expanded: true, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            AccordionSummary,
+            {
+              expandIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMoreIcon, {}),
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Purchase History" })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionDetails, { children: selectedCustomer.sales && selectedCustomer.sales.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { children: selectedCustomer.sales.map((sale) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+            sale.product,
+            " - ",
+            sale.quantity_sold,
+            " units sold at ",
+            sale.selling_price_per_item,
+            " per item"
+          ] }, sale.id)) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "No sales history available." }) })
+        ] }) }) })
+      ] }, customer.id + customer.name)) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddNewCustomerDialog,
+      {
+        setNewCustomerData,
+        newCustomerData,
+        openAddNewCustomerDialog,
+        handleCloseAddNewCustomerDialog,
+        handleAddCustomer: handleCreateCustomer
+      }
+    )
+  ] });
+};
 const ClientsManagement = () => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Управління клієнтами" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Інформація про клієнтів." })
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Інформація про клієнтів." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerPage, {})
   ] });
 };
 const Purchases = () => {
@@ -36770,6 +37242,8 @@ function useLinkClickHandler(to, _temp) {
 }
 const AddButtonWithMenu = () => {
   const [anchorEl, setAnchorEl] = reactExports.useState(null);
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const { createCustomerFunc } = useCustomers();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -36797,14 +37271,7 @@ const AddButtonWithMenu = () => {
     setModalState((prevState) => ({ ...prevState, [modal]: true }));
     handleClose();
   };
-  const [snackbar, setSnackbar] = reactExports.useState({
-    message: "",
-    severity: void 0
-  });
-  const [openSnackbar, setOpenSnackbar] = reactExports.useState(false);
   const [selectedCategories, setSelectedCategories] = reactExports.useState([]);
-  reactExports.useState([]);
-  reactExports.useState([]);
   const handleOpenAdd = () => {
     handleModalOpen("openAdd");
     setNewProduct((newProduct2) => {
@@ -36830,7 +37297,7 @@ const AddButtonWithMenu = () => {
   const resetStatesMap = {
     openAdd: resetNewProduct
   };
-  const { products, loadingState, fetchProductsFunc } = useProducts();
+  const { fetchProductsFunc } = useProducts();
   const { fetchCategoriesFunc } = useCategories();
   const { fetchSuppliersFunc } = useSuppliers();
   const handleModalClose = (modal) => {
@@ -36838,19 +37305,15 @@ const AddButtonWithMenu = () => {
     setModalState((prevState) => ({ ...prevState, [modal]: false }));
     (_a = resetStatesMap[modal]) == null ? void 0 : _a.call(resetStatesMap);
   };
-  const showSnackbar = (message, severity) => {
-    setSnackbar({ message, severity });
-    setOpenSnackbar(true);
-  };
   const handleAddProduct = async () => {
     try {
       await addProduct(newProduct);
       await fetchProductsFunc();
       handleModalClose("openAdd");
-      showSnackbar("Product added successfully!", "success");
+      showSnackbarMessage("Product added successfully!", "success");
     } catch (error) {
       console.error("There was an error adding the product!", error);
-      showSnackbar("Failed to add the product!", "error");
+      showSnackbarMessage("Failed to add the product!", "error");
     }
   };
   const handleCategoryChange = (categoryId) => {
@@ -36874,9 +37337,9 @@ const AddButtonWithMenu = () => {
     addNewCategory(categoryName).then(() => {
       fetchCategoriesFunc();
       handleModalClose("openCategoryCreate");
-      showSnackbar("Category added successfully!", "success");
+      showSnackbarMessage("Category added successfully!", "success");
     }).catch((error) => {
-      showSnackbar("Failed to add the Category!", "error");
+      showSnackbarMessage("Failed to add the Category!", "error");
       console.error("There was an error adding the product!", error);
     });
   };
@@ -36884,10 +37347,26 @@ const AddButtonWithMenu = () => {
     addSupplier(newSupplier).then(() => {
       handleModalClose("openAddSupplierOpen");
       fetchSuppliersFunc();
-      showSnackbar("Supplier completed successfully!", "success");
+      showSnackbarMessage("Supplier completed successfully!", "success");
     }).catch((error) => {
       console.error("There was an error saving the supplier!", error);
-      showSnackbar("There was an error saving the supplier!", "error");
+      showSnackbarMessage("There was an error saving the supplier!", "error");
+    });
+  };
+  const [newCustomerData, setNewCustomerData] = reactExports.useState({
+    id: 0,
+    name: "",
+    email: "",
+    phone_number: "",
+    address: ""
+  });
+  const handleCreateCustomer = (newCustomerData2) => {
+    createCustomerFunc(newCustomerData2).then(() => {
+      handleModalClose("createCustomerDialog");
+    }).catch((error) => {
+      var _a, _b;
+      console.error("Error creating customer:", error);
+      showSnackbarMessage("Error creating customer: " + ((_b = (_a = error.response) == null ? void 0 : _a.data) == null ? void 0 : _b.error) || "Unknown error", "error");
     });
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { children: [
@@ -36928,6 +37407,16 @@ const AddButtonWithMenu = () => {
               onClick: () => handleModalOpen("openAddSupplierOpen"),
               children: "Постачальника"
             }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              fullWidth: true,
+              onClick: () => handleModalOpen("createCustomerDialog"),
+              children: "Покупця"
+            }
           ) })
         ] }) })
       }
@@ -36952,17 +37441,29 @@ const AddButtonWithMenu = () => {
         handleCloseCategoryModal: () => handleModalClose("openCategoryCreate")
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    modalState.openAddSupplierOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddSupplierModal,
       {
         handleAddSupplier,
         open: modalState.openAddSupplierOpen,
         handleClose: () => handleModalClose("openAddSupplierOpen")
       }
+    ),
+    modalState.createCustomerDialog && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddNewCustomerDialog,
+      {
+        setNewCustomerData,
+        newCustomerData,
+        openAddNewCustomerDialog: modalState.createCustomerDialog,
+        handleCloseAddNewCustomerDialog: () => handleModalClose("createCustomerDialog"),
+        handleAddCustomer: handleCreateCustomer
+      }
     )
   ] });
 };
 const Sidebar = () => {
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     Box,
     {
@@ -36984,12 +37485,60 @@ const Sidebar = () => {
         // Проміжок між іконками
       },
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Головна", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Home, {}) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Управління клієнтами", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/clients", children: /* @__PURE__ */ jsxRuntimeExports.jsx(People, {}) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продажі", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/sales", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCart, {}) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Каталог товарів", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/products", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Store, {}) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Закупівлі", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/purchases", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Receipt, {}) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Аналітика та звіти", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "inherit", component: Link, to: "/crm_front_react/analytics", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart, {}) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Головна", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: isActive("/crm_front_react/") ? "primary" : "inherit",
+            component: Link,
+            to: "/crm_front_react/",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Home, {})
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Управління клієнтами", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: isActive("/crm_front_react/clients") ? "primary" : "inherit",
+            component: Link,
+            to: "/crm_front_react/clients",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(People, {})
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Продажі", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: isActive("/crm_front_react/sales") ? "primary" : "inherit",
+            component: Link,
+            to: "/crm_front_react/sales",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCart, {})
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Каталог товарів", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: isActive("/crm_front_react/products") ? "primary" : "inherit",
+            component: Link,
+            to: "/crm_front_react/products",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Store, {})
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Закупівлі", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: isActive("/crm_front_react/purchases") ? "primary" : "inherit",
+            component: Link,
+            to: "/crm_front_react/purchases",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Receipt, {})
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: "Аналітика та звіти", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: isActive("/crm_front_react/analytics") ? "primary" : "inherit",
+            component: Link,
+            to: "/crm_front_react/analytics",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(BarChart, {})
+          }
+        ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(AddButtonWithMenu, {})
       ]
     }
@@ -37012,8 +37561,5 @@ function App() {
   ] });
 }
 client.createRoot(document.getElementById("root")).render(
-  /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CustomerProvider, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(CssBaseline, {}),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(App, {})
-  ] }) }) }) }) })
+  /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SnackbarMessageProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) }) }) }) }) })
 );
