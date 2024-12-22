@@ -7,7 +7,12 @@ import {ICustomer, ICustomerDetails, IEditProduct, INewProduct, IPurchaseData, I
 console.log(import.meta.env.MODE);
 const api = axios.create();
 
-api.defaults.baseURL = 'http://localhost:5000/api'
+// Встановлюємо базову URL залежно від середовища
+if (window.location.hostname === 'localhost') {
+    api.defaults.baseURL = 'http://127.0.0.1:5000/api/'; // Локальний сервер
+} else {
+    api.defaults.baseURL = 'https://aleksandrforupwork.pythonanywhere.com/api/'; // Віддалений сервер
+}
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 // const fakeResponse = {
