@@ -66,10 +66,14 @@ import MainMenu from "./components/MainMenu/MainMenu";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
 import SpeedDial from "./components/SpeedDial/SpeedDial";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Login from "./components/Login/Login";
+import AdminPage from "./components/pages/AdminPage";
+import {useAuth} from "./components/context/AuthContext";
+import LoginPage from "./components/pages/LoginPage";
 
 
 function App() {
-
 
     return (
         <Router>
@@ -81,6 +85,13 @@ function App() {
                 <Box sx={{flex: 1, marginLeft: 'calc(80px)', padding: 3, paddingBottom: 6}}>
                     {/*<SpeedDial/>*/}
                     <Routes>
+                        <Route path="/crm_front_react/login" element={<Login/>}/>
+                        <Route
+                            path="/dashboard"
+                            element={
+                                <ProtectedRoute element={<Dashboard/>}/>
+                            }
+                        />
                         <Route path="/crm_front_react/" element={<ProductsCatalog/>}/>
                         <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
                         <Route path="/crm_front_react/sales" element={<Sales/>}/>
