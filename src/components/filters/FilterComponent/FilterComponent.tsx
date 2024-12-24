@@ -1,4 +1,4 @@
-import {Button, Grid, Slider, Typography} from "@mui/material";
+import {Box, Button, Grid, Slider, Typography} from "@mui/material";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import {ICategory, IProduct, IStateFilters, ISupplier} from "../../../utils/types";
@@ -141,14 +141,14 @@ const FilterComponent = ({
                     <Typography variant="subtitle1" gutterBottom>
                         Діапазон ціни: {filters.priceRange[0]} - {filters.priceRange[1]} грн
                     </Typography>
-                    <Slider
+                    <Box px={"10px"}> <Slider
                         value={filters.priceRange}
                         onChange={handlePriceRangeChange}
                         valueLabelDisplay="auto"
                         min={0}
                         max={priceMax} // Максимальна ціна
                         step={10} // Крок
-                    />
+                    /></Box>
 
                 </div>
                 <Typography>

@@ -600,7 +600,7 @@ const ProductsCatalog = () => {
             ) : loadingState.error ? (
                 <div>{loadingState.error}</div> // Відображення помилки
             ) : (
-                <React.Fragment>
+                <Box sx={{paddingTop: 1}}>
                     <h1>Список товарів</h1>
                     <Grid container justifyContent={"space-between"}>
                         <Grid item>
@@ -635,7 +635,9 @@ const ProductsCatalog = () => {
                         {/*    </Grid>*/}
                         {/*</Grid>*/}
                     </Grid>
-                    <Drawer open={modalState.openDrawer} onClose={() => handleModalClose("openDrawer")}>
+                    <Drawer classes={{
+                        paper:"filter_container"
+                    }} open={modalState.openDrawer} onClose={() => handleModalClose("openDrawer")}>
                         <Button variant={"outlined"} onClick={() => handleModalClose("openDrawer")}>
                             Закрити
                         </Button>
@@ -684,7 +686,7 @@ const ProductsCatalog = () => {
                     {/* Кнопка для відкриття модального вікна для додавання */}
 
 
-                </React.Fragment>
+                </Box>
             )}
 
 
@@ -796,12 +798,12 @@ const ProductsCatalog = () => {
                     </IconButton>
                 )}
                 {isAuthenticated ? (
-                    <Button variant={"contained"} onClick={handleLogout} title="Logout" endIcon={<ExitToAppIcon/>}>
+                    <Button variant={"text"} onClick={handleLogout} title="Logout" endIcon={<ExitToAppIcon/>}>
                         Вийти
                     </Button>
                 ) : (
                     <Button
-                        variant={"contained"}
+                        variant={"text"}
                         onClick={() => navigate('/crm_front_react/login')}
                         title="Login"
                         endIcon={<LoginIcon/>}
