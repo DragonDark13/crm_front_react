@@ -46482,17 +46482,20 @@ const FilterComponent = ({
         filters.priceRange[1],
         " грн"
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Slider,
-        {
-          value: filters.priceRange,
-          onChange: handlePriceRangeChange,
-          valueLabelDisplay: "auto",
-          min: 0,
-          max: priceMax,
-          step: 10
-        }
-      )
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { px: "10px", children: [
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Slider,
+          {
+            value: filters.priceRange,
+            onChange: handlePriceRangeChange,
+            valueLabelDisplay: "auto",
+            min: 0,
+            max: priceMax,
+            step: 10
+          }
+        )
+      ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
       "Знайдено ",
@@ -46524,18 +46527,27 @@ const ProductCardView = ({
     var _a2;
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "ID: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: product.id
-          }
-        )
-      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Typography,
+        {
+          style: { display: "none" },
+          variant: "subtitle1",
+          color: "textSecondary",
+          gutterBottom: true,
+          children: [
+            "ID: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                component: "span",
+                variant: "body1",
+                color: "textPrimary",
+                children: product.id
+              }
+            )
+          ]
+        }
+      ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
         "Постачальник: ",
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46588,9 +46600,33 @@ const ProductCardView = ({
       ] }) : null,
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
         isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагування заблоковано", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", disabled: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { disabled: !isAuthenticated, color: "error", onClick: () => handleDelete(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "success", onClick: () => handlePurchase(product), disabled: !isAuthenticated, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "warning", onClick: () => handleOpenSale(product), disabled: !isAuthenticated, children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            disabled: !isAuthenticated,
+            color: "error",
+            onClick: () => handleDelete(product.id),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: "success",
+            onClick: () => handlePurchase(product),
+            disabled: !isAuthenticated,
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" })
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          IconButton,
+          {
+            color: "warning",
+            onClick: () => handleOpenSale(product),
+            disabled: !isAuthenticated,
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" })
+          }
+        ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "info", onClick: () => handleOpenHistoryModal(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
       ] })
     ] }) }) }, `${product.id}${index}${product.purchase_total_price}`);
@@ -48558,7 +48594,7 @@ const ProductsCatalog = () => {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", sx: { mt: 2 }, children: "Loading..." })
         ] })
       }
-    ) : loadingState.error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: loadingState.error }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    ) : loadingState.error ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: loadingState.error }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { sx: { paddingTop: 1 }, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: "Список товарів" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "space-between", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
@@ -48569,7 +48605,9 @@ const ProductsCatalog = () => {
           children: "Фільтр"
         }
       ) }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Drawer, { open: modalState.openDrawer, onClose: () => handleModalClose("openDrawer"), children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Drawer, { classes: {
+        paper: "filter_container"
+      }, open: modalState.openDrawer, onClose: () => handleModalClose("openDrawer"), children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: () => handleModalClose("openDrawer"), children: "Закрити" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           FilterComponent,
@@ -48715,10 +48753,10 @@ const ProductsCatalog = () => {
           children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { badgeContent: lowQuantityProducts.length, color: "error", children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationImportantIcon, {}) })
         }
       ),
-      isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: handleLogout, title: "Logout", endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExitToAppIcon, {}), children: "Вийти" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "text", onClick: handleLogout, title: "Logout", endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExitToAppIcon, {}), children: "Вийти" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
-          variant: "contained",
+          variant: "text",
           onClick: () => navigate("/crm_front_react/login"),
           title: "Login",
           endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(LoginIcon, {}),

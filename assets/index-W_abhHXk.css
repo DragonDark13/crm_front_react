@@ -17,3 +17,7 @@
 .MuiDialogContent-root > .MuiFormControl-root {
   margin-top: 8px;
 }
+
+.filter_container {
+  max-width: 400px;
+}
