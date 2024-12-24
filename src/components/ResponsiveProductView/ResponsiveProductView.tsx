@@ -4,6 +4,7 @@ import {Grid, TablePagination, TextField, useMediaQuery} from '@mui/material';
 import {IProduct} from "../../utils/types";
 import ProductCardView from "../ProductCardView/ProductCardView";
 import ProductTable from "../ProductTable/ProductTable";
+import {useAuth} from "../context/AuthContext";
 
 // TODO Внизу загальну сумму і кількість
 
@@ -53,8 +54,9 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                                                                                  }, ref) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const {isAuthenticated} = useAuth();
 
-    console.log("filteredAndSearchedProducts",filteredAndSearchedProducts);
+    console.log("filteredAndSearchedProducts", filteredAndSearchedProducts);
     return (
         <React.Fragment>
             <Grid container justifyContent={"flex-end"}>
@@ -89,6 +91,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                     handlePurchase={handlePurchase}
                     handleOpenSale={handleOpenSale}
                     handleOpenHistoryModal={handleOpenHistoryModal}
+                    isAuthenticated={isAuthenticated}
                 />
             ) : (
                 <ProductTable
@@ -109,6 +112,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                     handlePurchase={handlePurchase}
                     handleOpenSale={handleOpenSale}
                     handleOpenHistoryModal={handleOpenHistoryModal}
+                    isAuthenticated={isAuthenticated}
                 />
             )}
             <TablePagination

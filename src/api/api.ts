@@ -16,7 +16,7 @@ if (window.location.hostname === 'localhost') {
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const loginUser = (username: string, password: string): Promise<string> => {
-    return api.post('/login', { username, password })
+    return api.post('/login', {username, password})
         .then((response: AxiosResponse<{ token: string }>) => {
             return response.data.token; // Повертаємо токен
         })
@@ -25,6 +25,23 @@ export const loginUser = (username: string, password: string): Promise<string> =
             throw new Error('Invalid username or password');
         });
 };
+
+export const logoutUser = (): Promise<void> => {
+    const token = localStorage.getItem('token'); // Get the token from localStorage
+    return api.post('/logout', {}, {
+        headers: {
+            'Authorization': `Bearer ${token}` // Send token as part of the request
+        }
+    })
+        .then(() => {
+            // Handle successful logout (if needed)
+        })
+        .catch(error => {
+            console.error('Logout failed:', error);
+            throw new Error('Error during logout');
+        });
+};
+
 // Функція для отримання списку продуктів
 export const fetchProducts = () => {
     return api.get('/products')

@@ -22,55 +22,18 @@ import {CircularProgress, Typography} from '@mui/material'; // Імпорт ко
 
 import './scss/main.scss';
 
-import {
-    addNewCategory,
-    addProduct,
-    addPurchase,
-    addSale, addSupplier,
-    deleteProduct,
-    fetchGetAllCategories, fetchGetAllSuppliers,
-    fetchProducts,
-    updateProduct
-} from "./api/api";
-import AddProductModal from "./components/dialogs/AddProductModal/AddProductModal";
-import EditProductModal from "./components/dialogs/EditProductModal/EditProductModal";
-import PurchaseProductModal from "./components/dialogs/PurchaseProductModal/PurchaseProductModal";
-import SaleProductModal from "./components/dialogs/SaleProductModal/SaleProductModal";
-import CreateNewCategoryModal from "./components/dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
-import AddSupplierModal from "./components/dialogs/AddSupplierModal/AddSupplierModal";
-import FilterComponent from "./components/filters/FilterComponent/FilterComponent";
-import {
-    ICategory,
-    IEditProduct,
-    INewProduct,
-    INewSupplier,
-    IProduct,
-    IPurchaseData,
-    ISaleData, IStateFilters,
-    ISupplier, modalNames, ModalNames
-} from "./utils/types";
-import ResponsiveProductView from "./components/ResponsiveProductView/ResponsiveProductView";
-import NotificationPanel from "./components/NotificationPanel/NotificationPanel";
-import {formatDate} from "./utils/function";
-import ConfirmDeleteModal from "./components/dialogs/ConfirmDeleteModal/ConfirmDeleteModal";
-import SupplierDetails from "./components/SupplierDetails/SupplierDetails";
-import CustomerPage from "./components/CustomerPage/CustomerPage";
-import {useProducts} from "./components/Provider/ProductContext";
 import Dashboard from "./components/Dachboard/Dashboard";
 import ProductsCatalog from "./components/pages/ProductsCatalog";
 import ReportsAnalytics from "./components/pages/ReportsAnalytics";
 import Sales from "./components/pages/Sales";
 import ClientsManagement from "./components/pages/ClientsManagement";
 import Purchases from "./components/pages/Purchases";
-import MainMenu from "./components/MainMenu/MainMenu";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
 import SpeedDial from "./components/SpeedDial/SpeedDial";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Login from "./components/Login/Login";
-import AdminPage from "./components/pages/AdminPage";
-import {useAuth} from "./components/context/AuthContext";
-import LoginPage from "./components/pages/LoginPage";
+
 
 
 function App() {

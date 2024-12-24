@@ -3,6 +3,7 @@ import {TextField, Button, Box, Typography, Container} from '@mui/material';
 import {useAuth} from '../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
 import {loginUser} from "../../api/api";
+import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');
@@ -10,6 +11,8 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>('');
     const {login} = useAuth();
     const navigate = useNavigate();
+      const { showSnackbarMessage } = useSnackbarMessage();
+
 
     function isLocalStorageAvailable() {
         try {
@@ -31,7 +34,8 @@ const Login: React.FC = () => {
                 localStorage.setItem('token', token); // Зберігаємо токен
             }
             login(token); // Встановлюємо токен в контекст
-            navigate('/crm_front_react/dashboard'); // Перенаправляємо на захищену сторінку після логіну
+            showSnackbarMessage('Ви ввійшли в систему', 'success')
+            navigate('/crm_front_react/'); // Перенаправляємо на захищену сторінку після логіну
         } catch (error) {
             setError('Invalid username or password');
             console.error('Login failed', error);

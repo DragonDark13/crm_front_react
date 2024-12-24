@@ -11,6 +11,7 @@ import {ICustomerDetails} from "../../utils/types";
 import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import {AxiosError} from "axios";
+import {useAuth} from "../context/AuthContext";
 //TODO перенести у запити у відповідні контексти
 
 
@@ -26,6 +27,8 @@ const CustomerPage: React.FC = () => {
         phone_number: '',
         address: '',
     });
+    const {isAuthenticated,} = useAuth();
+
 
     // Отримуємо список покупців при завантаженні компоненту
     // useEffect(() => {
@@ -93,8 +96,8 @@ const CustomerPage: React.FC = () => {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleOpenModal}>
-               Додати нового Кліента
+            <Button disabled={!isAuthenticated} variant="contained" color="primary" onClick={handleOpenModal}>
+                Додати нового Кліента
             </Button>
 
             {/* Таблиця з переліком усіх покупців */}
@@ -108,8 +111,8 @@ const CustomerPage: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {customers.map((customer,index) => (
-                            <React.Fragment key={customer.id+customer.name}>
+                        {customers.map((customer, index) => (
+                            <React.Fragment key={customer.id + customer.name}>
                                 <TableRow onClick={() => handleGetCustomerDetails(customer.id)}>
                                     <TableCell>{customer.name}</TableCell>
                                     <TableCell>{customer.email}</TableCell>

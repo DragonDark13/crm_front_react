@@ -13,13 +13,14 @@ import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {AxiosError} from "axios";
 import {useCustomers} from "../Provider/CustomerContext";
+import {useAuth} from "../context/AuthContext";
 
 //TODO Додати опцію Зберігти і додати ще
 
 const AddButtonWithMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const {showSnackbarMessage} = useSnackbarMessage()
-        const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
+    const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
 
 
     const handleClick = (event) => {
@@ -185,10 +186,13 @@ const AddButtonWithMenu = () => {
             });
     };
 
+    const {isAuthenticated} = useAuth();
+
+
     return (
         <Box>
             <Tooltip title="Додати" placement="right">
-                <IconButton color="primary" onClick={handleClick}>
+                <IconButton disabled={!isAuthenticated} color="primary" onClick={handleClick}>
                     <Add/>
                 </IconButton>
             </Tooltip>

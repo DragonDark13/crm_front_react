@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AuthContextType {
   token: string | null;
+  isAuthenticated: boolean; // Нове значення для перевірки автентифікації
   login: (token: string) => void;
   logout: () => void;
 }
@@ -14,16 +15,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = (token: string) => {
     setToken(token);
-    localStorage.setItem('token', token); // зберігаємо токен в localStorage
+    localStorage.setItem('token', token); // Зберігаємо токен в localStorage
   };
 
   const logout = () => {
     setToken(null);
-    localStorage.removeItem('token'); // очищаємо токен з localStorage
+    localStorage.removeItem('token'); // Очищаємо токен з localStorage
   };
 
+  const isAuthenticated = !!token; // Перевірка, чи є токен
+
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

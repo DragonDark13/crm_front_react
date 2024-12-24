@@ -52,12 +52,16 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                    filteredAndSearchedProducts,
                                                                    itemsPerPage,
                                                                    currentPage,
-                                                                   selectedLowProductId
+                                                                   selectedLowProductId,
+                                                                   isAuthenticated
                                                                }, ref) => {
 
     // Підрахунок загальної кількості та суми
+    // Підрахунок загальної кількості та суми
     const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
-    const totalSumPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.purchase_total_price, 0);
+    const totalSumPurchase = isAuthenticated
+        ? filteredAndSearchedProducts.reduce((sum, product) => sum + product.purchase_total_price, 0)
+        : 0; // Сума закупівельна тільки для залогінених
 
     const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_quantity, 0);
     const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_total_price, 0);
@@ -162,24 +166,23 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                 {'low-quantity': lowQuantity},
                                             )}>
                                             {product.quantity}</Typography>
-
-                                            {/*<Typography color={"primary"}>*/}
-                                            {/*    {product.selling_quantity}*/}
-                                            {/*</Typography>*/}
                                         </TableCell>
                                         <TableCell>
-                                            <Typography color={"secondary"}>
-                                                {product.purchase_price_per_item.toFixed(2)}
-                                            </Typography>
+                                            {isAuthenticated && (
+                                                <Typography color={"secondary"}>
+                                                    {product.purchase_price_per_item.toFixed(2)}
+                                                </Typography>
+                                            )}
                                             <Typography color={"primary"}>
                                                 {product.selling_price_per_item.toFixed(2)}
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-
-                                            <Typography color={"secondary"}>
-                                                {product.purchase_total_price.toFixed(2)}
-                                            </Typography>
+                                            {isAuthenticated && (
+                                                <Typography color={"secondary"}>
+                                                    {product.purchase_total_price.toFixed(2)}
+                                                </Typography>
+                                            )}
                                             <Typography color={"primary"}>
                                                 {product.selling_total_price.toFixed(2)}
                                             </Typography>
@@ -187,23 +190,26 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         <TableCell>
                                             <Box display={"flex"}>
                                                 <Tooltip title="Редагувати">
-                                                    <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
+                                                    <IconButton disabled={!isAuthenticated} color="primary"
+                                                                onClick={() => handleOpenEdit(product)}>
                                                         <EditIcon fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="Видалити">
-                                                    <IconButton color="secondary"
+                                                    <IconButton disabled={!isAuthenticated} color="secondary"
                                                                 onClick={() => handleDelete(product.id)}>
                                                         <DeleteIcon fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="Купівля">
-                                                    <IconButton color="primary" onClick={() => handlePurchase(product)}>
+                                                    <IconButton disabled={!isAuthenticated} color="primary"
+                                                                onClick={() => handlePurchase(product)}>
                                                         <ShoppingCartIcon fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="Продаж">
-                                                    <IconButton color="primary" onClick={() => handleOpenSale(product)}>
+                                                    <IconButton disabled={!isAuthenticated} color="primary"
+                                                                onClick={() => handleOpenSale(product)}>
                                                         <SellIcon fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>

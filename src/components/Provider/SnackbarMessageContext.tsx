@@ -39,9 +39,10 @@ export const SnackbarMessageProvider = ({children}: SnackbarMessageProviderProps
         <SnackbarMessageContext.Provider value={{showSnackbarMessage: showSnackbarMessage}}>
             {children}
             <Snackbar
+                sx={{marginTop: 10}}
                 anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                 open={openSnackbarMessage}
-                autoHideDuration={3000}
+                autoHideDuration={2000}
                 onClose={handleClose}
                 // action={
                 //     <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
@@ -49,7 +50,7 @@ export const SnackbarMessageProvider = ({children}: SnackbarMessageProviderProps
                 //     </IconButton>
                 // }
             >
-               <Alert onClose={handleClose} severity={severity}>
+                <Alert variant="filled" onClose={handleClose} severity={severity}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>

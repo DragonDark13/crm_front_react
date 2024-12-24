@@ -10,13 +10,15 @@ import {
     modalNames,
     ModalNames
 } from "../../utils/types";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import LoginIcon from '@mui/icons-material/Login';
 import {
     addNewCategory,
     addProduct,
     addPurchase, addSale, addSupplier,
     deleteProduct,
     fetchGetAllCategories,
-    fetchGetAllSuppliers,
+    fetchGetAllSuppliers, logoutUser,
     updateProduct
 } from "../../api/api";
 import {formatDate} from "../../utils/function";
@@ -46,6 +48,9 @@ import NotificationImportantIcon from "@mui/icons-material/NotificationImportant
 import NotificationPanel from "../NotificationPanel/NotificationPanel";
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import {useAuth} from "../context/AuthContext";
+import {useNavigate} from "react-router-dom";
+import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 
 const ProductsCatalog = () => {
 
@@ -57,6 +62,24 @@ const ProductsCatalog = () => {
     const [categories, setCategories] = useState<ICategory[]>([]);
     const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
+    let navigate = useNavigate();
+
+
+    const {isAuthenticated, logout} = useAuth();
+    const {showSnackbarMessage} = useSnackbarMessage()
+
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser(); // Call the logout API function
+            logout(); // Clear token from context and localStorage
+            showSnackbarMessage('Ви розлогінилися', 'success')
+
+            // Redirect to home page or login page (e.g., using React Router)
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
 
     // const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
     //     isLoading: true,
@@ -752,14 +775,39 @@ const ProductsCatalog = () => {
             {/*    </Alert>*/}
             {/*</Snackbar>*/}
 
-            {lowQuantityProducts.length > 0 && (
-                <IconButton onClick={() => handleModalOpen("openNotificationDrawer")}
-                            style={{position: "absolute", top: 16, right: 16}}>
-                    <Badge badgeContent={lowQuantityProducts.length} color="error">
-                        <NotificationImportantIcon/>
-                    </Badge>
-                </IconButton>
-            )}
+            {/*{lowQuantityProducts.length > 0 && (*/}
+            {/*    <IconButton onClick={() => handleModalOpen("openNotificationDrawer")}*/}
+            {/*                style={{position: "absolute", top: 16, right: 16}}>*/}
+            {/*        <Badge badgeContent={lowQuantityProducts.length} color="error">*/}
+            {/*            <NotificationImportantIcon/>*/}
+            {/*        </Badge>*/}
+            {/*    </IconButton>*/}
+            {/*)}*/}
+
+            <div style={{position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: "10px"}}>
+                {lowQuantityProducts.length > 0 && (
+                    <IconButton
+                        onClick={() => handleModalOpen("openNotificationDrawer")}
+                        title={`Low quantity products: ${lowQuantityProducts.length}`} // Tooltip for low quantity products
+                    >
+                        <Badge badgeContent={lowQuantityProducts.length} color="error">
+                            <NotificationImportantIcon/>
+                        </Badge>
+                    </IconButton>
+                )}
+                {isAuthenticated ? (
+                    <IconButton onClick={handleLogout} title="Logout">
+                        <ExitToAppIcon/>
+                    </IconButton>
+                ) : (
+                    <IconButton
+                        onClick={() => navigate('/crm_front_react/login')}
+                        title="Login"
+                    >
+                        <LoginIcon/>
+                    </IconButton>
+                )}
+            </div>
 
 
             {/* Drawer Component */}
@@ -771,6 +819,7 @@ const ProductsCatalog = () => {
 
             <Snackbar
                 anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                sx={{marginTop: 4}}
                 open={modalState.snackbarNotifyOpen}
                 autoHideDuration={1000}
                 onClose={() => handleModalClose("snackbarNotifyOpen")}
