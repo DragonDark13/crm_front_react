@@ -11,7 +11,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
   const { token } = useAuth();
 
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/crm_front_react/login" />;
   }
 
   return <>{element}</>;

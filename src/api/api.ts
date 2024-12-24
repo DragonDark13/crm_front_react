@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
 import {ICustomer, ICustomerDetails, IEditProduct, INewProduct, IPurchaseData, ISaleData} from "../utils/types";
 
 
@@ -15,17 +15,16 @@ if (window.location.hostname === 'localhost') {
 }
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-export const loginUser = (username: string, password: string) => {
+export const loginUser = (username: string, password: string): Promise<string> => {
     return api.post('/login', { username, password })
-        .then(response => {
-            return response.data.token; // Припускаємо, що токен повертається тут
+        .then((response: AxiosResponse<{ token: string }>) => {
+            return response.data.token; // Повертаємо токен
         })
         .catch(error => {
             console.error('Login failed:', error);
             throw new Error('Invalid username or password');
         });
 };
-
 // Функція для отримання списку продуктів
 export const fetchProducts = () => {
     return api.get('/products')

@@ -87,7 +87,7 @@ function App() {
                     <Routes>
                         <Route path="/crm_front_react/login" element={<Login/>}/>
                         <Route
-                            path="/dashboard"
+                            path="/crm_front_react/dashboard"
                             element={
                                 <ProtectedRoute element={<Dashboard/>}/>
                             }

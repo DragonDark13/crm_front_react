@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
 
     const handleLogout = () => {
         logout();
-        navigate('/login'); // Після виходу з системи, перенаправляє на сторінку логіну
+        navigate('/crm_front_react/login'); // Після виходу з системи, перенаправляє на сторінку логіну
     };
 
     return (
