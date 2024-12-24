@@ -45838,7 +45838,7 @@ const SnackbarMessageProvider = ({ children }) => {
         sx: { marginTop: 10 },
         anchorOrigin: { vertical: "top", horizontal: "right" },
         open: openSnackbarMessage,
-        autoHideDuration: 2e3,
+        autoHideDuration: 1300,
         onClose: handleClose,
         children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { variant: "filled", onClose: handleClose, severity, children: snackbarMessage })
       }
@@ -48715,12 +48715,14 @@ const ProductsCatalog = () => {
           children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { badgeContent: lowQuantityProducts.length, color: "error", children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationImportantIcon, {}) })
         }
       ),
-      isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { onClick: handleLogout, title: "Logout", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ExitToAppIcon, {}) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
-        IconButton,
+      isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: handleLogout, title: "Logout", endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExitToAppIcon, {}), children: "Вийти" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
         {
+          variant: "contained",
           onClick: () => navigate("/crm_front_react/login"),
           title: "Login",
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(LoginIcon, {})
+          endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(LoginIcon, {}),
+          children: "Увійти"
         }
       )
     ] }),
