@@ -42,7 +42,7 @@ export const SnackbarMessageProvider = ({children}: SnackbarMessageProviderProps
                 sx={{marginTop: 10}}
                 anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                 open={openSnackbarMessage}
-                autoHideDuration={2000}
+                autoHideDuration={1300}
                 onClose={handleClose}
                 // action={
                 //     <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>

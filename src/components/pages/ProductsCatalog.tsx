@@ -796,16 +796,18 @@ const ProductsCatalog = () => {
                     </IconButton>
                 )}
                 {isAuthenticated ? (
-                    <IconButton onClick={handleLogout} title="Logout">
-                        <ExitToAppIcon/>
-                    </IconButton>
+                    <Button variant={"contained"} onClick={handleLogout} title="Logout" endIcon={<ExitToAppIcon/>}>
+                        Вийти
+                    </Button>
                 ) : (
-                    <IconButton
+                    <Button
+                        variant={"contained"}
                         onClick={() => navigate('/crm_front_react/login')}
                         title="Login"
+                        endIcon={<LoginIcon/>}
                     >
-                        <LoginIcon/>
-                    </IconButton>
+                        Увійти
+                    </Button>
                 )}
             </div>
 
