@@ -14882,7 +14882,7 @@ const ErrorOutlineIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("pa
 const InfoOutlinedIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"
 }), "InfoOutlined");
-const ClearIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+const ClearIcon$1 = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 }), "Close");
 const useUtilityClasses$X = (ownerState) => {
@@ -15058,7 +15058,7 @@ const Alert = /* @__PURE__ */ reactExports.forwardRef(function Alert2(inProps, r
     ownerState
   });
   const [CloseIconSlot, closeIconProps] = useSlot("closeIcon", {
-    elementType: ClearIcon,
+    elementType: ClearIcon$1,
     externalForwardedProps,
     ownerState
   });
@@ -41315,6 +41315,9 @@ const Add = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
 const BarChart = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z"
 }), "BarChart");
+const ClearIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+}), "Clear");
 const CloseIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 }), "Close");
@@ -45863,13 +45866,8 @@ const AddNewCustomerDialog = ({
     }
   };
   const handleCreate = () => {
-    var _a2;
     if (newCustomerData.name.trim() === "") {
       setErrors({ name: "Name is required" });
-      return;
-    }
-    if (((_a2 = newCustomerData.email) == null ? void 0 : _a2.trim()) === "") {
-      setErrors({ email: "email is required" });
       return;
     }
     handleAddCustomer(newCustomerData);
@@ -45902,9 +45900,7 @@ const AddNewCustomerDialog = ({
           type: "email",
           fullWidth: true,
           value: newCustomerData.email,
-          onChange: handleInputChange,
-          error: !!errors.email,
-          helperText: errors.email
+          onChange: handleInputChange
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46129,7 +46125,7 @@ const AddButtonWithMenu = () => {
   };
   const { isAuthenticated } = useAuth();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Додати", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { disabled: !isAuthenticated, color: "primary", onClick: handleClick, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Add, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Додати", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { disabled: !isAuthenticated, color: "primary", onClick: handleClick, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Add, {}) }) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       Popover,
       {
@@ -46525,111 +46521,168 @@ const ProductCardView = ({
 }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 2, children: filteredAndSearchedProducts.length > 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
     var _a2;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        Typography,
-        {
-          style: { display: "none" },
-          variant: "subtitle1",
-          color: "textSecondary",
-          gutterBottom: true,
-          children: [
-            "ID: ",
+    const lowQuantity = product.quantity < 5;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Grid,
+      {
+        item: true,
+        xs: 12,
+        sm: 6,
+        md: 4,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h5", gutterBottom: true, fontWeight: "bold", children: product.name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Typography,
+            {
+              style: { display: "none" },
+              variant: "subtitle1",
+              color: "textSecondary",
+              gutterBottom: true,
+              children: [
+                "ID: ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Typography,
+                  {
+                    component: "span",
+                    variant: "body1",
+                    color: "textPrimary",
+                    children: product.id
+                  }
+                )
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+            "Постачальник: ",
             /* @__PURE__ */ jsxRuntimeExports.jsx(
               Typography,
               {
                 component: "span",
                 variant: "body1",
                 color: "textPrimary",
-                children: product.id
+                children: ((_a2 = product.supplier) == null ? void 0 : _a2.name) || "N/A"
               }
             )
-          ]
-        }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "Постачальник: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: ((_a2 = product.supplier) == null ? void 0 : _a2.name) || "N/A"
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-        "Кількість: ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Typography,
-          {
-            component: "span",
-            variant: "body1",
-            color: "textPrimary",
-            children: product.quantity
-          }
-        )
-      ] }),
-      isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-          "Ціна за 1 шт: ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Typography,
-            {
-              component: "span",
-              variant: "body1",
-              color: "textPrimary",
-              children: product.purchase_price_per_item
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-          "Сума: ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Typography,
-            {
-              component: "span",
-              variant: "body1",
-              color: "textPrimary",
-              children: product.purchase_total_price
-            }
-          )
-        ] })
-      ] }) : null,
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
-        isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагування заблоковано", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", disabled: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          IconButton,
-          {
-            disabled: !isAuthenticated,
-            color: "error",
-            onClick: () => handleDelete(product.id),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          IconButton,
-          {
-            color: "success",
-            onClick: () => handlePurchase(product),
-            disabled: !isAuthenticated,
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" })
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          IconButton,
-          {
-            color: "warning",
-            onClick: () => handleOpenSale(product),
-            disabled: !isAuthenticated,
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" })
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "info", onClick: () => handleOpenHistoryModal(product.id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
-      ] })
-    ] }) }) }, `${product.id}${index}${product.purchase_total_price}`);
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+            "Кількість: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                className: clsx(
+                  { "low-quantity": lowQuantity }
+                ),
+                component: "span",
+                variant: "body1",
+                color: !lowQuantity ? "textSecondary" : "error",
+                children: product.quantity
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+            "К-ть Продано: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                component: "span",
+                variant: "body1",
+                color: "primary",
+                children: product.selling_quantity
+              }
+            )
+          ] }),
+          isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+              "Ціна за 1 шт (Закупівля):",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  component: "span",
+                  variant: "body1",
+                  color: "secondary",
+                  children: product.purchase_price_per_item.toFixed(2)
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+              "Ціна за 1 шт (Продаж):",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  component: "span",
+                  variant: "body1",
+                  color: "primary",
+                  children: product.selling_price_per_item.toFixed(2)
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+              "Сума Закупівля :",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  component: "span",
+                  variant: "body1",
+                  color: "secondary",
+                  children: product.purchase_total_price.toFixed(2)
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+              "Прогнозована Сума Продажу:",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  component: "span",
+                  variant: "body1",
+                  color: "primary",
+                  children: product.selling_total_price.toFixed(2)
+                }
+              )
+            ] })
+          ] }) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
+            isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагування заблоковано", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", disabled: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              IconButton,
+              {
+                disabled: !isAuthenticated,
+                color: "error",
+                onClick: () => handleDelete(product.id),
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
+              }
+            ) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              IconButton,
+              {
+                color: "success",
+                onClick: () => handlePurchase(product),
+                disabled: !isAuthenticated,
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" })
+              }
+            ) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              IconButton,
+              {
+                color: "warning",
+                onClick: () => handleOpenSale(product),
+                disabled: !isAuthenticated,
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" })
+              }
+            ) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              IconButton,
+              {
+                color: "info",
+                onClick: () => handleOpenHistoryModal(product.id),
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" })
+              }
+            ) })
+          ] })
+        ] }) })
+      },
+      `${product.id}${index}${product.purchase_total_price}`
+    );
   }) }) });
 };
 const ProductTable = reactExports.forwardRef(({
@@ -46757,7 +46810,7 @@ const ProductTable = reactExports.forwardRef(({
               /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "primary", children: product.selling_total_price.toFixed(2) })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 IconButton,
                 {
                   disabled: !isAuthenticated,
@@ -46765,8 +46818,8 @@ const ProductTable = reactExports.forwardRef(({
                   onClick: () => handleOpenEdit(product),
                   children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" })
                 }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 IconButton,
                 {
                   disabled: !isAuthenticated,
@@ -46774,8 +46827,8 @@ const ProductTable = reactExports.forwardRef(({
                   onClick: () => handleDelete(product.id),
                   children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteIcon, { fontSize: "small" })
                 }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Купівля", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 IconButton,
                 {
                   disabled: !isAuthenticated,
@@ -46783,8 +46836,8 @@ const ProductTable = reactExports.forwardRef(({
                   onClick: () => handlePurchase(product),
                   children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingCartIcon, { fontSize: "small" })
                 }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ) }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Продаж", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 IconButton,
                 {
                   disabled: !isAuthenticated,
@@ -46792,7 +46845,7 @@ const ProductTable = reactExports.forwardRef(({
                   onClick: () => handleOpenSale(product),
                   children: /* @__PURE__ */ jsxRuntimeExports.jsx(SellIcon, { fontSize: "small" })
                 }
-              ) }),
+              ) }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Історія", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", onClick: () => {
                 handleOpenHistoryModal(product.id);
               }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" }) }) })
@@ -46864,7 +46917,18 @@ const ResponsiveProductView = reactExports.forwardRef(({
         fullWidth: true,
         margin: "normal",
         value: searchTerm,
-        onChange: (e2) => setSearchTerm(e2.target.value)
+        onChange: (e2) => setSearchTerm(e2.target.value),
+        InputProps: {
+          endAdornment: searchTerm && /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornment, { position: "end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            IconButton,
+            {
+              onClick: () => setSearchTerm(""),
+              edge: "end",
+              "aria-label": "Очистити поле",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ClearIcon, {})
+            }
+          ) })
+        }
       }
     ) }) }),
     isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -48003,7 +48067,12 @@ const SaleProductModal = ({
   purchasePricePerItem,
   quantityOnStock
 }) => {
-  const { customers } = useCustomers();
+  const { customers, fetchCustomersFunc } = useCustomers();
+  reactExports.useEffect(() => {
+    if (openSale) {
+      fetchCustomersFunc();
+    }
+  }, []);
   const [errors, setErrors] = reactExports.useState({
     customer: "",
     sale_date: "",
@@ -48068,7 +48137,7 @@ const SaleProductModal = ({
                   value: saleData.customer,
                   onChange: (e2) => setSaleData({ ...saleData, customer: e2.target.value }),
                   fullWidth: true,
-                  children: customers.map((customer) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: customer.id, children: customer.name }, customer.id))
+                  children: customers.map((customer) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: customer.id, children: customer.name }, customer.id + customer.name))
                 }
               ),
               errors.customer && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "error", children: errors.customer })
@@ -48764,13 +48833,16 @@ const ProductsCatalog = () => {
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
       Drawer,
       {
         anchor: "right",
         open: modalState.openNotificationDrawer,
         onClose: () => handleModalClose("openNotificationDrawer"),
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationPanel, { handleListItemClick, lowQuantityProducts })
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: () => handleModalClose("openNotificationDrawer"), children: "Закрити" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(NotificationPanel, { handleListItemClick, lowQuantityProducts })
+        ]
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
