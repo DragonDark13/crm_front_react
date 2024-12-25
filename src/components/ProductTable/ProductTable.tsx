@@ -190,28 +190,36 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         <TableCell>
                                             <Box display={"flex"}>
                                                 <Tooltip title="Редагувати">
+                                                    <span>
                                                     <IconButton disabled={!isAuthenticated} color="primary"
                                                                 onClick={() => handleOpenEdit(product)}>
                                                         <EditIcon fontSize={"small"}/>
                                                     </IconButton>
+                                                    </span>
                                                 </Tooltip>
                                                 <Tooltip title="Видалити">
+                                                    <span>
                                                     <IconButton disabled={!isAuthenticated} color="secondary"
                                                                 onClick={() => handleDelete(product.id)}>
                                                         <DeleteIcon fontSize={"small"}/>
                                                     </IconButton>
+                                                    </span>
                                                 </Tooltip>
                                                 <Tooltip title="Купівля">
+                                                    <span>
                                                     <IconButton disabled={!isAuthenticated} color="primary"
                                                                 onClick={() => handlePurchase(product)}>
                                                         <ShoppingCartIcon fontSize={"small"}/>
                                                     </IconButton>
+                                                    </span>
                                                 </Tooltip>
                                                 <Tooltip title="Продаж">
+                                                    <span>
                                                     <IconButton disabled={!isAuthenticated} color="primary"
                                                                 onClick={() => handleOpenSale(product)}>
                                                         <SellIcon fontSize={"small"}/>
                                                     </IconButton>
+                                                    </span>
                                                 </Tooltip>
                                                 <Tooltip title="Історія">
                                                     <IconButton size={"small"} onClick={() => {

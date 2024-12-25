@@ -14,7 +14,7 @@ import {useEffect, useState} from "react";
 import QuantityField from "../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../utils/function";
 import TotalPriceField from "../../FormComponents/TotalPriceField";
-import {ISaleData} from "../../../utils/types";
+import {ICustomer, ISaleData} from "../../../utils/types";
 import {useCustomers} from "../../Provider/CustomerContext";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
@@ -42,7 +42,14 @@ const SaleProductModal = ({
                           }: ISaleProductModal) => {
 
 
-    const {customers} = useCustomers();
+    const {customers, fetchCustomersFunc} = useCustomers();
+
+    useEffect(() => {
+        if (openSale) {
+            fetchCustomersFunc();
+        }
+    }, []);
+
 
 
     const [errors, setErrors] = useState({
@@ -99,7 +106,7 @@ const SaleProductModal = ({
 
     const isSubmitDisabled = () => {
         return (
-            saleData.customer=== '' ||
+            saleData.customer === '' ||
             saleData.selling_price_per_item <= 0 ||
             saleData.quantity <= 0 || saleData.quantity > quantityOnStock
         );
@@ -124,7 +131,7 @@ const SaleProductModal = ({
                                 fullWidth
                             >
                                 {customers.map((customer) => (
-                                    <MenuItem key={customer.id} value={customer.id}>
+                                    <MenuItem key={customer.id + customer.name} value={customer.id}>
                                         {customer.name}
                                     </MenuItem>
                                 ))}

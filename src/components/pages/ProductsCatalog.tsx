@@ -816,7 +816,11 @@ const ProductsCatalog = () => {
 
             {/* Drawer Component */}
             <Drawer anchor="right" open={modalState.openNotificationDrawer}
+
                     onClose={() => handleModalClose("openNotificationDrawer")}>
+                <Button variant={"outlined"} onClick={() => handleModalClose("openNotificationDrawer")}>
+                    Закрити
+                </Button>
                 <NotificationPanel handleListItemClick={handleListItemClick} lowQuantityProducts={lowQuantityProducts}/>
             </Drawer>
 

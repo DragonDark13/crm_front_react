@@ -41,10 +41,7 @@ const AddNewCustomerDialog = ({
             return; // зупиняємо процес створення, якщо ім'я порожнє
         }
 
-        if (newCustomerData.email?.trim() === '') {
-            setErrors({email: 'email is required'});
-            return; // зупиняємо процес створення, якщо ім'я порожнє
-        }
+
 
         handleAddCustomer(newCustomerData);
     };
@@ -74,8 +71,6 @@ const AddNewCustomerDialog = ({
                     fullWidth
                     value={newCustomerData.email}
                     onChange={handleInputChange}
-                    error={!!errors.email}  // Встановлюємо статус помилки
-                    helperText={errors.email}  // Виводимо текст помилки
                 />
                 <TextField
                     margin="dense"
