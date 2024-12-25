@@ -27,7 +27,7 @@ import {
     Box,
     Button,
     CircularProgress,
-    Container,
+    Container, Divider,
     Drawer,
     Grid,
     IconButton,
@@ -636,7 +636,7 @@ const ProductsCatalog = () => {
                         {/*</Grid>*/}
                     </Grid>
                     <Drawer classes={{
-                        paper:"filter_container"
+                        paper: "filter_container"
                     }} open={modalState.openDrawer} onClose={() => handleModalClose("openDrawer")}>
                         <Button variant={"outlined"} onClick={() => handleModalClose("openDrawer")}>
                             Закрити

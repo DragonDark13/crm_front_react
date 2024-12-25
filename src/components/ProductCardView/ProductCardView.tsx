@@ -110,24 +110,30 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                         )}
 
                                         <Tooltip title="Видалити">
+                                            <span>
                                             <IconButton disabled={!isAuthenticated} color="error"
                                                         onClick={() => handleDelete(product.id)}>
                                                 <DeleteIcon fontSize="small"/>
                                             </IconButton>
+                                            </span>
                                         </Tooltip>
 
                                         <Tooltip title="Купівля">
+                                            <span>
                                             <IconButton color="success" onClick={() => handlePurchase(product)}
                                                         disabled={!isAuthenticated}>
                                                 <ShoppingCartIcon fontSize="small"/>
                                             </IconButton>
+                                            </span>
                                         </Tooltip>
 
                                         <Tooltip title="Продаж">
+                                            <span>
                                             <IconButton color="warning" onClick={() => handleOpenSale(product)}
                                                         disabled={!isAuthenticated}>
                                                 <SellIcon fontSize="small"/>
                                             </IconButton>
+                                            </span>
                                         </Tooltip>
 
                                         <Tooltip title="Історія">

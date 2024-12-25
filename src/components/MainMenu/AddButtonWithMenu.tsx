@@ -192,9 +192,11 @@ const AddButtonWithMenu = () => {
     return (
         <Box>
             <Tooltip title="Додати" placement="right">
-                <IconButton disabled={!isAuthenticated} color="primary" onClick={handleClick}>
-                    <Add/>
-                </IconButton>
+               <span>
+                   <IconButton disabled={!isAuthenticated} color="primary" onClick={handleClick}>
+                                   <Add/>
+                               </IconButton>
+               </span>
             </Tooltip>
             <Popover
                 id={id}
