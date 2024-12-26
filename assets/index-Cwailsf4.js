@@ -47352,7 +47352,7 @@ const CombinedHistoryTable = ({ productHistory }) => {
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
     ] }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory && productHistory.purchase && productHistory.sales ? (
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory && productHistory.purchase && productHistory.purchase.length > 0 && productHistory.sales && productHistory.sales.length > 0 ? (
       // Об'єднання та сортування закупівель і продажів
       [
         ...productHistory.purchase.map((record) => ({ ...record, type: "purchase" })),
@@ -47381,7 +47381,7 @@ const CombinedHistoryTable = ({ productHistory }) => {
         record.id
       ))
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 6, children: "Немає жодного запису в журналі." }) }) }),
-    productHistory && productHistory.purchase && productHistory.sales && /* @__PURE__ */ jsxRuntimeExports.jsxs(TableFooter, { children: [
+    productHistory && productHistory.purchase && productHistory.purchase.length > 0 && productHistory.sales && productHistory.sales.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(TableFooter, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість продажів:" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
