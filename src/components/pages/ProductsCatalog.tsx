@@ -684,7 +684,7 @@ const ProductsCatalog = () => {
             {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
             <EditProductModal suppliers={suppliers}
                               selectedCategories={selectedCategories} categories={categories}
-                              handleCategoryChange={handleCategoryChange} openEdit={modalState.openEdit}
+                               openEdit={modalState.openEdit}
                               handleCloseEdit={() => handleModalClose("openEdit")}
                               editProduct={editProduct}
                               setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}

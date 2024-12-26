@@ -1,33 +1,61 @@
-import {Checkbox, FormControlLabel, FormGroup, Grid} from "@mui/material";
-import {FC} from "react";
-import {ICategory} from "../../utils/types";
+import React, { FC } from "react";
+import {
+  Select,
+  MenuItem,
+  Chip,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  Box,
+} from "@mui/material";
+import { ICategory } from "../../utils/types";
 
 interface ICategoriesProps {
-    categories: ICategory[]; // Можна уточнити тип категорій
-    selectedCategories: number[];
-    handleCategoryChange: (id: number) => void;
+  categories: ICategory[];
+  selectedCategories: number[];
+  handleCategoryChange: (updatedCategories: number[]) => void;
 }
 
 const CategoriesSelect: FC<ICategoriesProps> = ({
-                                                    categories,
-                                                    selectedCategories,
-                                                    handleCategoryChange,
-                                                }) => (
-    <FormGroup>
-        <Grid container>
-            {categories.map((category) => (
-                <Grid item xs={12} md={3} lg={4} key={category.id+category.name}><FormControlLabel
+  categories,
+  selectedCategories,
+  handleCategoryChange,
+}) => {
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const value = event.target.value as number[];
+    handleCategoryChange(value);
+  };
 
-                    control={
-                        <Checkbox
-                            checked={selectedCategories.includes(category.id)}
-                            onChange={() => handleCategoryChange(category.id)}
-                        />
-                    }
-                    label={category.name}
-                /></Grid>
-            ))}</Grid>
-    </FormGroup>
-);
+  return (
+    <FormControl fullWidth variant="outlined">
+      <InputLabel id="categories-select-label">Categories</InputLabel>
+      <Select
+        labelId="categories-select-label"
+        multiple
+        value={selectedCategories}
+        onChange={handleChange}
+        input={<OutlinedInput label="Categories" />}
+        renderValue={(selected) => (
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            {(selected as number[]).map((id) => (
+              <Chip
+                color={"success"}
+                variant={"filled"}
+                key={id}
+                label={categories.find((category) => category.id === id)?.name}
+              />
+            ))}
+          </Box>
+        )}
+      >
+        {categories.map((category) => (
+          <MenuItem key={category.id} value={category.id}>
+            {category.name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
 
-export default CategoriesSelect
+export default CategoriesSelect;

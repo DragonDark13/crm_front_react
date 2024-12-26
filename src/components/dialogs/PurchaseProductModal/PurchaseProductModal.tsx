@@ -102,24 +102,7 @@ const PurchaseProductModal = ({
                                             ...purchaseDetails,
                                             supplier_id: Number(e.target.value)
                                         })}/>
-                        {/*<FormControl disabled fullWidth margin="normal" error={!!errors.supplier}>*/}
-                        {/*    <InputLabel id={"label3"}>Постачальник</InputLabel>*/}
-                        {/*    <Select*/}
-                        {/*        labelId={'label3'}*/}
-                        {/*        label={"Постачальник"}*/}
-                        {/*        value={purchaseDetails.supplier_id ? purchaseDetails.supplier_id : ''}  // Змінено для використання*/}
-                        {/*        // id постачальника*/}
-                        {/*        onChange={(e) => setPurchaseDetails({*/}
-                        {/*            ...purchaseDetails,*/}
-                        {/*            supplier_id: Number(e.target.value)*/}
-                        {/*        })}*/}
-                        {/*    >*/}
-                        {/*        {suppliers.map(supplier => (*/}
-                        {/*            <MenuItem key={supplier.id} value={supplier.id}>{supplier.name}</MenuItem>*/}
-                        {/*        ))}*/}
-                        {/*    </Select>*/}
-                        {/*    {errors.supplier && <span className="error">{errors.supplier}</span>}*/}
-                        {/*</FormControl>*/}
+
 
                     </Grid>
                     <Grid item xs={12} sm={4}>
@@ -139,17 +122,7 @@ const PurchaseProductModal = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                        {/*<TextField*/}
-                        {/*    label="Quantity"*/}
-                        {/*    type="number"*/}
-                        {/*    value={purchaseDetails.quantity}*/}
-                        {/*    onChange={(e) => setPurchaseDetails({...purchaseDetails, quantity: Number(e.target.value)})}*/}
-                        {/*    fullWidth*/}
-                        {/*    margin="normal"*/}
-                        {/*    error={!!errors.quantity}*/}
-                        {/*    helperText={errors.quantity}*/}
-                        {/*    inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000*/}
-                        {/*/>*/}
+
                         <QuantityField
                             onIncrement={incrementQuantity}
                             onDecrement={decrementQuantity}
@@ -201,7 +174,7 @@ const PurchaseProductModal = ({
                 <Button variant={"outlined"} onClick={handleClosePurchase}>Закрити</Button>
 
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Підтвердити закупівлю
+                    Підтвердити
                 </Button>
             </DialogActions>
         </CustomDialog>

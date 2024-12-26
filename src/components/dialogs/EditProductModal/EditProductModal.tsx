@@ -23,9 +23,6 @@ interface IEditProductModalProps {
     editProduct: IEditProduct;
     setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct | null>>;
     handleEditSave: () => void;
-    selectedCategories: number[],
-    handleCategoryChange: (categoryID: number) => void,
-
 }
 
 const EditProductModal: React.FC<IEditProductModalProps> = ({
@@ -35,7 +32,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 setEditProduct,
                                                                 handleEditSave,
                                                                 selectedCategories,
-                                                                handleCategoryChange,
                                                             }) => {
 
 
@@ -147,23 +143,23 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     };
 
 
-    handleCategoryChange = (categoryId: number) => {
+    const handleCategoryChange = (categoryId: number[]) => {
         setEditProduct((prevProduct) => {
             // Якщо prevProduct = null, повертаємо початковий стан
             if (!prevProduct) return prevProduct;
 
-            const updatedCategories = prevProduct.category_ids.includes(categoryId)
-                ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
-                : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
+            // const updatedCategories = prevProduct.category_ids.includes(categoryId)
+            //     ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
+            //     : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
 
             // Перевіряємо, чи були зміни в категоріях
-            const isModified = compareCategories(originalProduct.category_ids, updatedCategories);
+            const isModified = compareCategories(originalProduct.category_ids, categoryId);
             setIsModified(isModified);
 
             // Повертаємо оновлений продукт
             return {
                 ...prevProduct,
-                category_ids: updatedCategories // Оновлення категорій
+                category_ids: categoryId // Оновлення категорій
             };
         });
     };
