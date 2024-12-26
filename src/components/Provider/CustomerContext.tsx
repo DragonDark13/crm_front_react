@@ -18,6 +18,7 @@ interface CustomerContextProps {
     customers: ICustomer[];
     fetchCustomersFunc: () => void;
     createCustomerFunc: (newCustomerData: ICustomerDetails) => Promise<void>; // Додаємо функцію для створення
+    loading: boolean; // Додаємо поле для перевірки завантаження
 }
 
 // Створення контексту
@@ -26,11 +27,12 @@ const CustomerContext = createContext<CustomerContextProps | undefined>(undefine
 // Створення Провайдера
 export const CustomerProvider: React.FC = ({children}) => {
     const [customers, setCustomers] = useState<ICustomer[]>([]);
-        const {showSnackbarMessage} = useSnackbarMessage()
-
+    const [loading, setLoading] = useState(true); // Стан завантаження
+    const {showSnackbarMessage} = useSnackbarMessage()
 
     const fetchGetAllCustomersFunc = async () => {
         try {
+            setLoading(true); // Починаємо завантаження
             const data = await fetchGetAllCustomers();
             if (Array.isArray(data)) {
                 setCustomers(data);
@@ -39,10 +41,12 @@ export const CustomerProvider: React.FC = ({children}) => {
             }
         } catch (error) {
             console.error('Error fetching customers:', error);
+        } finally {
+            setLoading(false); // Завершуємо завантаження
         }
     };
 
-     const createCustomerFunc = async (newCustomerData: ICustomerDetails) => {
+    const createCustomerFunc = async (newCustomerData: ICustomerDetails) => {
         try {
             const newCustomer = await createCustomer(newCustomerData);
             setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список
@@ -58,7 +62,7 @@ export const CustomerProvider: React.FC = ({children}) => {
     }, []);
 
     return (
-        <CustomerContext.Provider value={{customers, fetchCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc}}>
+        <CustomerContext.Provider value={{customers, fetchCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc, loading}}>
             {children}
         </CustomerContext.Provider>
     );

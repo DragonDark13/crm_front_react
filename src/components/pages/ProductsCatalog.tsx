@@ -55,7 +55,6 @@ import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 const ProductsCatalog = () => {
 
     const {products, loadingState, fetchProductsFunc} = useProducts();
-    // const [products, setProducts] = useState<IProduct[]>([]);
     const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
@@ -81,10 +80,6 @@ const ProductsCatalog = () => {
         }
     };
 
-    // const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: null | string }>({
-    //     isLoading: true,
-    //     error: null
-    // });
     const [newProduct, setNewProduct] = useState<INewProduct>({
         name: '',
         supplier_id: '',
@@ -149,25 +144,7 @@ const ProductsCatalog = () => {
         setFilteredProducts(products)
     }, [products])
 
-    // const fetchProductsFunc = async () => {
-    //     try {
-    //         setLoadingState({isLoading: true, error: null});
-    //         const data = await fetchProducts(); // Assuming fetchProducts() returns a Promise
-    //         if (Array.isArray(data)) {
-    //             setProducts(data);
-    //             setFilteredProducts(data);
-    //         } else {
-    //             throw new Error('Fetched data is not an array');
-    //         }
-    //     } catch (error) {
-    //         console.error('There was an error fetching the products!', error);
-    //         setLoadingState({isLoading: false, error: 'There was an error fetching the products!'});
-    //         setProducts([]);
-    //         setFilteredProducts([]);
-    //     } finally {
-    //         setLoadingState(prev => ({...prev, isLoading: false}));
-    //     }
-    // };
+
 
     const fetchSuppliersFunc = async () => {
         try {
@@ -765,26 +742,6 @@ const ProductsCatalog = () => {
                 open={modalState.openAddSupplierOpen}
                 handleClose={() => handleModalClose("openAddSupplierOpen")}
             />
-
-            {/*<Snackbar*/}
-            {/*    open={openSnackbar}*/}
-            {/*    autoHideDuration={1000}*/}
-            {/*    onClose={handleCloseSnackbar}*/}
-            {/*    anchorOrigin={{vertical: 'top', horizontal: 'right'}}*/}
-            {/*>*/}
-            {/*    <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>*/}
-            {/*        {snackbar.message}*/}
-            {/*    </Alert>*/}
-            {/*</Snackbar>*/}
-
-            {/*{lowQuantityProducts.length > 0 && (*/}
-            {/*    <IconButton onClick={() => handleModalOpen("openNotificationDrawer")}*/}
-            {/*                style={{position: "absolute", top: 16, right: 16}}>*/}
-            {/*        <Badge badgeContent={lowQuantityProducts.length} color="error">*/}
-            {/*            <NotificationImportantIcon/>*/}
-            {/*        </Badge>*/}
-            {/*    </IconButton>*/}
-            {/*)}*/}
 
             <div style={{position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: "10px"}}>
                 {lowQuantityProducts.length > 0 && (

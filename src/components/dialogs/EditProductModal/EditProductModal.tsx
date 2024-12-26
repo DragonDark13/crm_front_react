@@ -13,7 +13,7 @@ import QuantityField from "../../FormComponents/QuantityField";
 import CategoriesSelect from "../../FormComponents/CategoriesSelect";
 import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../utils/function";
 import SupplierSelect from "../../FormComponents/SupplierSelect";
-import {ICategory, IEditProduct, ISupplier} from "../../../utils/types";
+import { IEditProduct,} from "../../../utils/types";
 import {useCategories} from "../../Provider/CategoryContext";
 import {useSuppliers} from "../../Provider/SupplierContext";
 
@@ -54,18 +54,17 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
     // Обчислення загальної ціни
     useEffect(() => {
-        let totalPrice= 0
+        if (editProduct.quantity > 0 && editProduct.purchase_price_per_item > 0) {
+            const totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+            const roundedPrice = roundToDecimalPlaces(totalPrice, 2);
 
-        if (editProduct.quantity > 0) {
-            totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
-        } else {
-            totalPrice = editProduct.purchase_price_per_item;
+            // Only update if the value has changed
+            if (editProduct.purchase_total_price !== roundedPrice) {
+                handleFieldChange('purchase_total_price', roundedPrice);
+            }
         }
-
-        // setEditProduct({...editProduct, total_price: roundToDecimalPlaces(totalPrice, 2)});
-        debugger
-        handleFieldChange('purchase_total_price', roundToDecimalPlaces(totalPrice, 2))
     }, [editProduct.quantity, editProduct.purchase_price_per_item]);
+
 
     // Валідація полів
     const validateFields = () => {

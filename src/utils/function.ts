@@ -1,3 +1,5 @@
+import {MenuProps} from "@mui/material";
+
 export function roundToDecimalPlaces(num: number, decimalPlaces: number) {
     const factor = Math.pow(10, decimalPlaces);
     return Math.round(num * factor) / factor;
@@ -27,3 +29,14 @@ export const formatDateToBack = (dateString) => {
         return false
     }
 }
+
+// Об'єкт стилів для обмеження висоти меню
+export  const customMenuProps: MenuProps = {
+    open: false,
+    PaperProps: {
+        style: {
+            maxHeight: 200, // Встановлює максимальну висоту меню
+            overflowY: "auto", // Додає прокрутку при перевищенні висоти
+        },
+    }
+};

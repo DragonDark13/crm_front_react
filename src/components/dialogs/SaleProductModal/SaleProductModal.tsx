@@ -44,6 +44,7 @@ const SaleProductModal = ({
 
     const {customers, fetchCustomersFunc} = useCustomers();
 
+
     useEffect(() => {
         if (openSale) {
             fetchCustomersFunc();
