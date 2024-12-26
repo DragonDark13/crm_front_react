@@ -46177,18 +46177,28 @@ const CreateNewCategoryModal = ({
   createNewCategory
 }) => {
   const [categoryName, setCategoryName] = reactExports.useState("");
+  const [error, setError] = reactExports.useState("");
   const handleKeyDown = (e2) => {
     if (e2.key === "Enter") {
       e2.preventDefault();
-      createNewCategory(categoryName);
+      handleSave();
     }
+  };
+  const handleSave = () => {
+    if (categoryName.trim().length < 5) {
+      setError("Назва категорії повинна містити не менше 5 символів.");
+      return;
+    }
+    createNewCategory(categoryName);
+    setCategoryName("");
+    setError("");
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
       open: openCategoryCreateModal,
       handleClose: handleCloseCategoryModal,
-      title: "Добадавання нової Категорії",
+      title: "Додавання нової Категорії",
       maxWidth: "xs",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46198,12 +46208,23 @@ const CreateNewCategoryModal = ({
             label: "Назва категорії",
             value: categoryName,
             onChange: (e2) => setCategoryName(e2.target.value),
-            onKeyDown: handleKeyDown
+            onKeyDown: handleKeyDown,
+            error: !!error,
+            helperText: error
           }
         ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseCategoryModal, color: "primary", children: "Відміна" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: () => createNewCategory(categoryName), children: "Зберігти категорію" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              onClick: handleSave,
+              disabled: categoryName.trim().length < 5,
+              children: "Зберегти категорію"
+            }
+          )
         ] })
       ]
     }
@@ -46517,6 +46538,7 @@ const AddButtonWithMenu = () => {
       selling_price_per_item: 0,
       selling_quantity: 0
     });
+    setSelectedCategories([]);
   };
   const resetStatesMap = {
     openAdd: resetNewProduct
