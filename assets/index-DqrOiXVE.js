@@ -47631,7 +47631,7 @@ const PurchaseProductModal = ({
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: handleClosePurchase, children: "Закрити" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleSubmit, children: "Підтвердити закупівлю" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleSubmit, children: "Підтвердити" })
         ] })
       ]
     }
