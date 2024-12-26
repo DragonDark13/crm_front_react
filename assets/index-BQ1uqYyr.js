@@ -11302,7 +11302,7 @@ const useThemePropsDefault = (inProps) => useThemeProps$1({
   name: "MuiContainer",
   defaultTheme: defaultTheme$2
 });
-const useUtilityClasses$14 = (ownerState, componentName) => {
+const useUtilityClasses$15 = (ownerState, componentName) => {
   const getContainerUtilityClass = (slot) => {
     return generateUtilityClass(componentName, slot);
   };
@@ -11392,7 +11392,7 @@ function createContainer(options = {}) {
       fixed,
       maxWidth: maxWidth2
     };
-    const classes = useUtilityClasses$14(ownerState, componentName);
+    const classes = useUtilityClasses$15(ownerState, componentName);
     return (
       // @ts-ignore theme is injected by the styled util
       /* @__PURE__ */ jsxRuntimeExports.jsx(ContainerRoot, {
@@ -12541,7 +12541,7 @@ function getSvgIconUtilityClass(slot) {
   return generateUtilityClass("MuiSvgIcon", slot);
 }
 generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
-const useUtilityClasses$13 = (ownerState) => {
+const useUtilityClasses$14 = (ownerState) => {
   const {
     color: color2,
     fontSize,
@@ -12686,7 +12686,7 @@ const SvgIcon = /* @__PURE__ */ reactExports.forwardRef(function SvgIcon2(inProp
   if (!inheritViewBox) {
     more.viewBox = viewBox;
   }
-  const classes = useUtilityClasses$13(ownerState);
+  const classes = useUtilityClasses$14(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SvgIconRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -13190,7 +13190,7 @@ function getCollapseUtilityClass(slot) {
   return generateUtilityClass("MuiCollapse", slot);
 }
 generateUtilityClasses("MuiCollapse", ["root", "horizontal", "vertical", "entered", "hidden", "wrapper", "wrapperInner"]);
-const useUtilityClasses$12 = (ownerState) => {
+const useUtilityClasses$13 = (ownerState) => {
   const {
     orientation,
     classes
@@ -13318,7 +13318,7 @@ const Collapse = /* @__PURE__ */ reactExports.forwardRef(function Collapse2(inPr
     orientation,
     collapsedSize: collapsedSizeProp
   };
-  const classes = useUtilityClasses$12(ownerState);
+  const classes = useUtilityClasses$13(ownerState);
   const theme = useTheme();
   const timer = useTimeout();
   const wrapperRef = reactExports.useRef(null);
@@ -13478,7 +13478,7 @@ function getPaperUtilityClass(slot) {
   return generateUtilityClass("MuiPaper", slot);
 }
 generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
-const useUtilityClasses$11 = (ownerState) => {
+const useUtilityClasses$12 = (ownerState) => {
   const {
     square,
     elevation,
@@ -13551,7 +13551,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     square,
     variant
   };
-  const classes = useUtilityClasses$11(ownerState);
+  const classes = useUtilityClasses$12(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(PaperRoot, {
     as: component,
     ownerState,
@@ -13632,7 +13632,7 @@ function getAccordionUtilityClass(slot) {
   return generateUtilityClass("MuiAccordion", slot);
 }
 const accordionClasses = generateUtilityClasses("MuiAccordion", ["root", "heading", "rounded", "expanded", "disabled", "gutters", "region"]);
-const useUtilityClasses$10 = (ownerState) => {
+const useUtilityClasses$11 = (ownerState) => {
   const {
     classes,
     square,
@@ -13788,7 +13788,7 @@ const Accordion = /* @__PURE__ */ reactExports.forwardRef(function Accordion2(in
     disableGutters,
     expanded
   };
-  const classes = useUtilityClasses$10(ownerState);
+  const classes = useUtilityClasses$11(ownerState);
   const backwardCompatibleSlots = {
     transition: TransitionComponentProp,
     ...slots
@@ -13842,7 +13842,7 @@ function getAccordionDetailsUtilityClass(slot) {
   return generateUtilityClass("MuiAccordionDetails", slot);
 }
 generateUtilityClasses("MuiAccordionDetails", ["root"]);
-const useUtilityClasses$$ = (ownerState) => {
+const useUtilityClasses$10 = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -13870,7 +13870,7 @@ const AccordionDetails = /* @__PURE__ */ reactExports.forwardRef(function Accord
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$$(ownerState);
+  const classes = useUtilityClasses$10(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionDetailsRoot, {
     className: clsx(classes.root, className),
     ref,
@@ -14268,7 +14268,7 @@ function getButtonBaseUtilityClass(slot) {
   return generateUtilityClass("MuiButtonBase", slot);
 }
 const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]);
-const useUtilityClasses$_ = (ownerState) => {
+const useUtilityClasses$$ = (ownerState) => {
   const {
     disabled,
     focusVisible,
@@ -14497,7 +14497,7 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
     tabIndex,
     focusVisible
   };
-  const classes = useUtilityClasses$_(ownerState);
+  const classes = useUtilityClasses$$(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonBaseRoot, {
     as: ComponentProp,
     className: clsx(classes.root, className),
@@ -14531,7 +14531,7 @@ function getAccordionSummaryUtilityClass(slot) {
   return generateUtilityClass("MuiAccordionSummary", slot);
 }
 const accordionSummaryClasses = generateUtilityClasses("MuiAccordionSummary", ["root", "expanded", "focusVisible", "disabled", "gutters", "contentGutters", "content", "expandIconWrapper"]);
-const useUtilityClasses$Z = (ownerState) => {
+const useUtilityClasses$_ = (ownerState) => {
   const {
     classes,
     expanded,
@@ -14652,7 +14652,7 @@ const AccordionSummary = /* @__PURE__ */ reactExports.forwardRef(function Accord
     disabled,
     disableGutters
   };
-  const classes = useUtilityClasses$Z(ownerState);
+  const classes = useUtilityClasses$_(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(AccordionSummaryRoot, {
     focusRipple: false,
     disableRipple: true,
@@ -14701,7 +14701,7 @@ function getIconButtonUtilityClass(slot) {
   return generateUtilityClass("MuiIconButton", slot);
 }
 const iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge"]);
-const useUtilityClasses$Y = (ownerState) => {
+const useUtilityClasses$Z = (ownerState) => {
   const {
     classes,
     disabled,
@@ -14857,7 +14857,7 @@ const IconButton = /* @__PURE__ */ reactExports.forwardRef(function IconButton2(
     disableRipple,
     size
   };
-  const classes = useUtilityClasses$Y(ownerState);
+  const classes = useUtilityClasses$Z(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(IconButtonRoot, {
     className: clsx(classes.root, className),
     centerRipple: true,
@@ -14885,7 +14885,7 @@ const InfoOutlinedIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("pa
 const ClearIcon$1 = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 }), "Close");
-const useUtilityClasses$X = (ownerState) => {
+const useUtilityClasses$Y = (ownerState) => {
   const {
     variant,
     color: color2,
@@ -15040,7 +15040,7 @@ const Alert = /* @__PURE__ */ reactExports.forwardRef(function Alert2(inProps, r
     variant,
     colorSeverity: color2 || severity
   };
-  const classes = useUtilityClasses$X(ownerState);
+  const classes = useUtilityClasses$Y(ownerState);
   const externalForwardedProps = {
     slots: {
       closeButton: components.CloseButton,
@@ -15115,7 +15115,7 @@ const v6Colors = {
   textDisabled: true
 };
 const extendSxProp = internal_createExtendSxProp();
-const useUtilityClasses$W = (ownerState) => {
+const useUtilityClasses$X = (ownerState) => {
   const {
     align,
     gutterBottom,
@@ -15258,7 +15258,7 @@ const Typography = /* @__PURE__ */ reactExports.forwardRef(function Typography2(
     variantMapping
   };
   const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
-  const classes = useUtilityClasses$W(ownerState);
+  const classes = useUtilityClasses$X(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TypographyRoot, {
     as: Component,
     ref,
@@ -16688,7 +16688,7 @@ function resolveAnchorEl$1(anchorEl) {
 function isHTMLElement(element) {
   return element.nodeType !== void 0;
 }
-const useUtilityClasses$V = (ownerState) => {
+const useUtilityClasses$W = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -16789,7 +16789,7 @@ const PopperTooltip = /* @__PURE__ */ reactExports.forwardRef(function PopperToo
   if (TransitionProps !== null) {
     childProps.TransitionProps = TransitionProps;
   }
-  const classes = useUtilityClasses$V(props);
+  const classes = useUtilityClasses$W(props);
   const Root = slots.root ?? "div";
   const rootProps = useSlotProps({
     elementType: Root,
@@ -16931,6 +16931,453 @@ const Popper = /* @__PURE__ */ reactExports.forwardRef(function Popper22(inProps
     slotProps: slotProps ?? componentsProps,
     ...otherProps,
     ref
+  });
+});
+const CancelIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+}), "Cancel");
+function getChipUtilityClass(slot) {
+  return generateUtilityClass("MuiChip", slot);
+}
+const chipClasses = generateUtilityClasses("MuiChip", ["root", "sizeSmall", "sizeMedium", "colorDefault", "colorError", "colorInfo", "colorPrimary", "colorSecondary", "colorSuccess", "colorWarning", "disabled", "clickable", "clickableColorPrimary", "clickableColorSecondary", "deletable", "deletableColorPrimary", "deletableColorSecondary", "outlined", "filled", "outlinedPrimary", "outlinedSecondary", "filledPrimary", "filledSecondary", "avatar", "avatarSmall", "avatarMedium", "avatarColorPrimary", "avatarColorSecondary", "icon", "iconSmall", "iconMedium", "iconColorPrimary", "iconColorSecondary", "label", "labelSmall", "labelMedium", "deleteIcon", "deleteIconSmall", "deleteIconMedium", "deleteIconColorPrimary", "deleteIconColorSecondary", "deleteIconOutlinedColorPrimary", "deleteIconOutlinedColorSecondary", "deleteIconFilledColorPrimary", "deleteIconFilledColorSecondary", "focusVisible"]);
+const useUtilityClasses$V = (ownerState) => {
+  const {
+    classes,
+    disabled,
+    size,
+    color: color2,
+    iconColor,
+    onDelete,
+    clickable,
+    variant
+  } = ownerState;
+  const slots = {
+    root: ["root", variant, disabled && "disabled", `size${capitalize(size)}`, `color${capitalize(color2)}`, clickable && "clickable", clickable && `clickableColor${capitalize(color2)}`, onDelete && "deletable", onDelete && `deletableColor${capitalize(color2)}`, `${variant}${capitalize(color2)}`],
+    label: ["label", `label${capitalize(size)}`],
+    avatar: ["avatar", `avatar${capitalize(size)}`, `avatarColor${capitalize(color2)}`],
+    icon: ["icon", `icon${capitalize(size)}`, `iconColor${capitalize(iconColor)}`],
+    deleteIcon: ["deleteIcon", `deleteIcon${capitalize(size)}`, `deleteIconColor${capitalize(color2)}`, `deleteIcon${capitalize(variant)}Color${capitalize(color2)}`]
+  };
+  return composeClasses(slots, getChipUtilityClass, classes);
+};
+const ChipRoot = styled("div", {
+  name: "MuiChip",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    const {
+      color: color2,
+      iconColor,
+      clickable,
+      onDelete,
+      size,
+      variant
+    } = ownerState;
+    return [{
+      [`& .${chipClasses.avatar}`]: styles2.avatar
+    }, {
+      [`& .${chipClasses.avatar}`]: styles2[`avatar${capitalize(size)}`]
+    }, {
+      [`& .${chipClasses.avatar}`]: styles2[`avatarColor${capitalize(color2)}`]
+    }, {
+      [`& .${chipClasses.icon}`]: styles2.icon
+    }, {
+      [`& .${chipClasses.icon}`]: styles2[`icon${capitalize(size)}`]
+    }, {
+      [`& .${chipClasses.icon}`]: styles2[`iconColor${capitalize(iconColor)}`]
+    }, {
+      [`& .${chipClasses.deleteIcon}`]: styles2.deleteIcon
+    }, {
+      [`& .${chipClasses.deleteIcon}`]: styles2[`deleteIcon${capitalize(size)}`]
+    }, {
+      [`& .${chipClasses.deleteIcon}`]: styles2[`deleteIconColor${capitalize(color2)}`]
+    }, {
+      [`& .${chipClasses.deleteIcon}`]: styles2[`deleteIcon${capitalize(variant)}Color${capitalize(color2)}`]
+    }, styles2.root, styles2[`size${capitalize(size)}`], styles2[`color${capitalize(color2)}`], clickable && styles2.clickable, clickable && color2 !== "default" && styles2[`clickableColor${capitalize(color2)})`], onDelete && styles2.deletable, onDelete && color2 !== "default" && styles2[`deletableColor${capitalize(color2)}`], styles2[variant], styles2[`${variant}${capitalize(color2)}`]];
+  }
+})(memoTheme(({
+  theme
+}) => {
+  const textColor = theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[300];
+  return {
+    maxWidth: "100%",
+    fontFamily: theme.typography.fontFamily,
+    fontSize: theme.typography.pxToRem(13),
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 32,
+    color: (theme.vars || theme).palette.text.primary,
+    backgroundColor: (theme.vars || theme).palette.action.selected,
+    borderRadius: 32 / 2,
+    whiteSpace: "nowrap",
+    transition: theme.transitions.create(["background-color", "box-shadow"]),
+    // reset cursor explicitly in case ButtonBase is used
+    cursor: "unset",
+    // We disable the focus ring for mouse, touch and keyboard users.
+    outline: 0,
+    textDecoration: "none",
+    border: 0,
+    // Remove `button` border
+    padding: 0,
+    // Remove `button` padding
+    verticalAlign: "middle",
+    boxSizing: "border-box",
+    [`&.${chipClasses.disabled}`]: {
+      opacity: (theme.vars || theme).palette.action.disabledOpacity,
+      pointerEvents: "none"
+    },
+    [`& .${chipClasses.avatar}`]: {
+      marginLeft: 5,
+      marginRight: -6,
+      width: 24,
+      height: 24,
+      color: theme.vars ? theme.vars.palette.Chip.defaultAvatarColor : textColor,
+      fontSize: theme.typography.pxToRem(12)
+    },
+    [`& .${chipClasses.avatarColorPrimary}`]: {
+      color: (theme.vars || theme).palette.primary.contrastText,
+      backgroundColor: (theme.vars || theme).palette.primary.dark
+    },
+    [`& .${chipClasses.avatarColorSecondary}`]: {
+      color: (theme.vars || theme).palette.secondary.contrastText,
+      backgroundColor: (theme.vars || theme).palette.secondary.dark
+    },
+    [`& .${chipClasses.avatarSmall}`]: {
+      marginLeft: 4,
+      marginRight: -4,
+      width: 18,
+      height: 18,
+      fontSize: theme.typography.pxToRem(10)
+    },
+    [`& .${chipClasses.icon}`]: {
+      marginLeft: 5,
+      marginRight: -6
+    },
+    [`& .${chipClasses.deleteIcon}`]: {
+      WebkitTapHighlightColor: "transparent",
+      color: theme.vars ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.26)` : alpha$1(theme.palette.text.primary, 0.26),
+      fontSize: 22,
+      cursor: "pointer",
+      margin: "0 5px 0 -6px",
+      "&:hover": {
+        color: theme.vars ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.4)` : alpha$1(theme.palette.text.primary, 0.4)
+      }
+    },
+    variants: [{
+      props: {
+        size: "small"
+      },
+      style: {
+        height: 24,
+        [`& .${chipClasses.icon}`]: {
+          fontSize: 18,
+          marginLeft: 4,
+          marginRight: -4
+        },
+        [`& .${chipClasses.deleteIcon}`]: {
+          fontSize: 16,
+          marginRight: 4,
+          marginLeft: -4
+        }
+      }
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["contrastText"])).map(([color2]) => {
+      return {
+        props: {
+          color: color2
+        },
+        style: {
+          backgroundColor: (theme.vars || theme).palette[color2].main,
+          color: (theme.vars || theme).palette[color2].contrastText,
+          [`& .${chipClasses.deleteIcon}`]: {
+            color: theme.vars ? `rgba(${theme.vars.palette[color2].contrastTextChannel} / 0.7)` : alpha$1(theme.palette[color2].contrastText, 0.7),
+            "&:hover, &:active": {
+              color: (theme.vars || theme).palette[color2].contrastText
+            }
+          }
+        }
+      };
+    }), {
+      props: (props) => props.iconColor === props.color,
+      style: {
+        [`& .${chipClasses.icon}`]: {
+          color: theme.vars ? theme.vars.palette.Chip.defaultIconColor : textColor
+        }
+      }
+    }, {
+      props: (props) => props.iconColor === props.color && props.color !== "default",
+      style: {
+        [`& .${chipClasses.icon}`]: {
+          color: "inherit"
+        }
+      }
+    }, {
+      props: {
+        onDelete: true
+      },
+      style: {
+        [`&.${chipClasses.focusVisible}`]: {
+          backgroundColor: theme.vars ? `rgba(${theme.vars.palette.action.selectedChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))` : alpha$1(theme.palette.action.selected, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
+        }
+      }
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark"])).map(([color2]) => {
+      return {
+        props: {
+          color: color2,
+          onDelete: true
+        },
+        style: {
+          [`&.${chipClasses.focusVisible}`]: {
+            background: (theme.vars || theme).palette[color2].dark
+          }
+        }
+      };
+    }), {
+      props: {
+        clickable: true
+      },
+      style: {
+        userSelect: "none",
+        WebkitTapHighlightColor: "transparent",
+        cursor: "pointer",
+        "&:hover": {
+          backgroundColor: theme.vars ? `rgba(${theme.vars.palette.action.selectedChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}))` : alpha$1(theme.palette.action.selected, theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity)
+        },
+        [`&.${chipClasses.focusVisible}`]: {
+          backgroundColor: theme.vars ? `rgba(${theme.vars.palette.action.selectedChannel} / calc(${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.focusOpacity}))` : alpha$1(theme.palette.action.selected, theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity)
+        },
+        "&:active": {
+          boxShadow: (theme.vars || theme).shadows[1]
+        }
+      }
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark"])).map(([color2]) => ({
+      props: {
+        color: color2,
+        clickable: true
+      },
+      style: {
+        [`&:hover, &.${chipClasses.focusVisible}`]: {
+          backgroundColor: (theme.vars || theme).palette[color2].dark
+        }
+      }
+    })), {
+      props: {
+        variant: "outlined"
+      },
+      style: {
+        backgroundColor: "transparent",
+        border: theme.vars ? `1px solid ${theme.vars.palette.Chip.defaultBorder}` : `1px solid ${theme.palette.mode === "light" ? theme.palette.grey[400] : theme.palette.grey[700]}`,
+        [`&.${chipClasses.clickable}:hover`]: {
+          backgroundColor: (theme.vars || theme).palette.action.hover
+        },
+        [`&.${chipClasses.focusVisible}`]: {
+          backgroundColor: (theme.vars || theme).palette.action.focus
+        },
+        [`& .${chipClasses.avatar}`]: {
+          marginLeft: 4
+        },
+        [`& .${chipClasses.avatarSmall}`]: {
+          marginLeft: 2
+        },
+        [`& .${chipClasses.icon}`]: {
+          marginLeft: 4
+        },
+        [`& .${chipClasses.iconSmall}`]: {
+          marginLeft: 2
+        },
+        [`& .${chipClasses.deleteIcon}`]: {
+          marginRight: 5
+        },
+        [`& .${chipClasses.deleteIconSmall}`]: {
+          marginRight: 3
+        }
+      }
+    }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+      props: {
+        variant: "outlined",
+        color: color2
+      },
+      style: {
+        color: (theme.vars || theme).palette[color2].main,
+        border: `1px solid ${theme.vars ? `rgba(${theme.vars.palette[color2].mainChannel} / 0.7)` : alpha$1(theme.palette[color2].main, 0.7)}`,
+        [`&.${chipClasses.clickable}:hover`]: {
+          backgroundColor: theme.vars ? `rgba(${theme.vars.palette[color2].mainChannel} / ${theme.vars.palette.action.hoverOpacity})` : alpha$1(theme.palette[color2].main, theme.palette.action.hoverOpacity)
+        },
+        [`&.${chipClasses.focusVisible}`]: {
+          backgroundColor: theme.vars ? `rgba(${theme.vars.palette[color2].mainChannel} / ${theme.vars.palette.action.focusOpacity})` : alpha$1(theme.palette[color2].main, theme.palette.action.focusOpacity)
+        },
+        [`& .${chipClasses.deleteIcon}`]: {
+          color: theme.vars ? `rgba(${theme.vars.palette[color2].mainChannel} / 0.7)` : alpha$1(theme.palette[color2].main, 0.7),
+          "&:hover, &:active": {
+            color: (theme.vars || theme).palette[color2].main
+          }
+        }
+      }
+    }))]
+  };
+}));
+const ChipLabel = styled("span", {
+  name: "MuiChip",
+  slot: "Label",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    const {
+      size
+    } = ownerState;
+    return [styles2.label, styles2[`label${capitalize(size)}`]];
+  }
+})({
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  paddingLeft: 12,
+  paddingRight: 12,
+  whiteSpace: "nowrap",
+  variants: [{
+    props: {
+      variant: "outlined"
+    },
+    style: {
+      paddingLeft: 11,
+      paddingRight: 11
+    }
+  }, {
+    props: {
+      size: "small"
+    },
+    style: {
+      paddingLeft: 8,
+      paddingRight: 8
+    }
+  }, {
+    props: {
+      size: "small",
+      variant: "outlined"
+    },
+    style: {
+      paddingLeft: 7,
+      paddingRight: 7
+    }
+  }]
+});
+function isDeleteKeyboardEvent(keyboardEvent) {
+  return keyboardEvent.key === "Backspace" || keyboardEvent.key === "Delete";
+}
+const Chip = /* @__PURE__ */ reactExports.forwardRef(function Chip2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiChip"
+  });
+  const {
+    avatar: avatarProp,
+    className,
+    clickable: clickableProp,
+    color: color2 = "default",
+    component: ComponentProp,
+    deleteIcon: deleteIconProp,
+    disabled = false,
+    icon: iconProp,
+    label,
+    onClick,
+    onDelete,
+    onKeyDown,
+    onKeyUp,
+    size = "medium",
+    variant = "filled",
+    tabIndex,
+    skipFocusWhenDisabled = false,
+    // TODO v6: Rename to `focusableWhenDisabled`.
+    ...other
+  } = props;
+  const chipRef = reactExports.useRef(null);
+  const handleRef = useForkRef(chipRef, ref);
+  const handleDeleteIconClick = (event) => {
+    event.stopPropagation();
+    if (onDelete) {
+      onDelete(event);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.currentTarget === event.target && isDeleteKeyboardEvent(event)) {
+      event.preventDefault();
+    }
+    if (onKeyDown) {
+      onKeyDown(event);
+    }
+  };
+  const handleKeyUp = (event) => {
+    if (event.currentTarget === event.target) {
+      if (onDelete && isDeleteKeyboardEvent(event)) {
+        onDelete(event);
+      }
+    }
+    if (onKeyUp) {
+      onKeyUp(event);
+    }
+  };
+  const clickable = clickableProp !== false && onClick ? true : clickableProp;
+  const component = clickable || onDelete ? ButtonBase : ComponentProp || "div";
+  const ownerState = {
+    ...props,
+    component,
+    disabled,
+    size,
+    color: color2,
+    iconColor: /* @__PURE__ */ reactExports.isValidElement(iconProp) ? iconProp.props.color || color2 : color2,
+    onDelete: !!onDelete,
+    clickable,
+    variant
+  };
+  const classes = useUtilityClasses$V(ownerState);
+  const moreProps = component === ButtonBase ? {
+    component: ComponentProp || "div",
+    focusVisibleClassName: classes.focusVisible,
+    ...onDelete && {
+      disableRipple: true
+    }
+  } : {};
+  let deleteIcon = null;
+  if (onDelete) {
+    deleteIcon = deleteIconProp && /* @__PURE__ */ reactExports.isValidElement(deleteIconProp) ? /* @__PURE__ */ reactExports.cloneElement(deleteIconProp, {
+      className: clsx(deleteIconProp.props.className, classes.deleteIcon),
+      onClick: handleDeleteIconClick
+    }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CancelIcon, {
+      className: clsx(classes.deleteIcon),
+      onClick: handleDeleteIconClick
+    });
+  }
+  let avatar = null;
+  if (avatarProp && /* @__PURE__ */ reactExports.isValidElement(avatarProp)) {
+    avatar = /* @__PURE__ */ reactExports.cloneElement(avatarProp, {
+      className: clsx(classes.avatar, avatarProp.props.className)
+    });
+  }
+  let icon = null;
+  if (iconProp && /* @__PURE__ */ reactExports.isValidElement(iconProp)) {
+    icon = /* @__PURE__ */ reactExports.cloneElement(iconProp, {
+      className: clsx(classes.icon, iconProp.props.className)
+    });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(ChipRoot, {
+    as: component,
+    className: clsx(classes.root, className),
+    disabled: clickable && disabled ? true : void 0,
+    onClick,
+    onKeyDown: handleKeyDown,
+    onKeyUp: handleKeyUp,
+    ref: handleRef,
+    tabIndex: skipFocusWhenDisabled && disabled ? -1 : tabIndex,
+    ownerState,
+    ...moreProps,
+    ...other,
+    children: [avatar || icon, /* @__PURE__ */ jsxRuntimeExports.jsx(ChipLabel, {
+      className: clsx(classes.label),
+      ownerState,
+      children: label
+    }), deleteIcon]
   });
 });
 function getStyleValue(value) {
@@ -42890,19 +43337,38 @@ const CategoriesSelect = ({
   categories,
   selectedCategories,
   handleCategoryChange
-}) => /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroup, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 3, lg: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-  FormControlLabel,
-  {
-    control: /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Checkbox,
+}) => {
+  const handleChange = (event) => {
+    const value = event.target.value;
+    handleCategoryChange(value);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { fullWidth: true, variant: "outlined", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { id: "categories-select-label", children: "Categories" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Select,
       {
-        checked: selectedCategories.includes(category.id),
-        onChange: () => handleCategoryChange(category.id)
+        labelId: "categories-select-label",
+        multiple: true,
+        value: selectedCategories,
+        onChange: handleChange,
+        input: /* @__PURE__ */ jsxRuntimeExports.jsx(OutlinedInput, { label: "Categories" }),
+        renderValue: (selected) => /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { sx: { display: "flex", flexWrap: "wrap", gap: 0.5 }, children: selected.map((id2) => {
+          var _a2;
+          return /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Chip,
+            {
+              color: "success",
+              variant: "filled",
+              label: (_a2 = categories.find((category) => category.id === id2)) == null ? void 0 : _a2.name
+            },
+            id2
+          );
+        }) }),
+        children: categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: category.id, children: category.name }, category.id))
       }
-    ),
-    label: category.name
-  }
-) }, category.id + category.name)) }) });
+    )
+  ] });
+};
 function roundToDecimalPlaces(num, decimalPlaces) {
   const factor = Math.pow(10, decimalPlaces);
   return Math.round(num * factor) / factor;
@@ -46999,8 +47465,7 @@ const EditProductModal = ({
   editProduct,
   setEditProduct,
   handleEditSave,
-  selectedCategories,
-  handleCategoryChange
+  selectedCategories
 }) => {
   const [errors, setErrors] = reactExports.useState({
     name: "",
@@ -47078,15 +47543,14 @@ const EditProductModal = ({
     }
     return false;
   };
-  handleCategoryChange = (categoryId) => {
+  const handleCategoryChange = (categoryId) => {
     setEditProduct((prevProduct) => {
       if (!prevProduct) return prevProduct;
-      const updatedCategories = prevProduct.category_ids.includes(categoryId) ? prevProduct.category_ids.filter((id2) => id2 !== categoryId) : [...prevProduct.category_ids, categoryId];
-      const isModified2 = compareCategories(originalProduct.category_ids, updatedCategories);
+      const isModified2 = compareCategories(originalProduct.category_ids, categoryId);
       setIsModified(isModified2);
       return {
         ...prevProduct,
-        category_ids: updatedCategories
+        category_ids: categoryId
         // Оновлення категорій
       };
     });
@@ -48789,7 +49253,6 @@ const ProductsCatalog = () => {
         suppliers,
         selectedCategories,
         categories,
-        handleCategoryChange,
         openEdit: modalState.openEdit,
         handleCloseEdit: () => handleModalClose("openEdit"),
         editProduct,
