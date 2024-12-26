@@ -81,8 +81,8 @@ const AddButtonWithMenu = () => {
             selling_total_price: 0.00,
             selling_price_per_item: 0.00,
             selling_quantity: 0,
-
         });
+        setSelectedCategories([])
     };
 
 
