@@ -97,26 +97,31 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                                         {product.purchase_price_per_item.toFixed(2)}
                                                     </Typography>
                                                 </Typography>
-                                                <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                                    Ціна за 1 шт (Продаж):
-                                                    <Typography component="span"
-                                                                variant="body1"
-                                                                color={"primary"}>
-                                                        {product.selling_price_per_item.toFixed(2)}
-                                                    </Typography>
-                                                </Typography>
+                                            </>
+                                        ) : null}
+                                        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+                                            Ціна за 1 шт (Продаж):
+                                            <Typography component="span"
+                                                        variant="body1"
+                                                        color={"primary"}>
+                                                {product.selling_price_per_item.toFixed(2)}
+                                            </Typography>
+                                        </Typography>
+                                        {isAuthenticated ? (
+                                            <>
                                                 <Typography variant="subtitle1" color="textSecondary" gutterBottom>
                                                     Сума Закупівля :
                                                     <Typography component="span" variant="body1"
                                                                 color={"secondary"}>{product.purchase_total_price.toFixed(2)}</Typography>
                                                 </Typography>
-                                                <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                                    Прогнозована Сума Продажу:
-                                                    <Typography component="span" variant="body1"
-                                                                color={"primary"}>{product.selling_total_price.toFixed(2)}</Typography>
-                                                </Typography>
                                             </>
                                         ) : null}
+                                        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
+                                            Прогнозована Сума Продажу:
+                                            <Typography component="span" variant="body1"
+                                                        color={"primary"}>{product.selling_total_price.toFixed(2)}</Typography>
+                                        </Typography>
+
 
                                         {/* Блок з кнопками */}
                                         <Box mt={2} display="flex" justifyContent="space-between">
