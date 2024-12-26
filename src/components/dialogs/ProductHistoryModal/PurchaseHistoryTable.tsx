@@ -1,6 +1,17 @@
 import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import { ISupplier } from "../../../utils/types";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    TableFooter,
+    Typography
+} from "@mui/material";
+import {ISupplier} from "../../../utils/types";
+import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 
 interface PurchaseHistoryRecord {
     id: number;
@@ -12,33 +23,58 @@ interface PurchaseHistoryRecord {
 }
 
 interface PurchaseHistoryTableProps {
-    purchaseHistory: PurchaseHistoryRecord[];
+    productHistory: ProductHistory[];
+    sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
 }
 
-const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({ purchaseHistory }) => {
+const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({productHistory, sortByDate}) => {
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Дата закупівлі</TableCell>
+                        <TableCell>Дата</TableCell>
                         <TableCell>Постачальник</TableCell>
-                        <TableCell>Кількість</TableCell>
                         <TableCell>Ціна за одиницю</TableCell>
+                        <TableCell>Кількість закупівлі</TableCell>
                         <TableCell>Загальна ціна</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {purchaseHistory.map((record) => (
-                        <TableRow key={record.id}>
-                            <TableCell>{record.purchase_date}</TableCell>
+                    {(productHistory.purchase && productHistory.purchase.length > 0) ?
+                    sortByDate(productHistory.purchase, 'purchase_date').map((record) => (
+                        <TableRow key={record.id + record.purchase_date}>
+                            <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
                             <TableCell>{record.supplier.name}</TableCell>
-                            <TableCell>{record.quantity_purchase}</TableCell>
                             <TableCell>{record.purchase_price_per_item}</TableCell>
+                            <TableCell>{record.quantity_purchase}</TableCell>
                             <TableCell>{record.purchase_total_price}</TableCell>
                         </TableRow>
-                    ))}
+                    ))
+                        : (
+                            <TableRow>
+                                <TableCell colSpan={5}>Немає даних про історію товару.</TableCell>
+                            </TableRow>
+                        )
+                    }
                 </TableBody>
+                {productHistory.purchase && productHistory.purchase.length > 0 && (
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={3} align="right"><strong>Загальна
+                                кількість:</strong></TableCell>
+                            <TableCell>
+                                <Typography
+                                    variant={"subtitle2"}> {productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)}</Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Typography variant={"subtitle2"}>  {productHistory.purchase
+                                    .reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0)
+                                    .toFixed(2)}</Typography>
+                            </TableCell>
+                        </TableRow>
+                    </TableFooter>
+                )}
             </Table>
         </TableContainer>
     );

@@ -145,7 +145,6 @@ const ProductsCatalog = () => {
     }, [products])
 
 
-
     const fetchSuppliersFunc = async () => {
         try {
             const data = await fetchGetAllSuppliers(); // Assuming fetchGetAllSuppliers() returns a Promise
@@ -682,7 +681,7 @@ const ProductsCatalog = () => {
                     selectedCategories={selectedCategories}/>
             }
 
-            {(modalState.openEdit && editProduct) &&
+            {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
             <EditProductModal suppliers={suppliers}
                               selectedCategories={selectedCategories} categories={categories}
                               handleCategoryChange={handleCategoryChange} openEdit={modalState.openEdit}

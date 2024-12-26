@@ -21,7 +21,7 @@ import PurchaseHistoryTable from "./PurchaseHistoryTable";
 import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
 
-interface ProductHistoryRecord {
+export interface ProductHistoryRecord {
     id: number;
     timestamp?: string;
     change_type?: string;
@@ -39,7 +39,7 @@ interface ProductHistoryRecord {
     customer?: ICustomer;
 }
 
-interface ProductHistory {
+export interface ProductHistory {
     stock: ProductHistoryRecord[];
     purchase: ProductHistoryRecord[];
     sales: ProductHistoryRecord[];
@@ -111,6 +111,14 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         setSelectedView(event.target.value as number);
     };
 
+       const sortByDate = (history: ProductHistoryRecord[], dateKey: keyof ProductHistoryRecord) => {
+        return history.slice().sort((a, b) => {
+            const dateA = new Date(a[dateKey]!).getTime();
+            const dateB = new Date(b[dateKey]!).getTime();
+            return dateB - dateA; // сортування за спаданням (найновіші записи будуть першими)
+        });
+    };
+
     return (
         <CustomDialog
             open={openHistory}
@@ -141,14 +149,13 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                 )}
                 <div style={{marginTop: 16}}>
                     {(isMobile ? selectedView : tabIndex) === 0 &&
-                    <StockHistoryTable stockHistory={productHistory.stock}/>}
+                    <StockHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 1 &&
-                    <PurchaseHistoryTable purchaseHistory={productHistory.purchase}/>}
+                    <PurchaseHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 2 &&
-                    <SalesHistoryTable salesHistory={productHistory.sales}/>}
+                    <SalesHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 3 &&
-                    <CombinedHistoryTable purchaseHistory={productHistory.purchase}
-                                          salesHistory={productHistory.sales}/>}
+                    <CombinedHistoryTable productHistory={productHistory}/>}
                 </div>
             </DialogContent>
         </CustomDialog>

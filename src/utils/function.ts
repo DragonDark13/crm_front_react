@@ -30,13 +30,3 @@ export const formatDateToBack = (dateString) => {
     }
 }
 
-// Об'єкт стилів для обмеження висоти меню
-export  const customMenuProps: MenuProps = {
-    open: false,
-    PaperProps: {
-        style: {
-            maxHeight: 200, // Встановлює максимальну висоту меню
-            overflowY: "auto", // Додає прокрутку при перевищенні висоти
-        },
-    }
-};
