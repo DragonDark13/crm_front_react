@@ -41,7 +41,7 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {(productHistory && productHistory.purchase && productHistory.sales) ? (
+                    {(productHistory && productHistory.purchase && productHistory.purchase.length > 0 && productHistory.sales && productHistory.sales.length > 0) ? (
                             // Об'єднання та сортування закупівель і продажів
                             [...productHistory.purchase.map(record => ({...record, type: 'purchase'})),
                                 ...productHistory.sales.map(record => ({...record, type: 'sale'}))]
@@ -74,7 +74,7 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                             <TableCell colSpan={6}>Немає жодного запису в журналі.</TableCell>
                         </TableRow>}
                 </TableBody>
-                {productHistory && productHistory.purchase && productHistory.sales && (
+                {productHistory && productHistory.purchase && productHistory.purchase.length > 0 && productHistory.sales && productHistory.sales.length > 0 && (
                     <TableFooter>
                         <TableRow>
                             <TableCell colSpan={4} align="right">
