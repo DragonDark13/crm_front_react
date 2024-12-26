@@ -42925,6 +42925,17 @@ const formatDateToBack = (dateString) => {
     return false;
   }
 };
+const customMenuProps = {
+  open: false,
+  PaperProps: {
+    style: {
+      maxHeight: 200,
+      // Встановлює максимальну висоту меню
+      overflowY: "auto"
+      // Додає прокрутку при перевищенні висоти
+    }
+  }
+};
 const SupplierSelect = ({
   disabled = false,
   suppliers,
@@ -42936,6 +42947,7 @@ const SupplierSelect = ({
   /* @__PURE__ */ jsxRuntimeExports.jsx(
     Select,
     {
+      MenuProps: customMenuProps,
       labelId: "supplier-select-label",
       value,
       onChange: (e2) => onChange(e2),
@@ -45937,9 +45949,11 @@ const AddNewCustomerDialog = ({
 const CustomerContext = reactExports.createContext(void 0);
 const CustomerProvider = ({ children }) => {
   const [customers, setCustomers] = reactExports.useState([]);
+  const [loading, setLoading] = reactExports.useState(true);
   const { showSnackbarMessage } = useSnackbarMessage();
   const fetchGetAllCustomersFunc = async () => {
     try {
+      setLoading(true);
       const data = await fetchGetAllCustomers();
       if (Array.isArray(data)) {
         setCustomers(data);
@@ -45948,6 +45962,8 @@ const CustomerProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error fetching customers:", error);
+    } finally {
+      setLoading(false);
     }
   };
   const createCustomerFunc = async (newCustomerData) => {
@@ -45964,7 +45980,7 @@ const CustomerProvider = ({ children }) => {
   reactExports.useEffect(() => {
     fetchGetAllCustomersFunc();
   }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerContext.Provider, { value: { customers, fetchCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc }, children });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerContext.Provider, { value: { customers, fetchCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc, loading }, children });
 };
 const useCustomers = () => {
   const context = reactExports.useContext(CustomerContext);
@@ -46591,56 +46607,54 @@ const ProductCardView = ({
               }
             )
           ] }),
-          isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-              "Ціна за 1 шт (Закупівля):",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  component: "span",
-                  variant: "body1",
-                  color: "secondary",
-                  children: product.purchase_price_per_item.toFixed(2)
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-              "Ціна за 1 шт (Продаж):",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  component: "span",
-                  variant: "body1",
-                  color: "primary",
-                  children: product.selling_price_per_item.toFixed(2)
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-              "Сума Закупівля :",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  component: "span",
-                  variant: "body1",
-                  color: "secondary",
-                  children: product.purchase_total_price.toFixed(2)
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
-              "Прогнозована Сума Продажу:",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  component: "span",
-                  variant: "body1",
-                  color: "primary",
-                  children: product.selling_total_price.toFixed(2)
-                }
-              )
-            ] })
-          ] }) : null,
+          isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+            "Ціна за 1 шт (Закупівля):",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                component: "span",
+                variant: "body1",
+                color: "secondary",
+                children: product.purchase_price_per_item.toFixed(2)
+              }
+            )
+          ] }) }) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+            "Ціна за 1 шт (Продаж):",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                component: "span",
+                variant: "body1",
+                color: "primary",
+                children: product.selling_price_per_item.toFixed(2)
+              }
+            )
+          ] }),
+          isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+            "Сума Закупівля :",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                component: "span",
+                variant: "body1",
+                color: "secondary",
+                children: product.purchase_total_price.toFixed(2)
+              }
+            )
+          ] }) }) : null,
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle1", color: "textSecondary", gutterBottom: true, children: [
+            "Прогнозована Сума Продажу:",
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Typography,
+              {
+                component: "span",
+                variant: "body1",
+                color: "primary",
+                children: product.selling_total_price.toFixed(2)
+              }
+            )
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { mt: 2, display: "flex", justifyContent: "space-between", children: [
             isAuthenticated ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", onClick: () => handleOpenEdit(product), children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагування заблоковано", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { color: "primary", disabled: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(EditIcon, { fontSize: "small" }) }) }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -47012,14 +47026,13 @@ const EditProductModal = ({
   const [diffWithPrice, setDiffWithPrice] = reactExports.useState(0);
   console.log("editProduct", editProduct);
   reactExports.useEffect(() => {
-    let totalPrice = 0;
-    if (editProduct.quantity > 0) {
-      totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
-    } else {
-      totalPrice = editProduct.purchase_price_per_item;
+    if (editProduct.quantity > 0 && editProduct.purchase_price_per_item > 0) {
+      const totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+      const roundedPrice = roundToDecimalPlaces(totalPrice, 2);
+      if (editProduct.purchase_total_price !== roundedPrice) {
+        handleFieldChange("purchase_total_price", roundedPrice);
+      }
     }
-    debugger;
-    handleFieldChange("purchase_total_price", roundToDecimalPlaces(totalPrice, 2));
   }, [editProduct.quantity, editProduct.purchase_price_per_item]);
   const validateFields = () => {
     let tempErrors = { name: "", supplier: "", quantity: "", price_per_item: "", created_date: "" };
@@ -47254,17 +47267,98 @@ const EditProductModal = ({
     }
   );
 };
-const TabPanel = ({ value, index, children }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { role: "tabpanel", hidden: value !== index, children: value === index && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children }) });
+const StockHistoryTable = ({ stockHistory }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата та час" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип зміни" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: stockHistory.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.timestamp }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_type }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_amount })
+    ] }, record.id)) })
+  ] }) });
+};
+const PurchaseHistoryTable = ({ purchaseHistory }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата закупівлі" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: purchaseHistory.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_date }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.supplier.name }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_purchase }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_price_per_item }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_total_price })
+    ] }, record.id)) })
+  ] }) });
+};
+const SalesHistoryTable = ({ salesHistory }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата продажу" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Клієнт" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: salesHistory.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.sale_date }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.customer.name }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_sold }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_price_per_item }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_total_price })
+    ] }, record.id)) })
+  ] }) });
+};
+const CombinedHistoryTable = ({ purchaseHistory, salesHistory }) => {
+  const combinedHistory = [
+    ...purchaseHistory.map((item) => ({ ...item, type: "Закупівля" })),
+    ...salesHistory.map((item) => ({ ...item, type: "Продаж" }))
+  ].sort((a, b2) => new Date(a.date).getTime() - new Date(b2.date).getTime());
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: combinedHistory.map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.date }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.price }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.total })
+    ] }, record.id)) })
+  ] }) });
 };
 const ProductHistoryModal = ({ productId, openHistory, onClose, productName }) => {
   const [productHistory, setProductHistory] = reactExports.useState({ stock: [], purchase: [], sales: [] });
   const [tabIndex, setTabIndex] = reactExports.useState(0);
+  const [selectedView, setSelectedView] = reactExports.useState(0);
+  const [isMobile, setIsMobile] = reactExports.useState(false);
   reactExports.useEffect(() => {
     if (openHistory) {
       fetchProductHistory(productId);
     }
   }, [openHistory, productId]);
+  reactExports.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const fetchProductHistory = (productId2) => {
     axios.get(`http://localhost:5000/api/product/${productId2}/history`).then((response) => {
       setProductHistory({
@@ -47279,12 +47373,8 @@ const ProductHistoryModal = ({ productId, openHistory, onClose, productName }) =
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
   };
-  const sortByDate = (history, dateKey) => {
-    return history.slice().sort((a, b2) => {
-      const dateA = new Date(a[dateKey]).getTime();
-      const dateB = new Date(b2[dateKey]).getTime();
-      return dateB - dateA;
-    });
+  const handleViewChange = (event) => {
+    setSelectedView(event.target.value);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     CustomDialog,
@@ -47294,166 +47384,38 @@ const ProductHistoryModal = ({ productId, openHistory, onClose, productName }) =
       title: `Історія товару ${productName}`,
       maxWidth: "xl",
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { value: tabIndex, onChange: handleTabChange, indicatorColor: "primary", textColor: "primary", children: [
+        isMobile ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Select,
+          {
+            value: selectedView,
+            onChange: handleViewChange,
+            fullWidth: true,
+            displayEmpty: true,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: 0, children: "Історія змін" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: 1, children: "Історія закупівель" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: 2, children: "Історія продажів" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: 3, children: "Закупівель && Продажів" })
+            ]
+          }
+        ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { value: tabIndex, onChange: handleTabChange, indicatorColor: "primary", textColor: "primary", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія змін" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія закупівель" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Історія продажів" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "закупівель && продажів" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Tab, { label: "Закупівель && Продажів" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 0, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип зміни" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Зміни по Кількості" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.stock && productHistory.stock.length > 0 && sortByDate(productHistory.stock, "timestamp").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.timestamp).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_type }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.change_amount })
-          ] }, record.id)) })
-        ] }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 1, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість закупівлі" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.purchase && productHistory.purchase.length > 0 && sortByDate(productHistory.purchase, "purchase_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.supplier.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_price_per_item }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_purchase }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.purchase_total_price })
-          ] }, record.id + record.purchase_date)) }),
-          productHistory.purchase && productHistory.purchase.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість:" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              Typography,
-              {
-                variant: "subtitle2",
-                children: [
-                  " ",
-                  productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)
-                ]
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle2", children: [
-              "  ",
-              productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
-            ] }) })
-          ] }) })
-        ] }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Клієнт" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість проданих одиниць" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory.sales && productHistory.sales.length > 0 && sortByDate(productHistory.sales, "sale_date").map((record) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.sale_date).toLocaleString() }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.customer.name }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_price_per_item }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.quantity_sold }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.selling_total_price })
-          ] }, record.id + record.sale_date)) }),
-          productHistory.sales && productHistory.sales.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(TableFooter, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 3, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Загальна кількість:" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Typography,
-              {
-                variant: "subtitle2",
-                children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
-              Typography,
-              {
-                variant: "subtitle2",
-                children: [
-                  " ",
-                  productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
-                ]
-              }
-            ) })
-          ] }) })
-        ] }) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabPanel, { value: tabIndex, index: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Контрагент" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна ціна" })
-          ] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: productHistory && productHistory.purchase && productHistory.sales && // Об'єднання та сортування закупівель і продажів
-          [
-            ...productHistory.purchase.map((record) => ({ ...record, type: "purchase" })),
-            ...productHistory.sales.map((record) => ({ ...record, type: "sale" }))
-          ].sort((a, b2) => {
-            const dateA = a.purchase_date ? new Date(a.purchase_date).getTime() : 0;
-            const dateB = b2.purchase_date ? new Date(b2.purchase_date).getTime() : 0;
-            const dateSaleA = a.sale_date ? new Date(a.sale_date).getTime() : 0;
-            const dateSaleB = b2.sale_date ? new Date(b2.sale_date).getTime() : 0;
-            const finalDateA = dateA || dateSaleA;
-            const finalDateB = dateB || dateSaleB;
-            return finalDateA - finalDateB;
-          }).map((record, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-            TableRow,
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { marginTop: 16 }, children: [
+          (isMobile ? selectedView : tabIndex) === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(StockHistoryTable, { stockHistory: productHistory.stock }),
+          (isMobile ? selectedView : tabIndex) === 1 && /* @__PURE__ */ jsxRuntimeExports.jsx(PurchaseHistoryTable, { purchaseHistory: productHistory.purchase }),
+          (isMobile ? selectedView : tabIndex) === 2 && /* @__PURE__ */ jsxRuntimeExports.jsx(SalesHistoryTable, { salesHistory: productHistory.sales }),
+          (isMobile ? selectedView : tabIndex) === 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            CombinedHistoryTable,
             {
-              style: { backgroundColor: record.type === "sale" ? "#d1e7dd" : "#f8d7da" },
-              children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(record.purchase_date || record.sale_date).toLocaleString() }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? "Продаж" : "Закупка" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.customer.name : record.supplier.name }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_price_per_item }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.quantity_sold : record.quantity_purchase }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: record.type === "sale" ? record.selling_price_per_item : record.purchase_total_price })
-              ]
-            },
-            record.id
-          )) }),
-          productHistory && productHistory.purchase && productHistory.sales && /* @__PURE__ */ jsxRuntimeExports.jsxs(TableFooter, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість продажів:" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)
-                }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)
-                }
-              ) })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 4, align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна кількість закупок:" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)
-                }
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Typography,
-                {
-                  variant: "subtitle2",
-                  children: productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)
-                }
-              ) })
-            ] })
-          ] })
-        ] }) }) })
+              purchaseHistory: productHistory.purchase,
+              salesHistory: productHistory.sales
+            }
+          )
+        ] })
       ] })
     }
   );
