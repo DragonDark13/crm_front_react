@@ -24,11 +24,12 @@ const FilterComponent = ({
                              setFilters
                          }: IFilterComponentProps) => {
 
-    const [priceMax, setPriceMax] = useState(0)
+    const [priceMax, setPriceMax] = useState(0);
+    const [initialFilters, setInitialFilters] = useState(filters); // Доданий стейт для початкових фільтрів
 
     const {products} = useProducts();
     const {categories} = useCategories();
-    const {suppliers} = useSuppliers()
+    const {suppliers} = useSuppliers();
 
 // Функція для застосування фільтрів
     const applyFilters = (callback?) => {
@@ -63,17 +64,20 @@ const FilterComponent = ({
             const prices = products.map(product => product.selling_price_per_item);
             const minPrice = Math.min(...prices);
             const maxPrice = Math.max(...prices);
-            // Update filters without specifying the type
+
             setFilters(prevState => ({
                 ...prevState,
                 priceRange: [minPrice, maxPrice],
             }));
 
-            const max = Math.max(...products.map(product => product.selling_price_per_item))
-            setPriceMax(max);
+            setInitialFilters({
+                categories: [],
+                suppliers: [],
+                priceRange: [minPrice, maxPrice],
+            }); // Ініціалізуємо початкові фільтри
 
+            setPriceMax(maxPrice);
         }
-
     }, [products]);
 
 // Загальний обробник змін фільтрів
@@ -82,23 +86,6 @@ const FilterComponent = ({
             ...prevFilters,
             [filterType]: newValue,
         }));
-    };
-
-// Обробник зміни категорій
-    const handleCategoryFilterChange = (categoryID: number) => {
-        const updatedCategories = toggleFilter(filters.categories, categoryID);
-        handleFilterChange('categories', updatedCategories);
-    };
-
-// Обробник зміни постачальників
-    const handleSupplierFilterChange = (supplierID: number) => {
-        const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
-        handleFilterChange('suppliers', updatedSuppliers);
-    };
-
-// Обробник зміни діапазону цін
-    const handlePriceRangeChange = (event, newValue: [number, number]) => {
-        handleFilterChange('priceRange', newValue);
     };
 
 // Функція для toggle категорій і постачальників
@@ -113,6 +100,8 @@ const FilterComponent = ({
         applyFilters();
     }, [filters]);
 
+// Логіка для визначення, чи змінені фільтри
+    const isFiltersChanged = JSON.stringify(filters) !== JSON.stringify(initialFilters);
 
     return (
         <Grid container px={2}>
@@ -123,7 +112,10 @@ const FilterComponent = ({
                         <h3>Категорії</h3>
                         <CategoryFilter
                             selectedFilterCategories={filters.categories}
-                            handleCategoryFilterChange={handleCategoryFilterChange}
+                            handleCategoryFilterChange={(categoryID: number) => {
+                                const updatedCategories = toggleFilter(filters.categories, categoryID);
+                                handleFilterChange('categories', updatedCategories);
+                            }}
                             categories={categories}
                         />
                     </div>
@@ -131,7 +123,10 @@ const FilterComponent = ({
                         <h3>Постачальники</h3>
                         <SupplierFilter
                             selectedFilterSuppliers={filters.suppliers}
-                            handleSupplierFilterChange={handleSupplierFilterChange}
+                            handleSupplierFilterChange={(supplierID: number) => {
+                                const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
+                                handleFilterChange('suppliers', updatedSuppliers);
+                            }}
                             suppliers={suppliers}
                         />
                     </div>
@@ -141,27 +136,29 @@ const FilterComponent = ({
                     <Typography variant="subtitle1" gutterBottom>
                         Діапазон ціни: {filters.priceRange[0]} - {filters.priceRange[1]} грн
                     </Typography>
-                    <Box px={"10px"}> <Slider
-                        value={filters.priceRange}
-                        onChange={handlePriceRangeChange}
-                        valueLabelDisplay="auto"
-                        min={0}
-                        max={priceMax} // Максимальна ціна
-                        step={10} // Крок
-                    /></Box>
-
+                    <Box px={"10px"}>
+                        <Slider
+                            value={filters.priceRange}
+                            onChange={(event, newValue: [number, number]) => handleFilterChange('priceRange', newValue)}
+                            valueLabelDisplay="auto"
+                            min={0}
+                            max={priceMax} // Максимальна ціна
+                            step={10} // Крок
+                        />
+                    </Box>
                 </div>
                 <Typography>
-
                     Знайдено {filterArrayLength}
                 </Typography>
-                <Button variant={"contained"} onClick={resetFilters}>
+                <Button
+                    variant="contained"
+                    onClick={resetFilters}
+                    disabled={!isFiltersChanged} // Деактивуємо кнопку, якщо фільтри не змінені
+                >
                     Очистити
                 </Button>
             </Grid>
-
         </Grid>
-
     );
 };
 

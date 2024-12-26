@@ -434,15 +434,9 @@ const ProductsCatalog = () => {
         handleModalOpen("openHistory")
     }
 
-    const handleCategoryChange = (categoryId: number) => {
+    const handleCategoryChange = (categoryId: number[]) => {
 
-        setSelectedCategories((prevState: number[]) => {
-            if (prevState.includes(categoryId)) {
-                return prevState.filter(id => id !== categoryId); // Якщо категорія вибрана — видаляємо її
-            } else {
-                return [...prevState, categoryId]; // Якщо не вибрана — додаємо
-            }
-        });
+        setSelectedCategories(categoryId)
 
 
         setNewProduct((prevProduct) => {
@@ -452,7 +446,7 @@ const ProductsCatalog = () => {
 
             return {
                 ...prevProduct,
-                category_ids: updatedCategories // Оновлення категорій
+                category_ids: categoryId // Оновлення категорій
             };
         });
     };

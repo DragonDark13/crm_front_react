@@ -27,7 +27,7 @@ interface IAddProductModal {
     newProduct: INewProduct,
     setNewProduct: (product: INewProduct) => void,
     selectedCategories: number[],
-    handleCategoryChange: (categoryID: number) => void,
+    handleCategoryChange: (categoryID: number[]) => void,
     handleAdd: () => void
 }
 
