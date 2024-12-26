@@ -46541,18 +46541,11 @@ const AddButtonWithMenu = () => {
     }
   };
   const handleCategoryChange = (categoryId) => {
-    setSelectedCategories((prevState) => {
-      if (prevState.includes(categoryId)) {
-        return prevState.filter((id22) => id22 !== categoryId);
-      } else {
-        return [...prevState, categoryId];
-      }
-    });
+    setSelectedCategories(categoryId);
     setNewProduct((prevProduct) => {
-      const updatedCategories = prevProduct.category_ids.includes(categoryId) ? prevProduct.category_ids.filter((id22) => id22 !== categoryId) : [...prevProduct.category_ids, categoryId];
       return {
         ...prevProduct,
-        category_ids: updatedCategories
+        category_ids: categoryId
         // Оновлення категорій
       };
     });
@@ -46860,6 +46853,7 @@ const FilterComponent = ({
   setFilters
 }) => {
   const [priceMax, setPriceMax] = reactExports.useState(0);
+  const [initialFilters, setInitialFilters] = reactExports.useState(filters);
   const { products } = useProducts();
   const { categories } = useCategories();
   const { suppliers } = useSuppliers();
@@ -46888,8 +46882,12 @@ const FilterComponent = ({
         ...prevState,
         priceRange: [minPrice, maxPrice]
       }));
-      const max2 = Math.max(...products.map((product) => product.selling_price_per_item));
-      setPriceMax(max2);
+      setInitialFilters({
+        categories: [],
+        suppliers: [],
+        priceRange: [minPrice, maxPrice]
+      });
+      setPriceMax(maxPrice);
     }
   }, [products]);
   const handleFilterChange = (filterType, newValue) => {
@@ -46898,23 +46896,13 @@ const FilterComponent = ({
       [filterType]: newValue
     }));
   };
-  const handleCategoryFilterChange = (categoryID) => {
-    const updatedCategories = toggleFilter(filters.categories, categoryID);
-    handleFilterChange("categories", updatedCategories);
-  };
-  const handleSupplierFilterChange = (supplierID) => {
-    const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
-    handleFilterChange("suppliers", updatedSuppliers);
-  };
-  const handlePriceRangeChange = (event, newValue) => {
-    handleFilterChange("priceRange", newValue);
-  };
   const toggleFilter = (currentFilters, id2) => {
     return currentFilters.includes(id2) ? currentFilters.filter((filterId) => filterId !== id2) : [...currentFilters, id2];
   };
   reactExports.useEffect(() => {
     applyFilters();
   }, [filters]);
+  const isFiltersChanged = JSON.stringify(filters) !== JSON.stringify(initialFilters);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, px: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Фільтри" }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
@@ -46924,7 +46912,10 @@ const FilterComponent = ({
           CategoryFilter,
           {
             selectedFilterCategories: filters.categories,
-            handleCategoryFilterChange,
+            handleCategoryFilterChange: (categoryID) => {
+              const updatedCategories = toggleFilter(filters.categories, categoryID);
+              handleFilterChange("categories", updatedCategories);
+            },
             categories
           }
         )
@@ -46935,7 +46926,10 @@ const FilterComponent = ({
           SupplierFilter,
           {
             selectedFilterSuppliers: filters.suppliers,
-            handleSupplierFilterChange,
+            handleSupplierFilterChange: (supplierID) => {
+              const updatedSuppliers = toggleFilter(filters.suppliers, supplierID);
+              handleFilterChange("suppliers", updatedSuppliers);
+            },
             suppliers
           }
         )
@@ -46948,26 +46942,31 @@ const FilterComponent = ({
         filters.priceRange[1],
         " грн"
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { px: "10px", children: [
-        " ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Slider,
-          {
-            value: filters.priceRange,
-            onChange: handlePriceRangeChange,
-            valueLabelDisplay: "auto",
-            min: 0,
-            max: priceMax,
-            step: 10
-          }
-        )
-      ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { px: "10px", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Slider,
+        {
+          value: filters.priceRange,
+          onChange: (event, newValue) => handleFilterChange("priceRange", newValue),
+          valueLabelDisplay: "auto",
+          min: 0,
+          max: priceMax,
+          step: 10
+        }
+      ) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
       "Знайдено ",
       filterArrayLength
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: resetFilters, children: "Очистити" })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Button,
+      {
+        variant: "contained",
+        onClick: resetFilters,
+        disabled: !isFiltersChanged,
+        children: "Очистити"
+      }
+    )
   ] }) });
 };
 const ProductCardView = ({
@@ -49070,18 +49069,12 @@ const ProductsCatalog = () => {
     handleModalOpen("openHistory");
   };
   const handleCategoryChange = (categoryId) => {
-    setSelectedCategories((prevState) => {
-      if (prevState.includes(categoryId)) {
-        return prevState.filter((id2) => id2 !== categoryId);
-      } else {
-        return [...prevState, categoryId];
-      }
-    });
+    setSelectedCategories(categoryId);
     setNewProduct((prevProduct) => {
-      const updatedCategories = prevProduct.category_ids.includes(categoryId) ? prevProduct.category_ids.filter((id2) => id2 !== categoryId) : [...prevProduct.category_ids, categoryId];
+      prevProduct.category_ids.includes(categoryId) ? prevProduct.category_ids.filter((id2) => id2 !== categoryId) : [...prevProduct.category_ids, categoryId];
       return {
         ...prevProduct,
-        category_ids: updatedCategories
+        category_ids: categoryId
         // Оновлення категорій
       };
     });
