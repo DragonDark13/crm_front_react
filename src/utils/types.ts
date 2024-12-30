@@ -2,7 +2,9 @@ import NotificationPanel from "../components/NotificationPanel/NotificationPanel
 
 export interface IBaseProduct {
     name: string;
-    quantity: number;
+    available_quantity: number;
+    total_quantity: number;
+    sold_quantity: number;
     purchase_total_price: number;
     purchase_price_per_item: number;
     selling_total_price: number;

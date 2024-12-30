@@ -56,16 +56,14 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                    isAuthenticated
                                                                }, ref) => {
 
-    // Підрахунок загальної кількості та суми
-    // Підрахунок загальної кількості та суми
-    const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.quantity, 0);
+    // Підрахунок загальної кількості та суми для закупівлі та продажу
+    const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_quantity, 0);
     const totalSumPurchase = isAuthenticated
-        ? filteredAndSearchedProducts.reduce((sum, product) => sum + product.purchase_total_price, 0)
-        : 0; // Сума закупівельна тільки для залогінених
+        ? filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_total_price), 0)
+        : 0; // Сума закупівлі тільки для залогінених
 
-    const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_quantity, 0);
-    const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.selling_total_price, 0);
-
+    const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.sold_quantity, 0);
+    const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.sold_quantity * product.selling_total_price), 0);
 
     return (
         <React.Fragment>
@@ -145,7 +143,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                         sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
                             .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
                             .map((product: IProduct, index) => {
-                                const lowQuantity = product.quantity < 5; // умова для низької кількості
+                                const lowQuantity = product.total_quantity < 5; // умова для низької кількості
                                 return (
                                     <TableRow key={`${product.id}${index}${product.purchase_total_price}`}
                                               ref={el => {
@@ -155,17 +153,23 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                       ref.current[index + currentPage * itemsPerPage] = el;
                                                   }
                                               }}
-
                                               className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                         <TableCell>{product.id}</TableCell>
                                         <TableCell>{product.name}</TableCell>
                                         <TableCell>{product.supplier?.name || 'N/A'}</TableCell>
-                                        <TableCell
-                                        > <Typography
-                                            className={clsx(
-                                                {'low-quantity': lowQuantity},
-                                            )}>
-                                            {product.quantity}</Typography>
+                                        <TableCell>
+                                            <div>
+                                                <Typography>
+                                                    <strong>Закуплене:</strong>
+                                                    {product.total_quantity}
+                                                </Typography>
+                                                <Typography className={clsx({'low-quantity': lowQuantity})}>
+                                                    <strong>В наявності:</strong> {product.available_quantity}
+                                                </Typography>
+                                                <Typography>
+                                                    <strong>Продано:</strong> {product.sold_quantity}
+                                                </Typography>
+                                            </div>
                                         </TableCell>
                                         <TableCell>
                                             {isAuthenticated && (
@@ -180,11 +184,11 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         <TableCell>
                                             {isAuthenticated && (
                                                 <Typography color={"secondary"}>
-                                                    {product.purchase_total_price.toFixed(2)}
+                                                    {(product.total_quantity * product.purchase_price_per_item).toFixed(2)}
                                                 </Typography>
                                             )}
                                             <Typography color={"primary"}>
-                                                {product.selling_total_price.toFixed(2)}
+                                                {(product.sold_quantity * product.selling_price_per_item).toFixed(2)}
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
@@ -247,15 +251,10 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                             </TableCell>
                             <TableCell colSpan={1} align="right"><strong>Загальна сума:</strong></TableCell>
                             <TableCell>
-                                <Typography
-                                    color={"secondary"}
-                                    variant={"subtitle2"}>{totalSumPurchase.toFixed(2)}
-                                </Typography>
-                                <Typography
-                                    color={"primary"}
-                                    variant={"subtitle2"}>{totalSumSelling.toFixed(2)}
-                                </Typography>
-
+                                <Typography color={"secondary"}
+                                            variant={"subtitle2"}>{totalSumPurchase.toFixed(2)}</Typography>
+                                <Typography color={"primary"}
+                                            variant={"subtitle2"}>{totalSumSelling.toFixed(2)}</Typography>
                             </TableCell>
                         </TableRow>
                     </TableFooter>
