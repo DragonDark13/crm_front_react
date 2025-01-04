@@ -43,7 +43,7 @@ const AddProductModal = ({
     const [errors, setErrors] = useState({
         name: '',
         supplier: '',
-        quantity: '',
+        available_quantity: '',
         price_per_item: ''
     });
 
@@ -57,7 +57,7 @@ const AddProductModal = ({
         const newErrors = {
             name: newProduct.name.trim().length < 10 ? 'Name must be at least 10 characters long' : '',
             supplier: newProduct.supplier_id === '' ? 'Supplier is required' : '',
-            quantity: newProduct.quantity < 0 ? 'Quantity must be greater than or equal to 0' : '',
+            available_quantity: newProduct.available_quantity < 0 ? 'Quantity must be greater than or equal to 0' : '',
             price_per_item: newProduct.purchase_price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
         };
         setErrors(newErrors);
@@ -73,32 +73,32 @@ const AddProductModal = ({
     };
 
     const incrementQuantity = () => {
-        if (newProduct.quantity < 1000) {
+        if (newProduct.available_quantity < 1000) {
             setNewProduct({
                 ...newProduct,
-                quantity: newProduct.quantity + 1
+                available_quantity: newProduct.available_quantity + 1
             });
         }
     };
 
     const decrementQuantity = () => {
-        if (newProduct.quantity > 0) {
+        if (newProduct.available_quantity > 0) {
             setNewProduct({
                 ...newProduct,
-                quantity: newProduct.quantity = 0
+                available_quantity: newProduct.available_quantity = 0
             });
         }
     };
 
 
-    // Автоматичне оновлення total_price як добутку quantity і price_per_item
+    // Автоматичне оновлення total_price як добутку available_quantity і price_per_item
     useEffect(() => {
-        const totalPrice = newProduct.quantity * newProduct.purchase_price_per_item;
+        const totalPrice = newProduct.available_quantity * newProduct.purchase_price_per_item;
         setNewProduct({...newProduct, purchase_total_price: roundToDecimalPlaces(totalPrice, 2)});
-    }, [newProduct.quantity, newProduct.purchase_price_per_item]);
+    }, [newProduct.available_quantity, newProduct.purchase_price_per_item]);
 
     const isAddButtonDisabled = newProduct.name.trim().length < 10 ||
-        !newProduct.supplier_id || newProduct.quantity < 0;
+        !newProduct.supplier_id || newProduct.available_quantity < 0;
 
     useEffect(() => {
         if (newProduct.purchase_price_per_item && newProduct.selling_price_per_item) {
@@ -137,7 +137,7 @@ const AddProductModal = ({
                         <QuantityField
                             onIncrement={incrementQuantity}
                             onDecrement={decrementQuantity}
-                            value={newProduct.quantity}
+                            value={newProduct.available_quantity}
                             onChange={(e) => {
                                 // Видаляємо ведучий 0, якщо такий є
                                 let value = e.target.value;
@@ -147,14 +147,14 @@ const AddProductModal = ({
 
                                 if (value.startsWith('0')) {
                                     value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
-                                    setNewProduct({...newProduct, quantity: Number(value)});
+                                    setNewProduct({...newProduct, available_quantity: Number(value)});
                                 }
                                 if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
-                                    setNewProduct({...newProduct, quantity: Number(value)});
+                                    setNewProduct({...newProduct, available_quantity: Number(value)});
                                 }
                             }}
 
-                            error={errors.quantity}
+                            error={errors.available_quantity}
                         />
 
                     </Grid>

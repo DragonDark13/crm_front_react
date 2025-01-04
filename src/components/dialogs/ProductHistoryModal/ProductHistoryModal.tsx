@@ -20,6 +20,7 @@ import StockHistoryTable from "./StockHistoryTable";
 import PurchaseHistoryTable from "./PurchaseHistoryTable";
 import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
+import {fetchProductHistory, onDeleteHistoryRecord} from "../../../api/api";
 
 export interface ProductHistoryRecord {
     id: number;
@@ -74,7 +75,18 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
 
     useEffect(() => {
         if (openHistory) {
-            fetchProductHistory(productId);
+            fetchProductHistory(productId)
+                .then(response => {
+                    setProductHistory({
+                        stock: response.data.stock_history,
+                        purchase: response.data.purchase_history,
+                        sales: response.data.sale_history,
+                    });
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the product history!', error);
+                });
+
         }
     }, [openHistory, productId]);
 
@@ -89,17 +101,15 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         };
     }, []);
 
-    const fetchProductHistory = (productId: number) => {
-        axios.get(`http://localhost:5000/api/product/${productId}/history`)
-            .then(response => {
-                setProductHistory({
-                    stock: response.data.stock_history,
-                    purchase: response.data.purchase_history,
-                    sales: response.data.sale_history,
-                });
+
+    const handleDeleteHistoryRecord = (historyType: string, historyId: number) => {
+        onDeleteHistoryRecord(productId, historyType, historyId)
+            .then(() => {
+                // Оновити історію після видалення
+                fetchProductHistory(productId);
             })
-            .catch(error => {
-                console.error('There was an error fetching the product history!', error);
+            .catch((error) => {
+                console.error('Error deleting history record:', error);
             });
     };
 
@@ -111,7 +121,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         setSelectedView(event.target.value as number);
     };
 
-       const sortByDate = (history: ProductHistoryRecord[], dateKey: keyof ProductHistoryRecord) => {
+    const sortByDate = (history: ProductHistoryRecord[], dateKey: keyof ProductHistoryRecord) => {
         return history.slice().sort((a, b) => {
             const dateA = new Date(a[dateKey]!).getTime();
             const dateB = new Date(b[dateKey]!).getTime();
@@ -151,9 +161,11 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                     {(isMobile ? selectedView : tabIndex) === 0 &&
                     <StockHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 1 &&
-                    <PurchaseHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
+                    <PurchaseHistoryTable onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
+                                          productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 2 &&
-                    <SalesHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
+                    <SalesHistoryTable onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
+                                       productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 3 &&
                     <CombinedHistoryTable productHistory={productHistory}/>}
                 </div>

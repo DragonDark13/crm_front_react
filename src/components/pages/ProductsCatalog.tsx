@@ -81,16 +81,16 @@ const ProductsCatalog = () => {
     };
 
     const [newProduct, setNewProduct] = useState<INewProduct>({
+        available_quantity: 1, sold_quantity: 0, total_quantity: 0,
         name: '',
         supplier_id: '',
-        quantity: 1,
         purchase_total_price: 0.00,
         purchase_price_per_item: 0.00,
         category_ids: [],
         created_date: new Date().toISOString().slice(0, 10),
         selling_price_per_item: 0.00,
         selling_total_price: 0.00,
-        selling_quantity: 0,
+        selling_quantity: 0
     });
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
 
@@ -178,16 +178,16 @@ const ProductsCatalog = () => {
 
     const resetNewProduct = () => {
         setNewProduct({
+            available_quantity: 1, sold_quantity: 0, total_quantity: 0,
             name: '',
             supplier_id: '',
-            quantity: 1,
             purchase_total_price: 0.00,
             purchase_price_per_item: 0.00,
             category_ids: [],
             created_date: new Date().toISOString().slice(0, 10),
             selling_total_price: 0.00,
             selling_price_per_item: 0.00,
-            selling_quantity: 0,
+            selling_quantity: 0
 
         });
     };
@@ -363,7 +363,9 @@ const ProductsCatalog = () => {
         id: product.id,
         name: product.name,
         supplier_id: product.supplier ? product.supplier.id : '',
-        quantity: product.quantity,
+        available_quantity: product.available_quantity,
+        sold_quantity: product.sold_quantity,
+        total_quantity: product.total_quantity,
         purchase_total_price: product.purchase_total_price,
         purchase_price_per_item: product.purchase_price_per_item,
         category_ids: product.category_ids,
@@ -405,10 +407,12 @@ const ProductsCatalog = () => {
 
     const handleOpenSale = (product: IProduct) => {
         setEditProduct({
+            available_quantity: product.available_quantity,
+            sold_quantity: product.sold_quantity,
+            total_quantity: product.total_quantity,
             id: product.id,
             name: product.name,
             supplier_id: product.supplier ? product.supplier.id : '',
-            quantity: product.quantity,
             purchase_total_price: product.purchase_total_price,
             purchase_price_per_item: product.purchase_price_per_item,
             category_ids: product.category_ids,
@@ -440,9 +444,6 @@ const ProductsCatalog = () => {
 
 
         setNewProduct((prevProduct) => {
-            const updatedCategories = prevProduct.category_ids.includes(categoryId)
-                ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
-                : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
 
             return {
                 ...prevProduct,
@@ -474,7 +475,7 @@ const ProductsCatalog = () => {
 
     // Use this effect to set low quantity products when data changes
     useEffect(() => {
-        const lowQuantity = products.filter(product => product.quantity < 5);
+        const lowQuantity = products.filter(product => product.available_quantity < 5);
         setLowQuantityProducts(lowQuantity);
         lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
     }, [products]);
@@ -678,7 +679,7 @@ const ProductsCatalog = () => {
             {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
             <EditProductModal suppliers={suppliers}
                               selectedCategories={selectedCategories} categories={categories}
-                               openEdit={modalState.openEdit}
+                              openEdit={modalState.openEdit}
                               handleCloseEdit={() => handleModalClose("openEdit")}
                               editProduct={editProduct}
                               setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
@@ -707,7 +708,7 @@ const ProductsCatalog = () => {
                 <SaleProductModal
                     nameProduct={editProduct.name}
                     purchasePricePerItem={editProduct.purchase_price_per_item}
-                    quantityOnStock={editProduct.quantity}
+                    quantityOnStock={editProduct.available_quantity}
                     openSale={modalState.openSale}
                     handleCloseSale={() => handleModalClose("openSale")}
                     saleData={saleData}

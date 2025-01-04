@@ -8,7 +8,7 @@ import {
     TableRow,
     Paper,
     Typography,
-    TableFooter
+    TableFooter, Button
 } from "@mui/material";
 import {ICustomer} from "../../../utils/types";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
@@ -23,11 +23,12 @@ interface SalesHistoryRecord {
 }
 
 interface SalesHistoryTableProps {
+    onDeleteHistoryRecord: (historyType: string, historyId: number) => void;
     productHistory: ProductHistory[];
     sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
 }
 
-const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, sortByDate}) => {
+const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, sortByDate, onDeleteHistoryRecord}) => {
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -38,19 +39,29 @@ const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, so
                         <TableCell>Ціна</TableCell>
                         <TableCell>Кількість проданих одиниць</TableCell>
                         <TableCell>Загальна ціна</TableCell>
+                        <TableCell>Дії</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {(productHistory.sales && productHistory.sales.length > 0) ?
-                    sortByDate(productHistory.sales, 'sale_date').map((record) => (
-                        <TableRow key={record.id + record.sale_date}>
-                            <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
-                            <TableCell>{record.customer.name}</TableCell>
-                            <TableCell>{record.selling_price_per_item}</TableCell>
-                            <TableCell>{record.quantity_sold}</TableCell>
-                            <TableCell>{record.selling_total_price}</TableCell>
-                        </TableRow>
-                    ))
+                        sortByDate(productHistory.sales, 'sale_date').map((record) => (
+                            <TableRow key={record.id + record.sale_date}>
+                                <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
+                                <TableCell>{record.customer.name}</TableCell>
+                                <TableCell>{record.selling_price_per_item}</TableCell>
+                                <TableCell>{record.quantity_sold}</TableCell>
+                                <TableCell>{record.selling_total_price}</TableCell>
+                                <TableCell>
+                                    <Button
+                                        color="secondary"
+                                        onClick={() => onDeleteHistoryRecord('sale', record.id)}
+                                    >
+                                        Видалити
+                                    </Button>
+                                </TableCell>
+
+                            </TableRow>
+                        ))
                         : (
                             <TableRow>
                                 <TableCell colSpan={5}>

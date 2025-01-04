@@ -8,7 +8,7 @@ import {
     TableRow,
     Paper,
     TableFooter,
-    Typography
+    Typography, Button
 } from "@mui/material";
 import {ISupplier} from "../../../utils/types";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
@@ -22,12 +22,18 @@ interface PurchaseHistoryRecord {
     supplier: ISupplier;
 }
 
+
 interface PurchaseHistoryTableProps {
+    onDeleteHistoryRecord: (historyType: string, historyId: number) => void;
     productHistory: ProductHistory[];
     sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
 }
 
-const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({productHistory, sortByDate}) => {
+const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
+                                                                       productHistory,
+                                                                       sortByDate,
+                                                                       onDeleteHistoryRecord
+                                                                   }) => {
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -38,19 +44,29 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({productHisto
                         <TableCell>Ціна за одиницю</TableCell>
                         <TableCell>Кількість закупівлі</TableCell>
                         <TableCell>Загальна ціна</TableCell>
+                        <TableCell>Дії</TableCell>
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {(productHistory.purchase && productHistory.purchase.length > 0) ?
-                    sortByDate(productHistory.purchase, 'purchase_date').map((record) => (
-                        <TableRow key={record.id + record.purchase_date}>
-                            <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
-                            <TableCell>{record.supplier.name}</TableCell>
-                            <TableCell>{record.purchase_price_per_item}</TableCell>
-                            <TableCell>{record.quantity_purchase}</TableCell>
-                            <TableCell>{record.purchase_total_price}</TableCell>
-                        </TableRow>
-                    ))
+                        sortByDate(productHistory.purchase, 'purchase_date').map((record) => (
+                            <TableRow key={record.id + record.purchase_date}>
+                                <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
+                                <TableCell>{record.supplier.name}</TableCell>
+                                <TableCell>{record.purchase_price_per_item}</TableCell>
+                                <TableCell>{record.quantity_purchase}</TableCell>
+                                <TableCell>{record.purchase_total_price}</TableCell>
+                                <TableCell>
+                                    <Button
+                                        color="secondary"
+                                        onClick={() => onDeleteHistoryRecord('purchase', record.id)}
+                                    >
+                                        Видалити
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))
                         : (
                             <TableRow>
                                 <TableCell colSpan={5}>Немає даних про історію товару.</TableCell>

@@ -38,7 +38,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     const [errors, setErrors] = useState({
         name: '',
         supplier: '',
-        quantity: '',
+        available_quantity: '',
         price_per_item: '',
         created_date: ""
     });
@@ -50,8 +50,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
     // Обчислення загальної ціни
     useEffect(() => {
-        if (editProduct.quantity > 0 && editProduct.purchase_price_per_item > 0) {
-            const totalPrice = editProduct.quantity * editProduct.purchase_price_per_item;
+        if (editProduct.available_quantity > 0 && editProduct.purchase_price_per_item > 0) {
+            const totalPrice = editProduct.available_quantity * editProduct.purchase_price_per_item;
             const roundedPrice = roundToDecimalPlaces(totalPrice, 2);
 
             // Only update if the value has changed
@@ -59,12 +59,12 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                 handleFieldChange('purchase_total_price', roundedPrice);
             }
         }
-    }, [editProduct.quantity, editProduct.purchase_price_per_item]);
+    }, [editProduct.available_quantity, editProduct.purchase_price_per_item]);
 
 
     // Валідація полів
     const validateFields = () => {
-        let tempErrors = {name: '', supplier: '', quantity: '', price_per_item: '', created_date: ""};
+        let tempErrors = {name: '', supplier: '', available_quantity: '', price_per_item: '', created_date: ""};
         let isValid = true;
 
         if (!editProduct.name.trim()) {
@@ -83,11 +83,11 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         //     isValid = false;
         // }
 
-        if (editProduct.quantity < 0) {
-            tempErrors.quantity = 'Quantity cannot be less than 0';
+        if (editProduct.available_quantity < 0) {
+            tempErrors.available_quantity = 'Quantity cannot be less than 0';
             isValid = false;
-        } else if (editProduct.quantity > 100000) {
-            tempErrors.quantity = 'Quantity cannot exceed 100,000';
+        } else if (editProduct.available_quantity > 100000) {
+            tempErrors.available_quantity = 'Quantity cannot exceed 100,000';
             isValid = false;
         }
 
@@ -216,14 +216,14 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         }
     };
     const incrementQuantity = () => {
-        if (editProduct.quantity < 1000) {
-            handleFieldChange("quantity", Number(editProduct.quantity + 1))
+        if (editProduct.available_quantity < 1000) {
+            handleFieldChange("available_quantity", Number(editProduct.available_quantity + 1))
         }
     };
 
     const decrementQuantity = () => {
-        if (editProduct.quantity > 1) {
-            handleFieldChange("quantity", Number(editProduct.quantity - 1))
+        if (editProduct.available_quantity > 1) {
+            handleFieldChange("available_quantity", Number(editProduct.available_quantity - 1))
 
         }
     };
@@ -265,7 +265,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                         <QuantityField
                             onIncrement={incrementQuantity}
                             onDecrement={decrementQuantity}
-                            value={editProduct.quantity}
+                            value={editProduct.available_quantity}
                             onChange={(e) => {
                                 // Видаляємо ведучий 0, якщо такий є
                                 let value = e.target.value;
@@ -277,11 +277,11 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                     value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
                                 }
                                 if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
-                                    handleFieldChange('quantity', Number(value));
+                                    handleFieldChange('available_quantity', Number(value));
                                 }
                             }}
 
-                            error={errors.quantity}
+                            error={errors.available_quantity}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>

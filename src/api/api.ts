@@ -1,193 +1,147 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
-import {ICustomer, ICustomerDetails, IEditProduct, INewProduct, IPurchaseData, ISaleData} from "../utils/types";
+import {
+    ICustomer,
+    ICustomerDetails,
+    IEditProduct,
+    INewProduct,
+    IProduct,
+    IPurchaseData,
+    ISaleData,
+    ISupplier
+} from '../utils/types';
 
+// Встановлення базового URL залежно від середовища
+const getBaseURL = (): string => {
+    return window.location.hostname === 'localhost'
+        ? 'http://127.0.0.1:5000/api/'
+        : 'https://aleksandrforupwork.pythonanywhere.com/api/';
+};
 
-// Створення екземпляра axios з правильним типом конфігурації
+// Створення екземпляра axios з базовою конфігурацією
+const api = axios.create({
+    baseURL: getBaseURL(),
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
-console.log(import.meta.env.MODE);
-const api = axios.create();
+// Інтерсептор для обробки помилок
+api.interceptors.response.use(
+    response => response,
+    error => {
+        console.error('API Error:', error);
+        return Promise.reject(error);
+    }
+);
 
-// Встановлюємо базову URL залежно від середовища
-if (window.location.hostname === 'localhost') {
-    api.defaults.baseURL = 'http://127.0.0.1:5000/api/'; // Локальний сервер
-} else {
-    api.defaults.baseURL = 'https://aleksandrforupwork.pythonanywhere.com/api/'; // Віддалений сервер
-}
-axios.defaults.headers.common['Content-Type'] = 'application/json';
+// Константи для API-ендпоінтів
+const API_ENDPOINTS = {
+    LOGIN: '/login',
+    LOGOUT: '/logout',
+    PRODUCTS: '/products',
+    CATEGORIES: '/categories',
+    SUPPLIERS: '/suppliers',
+    CUSTOMERS: '/customers',
+    SUPPLIER_PURCHASE_HISTORY: (id: number) => `/supplier/${id}/purchase-history`,
+    SUPPLIER_PRODUCTS: (id: number) => `/supplier/${id}/products`,
+    CUSTOMER_DETAILS: (id: number) => `/customers/${id}`,
+    PRODUCT_PURCHASE: (id: number) => `/product/${id}/purchase`,
+    PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
+    PRODUCT: (id: number) => `/product/${id}`,
+};
 
+// Уніфікована обробка помилок
+const handleError = (error: AxiosError): never => {
+    const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+    throw new Error(errorMessage);
+};
+
+// Загальна функція для GET-запитів
+const fetchResource = <T>(endpoint: string): Promise<T> => {
+    return api.get(endpoint).then(response => response.data).catch(handleError);
+};
+
+// Загальна функція для POST-запитів
+const postResource = <T>(endpoint: string, data: any): Promise<T> => {
+    return api.post(endpoint, data).then(response => response.data).catch(handleError);
+};
+
+// Функції для API
 export const loginUser = (username: string, password: string): Promise<string> => {
-    return api.post('/login', {username, password})
-        .then((response: AxiosResponse<{ token: string }>) => {
-            return response.data.token; // Повертаємо токен
-        })
-        .catch(error => {
-            console.error('Login failed:', error);
-            throw new Error('Invalid username or password');
-        });
+    return postResource<{ token: string }>(API_ENDPOINTS.LOGIN, {username, password}).then(data => data.token);
 };
 
 export const logoutUser = (): Promise<void> => {
-    const token = localStorage.getItem('token'); // Get the token from localStorage
-    return api.post('/logout', {}, {
-        headers: {
-            'Authorization': `Bearer ${token}` // Send token as part of the request
-        }
-    })
-        .then(() => {
-            // Handle successful logout (if needed)
-        })
-        .catch(error => {
-            console.error('Logout failed:', error);
-            throw new Error('Error during logout');
-        });
+    const token = localStorage.getItem('token');
+    return api.post(API_ENDPOINTS.LOGOUT, {}, {
+        headers: {'Authorization': `Bearer ${token}`},
+    }).catch(handleError);
 };
 
-// Функція для отримання списку продуктів
-export const fetchProducts = () => {
-    return api.get('/products')
-        .then(response => response.data)
-        .catch(error => {
-            console.error('Error fetching products:', error);
-            return [];
-        });
+export const fetchProducts = (): Promise<IProduct[]> => {
+    return fetchResource<IProduct[]>(API_ENDPOINTS.PRODUCTS);
 };
 
-export const fetchGetAllCategories = () => {
-    return api.get('/categories')
-        .then(response => response.data)
-        .catch(error => {
-            console.error('Error fetching categories:', error);
-            return [];
-        });
-}
-
-export const addSupplier = (newSupplier: { name: string, contact_info: string | null }) => {
-    return api.post('/supplier', newSupplier)
-        .catch(error => {
-            console.error('Error adding supplier:', error);
-            throw error;
-        });
+export const fetchGetAllCategories = (): Promise<string[]> => {
+    return fetchResource<string[]>(API_ENDPOINTS.CATEGORIES);
 };
 
-// Функція для видалення продукту
-export const deleteProduct = (productId: number) => {
-    return api.delete(`/product/${productId}`)
-        .catch(error => {
-            console.error('Error deleting product:', error);
-            throw error;
-        });
+export const addSupplier = (newSupplier: { name: string; contact_info: string | null }): Promise<ISupplier> => {
+    return postResource<ISupplier>(API_ENDPOINTS.SUPPLIERS, newSupplier);
 };
 
-// Функція для додавання продукту
-export const addProduct = (newProduct: INewProduct) => {
-    return api.post('/product', newProduct)
-        .catch(error => {
-            console.error('Error adding product:', error);
-            throw error;
-        });
+export const deleteProduct = (productId: number): Promise<void> => {
+    return api.delete(API_ENDPOINTS.PRODUCT(productId)).catch(handleError);
 };
 
-export const addNewCategory = (name: string) => {
-
-    return api.post('/categories', {name: name}).catch(error => {
-        console.error('Error adding category:', error);
-        throw error;
-    });
-}
-
-// Функція для оновлення продукту
-export const updateProduct = (productId: number, editProduct: IEditProduct) => {
-    console.log(editProduct);
-    return api.put(`/product/${productId}`, editProduct)
-        .catch(error => {
-            console.error('Error updating product:', error);
-            throw error;
-        });
+export const addProduct = (newProduct: INewProduct): Promise<IProduct> => {
+    return postResource<IProduct>(API_ENDPOINTS.PRODUCTS, newProduct);
 };
 
-// Функція для додавання покупки
-export const addPurchase = (productId: number, purchaseData: IPurchaseData) => {
-    return api.post(`/product/${productId}/purchase`, purchaseData)
-        .catch(error => {
-            console.error('Error adding purchase:', error);
-            throw error;
-        });
+export const addNewCategory = (name: string): Promise<void> => {
+    return postResource<void>(API_ENDPOINTS.CATEGORIES, {name});
 };
 
-// Функція для реєстрації продажу
-export const addSale = (productId: number, saleData: ISaleData) => {
-    return api.post(`/product/${productId}/sale`, saleData)
-        .catch(error => {
-            console.error('Error adding sale:', error);
-            throw error;
-        });
+export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<void> => {
+    return api.put(API_ENDPOINTS.PRODUCT(productId), editProduct).catch(handleError);
 };
 
-// Функція для отримання списку постачальників
-export const fetchGetAllSuppliers = () => {
-    return api.get('/suppliers')  // Припустимо, що API-метод для отримання постачальників - це '/suppliers'
-        .then(response => response.data)
-        .catch(error => {
-            console.error('Error fetching suppliers:', error);
-            return [];
-        });
+export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<void> => {
+    return postResource<void>(API_ENDPOINTS.PRODUCT_PURCHASE(productId), purchaseData);
 };
 
-// Функція для отримання історії закупівель постачальника
-export const fetchGetSupplierPurchaseHistory = (supplierId) => {
-    return api.get(`/supplier/${supplierId}/purchase-history`)
-        .then(response => response.data)
-        .catch(error => {
-            console.error(`Error fetching purchase history for supplier ${supplierId}:`, error);
-            return {
-                purchase_history: [],
-                products: []
-            };
-        });
+export const addSale = (productId: number, saleData: ISaleData): Promise<void> => {
+    return postResource<void>(API_ENDPOINTS.PRODUCT_SALE(productId), saleData);
 };
 
-
-// Функція для отримання списку продуктів постачальника
-export const fetchGetSupplierProducts = (supplierId) => {
-    return api.get(`/supplier/${supplierId}/products`)
-        .then(response => response.data)
-        .catch(error => {
-            console.error(`Error fetching products for supplier ${supplierId}:`, error);
-            return {
-                products: []
-            };
-        });
+export const fetchGetAllSuppliers = (): Promise<ISupplier[]> => {
+    return fetchResource<ISupplier[]>(API_ENDPOINTS.SUPPLIERS);
 };
 
+export const fetchGetSupplierPurchaseHistory = (supplierId: number): Promise<{ purchase_history: any[]; products: IProduct[] }> => {
+    return fetchResource<{ purchase_history: any[]; products: IProduct[] }>(API_ENDPOINTS.SUPPLIER_PURCHASE_HISTORY(supplierId));
+};
 
-// Запит для створення нового покупця
+export const fetchGetSupplierProducts = (supplierId: number): Promise<IProduct[]> => {
+    return fetchResource<IProduct[]>(API_ENDPOINTS.SUPPLIER_PRODUCTS(supplierId));
+};
+
 export const createCustomer = (customerData: ICustomerDetails): Promise<ICustomer> => {
-    return api.post('/customers', customerData)
-        .then(response => response.data as ICustomer)
-        .catch((error: AxiosError) => {
-            console.error('Error creating customer:', error);
-            return Promise.reject(error); // Явно вказуємо, що в разі помилки повертається відхилений Promise
-        });
+    return postResource<ICustomer>(API_ENDPOINTS.CUSTOMERS, customerData);
 };
 
-
-// Запит для отримання списку всіх покупців
-export const fetchGetAllCustomers = () => {
-    return api.get('/customers')
-        .then(response => response.data)
-        .catch(error => {
-            console.error('Error fetching customers:', error);
-            return [];
-        });
+export const fetchGetAllCustomers = (): Promise<ICustomer[]> => {
+    return fetchResource<ICustomer[]>(API_ENDPOINTS.CUSTOMERS);
 };
 
-// Запит для отримання інформації про конкретного покупця
-export const fetchCustomerDetails = (customerId) => {
-    return api.get(`/customers/${customerId}`)
-        .then(response => response.data)
-        .catch(error => {
-            console.error('Error fetching customer details:', error);
-            throw error;
-        });
+export const fetchCustomerDetails = (customerId: number): Promise<ICustomerDetails> => {
+    return fetchResource<ICustomerDetails>(API_ENDPOINTS.CUSTOMER_DETAILS(customerId));
 };
 
+export const fetchProductHistory = (productId: number) => {
+    return api.get(`/product/${productId}/history`);
+};
+
+export const onDeleteHistoryRecord = (productId: number, historyType: string, historyId: number) => {
+    return api.delete(`/delete-history/${productId}/${historyType}/${historyId}`);
+};

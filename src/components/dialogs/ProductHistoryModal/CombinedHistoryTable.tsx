@@ -58,7 +58,7 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                                     return finalDateA - finalDateB;
                                 }).map((record, index) => (
                                 <TableRow
-                                    key={record.id}
+                                    key={record.id + index + record.type}
                                     style={{backgroundColor: record.type === 'sale' ? '#d1e7dd' : '#f8d7da'}} // Колір для продажу і закупки
                                 >
                                     <TableCell>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
