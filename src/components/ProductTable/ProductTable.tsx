@@ -56,14 +56,23 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                    isAuthenticated
                                                                }, ref) => {
 
-    // Підрахунок загальної кількості та суми для закупівлі та продажу
-    const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_quantity, 0);
+// Підрахунок загальної кількості та суми для закупівлі та продажу
+    const totalQuantityPurchaseAllTime = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_quantity, 0);
+
+    const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.available_quantity, 0);
     const totalSumPurchase = isAuthenticated
-        ? filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_total_price), 0)
+        ? filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_price_per_item), 0) // Загальна сума закупівель
         : 0; // Сума закупівлі тільки для залогінених
 
     const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.sold_quantity, 0);
-    const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.sold_quantity * product.selling_total_price), 0);
+    const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.sold_quantity * product.selling_price_per_item), 0);
+
+    // Розрахункова сума продажу (оскільки наявність продукції може змінюватися)
+    const totalCalculatedSellingSum = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.available_quantity * product.selling_price_per_item), 0);
+    // Розрахункова сума закупівель (оскільки наявність продукці�� може змінюватися)
+
+
+
 
     return (
         <React.Fragment>
@@ -242,18 +251,31 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                             <TableCell colSpan={3} align="right"><strong>Загальна кількість:</strong></TableCell>
                             <TableCell>
                                 <Typography variant={"subtitle2"} color={"secondary"}>
-                                    {totalQuantityPurchase}
+                                    <strong> За весь час</strong> {totalQuantityPurchaseAllTime}
+                                </Typography><Typography variant={"subtitle2"} color={"secondary"}>
+                                    <strong> Загальна кількість у наявності</strong> {totalQuantityPurchase}
                                 </Typography>
                                 <Typography variant={"subtitle2"} color={"primary"}>
-                                    {totalQuantitySelling}
+                                    <strong> Продано</strong> {totalQuantitySelling}
                                 </Typography>
                             </TableCell>
                             <TableCell colSpan={1} align="right"><strong>Загальна сума:</strong></TableCell>
                             <TableCell>
                                 <Typography color={"secondary"}
-                                            variant={"subtitle2"}>{totalSumPurchase.toFixed(2)}</Typography>
+                                            variant={"subtitle2"}>
+                                    <strong> Закупівель: </strong> {totalSumPurchase.toFixed(2)}
+                                </Typography>
                                 <Typography color={"primary"}
-                                            variant={"subtitle2"}>{totalSumSelling.toFixed(2)}</Typography>
+                                            variant={"subtitle2"}>
+                                    <strong> Проданого: </strong>
+                                    {totalSumSelling.toFixed(2)}
+                                </Typography>
+
+                                <Typography color={"primary"}
+                                            variant={"subtitle2"}>
+                                    <strong>залишку: </strong>
+                                    {totalCalculatedSellingSum.toFixed(2)}
+                                </Typography>
                             </TableCell>
                         </TableRow>
                     </TableFooter>
