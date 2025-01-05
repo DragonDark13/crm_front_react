@@ -151,3 +151,24 @@ export interface ISaleHistory {
     selling_total_price: number;
     sale_date: string;
 }
+
+export interface IMaterialSupplier {
+    address: string | null;
+    contact_info: string | null;
+    email: string | null;
+    id: number;
+    name: string;
+    phone_number: string | null;
+}
+
+export interface IMaterial {
+    available_quantity: number;
+    created_date: string; // or Date if you prefer to parse it into a Date object
+    id: number;
+    name: string;
+    packaging_material_supplier_id: number;
+    purchase_price_per_unit: number;
+    reorder_level: number;
+    supplier: IMaterialSupplier;
+    total_quantity: number;
+}

@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosResponse} from 'axios';
 import {
     ICustomer,
     ICustomerDetails,
-    IEditProduct,
+    IEditProduct, IMaterial,
     INewProduct,
     IProduct,
     IPurchaseData,
@@ -48,6 +48,7 @@ const API_ENDPOINTS = {
     PRODUCT_PURCHASE: (id: number) => `/product/${id}/purchase`,
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
     PRODUCT: (id: number) => `/product/${id}`,
+    PACKAGING_MATERIALS: '/get_all_packaging_materials',  // New endpoint for packaging materials
 };
 
 // Уніфікована обробка помилок
@@ -144,4 +145,9 @@ export const fetchProductHistory = (productId: number) => {
 
 export const onDeleteHistoryRecord = (productId: number, historyType: string, historyId: number) => {
     return api.delete(`/delete-history/${productId}/${historyType}/${historyId}`);
+};
+
+// Функція для отримання пакувальних матеріалів
+export const fetchPackagingMaterials = (): Promise<{ materials: IMaterial[] }> => {
+    return fetchResource<{ materials: IMaterial[] }>(API_ENDPOINTS.PACKAGING_MATERIALS);
 };

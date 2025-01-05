@@ -1,8 +1,9 @@
 import React from 'react';
 import {Box, IconButton, Tooltip} from '@mui/material';
-import {Home, People, ShoppingCart, Store, BarChart, Receipt} from '@mui/icons-material';
+import {Home, People, ShoppingCart, Store, BarChart, Receipt, Luggage} from '@mui/icons-material';
 import {Link, useLocation} from 'react-router-dom';
 import AddButtonWithMenu from "../MainMenu/AddButtonWithMenu";
+
 
 export const Sidebar: React.FC = () => {
     const location = useLocation(); // Отримуємо поточний шлях
@@ -71,6 +72,12 @@ export const Sidebar: React.FC = () => {
                 <IconButton color={isActive("/crm_front_react/analytics") ? "primary" : "inherit"} component={Link}
                             to="/crm_front_react/analytics">
                     <BarChart/>
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Пакування" placement="right">
+                <IconButton color={isActive("/crm_front_react/packaging") ? "primary" : "inherit"} component={Link}
+                            to="/crm_front_react/packaging">
+                    <Luggage/>
                 </IconButton>
             </Tooltip>
             <AddButtonWithMenu/>

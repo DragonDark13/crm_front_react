@@ -72,8 +72,6 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
     // Розрахункова сума закупівель (оскільки наявність продукці�� може змінюватися)
 
 
-
-
     return (
         <React.Fragment>
 
@@ -192,7 +190,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         <TableCell>
                                             {isAuthenticated && (
                                                 <Typography color={"secondary"}>
-                                                    {(product.total_quantity * product.purchase_price_per_item).toFixed(2)}
+                                                    {(product.purchase_total_price).toFixed(2)}
                                                 </Typography>
                                             )}
                                             <Typography color={"primary"}>
@@ -253,8 +251,8 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                 <Typography variant={"subtitle2"} color={"secondary"}>
                                     <strong> За весь час</strong> {totalQuantityPurchaseAllTime}
                                 </Typography><Typography variant={"subtitle2"} color={"secondary"}>
-                                    <strong> Загальна кількість у наявності</strong> {totalQuantityPurchase}
-                                </Typography>
+                                <strong> Загальна кількість у наявності</strong> {totalQuantityPurchase}
+                            </Typography>
                                 <Typography variant={"subtitle2"} color={"primary"}>
                                     <strong> Продано</strong> {totalQuantitySelling}
                                 </Typography>
