@@ -18,15 +18,16 @@ const getBaseURL = (): string => {
 };
 
 // Створення екземпляра axios з базовою конфігурацією
-const api = axios.create({
+export const axiosInstance = axios.create({
     baseURL: getBaseURL(),
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
+
 // Інтерсептор для обробки помилок
-api.interceptors.response.use(
+axiosInstance.interceptors.response.use(
     response => response,
     error => {
         console.error('API Error:', error);
@@ -59,12 +60,12 @@ const handleError = (error: AxiosError): never => {
 
 // Загальна функція для GET-запитів
 const fetchResource = <T>(endpoint: string): Promise<T> => {
-    return api.get(endpoint).then(response => response.data).catch(handleError);
+    return axiosInstance.get(endpoint).then(response => response.data).catch(handleError);
 };
 
 // Загальна функція для POST-запитів
 const postResource = <T>(endpoint: string, data: any): Promise<T> => {
-    return api.post(endpoint, data).then(response => response.data).catch(handleError);
+    return axiosInstance.post(endpoint, data).then(response => response.data).catch(handleError);
 };
 
 // Функції для API
@@ -74,7 +75,7 @@ export const loginUser = (username: string, password: string): Promise<string> =
 
 export const logoutUser = (): Promise<void> => {
     const token = localStorage.getItem('token');
-    return api.post(API_ENDPOINTS.LOGOUT, {}, {
+    return axiosInstance.post(API_ENDPOINTS.LOGOUT, {}, {
         headers: {'Authorization': `Bearer ${token}`},
     }).catch(handleError);
 };
@@ -92,7 +93,7 @@ export const addSupplier = (newSupplier: { name: string; contact_info: string | 
 };
 
 export const deleteProduct = (productId: number): Promise<void> => {
-    return api.delete(API_ENDPOINTS.PRODUCT(productId)).catch(handleError);
+    return axiosInstance.delete(API_ENDPOINTS.PRODUCT(productId)).catch(handleError);
 };
 
 export const addProduct = (newProduct: INewProduct): Promise<IProduct> => {
@@ -104,7 +105,7 @@ export const addNewCategory = (name: string): Promise<void> => {
 };
 
 export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<void> => {
-    return api.put(API_ENDPOINTS.PRODUCT(productId), editProduct).catch(handleError);
+    return axiosInstance.put(API_ENDPOINTS.PRODUCT(productId), editProduct).catch(handleError);
 };
 
 export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<void> => {
@@ -140,11 +141,11 @@ export const fetchCustomerDetails = (customerId: number): Promise<ICustomerDetai
 };
 
 export const fetchProductHistory = (productId: number) => {
-    return api.get(`/product/${productId}/history`);
+    return axiosInstance.get(`/product/${productId}/history`);
 };
 
 export const onDeleteHistoryRecord = (productId: number, historyType: string, historyId: number) => {
-    return api.delete(`/delete-history/${productId}/${historyType}/${historyId}`);
+    return axiosInstance.delete(`/delete-history/${productId}/${historyType}/${historyId}`);
 };
 
 // Функція для отримання пакувальних матеріалів

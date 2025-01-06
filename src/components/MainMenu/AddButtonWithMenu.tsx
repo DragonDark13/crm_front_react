@@ -14,6 +14,7 @@ import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomer
 import {AxiosError} from "axios";
 import {useCustomers} from "../Provider/CustomerContext";
 import {useAuth} from "../context/AuthContext";
+import AddNewPackagingModal from "../dialogs/AddNewPackagingModal/AddNewPackagingModal";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -35,16 +36,16 @@ const AddButtonWithMenu = () => {
     const id = open ? 'simple-popover' : undefined;
 
     const [newProduct, setNewProduct] = useState<INewProduct>({
+        available_quantity: 0, sold_quantity: 0, total_quantity: 0,
         name: '',
         supplier_id: '',
-        quantity: 1,
         purchase_total_price: 0.00,
         purchase_price_per_item: 0.00,
         category_ids: [],
         created_date: new Date().toISOString().slice(0, 10),
         selling_price_per_item: 0.00,
         selling_total_price: 0.00,
-        selling_quantity: 0,
+        selling_quantity: 0
     });
 
 
@@ -73,14 +74,16 @@ const AddButtonWithMenu = () => {
         setNewProduct({
             name: '',
             supplier_id: '',
-            quantity: 1,
+            total_quantity: 0,
+            available_quantity: 0,
+            sold_quantity: 0,
             purchase_total_price: 0.00,
             purchase_price_per_item: 0.00,
             category_ids: [],
             created_date: new Date().toISOString().slice(0, 10),
             selling_total_price: 0.00,
             selling_price_per_item: 0.00,
-            selling_quantity: 0,
+            selling_quantity: 0
         });
         setSelectedCategories([])
     };
@@ -229,6 +232,12 @@ const AddButtonWithMenu = () => {
                                 Покупця
                             </Button>
                         </Grid>
+                        <Grid item xs={12}>
+                            <Button variant={"contained"} color="primary" fullWidth
+                                    onClick={() => handleModalOpen("addNewPackage")}>
+                                Пакування
+                            </Button>
+                        </Grid>
 
                     </Grid>
                 </Box>
@@ -265,6 +274,10 @@ const AddButtonWithMenu = () => {
                 openAddNewCustomerDialog={modalState.createCustomerDialog}
                 handleCloseAddNewCustomerDialog={() => handleModalClose("createCustomerDialog")}
                 handleAddCustomer={handleCreateCustomer}/>}
+
+            {modalState.addNewPackage && <AddNewPackagingModal openAddNewPackaging={modalState.addNewPackage}
+                                                               handleCloseAddNewPackaging={() => handleModalClose('addNewPackage')}
+                                                               handleAddClick={handleCreateCustomer}/>}
 
 
         </Box>

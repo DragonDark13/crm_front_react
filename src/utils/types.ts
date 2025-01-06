@@ -80,6 +80,7 @@ export type ModalNames =
     | 'openNotificationDrawer'
     | 'snackbarNotifyOpen'
     | 'createCustomerDialog'
+    | 'addNewPackage'
     ;
 
 export const modalNames: ModalNames[] = [
@@ -94,7 +95,8 @@ export const modalNames: ModalNames[] = [
     'openAddSupplierOpen',
     'openNotificationDrawer',
     'snackbarNotifyOpen',
-    'createCustomerDialog'
+    'createCustomerDialog',
+    'addNewPackage'
 ];
 
 export interface INotificationPanel {
@@ -171,4 +173,6 @@ export interface IMaterial {
     reorder_level: number;
     supplier: IMaterialSupplier;
     total_quantity: number;
+    total_purchase_cost: number;
+    available_stock_cost: number;
 }
