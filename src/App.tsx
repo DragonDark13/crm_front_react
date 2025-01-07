@@ -34,6 +34,7 @@ import SpeedDial from "./components/SpeedDial/SpeedDial";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Login from "./components/Login/Login";
 import PackagingMaterialList from "./components/pages/PackagingMaterialList";
+import InvestmentsPage from "./components/pages/InvestmentsPage";
 
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
                         <Route path="/crm_front_react/purchases" element={<Purchases/>}/>
                         <Route path="/crm_front_react/analytics" element={<ReportsAnalytics/>}/>
                         <Route path="/crm_front_react/packaging" element={<PackagingMaterialList/>}/>
+                        <Route path="/crm_front_react/other-investments" element={<InvestmentsPage/>}/>
                     </Routes>
                 </Box>
             </Box>
