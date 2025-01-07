@@ -10,13 +10,14 @@ const QuantityField: FC<{
     error: string;
     onIncrement: () => void; // Додано проп для інкременту
     onDecrement: () => void; // Додано проп для декременту
-}> = ({value, onChange, error, onIncrement, onDecrement}) => {
+    label?: string;
+}> = ({value, onChange, error, onIncrement, onDecrement,label='Кількість'}) => {
 
     return (
         <Box display="flex" alignItems="center">
 
             <TextField
-                label="Кількість"
+                label={label}
                 type="text"
                 value={value.toString()}
                 onChange={onChange}

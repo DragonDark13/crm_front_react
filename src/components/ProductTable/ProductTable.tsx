@@ -167,7 +167,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         <TableCell>
                                             <div>
                                                 <Typography>
-                                                    <strong>За всеь час:</strong> {product.total_quantity}
+                                                    <strong>За весь час:</strong> {product.total_quantity}
                                                 </Typography>
                                                 <Typography className={clsx({'low-quantity': lowQuantity})}>
                                                     <strong>В наявності:</strong> {product.available_quantity}

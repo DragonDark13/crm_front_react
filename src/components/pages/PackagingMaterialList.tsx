@@ -92,20 +92,6 @@ const PackagingMaterialList: React.FC = () => {
         setSortOrder(isAsc ? 'desc' : 'asc');
     };
 
-    const purchasePackagingMaterial = async (purchaseData: {
-        material_id: number;
-        supplier_id?: number;
-        quantity: number;
-        purchase_price_per_unit: number;
-    }) => {
-        try {
-            const response = await axiosInstance.post('/purchase_packaging_material', purchaseData);
-            return response.data;
-        } catch (error) {
-            console.error('Error purchasing packaging material:', error);
-            throw error;
-        }
-    };
 
     const handleOpenDialog = (material: IMaterial) => {
         setSelectedMaterialId(material.id);

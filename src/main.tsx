@@ -8,23 +8,24 @@ import {SupplierProvider} from "./components/Provider/SupplierContext";
 import {ProductProvider} from "./components/Provider/ProductContext";
 import {SnackbarMessageProvider} from "./components/Provider/SnackbarMessageContext";
 import {AuthProvider} from "./components/context/AuthContext";
+import {PackagingProvider} from "./components/Provider/PackagingContext";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <AuthProvider>
-                <SnackbarMessageProvider>
-                    <ProductProvider>
-                        <SupplierProvider>
-                            <CategoryProvider>
-                                <CustomerProvider>
-
+            <SnackbarMessageProvider>
+                <ProductProvider>
+                    <SupplierProvider>
+                        <CategoryProvider>
+                            <CustomerProvider>
+                                <PackagingProvider>
                                     <App/>
-
-                                </CustomerProvider>
-                            </CategoryProvider>
-                        </SupplierProvider>
-                    </ProductProvider>
-                </SnackbarMessageProvider>
+                                </PackagingProvider>
+                            </CustomerProvider>
+                        </CategoryProvider>
+                    </SupplierProvider>
+                </ProductProvider>
+            </SnackbarMessageProvider>
         </AuthProvider>
     </React.StrictMode>
     ,

@@ -423,12 +423,17 @@ const ProductsCatalog = () => {
         })
 
         setSaleData({
+            packaging_id: '',
+            packaging_quantity: 0,
+            total_cost_price: 0,
             customer: '',
             quantity: 1,
             selling_price_per_item: product.selling_price_per_item,
             selling_total_price: product.selling_total_price,
+            purchase_price_per_item: product.purchase_price_per_item,
             sale_date: new Date().toISOString().split('T')[0],
-            productId: product.id, // Зберігаємо ID продукту для відправки на сервер
+            productId: product.id,
+            total_packaging_cost: 0 // Зберігаємо ID продукту для відправки на сервер
         });
         handleModalOpen("openSale")
     };
