@@ -7,7 +7,7 @@ import {
     IProduct,
     IPurchaseData,
     ISaleData,
-    ISupplier
+    ISupplier, PackagingMaterialHistory
 } from '../utils/types';
 
 // Встановлення базового URL залежно від середовища
@@ -50,6 +50,7 @@ const API_ENDPOINTS = {
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
     PRODUCT: (id: number) => `/product/${id}`,
     PACKAGING_MATERIALS: '/get_all_packaging_materials',  // New endpoint for packaging materials
+    CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`
 };
 
 // Уніфікована обробка помилок
@@ -151,4 +152,8 @@ export const onDeleteHistoryRecord = (productId: number, historyType: string, hi
 // Функція для отримання пакувальних матеріалів
 export const fetchPackagingMaterials = (): Promise<{ materials: IMaterial[] }> => {
     return fetchResource<{ materials: IMaterial[] }>(API_ENDPOINTS.PACKAGING_MATERIALS);
+};
+
+export const getCurrentPackagingHistory = (materialId: number): Promise<PackagingMaterialHistory> => {
+    return fetchResource<PackagingMaterialHistory>(API_ENDPOINTS.CURRENT_PACKAGING_HISTORY(materialId));
 };

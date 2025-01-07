@@ -11,282 +11,352 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
-    Paper, Typography, Grid, Button
+    Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog
 } from '@mui/material';
-import {axiosInstance, fetchPackagingMaterials} from "../../api/api";
-import {IMaterial} from "../../utils/types";
+import {axiosInstance, fetchPackagingMaterials, getCurrentPackagingHistory} from "../../api/api";
+import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../utils/types";
 import PurchaseMaterialDialog from "../dialogs/AddNewPackagingModal/PurchaseMaterialDialog";
 import MarkPackagingAsUsedDialog from "../dialogs/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
+import MaterialHistoryTable from "./MaterialHistoryTable";
 
 
 const PackagingMaterialList: React.FC = () => {
-    const [materials, setMaterials] = useState<IMaterial[]>([]);
-    const [searchTerm, setSearchTerm] = useState<string>('');
-    const [sortBy, setSortBy] = useState<string>('name');
-    const [sortOrder, setSortOrder] = useState<string>('asc');
-    const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null);
-    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-    const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(null);
-    const [defaultPricePerUnit, setDefaultPricePerUnit] = useState<number>(0);
-    const [selectedMaterial, setSelectedMaterial] = useState<IMaterial | null>(null);
-    const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
+        const [materials, setMaterials] = useState<IMaterial[]>([]);
+        const [searchTerm, setSearchTerm] = useState<string>('');
+        const [sortBy, setSortBy] = useState<string>('name');
+        const [sortOrder, setSortOrder] = useState<string>('asc');
+        const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null);
+        const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+        const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(null);
+        const [defaultPricePerUnit, setDefaultPricePerUnit] = useState<number>(0);
+        const [selectedMaterial, setSelectedMaterial] = useState<IMaterial | null>(null);
+        const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
+        const [historyDialogOpen, setHistoryDialogOpen] = useState<boolean>(false);
+        const [materialHistory, setMaterialHistory] = useState<MaterialHistoryItem[]>([]);
 
-    const handleOpenDialogUpdate = (material: IMaterial) => {
-        setSelectedMaterial(material);
-        setOpenDialogUpdate(true);
-    };
+        const mapMaterialHistory = (history: PackagingMaterialHistory): MaterialHistoryItem[] => {
+            const purchaseMapped = history.purchase_history.map(purchase => ({
+                date: purchase.purchase_date,
+                description: `Закупівля у постачальника (ID: ${purchase.supplier_id}), ціна за одиницю: ${purchase.purchase_price_per_unit}`,
+                quantity: purchase.quantity_purchased,
+            }));
 
-    const handleCloseDialogUpdate = () => {
-        setOpenDialogUpdate(false);
-        setSelectedMaterial(null);
-    };
+            const salesMapped = history.sales_history.map(sale => ({
+                date: sale.sale_date,
+                description: `Продаж (ID продажу: ${sale.sale_id}), загальна вартість: ${sale.total_packaging_cost}`,
+                quantity: -sale.packaging_quantity, // Від'ємне значення для продажу
+            }));
 
-    const handleUpdateSuccess = () => {
-        // Логіка оновлення після успішного позначення пакування як використаного
-        console.log("Update was successful!");
-        handleCloseDialogUpdate(); // Закриваємо діалог після успіху
-    };
+            const stockMapped = history.stock_history.map(stock => ({
+                date: stock.change_date,
+                description: `Зміна на складі, новий залишок: ${stock.new_total}`,
+                quantity: stock.quantity_changed,
+            }));
 
-    // Fetch materials from backend using Axios
-    useEffect(() => {
-        if (materials.length > 0) {
+            // Об'єднання всіх подій, сортування за датою
+            return [...purchaseMapped, ...salesMapped, ...stockMapped].sort(
+                (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            );
+        };
 
-        } else {
-            fetchPackagingMaterials()
-                .then((response) => setMaterials(response.materials))
+        const fetchMaterialHistory = (materialId: number) => {
+
+            getCurrentPackagingHistory(materialId)
+                .then(data => {
+                    const mappedData = mapMaterialHistory(data);
+                    setMaterialHistory(mappedData);
+                })
                 .catch((error) => console.error('Error fetching packaging materials:', error));
-        }
+        };
 
-    }, []);
+        const handleOpenHistoryDialog = (material: IMaterial) => {
+            setSelectedMaterial(material);
+            fetchMaterialHistory(material.id); // Fetch history when opening the dialog
+            setHistoryDialogOpen(true);
+        };
 
-    // Filter and sort materials
-// Filter and sort materials
-    const filteredMaterials = materials
-        .filter((material) =>
-            material.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        .sort((a, b) => {
-            if (sortBy === 'name') {
-                return sortOrder === 'asc'
-                    ? a.name.localeCompare(b.name)
-                    : b.name.localeCompare(a.name);
-            } else if (sortBy === 'purchase_price_per_unit') {
-                return sortOrder === 'asc'
-                    ? a.purchase_price_per_unit - b.purchase_price_per_unit
-                    : b.purchase_price_per_unit - a.purchase_price_per_unit;
-            } else if (sortBy === 'available_quantity') {
-                return sortOrder === 'asc'
-                    ? a.available_quantity - b.available_quantity
-                    : b.available_quantity - a.available_quantity;
-            } else if (sortBy === 'created_date') {
-                const dateA = new Date(a.created_date);
-                const dateB = new Date(b.created_date);
-                return sortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+        const handleCloseHistoryDialog = () => {
+            setHistoryDialogOpen(false);
+            setSelectedMaterial(null);
+            setMaterialHistory([]); // Clear history data when closing the dialog
+        };
+
+        const handleOpenDialogUpdate = (material: IMaterial) => {
+            setSelectedMaterial(material);
+            setOpenDialogUpdate(true);
+        };
+
+        const handleCloseDialogUpdate = () => {
+            setOpenDialogUpdate(false);
+            setSelectedMaterial(null);
+        };
+
+        const handleUpdateSuccess = () => {
+            // Логіка оновлення після успішного позначення пакування як використаного
+            console.log("Update was successful!");
+            handleCloseDialogUpdate(); // Закриваємо діалог після успіху
+        };
+
+        // Fetch materials from backend using Axios
+        useEffect(() => {
+            if (materials.length > 0) {
+
+            } else {
+                fetchPackagingMaterials()
+                    .then((response) => setMaterials(response.materials))
+                    .catch((error) => console.error('Error fetching packaging materials:', error));
             }
-            return 0;
-        });
 
-    const handleSort = (property: string) => {
-        const isAsc = sortBy === property && sortOrder === 'asc';
-        setSortBy(property);
-        setSortOrder(isAsc ? 'desc' : 'asc');
-    };
+        }, []);
+
+        // Filter and sort materials
+// Filter and sort materials
+        const filteredMaterials = materials
+            .filter((material) =>
+                material.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .sort((a, b) => {
+                if (sortBy === 'name') {
+                    return sortOrder === 'asc'
+                        ? a.name.localeCompare(b.name)
+                        : b.name.localeCompare(a.name);
+                } else if (sortBy === 'purchase_price_per_unit') {
+                    return sortOrder === 'asc'
+                        ? a.purchase_price_per_unit - b.purchase_price_per_unit
+                        : b.purchase_price_per_unit - a.purchase_price_per_unit;
+                } else if (sortBy === 'available_quantity') {
+                    return sortOrder === 'asc'
+                        ? a.available_quantity - b.available_quantity
+                        : b.available_quantity - a.available_quantity;
+                } else if (sortBy === 'created_date') {
+                    const dateA = new Date(a.created_date);
+                    const dateB = new Date(b.created_date);
+                    return sortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+                }
+                return 0;
+            });
+
+        const handleSort = (property: string) => {
+            const isAsc = sortBy === property && sortOrder === 'asc';
+            setSortBy(property);
+            setSortOrder(isAsc ? 'desc' : 'asc');
+        };
 
 
-    const handleOpenDialog = (material: IMaterial) => {
-        setSelectedMaterialId(material.id);
-        setSelectedSupplierId(material.supplier.id || null); // Передаємо ID постачальника
-        setDefaultPricePerUnit(material.purchase_price_per_unit || 0); // Передаємо ціну за одиницю
-        setDialogOpen(true);
-    };
+        const handleOpenDialog = (material: IMaterial) => {
+            setSelectedMaterialId(material.id);
+            setSelectedSupplierId(material.supplier.id || null); // Передаємо ID постачальника
+            setDefaultPricePerUnit(material.purchase_price_per_unit || 0); // Передаємо ціну за одиницю
+            setDialogOpen(true);
+        };
 
-    const handleCloseDialog = () => {
-        setDialogOpen(false);
-        setSelectedMaterialId(null);
-        setSelectedSupplierId(null);
-        setDefaultPricePerUnit(0);
-    };
+        const handleCloseDialog = () => {
+            setDialogOpen(false);
+            setSelectedMaterialId(null);
+            setSelectedSupplierId(null);
+            setDefaultPricePerUnit(0);
+        };
 
-    return (
-        <React.Fragment><Paper sx={{width: '100%', overflow: 'hidden'}}>
-            <h1>Список пакувальних матеріалів</h1>
-            <Grid justifyContent={"flex-end"} alignItems={"center"} container>
-                {/* Search */}
-                <Grid item>
+        return (
+            <React.Fragment><Paper sx={{width: '100%', overflow: 'hidden'}}>
+                <h1>Список пакувальних матеріалів</h1>
+                <Grid justifyContent={"flex-end"} alignItems={"center"} container>
+                    {/* Search */}
+                    <Grid item>
 
 
-                    <TextField
-                        label="Пошук за назвою"
-                        variant="outlined"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        fullWidth
-                        margin="dense"
-                    />
+                        <TextField
+                            label="Пошук за назвою"
+                            variant="outlined"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            fullWidth
+                            margin="dense"
+                        />
+                    </Grid>
+                    {/* Sorting */}
+                    <Grid item>
+                        <Select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            fullWidth
+                            margin="dense"
+                        >
+                            <MenuItem value="name">Назва</MenuItem>
+                            <MenuItem value="purchase_price_per_unit">Ціна</MenuItem>
+                            <MenuItem value="available_quantity">Кількість в наявності</MenuItem>
+                            <MenuItem value="created_date">Дата
+                                створення</MenuItem> {/* Added sorting option for created_date */}
+                        </Select>
+                    </Grid>
+                    <Grid item>
+
+
+                        <Select
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            fullWidth
+                            margin="dense"
+                        >
+                            <MenuItem value="asc">По зростанню</MenuItem>
+                            <MenuItem value="desc">По спаданню</MenuItem>
+                        </Select>
+                    </Grid>
                 </Grid>
-                {/* Sorting */}
-                <Grid item>
-                    <Select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        fullWidth
-                        margin="dense"
-                    >
-                        <MenuItem value="name">Назва</MenuItem>
-                        <MenuItem value="purchase_price_per_unit">Ціна</MenuItem>
-                        <MenuItem value="available_quantity">Кількість в наявності</MenuItem>
-                        <MenuItem value="created_date">Дата
-                            створення</MenuItem> {/* Added sorting option for created_date */}
-                    </Select>
-                </Grid>
-                <Grid item>
 
 
-                    <Select
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                        fullWidth
-                        margin="dense"
-                    >
-                        <MenuItem value="asc">По зростанню</MenuItem>
-                        <MenuItem value="desc">По спаданню</MenuItem>
-                    </Select>
-                </Grid>
-            </Grid>
-
-
-            {/* IMaterial List Table */}
-            <TableContainer>
-                <Table sx={{minWidth: 650}}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortBy === 'name'}
-                                    direction={sortBy === 'name' ? (sortOrder as 'asc' | 'desc') : 'asc'}
-                                    onClick={() => handleSort('name')}
-                                >
-                                    Назва
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Постачальник</TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortBy === 'purchase_price_per_unit'}
-                                    direction={sortBy === 'purchase_price_per_unit' ? (sortOrder as 'asc' | 'desc') : 'asc'}
-                                    onClick={() => handleSort('purchase_price_per_unit')}
-                                >
-                                    Ціна
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortBy === 'available_quantity'}
-                                    direction={sortBy === 'available_quantity' ? (sortOrder as 'asc' | 'desc') : 'asc'}
-                                    onClick={() => handleSort('available_quantity')}
-                                >
-                                    Кількість
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                Сумма
-                            </TableCell>
-
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortBy === 'created_date'}
-                                    direction={sortBy === 'created_date' ? (sortOrder as 'asc' | 'desc') : 'asc'}
-                                    onClick={() => handleSort('created_date')}
-                                >
-                                    Дата створення
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>Дії</TableCell>
-
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredMaterials.length > 0 && filteredMaterials.map((material) => (
-                            <TableRow key={material.id}>
-                                <TableCell>{material.name}</TableCell>
+                {/* IMaterial List Table */}
+                <TableContainer>
+                    <Table sx={{minWidth: 650}}>
+                        <TableHead>
+                            <TableRow>
                                 <TableCell>
-                                    <Typography
-                                        sx={{
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap'
-                                        }}>{material.supplier.name}</Typography></TableCell>
-                                <TableCell>{material.purchase_price_per_unit}</TableCell>
-                                <TableCell>
-                                    <div>
-                                        <Typography>
-                                            <strong>Загальна: </strong>{material.total_quantity}
-                                        </Typography>
-                                        <Typography>
-                                            <strong>В наявності: </strong>{material.available_quantity}
-                                        </Typography>
-                                    </div>
-
-
-                                </TableCell>
-                                <TableCell>
-                                    <div>
-                                        <Typography>
-                                            <strong>Загальна: </strong>{material.total_purchase_cost}
-                                        </Typography>
-                                        <Typography>
-                                            <strong>В наявності: </strong>{material.available_stock_cost}
-                                        </Typography>
-                                    </div>
-                                </TableCell>
-                                <TableCell>{new Date(material.created_date).toLocaleDateString()}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        onClick={() => handleOpenDialog(material)}
+                                    <TableSortLabel
+                                        active={sortBy === 'name'}
+                                        direction={sortBy === 'name' ? (sortOrder as 'asc' | 'desc') : 'asc'}
+                                        onClick={() => handleSort('name')}
                                     >
-                                        Закупити
-                                    </Button>
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        onClick={() => handleOpenDialogUpdate(material)}
-                                    >
-                                        Використано
-                                    </Button>
+                                        Назва
+                                    </TableSortLabel>
                                 </TableCell>
+                                <TableCell>Постачальник</TableCell>
+                                <TableCell>
+                                    <TableSortLabel
+                                        active={sortBy === 'purchase_price_per_unit'}
+                                        direction={sortBy === 'purchase_price_per_unit' ? (sortOrder as 'asc' | 'desc') : 'asc'}
+                                        onClick={() => handleSort('purchase_price_per_unit')}
+                                    >
+                                        Ціна
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell>
+                                    <TableSortLabel
+                                        active={sortBy === 'available_quantity'}
+                                        direction={sortBy === 'available_quantity' ? (sortOrder as 'asc' | 'desc') : 'asc'}
+                                        onClick={() => handleSort('available_quantity')}
+                                    >
+                                        Кількість
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell>
+                                    Сумма
+                                </TableCell>
+
+                                <TableCell>
+                                    <TableSortLabel
+                                        active={sortBy === 'created_date'}
+                                        direction={sortBy === 'created_date' ? (sortOrder as 'asc' | 'desc') : 'asc'}
+                                        onClick={() => handleSort('created_date')}
+                                    >
+                                        Дата створення
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell>Дії</TableCell>
+
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Paper>
+                        </TableHead>
+                        <TableBody>
+                            {filteredMaterials.length > 0 && filteredMaterials.map((material) => (
+                                <TableRow key={material.id}>
+                                    <TableCell>{material.name}</TableCell>
+                                    <TableCell>
+                                        <Typography
+                                            sx={{
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap'
+                                            }}>{material.supplier.name}</Typography></TableCell>
+                                    <TableCell>{material.purchase_price_per_unit}</TableCell>
+                                    <TableCell>
+                                        <div>
+                                            <Typography>
+                                                <strong>Загальна: </strong>{material.total_quantity}
+                                            </Typography>
+                                            <Typography>
+                                                <strong>В наявності: </strong>{material.available_quantity}
+                                            </Typography>
+                                        </div>
 
-            {/* Dialog for purchasing material */}
-            {selectedMaterialId && (
-                <PurchaseMaterialDialog
-                    open={dialogOpen}
-                    onClose={handleCloseDialog}
-                    materialId={selectedMaterialId}
-                    onPurchaseSuccess={fetchPackagingMaterials}
-                    defaultSupplierId={selectedSupplierId}
-                    defaultPricePerUnit={defaultPricePerUnit}
-                    suppliers={materials.map((m) => m.supplier)}
-                />
-            )}
 
-            {selectedMaterial && (
-                <MarkPackagingAsUsedDialog
-                    open={openDialogUpdate}
-                    onClose={handleCloseDialogUpdate}
-                    materialId={selectedMaterial.id}
-                    materialName={selectedMaterial.name}
-                    availableQuantity={selectedMaterial.available_quantity}
-                    onUpdateSuccess={handleUpdateSuccess}
-                />
-            )}
-        </React.Fragment>
-    );
-};
+                                    </TableCell>
+                                    <TableCell>
+                                        <div>
+                                            <Typography>
+                                                <strong>Загальна: </strong>{material.total_purchase_cost}
+                                            </Typography>
+                                            <Typography>
+                                                <strong>В наявності: </strong>{material.available_stock_cost}
+                                            </Typography>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>{new Date(material.created_date).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleOpenDialog(material)}
+                                        >
+                                            Закупити
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={() => handleOpenDialogUpdate(material)}
+                                        >
+                                            Використано
+                                        </Button>
+                                        <Button
+                                            variant="outlined"
+                                            color="secondary"
+                                            onClick={() => handleOpenHistoryDialog(material)}
+                                        >
+                                            Історія
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+
+                {/* Dialog for purchasing material */}
+                {selectedMaterialId && (
+                    <PurchaseMaterialDialog
+                        open={dialogOpen}
+                        onClose={handleCloseDialog}
+                        materialId={selectedMaterialId}
+                        onPurchaseSuccess={fetchPackagingMaterials}
+                        defaultSupplierId={selectedSupplierId}
+                        defaultPricePerUnit={defaultPricePerUnit}
+                        suppliers={materials.map((m) => m.supplier)}
+                    />
+                )}
+
+                {selectedMaterial && (
+                    <MarkPackagingAsUsedDialog
+                        open={openDialogUpdate}
+                        onClose={handleCloseDialogUpdate}
+                        materialId={selectedMaterial.id}
+                        materialName={selectedMaterial.name}
+                        availableQuantity={selectedMaterial.available_quantity}
+                        onUpdateSuccess={handleUpdateSuccess}
+                    />
+                )}
+
+                {/* History Dialog */}
+                {selectedMaterial && (
+                    <Dialog open={historyDialogOpen} onClose={handleCloseHistoryDialog}>
+                        <DialogTitle>Історія {selectedMaterial.name}</DialogTitle>
+                        <DialogContent>
+                            <MaterialHistoryTable materialHistory={materialHistory}/>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCloseHistoryDialog} color="primary">Закрити</Button>
+                        </DialogActions>
+                    </Dialog>)}
+            </React.Fragment>
+        );
+    }
+;
 
 export default PackagingMaterialList;

@@ -181,3 +181,37 @@ export interface IMaterial {
     total_purchase_cost: number;
     available_stock_cost: number;
 }
+
+export interface MaterialHistoryItem {
+    date: string; // Дата події
+    description: string; // Опис події
+    quantity: number; // Кількість
+}
+
+export interface PackagingMaterialHistory {
+    packaging_material_id: number;
+    purchase_history: Array<{
+        id: number;
+        material_id: number;
+        purchase_date: string;
+        purchase_price_per_unit: number;
+        purchase_total_price: number;
+        quantity_purchased: number;
+        supplier_id: number;
+    }>;
+    sales_history: Array<{
+        id: number;
+        packaging_material_id: number;
+        packaging_quantity: number;
+        sale_date: string;
+        sale_id: number;
+        total_packaging_cost: number;
+    }>;
+    stock_history: Array<{
+        id: number;
+        material_id: number;
+        change_date: string;
+        quantity_changed: number;
+        new_total: number;
+    }>;
+}
