@@ -45,7 +45,7 @@ const API_ENDPOINTS = {
     CUSTOMERS: '/customers',
     SUPPLIER_PURCHASE_HISTORY: (id: number) => `/supplier/${id}/purchase-history`,
     SUPPLIER_PRODUCTS: (id: number) => `/supplier/${id}/products`,
-    CUSTOMER_DETAILS: (id: number) => `/customers/${id}`,
+    CUSTOMER_DETAILS: (id: number) => `/customers_details/${id}`,
     PRODUCT_PURCHASE: (id: number) => `/product/${id}/purchase`,
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
     PRODUCT: (id: number) => `/product/${id}`,
@@ -156,4 +156,22 @@ export const fetchPackagingMaterials = (): Promise<{ materials: IMaterial[] }> =
 
 export const getCurrentPackagingHistory = (materialId: number): Promise<PackagingMaterialHistory> => {
     return fetchResource<PackagingMaterialHistory>(API_ENDPOINTS.CURRENT_PACKAGING_HISTORY(materialId));
+};
+
+// Функція для оновлення клієнта
+export const updateCustomerData = async (customerData: ICustomerDetails) => {
+    try {
+        await axiosInstance.put(`/update_customers/${customerData.id}`, customerData);
+    } catch (error) {
+        console.error('Error updating customer:', error);
+    }
+};
+
+// Функція для видалення клієнта
+export const deleteCustomerData = async (customerId: number) => {
+    try {
+        await axiosInstance.delete(`/delete_customers/${customerId}`);
+    } catch (error) {
+        console.error('Error deleting customer:', error);
+    }
 };

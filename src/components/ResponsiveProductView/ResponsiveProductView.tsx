@@ -63,31 +63,44 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
         <React.Fragment>
             <Grid container justifyContent={"flex-end"}>
 
-                    <Grid item xs={12} md={6}>
-                        <TextField
-                            label="Пошук товару"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            InputProps={{
-                                endAdornment: searchTerm && (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            onClick={() => setSearchTerm('')}
-                                            edge="end"
-                                            aria-label="Очистити поле"
-                                        >
-                                            <ClearIcon/>
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        label="Пошук товару"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        InputProps={{
+                            endAdornment: searchTerm && (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        onClick={() => setSearchTerm('')}
+                                        edge="end"
+                                        aria-label="Очистити поле"
+                                    >
+                                        <ClearIcon/>
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Grid>
 
             </Grid>
+
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={filteredAndSearchedProducts.length}
+                rowsPerPage={itemsPerPage}
+                page={currentPage}
+                onPageChange={(event, newPage) => setCurrentPage(newPage)}
+                onRowsPerPageChange={(event) => {
+                    setItemsPerPage(parseInt(event.target.value, 10));
+                    setCurrentPage(0); // Скидаємо на першу сторінку
+                }}
+            />
 
             {isMobile ? (
                 <ProductCardView

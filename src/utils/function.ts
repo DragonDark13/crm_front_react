@@ -1,4 +1,3 @@
-import {MenuProps} from "@mui/material";
 
 export function roundToDecimalPlaces(num: number, decimalPlaces: number) {
     const factor = Math.pow(10, decimalPlaces);
@@ -29,4 +28,3 @@ export const formatDateToBack = (dateString) => {
         return false
     }
 }
-

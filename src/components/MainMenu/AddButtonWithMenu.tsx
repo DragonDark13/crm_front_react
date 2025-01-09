@@ -15,6 +15,7 @@ import {AxiosError} from "axios";
 import {useCustomers} from "../Provider/CustomerContext";
 import {useAuth} from "../context/AuthContext";
 import AddNewPackagingModal from "../dialogs/AddNewPackagingModal/AddNewPackagingModal";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -189,7 +190,7 @@ const AddButtonWithMenu = () => {
             <Tooltip title="Додати" placement="right">
                <span>
                    <IconButton disabled={!isAuthenticated} color="primary" onClick={handleClick}>
-                                   <Add/>
+                                   <AddCircleOutlineIcon/>
                                </IconButton>
                </span>
             </Tooltip>

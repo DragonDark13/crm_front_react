@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {createCustomer, fetchGetAllCustomers, fetchCustomerDetails} from '../../api/api';
+import {
+    createCustomer,
+    fetchGetAllCustomers,
+    fetchCustomerDetails,
+    updateCustomerData,
+    deleteCustomerData
+} from '../../api/api';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
     Accordion, AccordionSummary, AccordionDetails, Button, Dialog, DialogActions,
@@ -12,6 +18,8 @@ import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomer
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import {AxiosError} from "axios";
 import {useAuth} from "../context/AuthContext";
+import CustomerDetailsDialog from "../dialogs/CustomerDetailsDialog/CustomerDetailsDialog";
+import EditCustomerDialog from "../dialogs/EditCustomerDialog/EditCustomerDialog";
 //TODO перенести у запити у відповідні контексти
 
 
@@ -29,6 +37,9 @@ const CustomerPage: React.FC = () => {
     });
     const {isAuthenticated,} = useAuth();
 
+    const [selectedCustomerDetails, setSelectedCustomerDetails] = useState<ICustomerDetails | null>(null);
+    const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
 
     // Отримуємо список покупців при завантаженні компоненту
     // useEffect(() => {
@@ -40,17 +51,33 @@ const CustomerPage: React.FC = () => {
     // }, []);
 
     // Функція для отримання деталей покупця
-    const handleGetCustomerDetails = (customerId: number) => {
-        fetchCustomerDetails(customerId)
+    const handleGetCustomerDetails = (customer: ICustomerDetails) => {
+        setSelectedCustomer(customer); // Починаємо з пустого стану
+        fetchCustomerDetails(customer.id)
             .then(response => {
-                if (response && response.data) {
-                    setSelectedCustomer(response.data); // Витягуємо дані з AxiosResponse
+                if (response && response) {
+                    setSelectedCustomer(response); // Витягуємо дані з AxiosResponse
                 } else {
                     setSelectedCustomer(null); // Якщо відповідь порожня
                 }
             })
             .catch(error => {
                 console.error('Error fetching customer details:', error);
+            });
+    };
+
+    // Функція для відкриття деталей клієнта
+    const handleViewDetails = (customerId: number) => {
+        fetchCustomerDetails(customerId)
+            .then(response => {
+                if (response && response) {
+                    setSelectedCustomerDetails(response);
+                    setOpenDetailsDialog(true);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching customer details:', error);
+                showSnackbarMessage('Error fetching customer details.', 'error');
             });
     };
 
@@ -94,6 +121,32 @@ const CustomerPage: React.FC = () => {
         });
     };
 
+    // Функція для закриття модального вікна
+    const handleCloseDetailsDialog = () => {
+        setOpenDetailsDialog(false);
+        setSelectedCustomerDetails(null);
+    };
+
+    const [openEditCustomerDialog, setOpenEditCustomerDialog] = useState(false);
+    const [customerToEdit, setCustomerToEdit] = useState<ICustomerDetails | null>(null);
+
+    const handleEditCustomer = (customerData: ICustomerDetails) => {
+        // Логіка для редагування клієнта
+        updateCustomerData(customerData); // Викликаємо API для оновлення клієнта
+        setOpenEditCustomerDialog(false);
+        showSnackbarMessage('Customer updated successfully!', 'success');
+    };
+
+    const handleOpenEditModal = (customer: ICustomerDetails) => {
+        setCustomerToEdit(customer);
+        setOpenEditCustomerDialog(true);
+    };
+
+    const handleDeleteCustomer = (customerId: number) => {
+        deleteCustomerData(customerId); // Викликаємо API для видалення клієнта
+        showSnackbarMessage('Customer deleted successfully!', 'success');
+    };
+
     return (
         <div>
             <Button disabled={!isAuthenticated} variant="contained" color="primary" onClick={handleOpenModal}>
@@ -108,44 +161,44 @@ const CustomerPage: React.FC = () => {
                             <TableCell>Ім'я</TableCell>
                             <TableCell>Єлектронна пошта</TableCell>
                             <TableCell>Телефонний номер</TableCell>
+                            <TableCell>Address</TableCell> {/* Додаємо колонку для адреси */}
+
+                            <TableCell>Дії</TableCell>
+
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {customers.map((customer, index) => (
                             <React.Fragment key={customer.id + customer.name}>
-                                <TableRow onClick={() => handleGetCustomerDetails(customer.id)}>
+                                <TableRow hover selected={selectedCustomer && selectedCustomer?.id === customer.id}
+                                          onClick={
+                                              () => handleGetCustomerDetails(customer)
+                                          }>
                                     <TableCell>{customer.name}</TableCell>
                                     <TableCell>{customer.email}</TableCell>
                                     <TableCell>{customer.phone_number}</TableCell>
+                                    <TableCell>{customer.address}</TableCell>
+
+                                    <TableCell>
+                                        <Button
+                                            variant="outlined"
+                                            color="info"
+                                            onClick={() => handleViewDetails(customer.id)}
+                                        >
+                                            Деталі
+                                        </Button>
+                                        <Button onClick={() => handleOpenEditModal(customer)} color="primary">
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            onClick={() => handleDeleteCustomer(customer.id)}
+                                            color="secondary"
+                                        >
+                                            Delete
+                                        </Button>
+                                    </TableCell>
                                 </TableRow>
                                 {/* Якщо покупець обраний, відображаємо акордеон з додатковою інформацією */}
-                                {selectedCustomer && selectedCustomer.id === customer.id && (
-                                    <TableRow>
-                                        <TableCell colSpan={3}>
-                                            <Accordion expanded={true}>
-                                                <AccordionSummary
-                                                    expandIcon={<ExpandMoreIcon/>}
-                                                >
-                                                    <Typography>Purchase History</Typography>
-                                                </AccordionSummary>
-                                                <AccordionDetails>
-                                                    {selectedCustomer.sales && selectedCustomer.sales.length > 0 ? (
-                                                        <ul>
-                                                            {selectedCustomer.sales.map((sale) => (
-                                                                <li key={sale.id}>
-                                                                    {sale.product} - {sale.quantity_sold} units sold
-                                                                    at {sale.selling_price_per_item} per item
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    ) : (
-                                                        <Typography>No sales history available.</Typography>
-                                                    )}
-                                                </AccordionDetails>
-                                            </Accordion>
-                                        </TableCell>
-                                    </TableRow>
-                                )}
                             </React.Fragment>
                         ))}
                     </TableBody>
@@ -159,6 +212,21 @@ const CustomerPage: React.FC = () => {
                 openAddNewCustomerDialog={openAddNewCustomerDialog}
                 handleCloseAddNewCustomerDialog={handleCloseAddNewCustomerDialog}
                 handleAddCustomer={handleCreateCustomer}/>
+
+            <CustomerDetailsDialog
+                open={openDetailsDialog}
+                customer={selectedCustomerDetails}
+                handleClose={handleCloseDetailsDialog}
+            />
+
+            {/* Модальне вікно для редагування клієнта */}
+            <EditCustomerDialog
+                handleEditCustomer={handleEditCustomer}
+                handleCloseEditCustomerDialog={() => setOpenEditCustomerDialog(false)}
+                openEditCustomerDialog={openEditCustomerDialog}
+                customerToEdit={customerToEdit}
+                setCustomerToEdit={setCustomerToEdit}
+            />
         </div>
     );
 };

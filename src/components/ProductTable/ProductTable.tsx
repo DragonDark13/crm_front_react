@@ -1,6 +1,4 @@
-// ProductTable.tsx
-
-import React, {forwardRef, useState} from 'react';
+import React, {forwardRef} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
     TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography, TableFooter,
@@ -166,13 +164,13 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         <TableCell>{product.supplier?.name || 'N/A'}</TableCell>
                                         <TableCell>
                                             <div>
-                                                <Typography>
+                                                <Typography color={"secondary"}>
                                                     <strong>За весь час:</strong> {product.total_quantity}
                                                 </Typography>
-                                                <Typography className={clsx({'low-quantity': lowQuantity})}>
+                                                <Typography color={ lowQuantity? "error" : "secondary"} className={clsx({'low-quantity': lowQuantity})}>
                                                     <strong>В наявності:</strong> {product.available_quantity}
                                                 </Typography>
-                                                <Typography>
+                                                <Typography color={"primary"}>
                                                     <strong>Продано:</strong> {product.sold_quantity}
                                                 </Typography>
                                             </div>

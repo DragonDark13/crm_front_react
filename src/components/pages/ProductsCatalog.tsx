@@ -23,13 +23,11 @@ import {
 } from "../../api/api";
 import {formatDate} from "../../utils/function";
 import {
-    Alert, Badge,
+    Badge,
     Box,
     Button,
     CircularProgress,
-    Container, Divider,
-    Drawer,
-    Grid,
+    Drawer, Grid,
     IconButton,
     Snackbar,
     Typography
@@ -585,31 +583,6 @@ const ProductsCatalog = () => {
                                 variant={"contained"}
                                 onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
                         </Grid>
-                        {/*<Grid item>*/}
-                        {/*    <Grid container gap={1}>*/}
-                        {/*        <Grid>*/}
-                        {/*            <Button variant={"outlined"}*/}
-                        {/*                    color={"primary"}*/}
-                        {/*                    onClick={handleOpenAdd}>*/}
-                        {/*                Купити Новий Товар*/}
-                        {/*            </Button>*/}
-                        {/*        </Grid>*/}
-                        {/*        <Grid>*/}
-                        {/*            <Button variant={"outlined"} color={"primary"}*/}
-                        {/*                    onClick={() => handleModalOpen("openCategoryCreate")}*/}
-                        {/*            >*/}
-                        {/*                Створити Категорію*/}
-                        {/*            </Button>*/}
-                        {/*        </Grid>*/}
-                        {/*        <Grid>*/}
-
-                        {/*            <Button variant={"outlined"} color={"primary"}*/}
-                        {/*                    onClick={() => handleModalOpen("openAddSupplierOpen")}>*/}
-                        {/*                Створити Постачальника*/}
-                        {/*            </Button>*/}
-                        {/*        </Grid>*/}
-                        {/*    </Grid>*/}
-                        {/*</Grid>*/}
                     </Grid>
                     <Drawer classes={{
                         paper: "filter_container"
@@ -666,7 +639,6 @@ const ProductsCatalog = () => {
             )}
 
 
-            {/* Модальне вікно для додавання нового товару */}
 
             {
                 modalState.openAdd && <AddProductModal
@@ -699,7 +671,8 @@ const ProductsCatalog = () => {
                 />
             )}
 
-            {(modalState.openPurchase && purchaseDetails && editProduct?.name) && <PurchaseProductModal
+            {(modalState.openPurchase && purchaseDetails && editProduct?.name) &&
+            <PurchaseProductModal
                 nameProduct={editProduct.name} openPurchase={modalState.openPurchase}
                 suppliers={suppliers}
                 handleClosePurchase={() => handleModalClose("openPurchase")}
