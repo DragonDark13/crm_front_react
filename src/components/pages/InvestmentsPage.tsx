@@ -26,13 +26,13 @@ const InvestmentsPage: React.FC = () => {
 
     const handleAddInvestment = async () => {
         await axios.post("/api/investments", newInvestment);
-        fetchInvestments();
+        await fetchInvestments();
         setNewInvestment({type_name: "", cost: "", date: ""});
     };
 
     const handleDeleteInvestment = async (id: number) => {
         await axios.delete(`/api/investments/${id}`);
-        fetchInvestments();
+        await fetchInvestments();
     };
 
     useEffect(() => {

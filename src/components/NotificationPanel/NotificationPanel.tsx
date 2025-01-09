@@ -12,7 +12,7 @@ const NotificationPanel = ({lowQuantityProducts, handleListItemClick}: INotifica
                     <ListItemIcon>
                         <NotificationImportantIcon/>
                     </ListItemIcon>
-                    <ListItemText primary={product.name} secondary={`Кількість: ${product.quantity}`}/>
+                    <ListItemText primary={product.name} secondary={`Кількість: ${product.available_quantity}`}/>
                 </ListItemButton>
             ))}
         </List>
