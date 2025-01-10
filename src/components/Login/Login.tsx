@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import {TextField, Button, Box, Typography, Container} from '@mui/material';
 import {useAuth} from '../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
-import {loginUser} from "../../api/api";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import {loginUser} from "../../api/_user";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');

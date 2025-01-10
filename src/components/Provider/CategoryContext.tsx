@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import {fetchGetAllCategories} from "../../api/api";
+import {fetchGetAllCategories} from "../../api/_categories";
 
 // Типізація категорій
 interface ICategory {

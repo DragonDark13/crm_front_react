@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import {fetchProducts} from "../../api/api";
 import {IProduct} from "../../utils/types";
+import {fetchProducts} from "../../api/_product";
 
 // Типізація для контексту
 interface ProductContextProps {

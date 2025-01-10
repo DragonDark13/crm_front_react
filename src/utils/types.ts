@@ -134,10 +134,10 @@ export interface ICustomer {
 export interface ISupplier {
     id: number;              // Унікальний ідентифікатор постачальника
     name: string;            // Ім'я постачальника, унікальне,
-    contact_info?: string;   // Контактна інформація, може бути відсутня
-    email?: string;          // Email, може бути відсутнім
-    phone_number?: string;   // Номер телефону, може бути відсутнім
-    address?: string;        // Адреса, може бути відсутня
+    contact_info: string;   // Контактна інформація, може бути відсутня
+    email: string;          // Email, може бути відсутнім
+    phone_number: string;   // Номер телефону, може бути відсутнім
+    address: string;        // Адреса, може бути відсутня
 }
 
 export interface ICustomerDetails {

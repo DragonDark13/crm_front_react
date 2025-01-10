@@ -22,6 +22,11 @@
   max-width: 400px;
 }
 
-.MuiMenu-paper.MuiPopover-paper{
+.MuiMenu-paper.MuiPopover-paper {
   max-height: 300px;
+}
+
+.supplier_name {
+  width: 200px;
+  overflow: hidden;
 }

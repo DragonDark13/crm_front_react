@@ -15,6 +15,9 @@ interface AddSupplierModalProps {
 const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, handleAddSupplier}) => {
     const [name, setName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [address, setAddress] = useState('');
     const [error, setError] = useState<string | null>(null);
 
     const validate = () => {
@@ -33,10 +36,8 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
         if (!validate()) {
             return;
         }
-        const newSupplier: INewSupplier = {
-            name: name,
-            contact_info: contactInfo
-        };
+        const newSupplier = {name, contact_info: contactInfo, email, phone_number: phoneNumber, address};
+
         handleAddSupplier(newSupplier);
     };
 
@@ -64,6 +65,27 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
                     value={contactInfo}
                     onChange={(e) => setContactInfo(e.target.value)}
                 />
+                <TextField
+                    margin="dense"
+                    label="Email"
+                    fullWidth
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                    margin="dense"
+                    label="Телефон"
+                    fullWidth
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+                <TextField
+                    margin="dense"
+                    label="Адреса"
+                    fullWidth
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
@@ -74,7 +96,7 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
                     onClick={handleSave}
                     color="primary"
                     variant="contained"
-                    disabled={!name.trim() } // Кнопка неактивна, якщо поле порожнє
+                    disabled={!name.trim()} // Кнопка неактивна, якщо поле порожнє
                 >
                     Зберегти постачальника
                 </Button>

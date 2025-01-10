@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import {axiosInstance} from "../../../api/api";
-import AddSupplierForm from "./AddSupplierForm";
+import AddPackagingSupplierForm from "./AddPackagingSupplierForm";
 
 interface IAddNewPackaging {
     openAddNewPackaging: boolean;
@@ -201,7 +201,7 @@ const AddNewPackagingModal = ({
                     handleClose={handleCloseAddSupplier}
                     title="Додати постачальника"
                 >
-                    <AddSupplierForm handleClose={handleCloseAddSupplier}/>
+                    <AddPackagingSupplierForm handleClose={handleCloseAddSupplier}/>
                 </CustomDialog>
             )}
         </>

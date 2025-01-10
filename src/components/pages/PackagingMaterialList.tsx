@@ -13,15 +13,16 @@ import {
     TableSortLabel,
     Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog
 } from '@mui/material';
-import {axiosInstance, fetchPackagingMaterials, getCurrentPackagingHistory} from "../../api/api";
 import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../utils/types";
 import PurchaseMaterialDialog from "../dialogs/AddNewPackagingModal/PurchaseMaterialDialog";
 import MarkPackagingAsUsedDialog from "../dialogs/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
 import MaterialHistoryTable from "./MaterialHistoryTable";
+import {usePackaging} from "../Provider/PackagingContext";
+import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../api/_packagingMaterials";
 
 
 const PackagingMaterialList: React.FC = () => {
-        const [materials, setMaterials] = useState<IMaterial[]>([]);
+        const {packagingMaterials} = usePackaging()
         const [searchTerm, setSearchTerm] = useState<string>('');
         const [sortBy, setSortBy] = useState<string>('name');
         const [sortOrder, setSortOrder] = useState<string>('asc');
@@ -98,20 +99,20 @@ const PackagingMaterialList: React.FC = () => {
         };
 
         // Fetch materials from backend using Axios
-        useEffect(() => {
-            if (materials.length > 0) {
-
-            } else {
-                fetchPackagingMaterials()
-                    .then((response) => setMaterials(response.materials))
-                    .catch((error) => console.error('Error fetching packaging materials:', error));
-            }
-
-        }, []);
+        // useEffect(() => {
+        //     if (materials.length > 0) {
+        //
+        //     } else {
+        //         fetchListPackagingMaterials()
+        //             .then((response) => setMaterials(response.materials))
+        //             .catch((error) => console.error('Error fetching packaging materials:', error));
+        //     }
+        //
+        // }, []);
 
         // Filter and sort materials
 // Filter and sort materials
-        const filteredMaterials = materials
+        const filteredMaterials = packagingMaterials
             .filter((material) =>
                 material.name.toLowerCase().includes(searchTerm.toLowerCase())
             )
@@ -325,10 +326,10 @@ const PackagingMaterialList: React.FC = () => {
                         open={dialogOpen}
                         onClose={handleCloseDialog}
                         materialId={selectedMaterialId}
-                        onPurchaseSuccess={fetchPackagingMaterials}
+                        onPurchaseSuccess={fetchListPackagingMaterials}
                         defaultSupplierId={selectedSupplierId}
                         defaultPricePerUnit={defaultPricePerUnit}
-                        suppliers={materials.map((m) => m.supplier)}
+                        suppliers={packagingMaterials.map((m) => m.supplier)}
                     />
                 )}
 

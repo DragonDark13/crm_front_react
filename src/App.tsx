@@ -35,6 +35,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Login from "./components/Login/Login";
 import PackagingMaterialList from "./components/pages/PackagingMaterialList";
 import InvestmentsPage from "./components/pages/InvestmentsPage";
+import SupplierPage from "./components/pages/SupplierPage";
 
 
 function App() {
@@ -64,6 +65,9 @@ function App() {
                         <Route path="/crm_front_react/analytics" element={<ReportsAnalytics/>}/>
                         <Route path="/crm_front_react/packaging" element={<PackagingMaterialList/>}/>
                         <Route path="/crm_front_react/other-investments" element={<InvestmentsPage/>}/>
+                        <Route path="/crm_front_react/suppliers"
+                               element={<SupplierPage/>}/>
+
                     </Routes>
                 </Box>
             </Box>

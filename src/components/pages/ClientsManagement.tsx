@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomerPage from "../CustomerPage/CustomerPage";
+import CustomerPage from "./CustomerPage";
 
 const ClientsManagement = () => {
     return (

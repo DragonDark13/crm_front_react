@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import CustomDialog from "../CustomDialog/CustomDialog";
-import AddSupplierForm from "./AddSupplierForm";
+import AddPackagingSupplierForm from "./AddPackagingSupplierForm";
 
 interface PurchaseMaterialDialogProps {
     open: boolean;
@@ -153,7 +153,7 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                     handleClose={handleCloseAddSupplier}
                     title="Додати постачальника"
                 >
-                    <AddSupplierForm handleClose={handleCloseAddSupplier}/>
+                    <AddPackagingSupplierForm handleClose={handleCloseAddSupplier}/>
                 </CustomDialog>
             )}
         </Dialog>

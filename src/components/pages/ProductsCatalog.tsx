@@ -12,15 +12,6 @@ import {
 } from "../../utils/types";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import LoginIcon from '@mui/icons-material/Login';
-import {
-    addNewCategory,
-    addProduct,
-    addPurchase, addSale, addSupplier,
-    deleteProduct,
-    fetchGetAllCategories,
-    fetchGetAllSuppliers, logoutUser,
-    updateProduct
-} from "../../api/api";
 import {formatDate} from "../../utils/function";
 import {
     Badge,
@@ -49,6 +40,10 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import {useAuth} from "../context/AuthContext";
 import {useNavigate} from "react-router-dom";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import {addSupplier, fetchGetAllSuppliers} from "../../api/_supplier";
+import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "../../api/_product";
+import {logoutUser} from "../../api/_user";
+import {addNewCategory, fetchGetAllCategories} from "../../api/_categories";
 
 const ProductsCatalog = () => {
 

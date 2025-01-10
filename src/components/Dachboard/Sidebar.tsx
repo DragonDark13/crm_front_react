@@ -1,6 +1,16 @@
 import React from 'react';
 import {Box, IconButton, Tooltip} from '@mui/material';
-import {Home, People, ShoppingCart, Store, BarChart, Receipt, Luggage, AttachMoney} from '@mui/icons-material';
+import {
+    Home,
+    People,
+    ShoppingCart,
+    Store,
+    BarChart,
+    Receipt,
+    Luggage,
+    AttachMoney,
+    Business
+} from '@mui/icons-material';
 import {Link, useLocation} from 'react-router-dom';
 import AddButtonWithMenu from "../MainMenu/AddButtonWithMenu";
 
@@ -86,6 +96,13 @@ export const Sidebar: React.FC = () => {
                             component={Link}
                             to="/crm_front_react/other-investments">
                     <AttachMoney/> {/* Іконка для вкладень, можна вибрати іншу */}
+                </IconButton>
+            </Tooltip>
+            {/* Управління постачальниками */}
+            <Tooltip title="Управління постачальниками" placement="right">
+                <IconButton color={isActive("/crm_front_react/suppliers") ? "primary" : "inherit"} component={Link}
+                            to="/crm_front_react/suppliers">
+                    <Business/>
                 </IconButton>
             </Tooltip>
 

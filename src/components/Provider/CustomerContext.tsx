@@ -1,8 +1,8 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
-import {createCustomer, fetchGetAllCustomers} from "../../api/api";
 import {ICustomerDetails} from "../../utils/types";
 import {AxiosError} from "axios";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
+import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
 
 // Типізація клієнтів
 interface ICustomer {

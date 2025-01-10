@@ -1,11 +1,12 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import {fetchGetAllSuppliers} from "../../api/api";
+import {ISupplier} from "../../utils/types";
+import {fetchGetAllSuppliers} from "../../api/_supplier";
 
 // Типізація постачальників
-interface ISupplier {
-  id: number;
-  name: string;
-}
+// interface ISupplier {
+//   id: number;
+//   name: string;
+// }
 
 // Типізація для контексту
 interface SupplierContextProps {

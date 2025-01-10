@@ -2,7 +2,7 @@ import {axiosInstance} from "../../../api/api";
 import {useState} from "react";
 import {Box, Button, CircularProgress, TextField, Typography} from "@mui/material";
 
-const AddSupplierForm = ({handleClose}: { handleClose: () => void }) => {
+const AddPackagingSupplierForm = ({handleClose}: { handleClose: () => void }) => {
     const [name, setName] = useState("");
     const [contactInfo, setContactInfo] = useState("");
     const [loading, setLoading] = useState(false);
@@ -55,4 +55,4 @@ const AddSupplierForm = ({handleClose}: { handleClose: () => void }) => {
     );
 };
 
-export default AddSupplierForm;
+export default AddPackagingSupplierForm;

@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-    createCustomer,
-    fetchGetAllCustomers,
-    fetchCustomerDetails,
-    updateCustomerData,
-    deleteCustomerData
-} from '../../api/api';
-import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
     Accordion, AccordionSummary, AccordionDetails, Button, Dialog, DialogActions,
     DialogContent, DialogTitle, TextField, Typography
@@ -20,6 +13,13 @@ import {AxiosError} from "axios";
 import {useAuth} from "../context/AuthContext";
 import CustomerDetailsDialog from "../dialogs/CustomerDetailsDialog/CustomerDetailsDialog";
 import EditCustomerDialog from "../dialogs/EditCustomerDialog/EditCustomerDialog";
+import {
+    createCustomer,
+    deleteCustomerData,
+    fetchCustomerDetails,
+    fetchGetAllCustomers,
+    updateCustomerData
+} from "../../api/_customer";
 //TODO перенести у запити у відповідні контексти
 
 

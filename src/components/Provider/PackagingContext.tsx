@@ -1,8 +1,8 @@
 // PackagingContext.js
 import {createContext, useContext, useEffect, useState} from 'react';
 import axios from 'axios';
-import {axiosInstance, fetchPackagingMaterials} from "../../api/api";
 import {IMaterial} from "../../utils/types";
+import {fetchListPackagingMaterials} from "../../api/_packagingMaterials";
 
 interface IPackagingContextProps {
     packagingMaterials: IMaterial[];
@@ -29,7 +29,7 @@ export const PackagingProvider = ({children}) => {
         setLoading(true);
         setError(null);
         try {
-            const {materials} = await fetchPackagingMaterials();
+            const {materials} = await fetchListPackagingMaterials();
             setPackagingMaterials(materials);
         } catch (err) {
             setError('Не вдалося завантажити пакувальні матеріали');

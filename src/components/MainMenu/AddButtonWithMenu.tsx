@@ -3,7 +3,6 @@ import {Box, Button, Grid, IconButton, Popover, Tooltip} from "@mui/material";
 import React, {useState} from "react";
 import {ICustomerDetails, INewProduct, INewSupplier, modalNames, ModalNames} from "../../utils/types";
 import AddProductModal from "../dialogs/AddProductModal/AddProductModal";
-import {addNewCategory, addProduct, addSupplier, createCustomer, fetchGetAllCustomers} from "../../api/api";
 import {useProducts} from "../Provider/ProductContext";
 import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
@@ -16,6 +15,9 @@ import {useCustomers} from "../Provider/CustomerContext";
 import {useAuth} from "../context/AuthContext";
 import AddNewPackagingModal from "../dialogs/AddNewPackagingModal/AddNewPackagingModal";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import {addSupplier} from "../../api/_supplier";
+import {addProduct} from "../../api/_product";
+import {addNewCategory} from "../../api/_categories";
 
 //TODO Додати опцію Зберігти і додати ще
 

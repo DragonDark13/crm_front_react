@@ -20,7 +20,7 @@ import StockHistoryTable from "./StockHistoryTable";
 import PurchaseHistoryTable from "./PurchaseHistoryTable";
 import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
-import {fetchProductHistory, onDeleteHistoryRecord} from "../../../api/api";
+import {onDeleteHistoryRecord} from "../../../api/_history";
 
 export interface ProductHistoryRecord {
     id: number;
