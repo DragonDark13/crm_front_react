@@ -25,7 +25,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import {
-    addSupplier,
+    addSupplier, deleteSupplier,
     fetchGetSupplierProducts,
     fetchGetSupplierPurchaseHistory,
     updateSupplier
@@ -108,10 +108,11 @@ const SupplierPage: React.FC = () => {
     // Видалення постачальника
     const handleDeleteSupplier = async (id: number) => {
         try {
-            await axios.delete(`/api/suppliers/${id}`);
-            setSuppliers(suppliers.filter(supplier => supplier.id !== id));
+            await deleteSupplier(id);
+            fetchSuppliersFunc(); // Оновити список постачальників після додавання
+            showSnackbarMessage('Supplier deleted successfully!', 'success'); // Show success message
         } catch (error) {
-            console.error('Error deleting supplier:', error);
+            console.error('Failed to delete supplier:', error);
         }
     };
 
@@ -146,73 +147,117 @@ const SupplierPage: React.FC = () => {
                     </TableHead>
                     <TableBody>
                         {suppliers.map((supplier) => (
-                            <TableRow key={supplier.id}>
-                                <TableCell>
-                                    <Typography
-                                        className={clsx("supplier_name")}
-                                        title={supplier.name}
-                                        sx={{
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap'
-                                        }}>{supplier.name}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell>{supplier.contact_info || 'Не вказано'}</TableCell>
-                                <TableCell>{supplier.email || 'Не вказано'}</TableCell>
-                                <TableCell>{supplier.phone_number || 'Не вказано'}</TableCell>
-                                <TableCell>{supplier.address || 'Не вказано'}</TableCell>
-                                <TableCell>
-                                    <div>
+                            <React.Fragment key={supplier.id}>
+                                <TableRow>
+                                    <TableCell>
+                                        <Typography
+                                            className={clsx("supplier_name")}
+                                            title={supplier.name}
+                                            sx={{
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap'
+                                            }}>{supplier.name}
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell>{supplier.contact_info || 'Не вказано'}</TableCell>
+                                    <TableCell>{supplier.email || 'Не вказано'}</TableCell>
+                                    <TableCell>{supplier.phone_number || 'Не вказано'}</TableCell>
+                                    <TableCell>{supplier.address || 'Не вказано'}</TableCell>
+                                    <TableCell>
                                         <div>
-                                            <Button
+                                            <div>
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    onClick={() => {
+                                                        handleOpenSupplierEdit(supplier)
+                                                    }}
+                                                >
+                                                    <EditIcon/>
+                                                </Button></div>
+                                            <div><Button
                                                 variant="contained"
-                                                color="secondary"
-                                                onClick={() => {
-                                                    handleOpenSupplierEdit(supplier)
-                                                }}
+                                                color="error"
+                                                onClick={() => handleDeleteSupplier(supplier.id)}
                                             >
-                                                <EditIcon/>
+                                                <DeleteIcon/>
                                             </Button></div>
-                                        <div><Button
-                                            variant="contained"
-                                            color="error"
-                                            onClick={() => handleDeleteSupplier(supplier.id)}
-                                        >
-                                            <DeleteIcon/>
-                                        </Button></div>
-                                        <Button
-                                            title="Історія закупівель"
-                                            variant="contained"
-                                            color="primary"
-                                            startIcon={<HistoryIcon fontSize={"small"}/>}
-                                            onClick={() => toggleHistory(supplier.id)}
-                                        >
-                                        </Button>
-                                        {/*<Tooltip title="Історія">*/}
-                                        {/*    <IconButton size={"small"} onClick={() => toggleHistory(supplier.id)}>*/}
-                                        {/*        <HistoryIcon fontSize={"small"}/>*/}
-                                        {/*    </IconButton>*/}
-                                        {/*</Tooltip>*/}
+                                            <Button
+                                                title="Історія закупівель"
+                                                variant="contained"
+                                                color="primary"
+                                                startIcon={<HistoryIcon fontSize={"small"}/>}
+                                                onClick={() => toggleHistory(supplier.id)}
+                                            >
+                                            </Button>
+                                            {/*<Tooltip title="Історія">*/}
+                                            {/*    <IconButton size={"small"} onClick={() => toggleHistory(supplier.id)}>*/}
+                                            {/*        <HistoryIcon fontSize={"small"}/>*/}
+                                            {/*    </IconButton>*/}
+                                            {/*</Tooltip>*/}
 
+                                            {/*<Collapse in={openHistory === supplier.id} timeout="auto" unmountOnExit>*/}
+                                            {/*    <div style={{marginTop: '10px'}}>*/}
+                                            {/*        <h4>Історія закупівель:</h4>*/}
+                                            {/*        {purchaseHistory.map((purchase, index) => (*/}
+                                            {/*            <div key={index}>*/}
+                                            {/*                <strong>{purchase.date}</strong>: {purchase.product} - {purchase.amount} шт.*/}
+                                            {/*            </div>*/}
+                                            {/*        ))}*/}
+                                            {/*        <h3>Продукти постачальника</h3>*/}
+                                            {/*        <ul>*/}
+                                            {/*            {products.map(product => (*/}
+                                            {/*                <li key={product.id}>{product.name}</li>*/}
+                                            {/*            ))}*/}
+                                            {/*        </ul>*/}
+                                            {/*    </div>*/}
+                                            {/*</Collapse>*/}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+
+                                {/* Рядок для розгортання історії */}
+                                <TableRow>
+                                    <TableCell colSpan={6}>
                                         <Collapse in={openHistory === supplier.id} timeout="auto" unmountOnExit>
-                                            <div style={{marginTop: '10px'}}>
-                                                <h4>Історія закупівель:</h4>
-                                                {purchaseHistory.map((purchase, index) => (
-                                                    <div key={index}>
-                                                        <strong>{purchase.date}</strong>: {purchase.product} - {purchase.amount} шт.
-                                                    </div>
-                                                ))}
-                                                <h3>Продукти постачальника</h3>
-                                                <ul>
-                                                    {products.map(product => (
-                                                        <li key={product.id}>{product.name}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
+                                            <TableContainer>
+                                                <Table size="small" sx={{marginTop: 2}}>
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell>Дата закупівлі</TableCell>
+                                                            <TableCell>Товар</TableCell>
+                                                            <TableCell>Кількість</TableCell>
+                                                            <TableCell>Ціна за одиницю</TableCell>
+                                                            <TableCell>Загальна вартість</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {purchaseHistory.length > 0 ? (
+                                                            purchaseHistory.map((purchase, index) => (
+                                                                <TableRow key={index}>
+                                                                    <TableCell>
+                                                                        {new Date(purchase.purchase_date).toLocaleDateString("uk-UA")}
+                                                                    </TableCell>
+                                                                    <TableCell>{purchase.product}</TableCell>
+                                                                    <TableCell>{purchase.quantity_purchase}</TableCell>
+                                                                    <TableCell>{purchase.purchase_price_per_item}</TableCell>
+                                                                    <TableCell>{purchase.purchase_total_price}</TableCell>
+                                                                </TableRow>
+                                                            ))
+                                                        ) : (
+                                                            <TableRow>
+                                                                <TableCell colSpan={5} align="center">
+                                                                    Даних немає
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )}
+                                                    </TableBody>
+                                                </Table>
+                                            </TableContainer>
                                         </Collapse>
-                                    </div>
-                                </TableCell>
-                            </TableRow>
+                                    </TableCell>
+                                </TableRow>
+                            </React.Fragment>
                         ))}
                     </TableBody>
                 </Table>

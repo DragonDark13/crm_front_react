@@ -21,3 +21,11 @@ export const fetchGetSupplierPurchaseHistory = (supplierId: number): Promise<{ p
 export const fetchGetSupplierProducts = (supplierId: number): Promise<IProduct[]> => {
     return fetchResource<IProduct[]>(API_ENDPOINTS.SUPPLIER_PRODUCTS(supplierId));
 };
+
+
+export const deleteSupplier = (supplierId: number): Promise<void> => {
+    return axiosInstance
+        .delete(API_ENDPOINTS.DELETE_SUPPLIER(supplierId))
+        .then(() => console.log(`Supplier with ID ${supplierId} deleted successfully.`))
+        .catch(handleError);
+};

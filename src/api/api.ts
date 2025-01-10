@@ -35,6 +35,7 @@ export const API_ENDPOINTS = {
     CUSTOMERS: '/get_all_customers',
     SUPPLIER_PURCHASE_HISTORY: (id: number) => `/supplier/${id}/purchase-history`,
     SUPPLIER_PRODUCTS: (id: number) => `/supplier/${id}/products`,
+    DELETE_SUPPLIER: (id: number) => `/delete_supplier/${id}`,
     CUSTOMER_DETAILS: (id: number) => `/customers_details/${id}`,
     PRODUCT_PURCHASE: (id: number) => `/product/${id}/purchase`,
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
