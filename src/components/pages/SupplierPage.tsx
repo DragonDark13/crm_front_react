@@ -24,7 +24,12 @@ import clsx from "clsx";
 import HistoryIcon from "@mui/icons-material/History";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
-import {addSupplier, updateSupplier} from "../../api/_supplier";
+import {
+    addSupplier,
+    fetchGetSupplierProducts,
+    fetchGetSupplierPurchaseHistory,
+    updateSupplier
+} from "../../api/_supplier";
 
 interface Supplier {
     id: number;
@@ -49,17 +54,21 @@ const SupplierPage: React.FC = () => {
     const [openHistory, setOpenHistory] = useState<number | null>(null);
     const [purchaseHistory, setPurchaseHistory] = useState<PurchaseHistory[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
+    const [products, setProducts] = useState([]);
 
 
     // Отримуємо історію закупівель для конкретного постачальника
     const fetchPurchaseHistory = async (supplierId: number) => {
-        try {
-            const response = await axios.get(`/api/suppliers/${supplierId}/purchase-history`);
-            setPurchaseHistory(response.data);
-        } catch (error) {
-            console.error('Error fetching purchase history:', error);
-        }
+        // Отримуємо історію закупівель постачальника
+        fetchGetSupplierPurchaseHistory(supplierId)
+            .then(data => {
+                setPurchaseHistory(data.purchase_history);
+                setProducts(data.products);
+            });
+
+
     };
+
 
     // Додавання нового постачальника
     const handleAddSupplier = (newSupplier: INewSupplier) => {
@@ -193,6 +202,12 @@ const SupplierPage: React.FC = () => {
                                                         <strong>{purchase.date}</strong>: {purchase.product} - {purchase.amount} шт.
                                                     </div>
                                                 ))}
+                                                <h3>Продукти постачальника</h3>
+                                                <ul>
+                                                    {products.map(product => (
+                                                        <li key={product.id}>{product.name}</li>
+                                                    ))}
+                                                </ul>
                                             </div>
                                         </Collapse>
                                     </div>

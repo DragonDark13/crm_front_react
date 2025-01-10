@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {fetchGetSupplierProducts, fetchGetSupplierPurchaseHistory} from "../../api/api";
+import {fetchGetSupplierProducts, fetchGetSupplierPurchaseHistory} from "../../api/_supplier";
 
 const SupplierDetails = ({supplierId}) => {
     const [purchaseHistory, setPurchaseHistory] = useState([]);
