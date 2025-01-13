@@ -19,9 +19,10 @@ import {useCategories} from "../../Provider/CategoryContext";
 
 
 interface IPurchasesTable {
+    type: string,
     purchase_id: number;
     product_id: number;
-    product_name: string;
+    name: string;
     supplier_id: number;
     supplier_name: string;
     quantity: number;
@@ -39,10 +40,10 @@ const PurchasesTable: React.FC = () => {
     const [categoryFilter, setCategoryFilter] = useState<number | ''>('');
     const [supplierFilter, setSupplierFilter] = useState('');
     const [priceRangeFilter, setPriceRangeFilter] = useState({min: '', max: ''});
-const [page, setPage] = useState(0);
+    const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const { categories } = useCategories(); // Отримання всіх категорій
+    const {categories} = useCategories(); // Отримання всіх категорій
 
     useEffect(() => {
         fetchPurchaseHistory();
@@ -51,7 +52,14 @@ const [page, setPage] = useState(0);
     const fetchPurchaseHistory = async () => {
         try {
             const response = await axiosInstance.get('/get_all_purchase_history');
-            setPurchaseHistory(response.data);
+            // Перетворюємо потрібні поля в числа
+            const formattedData = response.data.map((item: any) => ({
+                ...item,
+                price_per_item: parseFloat(item.price_per_item),
+                total_price: parseFloat(item.total_price),
+            }));
+
+            setPurchaseHistory(formattedData);
         } catch (error) {
             console.error('Error fetching purchase history:', error);
         }
@@ -62,7 +70,7 @@ const [page, setPage] = useState(0);
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
             direction = 'desc';
         }
-        setSortConfig({ key, direction });
+        setSortConfig({key, direction});
 
         const sortedData = [...purchaseHistory].sort((a, b) => {
             if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
@@ -77,7 +85,7 @@ const [page, setPage] = useState(0);
     };
 
     const handleDateRangeFilterChange = (field: string, value: string) => {
-        setDateRangeFilter((prev) => ({ ...prev, [field]: value }));
+        setDateRangeFilter((prev) => ({...prev, [field]: value}));
     };
 
     const handleCategoryFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -89,17 +97,17 @@ const [page, setPage] = useState(0);
     };
 
     const handlePriceRangeFilterChange = (field: string, value: string) => {
-        setPriceRangeFilter((prev) => ({ ...prev, [field]: value }));
+        setPriceRangeFilter((prev) => ({...prev, [field]: value}));
     };
 
     const resetFilters = () => {
         setFilter('');
-        setDateRangeFilter({ start: '', end: '' });
+        setDateRangeFilter({start: '', end: ''});
         setCategoryFilter('');
         setSupplierFilter('');
-        setPriceRangeFilter({ min: '', max: '' });
+        setPriceRangeFilter({min: '', max: ''});
     };
-     const handleChangePage = (event: unknown, newPage: number) => {
+    const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
 
@@ -110,7 +118,7 @@ const [page, setPage] = useState(0);
 
     const filteredData = purchaseHistory.filter((item) => {
         const matchesSearch =
-            item.product_name.toLowerCase().includes(filter) ||
+            item.name.toLowerCase().includes(filter) ||
             item.supplier_name.toLowerCase().includes(filter);
 
         const matchesDateRange =
@@ -160,7 +168,7 @@ const [page, setPage] = useState(0);
                     fullWidth
                     value={dateRangeFilter.start}
                     onChange={(e) => handleDateRangeFilterChange('start', e.target.value)}
-                    InputLabelProps={{ shrink: true }}
+                    InputLabelProps={{shrink: true}}
                 />
                 <TextField
                     label="End Date"
@@ -168,7 +176,7 @@ const [page, setPage] = useState(0);
                     fullWidth
                     value={dateRangeFilter.end}
                     onChange={(e) => handleDateRangeFilterChange('end', e.target.value)}
-                    InputLabelProps={{ shrink: true }}
+                    InputLabelProps={{shrink: true}}
                 />
             </Box>
             <FormControl fullWidth margin="normal">
@@ -209,20 +217,31 @@ const [page, setPage] = useState(0);
                 value={priceRangeFilter.max}
                 onChange={(e) => handlePriceRangeFilterChange('max', e.target.value)}
             />
-             <Box marginY={2}>
+            <Box marginY={2}>
                 <Button variant="contained" color="primary" onClick={resetFilters}>
                     Reset Filters
                 </Button>
             </Box>
+
             <TableContainer component={Paper}>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={filteredData.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+
                 <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>
                                 <TableSortLabel
-                                    active={sortConfig.key === 'product_name'}
+                                    active={sortConfig.key === 'name'}
                                     direction={sortConfig.direction}
-                                    onClick={() => handleSort('product_name')}
+                                    onClick={() => handleSort('name')}
                                 >
                                     Product Name
                                 </TableSortLabel>
@@ -275,9 +294,9 @@ const [page, setPage] = useState(0);
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedData.map((row) => (
-                            <TableRow key={row.purchase_id + row.product_name}>
-                                <TableCell>{row.product_name}</TableCell>
+                        {paginatedData.map((row, index) => (
+                            <TableRow key={index + row.name}>
+                                <TableCell>{row.name}</TableCell>
                                 <TableCell>
                                     <Typography
                                         className={clsx("supplier_name")}
@@ -289,8 +308,8 @@ const [page, setPage] = useState(0);
                                         {row.supplier_name}
                                     </Typography>
                                 </TableCell>
-                                <TableCell>{row.quantity}</TableCell>
-                                <TableCell>{row.price_per_item.toFixed(2)}</TableCell>
+                                <TableCell>{row.quantity ? row.quantity : "Загалом"}</TableCell>
+                                <TableCell>{row.price_per_item ? row.price_per_item.toFixed(2) : "Загалом"}</TableCell>
                                 <TableCell>{row.total_price.toFixed(2)}</TableCell>
                                 <TableCell>{row.date}</TableCell>
                             </TableRow>
@@ -298,15 +317,14 @@ const [page, setPage] = useState(0);
                     </TableBody>
                     <TableFooter>
                         <TableRow>
-                            <TableCell colSpan={2}>Total</TableCell>
-                            <TableCell>{totalQuantity}</TableCell>
+
                             <TableCell colSpan={2}>{totalPrice.toFixed(2)}</TableCell>
                             <TableCell></TableCell>
                         </TableRow>
                     </TableFooter>
                 </Table>
             </TableContainer>
-             <TablePagination
+            <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
                 count={filteredData.length}
