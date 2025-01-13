@@ -21,6 +21,7 @@ import PurchaseHistoryTable from "./PurchaseHistoryTable";
 import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
 import {onDeleteHistoryRecord} from "../../../api/_history";
+import {fetchProductHistory} from "../../../api/_product";
 
 export interface ProductHistoryRecord {
     id: number;

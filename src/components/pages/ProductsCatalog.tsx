@@ -234,10 +234,6 @@ const ProductsCatalog = () => {
         setOpenSnackbar(true);
     };
 
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-    };
-
 
     const handleDelete = async (productId: number) => {
         try {
@@ -343,14 +339,6 @@ const ProductsCatalog = () => {
         handleModalOpen('openEdit');
     };
 
-    const handleOpenAdd = () => {
-        handleModalOpen("openAdd");
-        setNewProduct((newProduct) => {
-            return {
-                ...newProduct,
-            }
-        })
-    };
 
     const mapProductToEditProduct = (product: IProduct): IEditProduct => ({
         id: product.id,

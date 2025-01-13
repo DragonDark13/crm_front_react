@@ -27,7 +27,7 @@ import ProductsCatalog from "./components/pages/ProductsCatalog";
 import ReportsAnalytics from "./components/pages/ReportsAnalytics";
 import Sales from "./components/pages/Sales";
 import ClientsManagement from "./components/pages/ClientsManagement";
-import Purchases from "./components/pages/Purchases";
+import Purchases from "./components/pages/PurchasesPage/Purchases";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
 import SpeedDial from "./components/SpeedDial/SpeedDial";

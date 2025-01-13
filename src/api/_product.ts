@@ -1,5 +1,5 @@
 // Операції з продуктами
-import {API_ENDPOINTS, axiosInstance, handleError, postResource} from "./api";
+import {API_ENDPOINTS, axiosInstance, handleError, postResource, fetchResource} from "./api";
 import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
 
 export const fetchProducts = (): Promise<IProduct[]> => {

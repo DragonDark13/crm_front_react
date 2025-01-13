@@ -17,6 +17,7 @@ const SupplierFilter: React.FC<ISupplierFilterProps> = ({
         <FormGroup>
             {suppliers.map(supplier => (
                 <FormControlLabel
+                    tid={supplier.name}
                     key={supplier.id}
                     control={
                         <Checkbox
@@ -25,6 +26,16 @@ const SupplierFilter: React.FC<ISupplierFilterProps> = ({
                         />
                     }
                     label={supplier.name}
+                    componentsProps={{
+
+                        typography: {
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                        }
+                    }}
+                    classes={{
+                        label: 'supplier_name'
+                    }}
                 />
             ))}
         </FormGroup>
