@@ -150,6 +150,19 @@ const PurchasesTable: React.FC = () => {
     const totalQuantity = filteredData.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = filteredData.reduce((sum, item) => sum + item.total_price, 0);
 
+    const getRowStyle = (itemType: string) => {
+        switch (itemType) {
+            case "Other Investment":
+                return {backgroundColor: "#597183"}; // Світло-синій для електроніки
+            case "Packaging":
+                return {backgroundColor: "#803f54"}; // Світло-рожевий для одягу
+            case "Product":
+                return {backgroundColor: "#a589cb"}; // Світло-фіолетовий для меблів
+            default:
+                return {backgroundColor: "#ffffff"}; // Білий за замовчуванням
+        }
+    };
+
     return (
         <div>
             <h1>Purchase History</h1>
@@ -238,6 +251,9 @@ const PurchasesTable: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>
+                                Тип
+                            </TableCell>
+                            <TableCell>
                                 <TableSortLabel
                                     active={sortConfig.key === 'name'}
                                     direction={sortConfig.direction}
@@ -295,7 +311,8 @@ const PurchasesTable: React.FC = () => {
                     </TableHead>
                     <TableBody>
                         {paginatedData.map((row, index) => (
-                            <TableRow key={index + row.name}>
+                            <TableRow key={index + row.name} style={getRowStyle(row.type)}>
+                                <TableCell>{row.type}</TableCell>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>
                                     <Typography
