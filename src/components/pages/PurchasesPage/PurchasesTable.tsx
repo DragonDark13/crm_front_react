@@ -40,6 +40,7 @@ const PurchasesTable: React.FC = () => {
     const [categoryFilter, setCategoryFilter] = useState<number | ''>('');
     const [supplierFilter, setSupplierFilter] = useState('');
     const [priceRangeFilter, setPriceRangeFilter] = useState({min: '', max: ''});
+    const [typeFilter, setTypeFilter] = useState<string | ''>('');  // Додано фільтр по типу
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -99,6 +100,9 @@ const PurchasesTable: React.FC = () => {
     const handlePriceRangeFilterChange = (field: string, value: string) => {
         setPriceRangeFilter((prev) => ({...prev, [field]: value}));
     };
+     const handleTypeFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {  // Обробка зміни фільтру по типу
+        setTypeFilter(event.target.value as string);
+    };
 
     const resetFilters = () => {
         setFilter('');
@@ -106,7 +110,9 @@ const PurchasesTable: React.FC = () => {
         setCategoryFilter('');
         setSupplierFilter('');
         setPriceRangeFilter({min: '', max: ''});
+        setTypeFilter(''); // Скидаємо фільтр по типу
     };
+
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
@@ -137,15 +143,19 @@ const PurchasesTable: React.FC = () => {
             (priceRangeFilter.min === '' || item.price_per_item >= parseFloat(priceRangeFilter.min)) &&
             (priceRangeFilter.max === '' || item.price_per_item <= parseFloat(priceRangeFilter.max));
 
+        const matchesType = typeFilter ? item.type === typeFilter : true; // Додаємо перевірку для фільтру по типу
+
         return (
-            matchesSearch && matchesDateRange && matchesCategory && matchesSupplier && matchesPriceRange
+            matchesSearch &&
+            matchesDateRange &&
+            matchesCategory &&
+            matchesSupplier &&
+            matchesPriceRange &&
+            matchesType  // Включаємо перевірку фільтру по типу
         );
     });
 
-    const paginatedData = filteredData.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-    );
+    const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const totalQuantity = filteredData.reduce((sum, item) => sum + item.quantity, 0);
     const totalPrice = filteredData.reduce((sum, item) => sum + item.total_price, 0);
@@ -214,6 +224,15 @@ const PurchasesTable: React.FC = () => {
                             </MenuItem>
                         )
                     )}
+                </Select>
+            </FormControl>
+             <FormControl fullWidth margin="normal">
+                <InputLabel>Filter by Type</InputLabel>
+                <Select value={typeFilter} onChange={handleTypeFilterChange}>  {/* Додано фільтр по типу */}
+                    <MenuItem value="">All Types</MenuItem>
+                    <MenuItem value="Other Investment">Other Investment</MenuItem>
+                    <MenuItem value="Packaging">Packaging</MenuItem>
+                    <MenuItem value="Product">Product</MenuItem>
                 </Select>
             </FormControl>
             <TextField
