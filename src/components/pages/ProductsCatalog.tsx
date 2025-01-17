@@ -44,6 +44,7 @@ import {addSupplier, fetchGetAllSuppliers} from "../../api/_supplier";
 import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "../../api/_product";
 import {logoutUser} from "../../api/_user";
 import {addNewCategory, fetchGetAllCategories} from "../../api/_categories";
+import {exportToExcel} from "../../api/api";
 
 const ProductsCatalog = () => {
 
@@ -538,6 +539,11 @@ const ProductsCatalog = () => {
         }
     };
 
+    const handleExportToExcel = () => {
+        const productIds = filteredAndSearchedProducts.map(product => product.id);
+        exportToExcel(productIds);
+    };
+
 
 // Обробник для зміни слайдера
     return (
@@ -565,6 +571,9 @@ const ProductsCatalog = () => {
                                 startIcon={<FilterListIcon/>}
                                 variant={"contained"}
                                 onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button variant={"contained"} onClick={handleExportToExcel}>Експортувати в Excel</Button>
                         </Grid>
                     </Grid>
                     <Drawer classes={{
@@ -620,7 +629,6 @@ const ProductsCatalog = () => {
 
                 </Box>
             )}
-
 
 
             {

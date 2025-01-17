@@ -161,14 +161,12 @@ const CustomerPage: React.FC = () => {
                             <TableCell>Ім'я</TableCell>
                             <TableCell>Єлектронна пошта</TableCell>
                             <TableCell>Телефонний номер</TableCell>
-                            <TableCell>Address</TableCell> {/* Додаємо колонку для адреси */}
-
+                            <TableCell>Address</TableCell>
                             <TableCell>Дії</TableCell>
-
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {customers.map((customer, index) => (
+                        {customers.length > 1 ? customers.map((customer, index) => (
                             <React.Fragment key={customer.id + customer.name}>
                                 <TableRow hover selected={selectedCustomer && selectedCustomer?.id === customer.id}
                                           onClick={
@@ -178,7 +176,6 @@ const CustomerPage: React.FC = () => {
                                     <TableCell>{customer.email}</TableCell>
                                     <TableCell>{customer.phone_number}</TableCell>
                                     <TableCell>{customer.address}</TableCell>
-
                                     <TableCell>
                                         <Button
                                             variant="outlined"
@@ -188,19 +185,23 @@ const CustomerPage: React.FC = () => {
                                             Деталі
                                         </Button>
                                         <Button onClick={() => handleOpenEditModal(customer)} color="primary">
-                                            Edit
+                                            Редагувати
                                         </Button>
                                         <Button
                                             onClick={() => handleDeleteCustomer(customer.id)}
                                             color="secondary"
                                         >
-                                            Delete
+                                            Видалити
                                         </Button>
                                     </TableCell>
                                 </TableRow>
-                                {/* Якщо покупець обраний, відображаємо акордеон з додатковою інформацією */}
                             </React.Fragment>
-                        ))}
+                        ))
+                            :
+                            <TableRow>
+                                <TableCell colSpan={5}>Немає покупців</TableCell>
+                            </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>

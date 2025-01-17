@@ -161,13 +161,24 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                               className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                         <TableCell>{product.id}</TableCell>
                                         <TableCell>{product.name}</TableCell>
-                                        <TableCell>{product.supplier?.name || 'N/A'}</TableCell>
+                                        <TableCell>
+                                            <Typography
+                                                className={clsx("supplier_name")}
+                                                title={product.supplier?.name || 'N/A'}
+                                                sx={{
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap'
+                                                }}>
+                                                {product.supplier?.name || 'N/A'}
+                                            </Typography>
+                                        </TableCell>
                                         <TableCell>
                                             <div>
                                                 <Typography color={"secondary"}>
                                                     <strong>За весь час:</strong> {product.total_quantity}
                                                 </Typography>
-                                                <Typography color={ lowQuantity? "error" : "secondary"} className={clsx({'low-quantity': lowQuantity})}>
+                                                <Typography color={lowQuantity ? "error" : "secondary"}
+                                                            className={clsx({'low-quantity': lowQuantity})}>
                                                     <strong>В наявності:</strong> {product.available_quantity}
                                                 </Typography>
                                                 <Typography color={"primary"}>
@@ -205,14 +216,6 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                     </IconButton>
                                                     </span>
                                                 </Tooltip>
-                                                <Tooltip title="Видалити">
-                                                    <span>
-                                                    <IconButton disabled={!isAuthenticated} color="secondary"
-                                                                onClick={() => handleDelete(product.id)}>
-                                                        <DeleteIcon fontSize={"small"}/>
-                                                    </IconButton>
-                                                    </span>
-                                                </Tooltip>
                                                 <Tooltip title="Купівля">
                                                     <span>
                                                     <IconButton disabled={!isAuthenticated} color="primary"
@@ -236,6 +239,15 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                         <HistoryIcon fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>
+                                                <Tooltip title="Видалити">
+                                                    <span>
+                                                    <IconButton disabled={!isAuthenticated} color="secondary"
+                                                                onClick={() => handleDelete(product.id)}>
+                                                        <DeleteIcon fontSize={"small"}/>
+                                                    </IconButton>
+                                                    </span>
+                                                </Tooltip>
+
                                             </Box>
                                         </TableCell>
                                     </TableRow>

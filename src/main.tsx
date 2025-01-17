@@ -11,7 +11,7 @@ import {AuthProvider} from "./components/context/AuthContext";
 import {PackagingProvider} from "./components/Provider/PackagingContext";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
+    <React.Fragment>
         <AuthProvider>
             <SnackbarMessageProvider>
                 <ProductProvider>
@@ -27,6 +27,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 </ProductProvider>
             </SnackbarMessageProvider>
         </AuthProvider>
-    </React.StrictMode>
+    </React.Fragment>
     ,
 )

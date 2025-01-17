@@ -59,3 +59,29 @@ export const fetchResource = <T>(endpoint: string): Promise<T> => {
 export const postResource = <T>(endpoint: string, data: any): Promise<T> => {
     return axiosInstance.post(endpoint, data).then(response => response.data).catch(handleError);
 };
+
+export const exportToExcel = async (productIds: number[]) => {
+    try {
+        const response = await axiosInstance.post(
+            "/export-products-excel",
+            {product_ids: productIds},
+            {
+                responseType: "blob", // Вказати тип для файлів
+            }
+        );
+
+        // Створення посилання для завантаження файлу
+        const timestamp = new Date().toLocaleDateString().replace(/[-:.]/g, "_"); // Створення унікального timestamp
+        const filename = `Products_${timestamp}.xlsx`; // Формування імені файлу
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", filename); // Ім'я файлу змінене на унікальне
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    } catch (error) {
+        console.error("Помилка експорту:", error);
+    }
+};

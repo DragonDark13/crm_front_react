@@ -7,7 +7,7 @@ import {
     Typography,
     Select,
     MenuItem,
-    InputLabel, FormControl, Collapse
+    InputLabel, FormControl, Collapse, Paper
 } from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
@@ -22,6 +22,11 @@ import {usePackaging} from "../../Provider/PackagingContext";
 import {AxiosError} from "axios";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import AddNewCustomerDialog from "../AddNewCustomerDialog/AddNewCustomerDialog";
+import React from "react";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 
 interface ISaleProductModal {
     openSale: boolean;
@@ -68,6 +73,11 @@ const SaleProductModal = ({
     const togglePackaging = () => {
         setShowPackaging(!showPackaging); // Перемикаємо видимість полів пакування
     };
+
+    const removePackage = () => {
+        setSaleData({...saleData, packaging_id: '', packaging_quantity: 0});
+        togglePackaging();
+    }
 
 
     useEffect(() => {
@@ -162,246 +172,289 @@ const SaleProductModal = ({
         );
     };
 
+    const packagingPrice = saleData.packaging_quantity > 0 && saleData.packaging_id
+        ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0)
+        : 0;
+
+    const totalSalePrice = roundToDecimalPlaces(saleData.selling_total_price, 2);
+    const totalPackagingCost = roundToDecimalPlaces(saleData.packaging_quantity * packagingPrice, 2);
+    const totalCost = roundToDecimalPlaces(saleData.total_cost_price, 2);
+    const cleanProfit = roundToDecimalPlaces(totalSalePrice - saleData.quantity * purchasePricePerItem - totalPackagingCost, 2);
+
     return (
-        <CustomDialog
-            open={openSale}
-            handleClose={handleCloseSale}
-            title={`Продаж ${nameProduct} x ${saleData.quantity}шт`}
-            maxWidth="md"
-        >
-            <DialogContent>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={8}>
-                        <FormControl fullWidth margin="normal" error={!!errors.customer}>
-                            <InputLabel id="supplier-select-label">Покупець</InputLabel>
-                            <Select
-                                label="Покупець"
-                                value={saleData.customer}
-                                onChange={(e) => setSaleData({...saleData, customer: e.target.value})}
-                                fullWidth
-                            >
-                                {customers.map((customer) => (
-                                    <MenuItem key={customer.id + customer.name} value={customer.id}>
-                                        {customer.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            {errors.customer && <span className="error">{errors.customer}</span>}
-                        </FormControl>
-                        {/* Кнопка для додавання нового покупця */}
-                        <Button onClick={() => setOpenAddNewCustomerDialog(true)} color="secondary" fullWidth>
-                            Додати нового покупця
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            label="Дата продажу"
-                            type="date"
-                            value={saleData.sale_date}
-                            onChange={(e) => setSaleData({...saleData, sale_date: e.target.value})}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.sale_date}
-                            helperText={errors.sale_date}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <Typography> Максимальна кількість {quantityOnStock}шт</Typography>
-                        <QuantityField
-                            onIncrement={incrementQuantity}
-                            onDecrement={decrementQuantity}
-                            value={saleData.quantity}
-                            onChange={(e) => {
-                                let value = e.target.value;
-                                value = value.replace(/[^0-9]/g, '');
+        <React.Fragment>
+            <CustomDialog
+                open={openSale}
+                handleClose={handleCloseSale}
+                title={`Продаж ${nameProduct} x ${saleData.quantity}шт`}
+                maxWidth="md"
+            >
+                <React.Fragment>
+                    <DialogContent>
+                        <Grid container alignItems={"center"} spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth margin="normal" error={!!errors.customer}>
+                                    <InputLabel id="supplier-select-label">Покупець</InputLabel>
+                                    <Select
+                                        label="Покупець"
+                                        value={saleData.customer}
+                                        onChange={(e) => setSaleData({...saleData, customer: e.target.value})}
+                                        fullWidth
+                                    >
+                                        {customers.map((customer) => (
+                                            <MenuItem key={customer.id + customer.name} value={customer.id}>
+                                                {customer.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    {errors.customer && <span className="error">{errors.customer}</span>}
+                                </FormControl>
+                                {/* Кнопка для додавання нового покупця */}
 
-                                if (value.startsWith('0')) {
-                                    value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
-                                }
-
-                                if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
-                                    setSaleData({...saleData, quantity: Number(value)});
-                                }
-                            }}
-                            error={errors.quantity}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={3}>
-                        <TextField
-                            label="Ціна за 1шт (Продаж)"
-                            type="number"
-                            value={saleData.selling_price_per_item}
-                            onChange={(e) => setSaleData({
-                                ...saleData,
-                                selling_price_per_item: Number(e.target.value)
-                            })}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.price_per_item}
-                            helperText={errors.price_per_item}
-                            inputProps={{min: 1, max: 100000}}  // Обмеження значень
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={12}>
-                        {/* Кнопка для додавання пакування */}
-                        <Grid item xs={12}>
-                            <Button onClick={togglePackaging} color="primary" fullWidth>
-                                {showPackaging ? 'Приховати пакування' : 'Додати пакування'}
-                            </Button>
-                        </Grid>
-
-                        {/* Поля для пакування, які з'являються після натискання кнопки */}
-                        {showPackaging && (
-                            <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6} md={3}>
-                                    <FormControl fullWidth margin="normal" error={!!errors.packaging}>
-                                        <InputLabel id="packaging-select-label">Пакування</InputLabel>
-                                        <Select
-                                            label="Пакування"
-                                            value={saleData.packaging_id || ''}
-                                            onChange={(e) => setSaleData({...saleData, packaging_id: e.target.value})}
-                                            fullWidth
-                                        >
-                                            {packagingMaterials.map((material: IMaterial) => (
-                                                <MenuItem key={material.id} value={material.id}>
-                                                    {material.name} (Доступно: {material.available_quantity})
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                        {errors.packaging && <span className="error">{errors.packaging}</span>}
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={3}>
-                                    <QuantityField
-                                        label="Кількість пакування"
-                                        onIncrement={() => setSaleData({
-                                            ...saleData,
-                                            packaging_quantity: saleData.packaging_quantity + 1
-                                        })}
-                                        onDecrement={() => {
-                                            if (saleData.packaging_quantity > 0) {
-                                                setSaleData({
-                                                    ...saleData,
-                                                    packaging_quantity: saleData.packaging_quantity - 1
-                                                });
-                                            }
-                                        }}
-                                        value={saleData.packaging_quantity}
-                                        onChange={(e) => {
-                                            let value = e.target.value;
-                                            value = value.replace(/[^0-9]/g, '');
-
-                                            if (value.startsWith('0')) {
-                                                value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
-                                            }
-
-                                            if (/^\d+$/.test(value)) {
-                                                setSaleData({...saleData, packaging_quantity: Number(value)});
-                                            }
-                                        }}
-                                        error={errors.packaging_quantity}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={3}>
-                                    <Typography>
-                                        Собівартість пакування за 1 одиницю: {roundToDecimalPlaces(
-                                        saleData.packaging_id
-                                            ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0)
-                                            : 0, 2)} грн.
-                                    </Typography>
-
-                                    <Typography>
-                                        Кількість у наявності: {
-                                        saleData.packaging_id
-                                            ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.available_quantity || 0)
-                                            : 0}
-                                    </Typography>
-                                </Grid>
                             </Grid>
-                        )}
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <TotalPriceField label={"Загальна сума (Продаж)"} value={saleData.selling_total_price}/>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography>
-                            Загальна Чиста Вигода з продажу:
-                            {roundToDecimalPlaces(saleData.selling_total_price - saleData.quantity * purchasePricePerItem -
-                                saleData.packaging_quantity * (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0), 2)} грн.
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                            Розрахунок:
-                            <Collapse in={expanded}>
-                                <ul>
-                                    <li>Загальна сума
-                                        продажу: {roundToDecimalPlaces(saleData.selling_total_price, 2)} грн.
-                                    </li>
-                                    <li>Ціна товару за
-                                        1шт: {roundToDecimalPlaces(saleData.selling_total_price / saleData.quantity, 2)} грн.
-                                    </li>
-                                    <li>Собівартість пакування за 1 одиницю: {roundToDecimalPlaces(
-                                        saleData.packaging_quantity > 0 && saleData.packaging_id
-                                            ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0)
-                                            : 0, 2)} грн.
-                                    </li>
-                                    <li>Чиста
-                                        вигода: {roundToDecimalPlaces(saleData.selling_total_price - saleData.quantity * purchasePricePerItem -
-                                            saleData.packaging_quantity * (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0), 2)} грн.
-                                    </li>
-                                </ul>
-                            </Collapse>
-                            <Button onClick={toggleExpanded} size="small">
-                                {expanded ? 'Згорнути' : 'Детальніше'}
-                            </Button>
-                        </Typography>
-                    </Grid>
+                            <Grid item xs={12} sm={2}>
+                                <Button size={"large"} variant={"contained"} endIcon={<AddIcon/>}
+                                        onClick={() => setOpenAddNewCustomerDialog(true)}
+                                        color="secondary">
+                                    Додати
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <TextField
+                                    label="Дата продажу"
+                                    type="date"
+                                    value={saleData.sale_date}
+                                    onChange={(e) => setSaleData({...saleData, sale_date: e.target.value})}
+                                    fullWidth
+                                    margin="normal"
+                                    error={!!errors.sale_date}
+                                    helperText={errors.sale_date}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Typography> Максимальна кількість {quantityOnStock}шт</Typography>
+                        </Grid>
+                        <Grid container spacing={2} alignItems={"center"}>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <QuantityField
+                                    onIncrement={incrementQuantity}
+                                    onDecrement={decrementQuantity}
+                                    value={saleData.quantity}
+                                    onChange={(e) => {
+                                        let value = e.target.value;
+                                        value = value.replace(/[^0-9]/g, '');
 
-                    <Grid item xs={12}>
-                        <Typography>
-                            Загальна собівартість: {roundToDecimalPlaces(saleData.total_cost_price, 2)} грн.
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                            Розрахунок собівартості:
-                            <Collapse in={expanded}>
-                                <ul>
-                                    <li>Собівартість товару за
-                                        1шт: {roundToDecimalPlaces(purchasePricePerItem, 2)} грн.
-                                    </li>
-                                    <li>Собівартість пакування за 1 одиницю: {roundToDecimalPlaces(
-                                        saleData.packaging_quantity > 0 && saleData.packaging_id
-                                            ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0)
-                                            : 0, 2)} грн.
-                                    </li>
-                                    <li>Загальна
-                                        собівартість: {roundToDecimalPlaces(saleData.total_cost_price, 2)} грн.
-                                    </li>
-                                </ul>
-                            </Collapse>
-                            <Button onClick={toggleExpanded} size="small">
-                                {expanded ? 'Згорнути' : 'Детальніше'}
-                            </Button>
-                        </Typography>
-                    </Grid>
+                                        if (value.startsWith('0')) {
+                                            value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
+                                        }
 
-                </Grid>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleCloseSale} color="primary">
-                    Відміна
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    disabled={isSubmitDisabled()} // Додаємо перевірку для активності кнопки
-                >
-                    Підтвердити продаж
-                </Button>
-            </DialogActions>
+                                        if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
+                                            setSaleData({...saleData, quantity: Number(value)});
+                                        }
+                                    }}
+                                    error={errors.quantity}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} sm={6} md={3}>
+                                <TextField
+                                    label="Ціна за 1шт (Продаж)"
+                                    type="number"
+                                    value={saleData.selling_price_per_item}
+                                    onChange={(e) => setSaleData({
+                                        ...saleData,
+                                        selling_price_per_item: Number(e.target.value)
+                                    })}
+                                    fullWidth
+                                    margin="normal"
+                                    error={!!errors.price_per_item}
+                                    helperText={errors.price_per_item}
+                                    inputProps={{min: 1, max: 100000}}  // Обмеження значень
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} sm={6} md={12}>
+                                {/* Кнопка для додавання пакування */}
+                                {!showPackaging && <Grid item xs={12}>
+                                    <Button variant={"contained"} endIcon={<AddIcon/>} onClick={togglePackaging}
+                                            color="secondary">
+                                        {showPackaging ? 'Приховати пакування' : 'Додати пакування'}
+                                    </Button>
+                                </Grid>}
+
+                                {/* Поля для пакування, які з'являються після натискання кнопки */}
+                                {showPackaging && (
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12} sm={6} md={3}>
+                                            <FormControl fullWidth margin="normal" error={!!errors.packaging}>
+                                                <InputLabel id="packaging-select-label">Пакування</InputLabel>
+                                                <Select
+                                                    label="Пакування"
+                                                    value={saleData.packaging_id || ''}
+                                                    onChange={(e) => setSaleData({
+                                                        ...saleData,
+                                                        packaging_id: e.target.value
+                                                    })}
+                                                    fullWidth
+                                                >
+                                                    {packagingMaterials.map((material: IMaterial) => (
+                                                        <MenuItem key={material.id} value={material.id}>
+                                                            {material.name} (Доступно: {material.available_quantity})
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                                {errors.packaging && <span className="error">{errors.packaging}</span>}
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} md={3}>
+                                            {saleData.packaging_id === '' ? (
+                                                <Typography variant="body2" color="error">
+                                                    Спочатку оберіть пакування
+                                                </Typography>
+                                            ) : (
+                                                <QuantityField
+                                                    label="Кількість пакування"
+                                                    readonly={saleData.packaging_id === ''}
+                                                    onIncrement={() => setSaleData({
+                                                        ...saleData,
+                                                        packaging_quantity: saleData.packaging_quantity + 1
+                                                    })}
+                                                    onDecrement={() => {
+                                                        if (saleData.packaging_quantity > 0) {
+                                                            setSaleData({
+                                                                ...saleData,
+                                                                packaging_quantity: saleData.packaging_quantity - 1
+                                                            });
+                                                        }
+                                                    }}
+                                                    value={saleData.packaging_quantity}
+                                                    onChange={(e) => {
+                                                        let value = e.target.value;
+                                                        value = value.replace(/[^0-9]/g, ''); // Видаляє все, крім цифр
+
+                                                        if (value.startsWith('0')) {
+                                                            value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
+                                                        }
+
+                                                        if (/^\d+$/.test(value)) {
+                                                            setSaleData({
+                                                                ...saleData,
+                                                                packaging_quantity: Number(value)
+                                                            });
+                                                        }
+                                                    }}
+                                                    error={errors.packaging_quantity}
+                                                />
+                                            )}
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} md={3}>
+                                        <Typography>
+                                            Собівартість пакування за 1 одиницю: {roundToDecimalPlaces(
+                                            saleData.packaging_id
+                                                ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0)
+                                                : 0, 2)} грн.
+                                        </Typography>
+
+                                        <Typography>
+                                            Кількість у наявності: {
+                                            saleData.packaging_id
+                                                ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.available_quantity || 0)
+                                                : 0}
+                                        </Typography>
+                                    </Grid>
+                                        <Grid item xs={12} sm={6} md={3}>
+                                            <Button variant={"contained"} endIcon={<DeleteIcon/>}
+                                                    onClick={removePackage}
+                                                    color="secondary">
+                                                Видалити пакування
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                )}
+                            </Grid>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <TotalPriceField label={"Загальна сума (Продаж)"} value={saleData.selling_total_price}/>
+                            </Grid>
+
+
+                        </Grid>
+                        <Grid container spacing={3}>
+                            {/* Загальна Чиста Вигода */}
+                            <Grid item xs={12} sm={6}>
+                                <Paper sx={{padding: 2, backgroundColor: '#f4f8f4'}}>
+                                    <Typography variant="h6" sx={{color: 'green'}}>
+                                       Чиста Вигода з продажу:
+                                        <span style={{fontWeight: 'bold', color: 'green'}}>{cleanProfit} грн.</span>
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        Розрахунок:
+                                        <Collapse in={expanded}>
+                                            <ul>
+                                                <li>Загальна сума продажу: <strong>{totalSalePrice} грн.</strong></li>
+                                                <li>Ціна товару за
+                                                    1шт: <strong>{roundToDecimalPlaces(totalSalePrice / saleData.quantity, 2)} грн.</strong>
+                                                </li>
+                                                <li>Собівартість пакування за 1
+                                                    одиницю: <strong>{packagingPrice} грн.</strong></li>
+                                                <li>Чиста вигода: <strong>{cleanProfit} грн.</strong></li>
+                                            </ul>
+                                        </Collapse>
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+
+                            {/* Загальна собівартість */}
+                            <Grid item xs={12} sm={6}>
+                                <Paper sx={{padding: 2, backgroundColor: '#f4f8f4'}}>
+                                    <Typography variant="h6" sx={{color: 'red'}}>
+                                        Загальна собівартість:
+                                        <span style={{fontWeight: 'bold', color: 'red'}}>{totalCost} грн.</span>
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        Розрахунок собівартості:
+                                        <Collapse in={expanded}>
+                                            <ul>
+                                                <li>Собівартість товару за
+                                                    1шт: <strong>{purchasePricePerItem} грн.</strong></li>
+                                                <li>Собівартість пакування за 1
+                                                    одиницю: <strong>{packagingPrice} грн.</strong></li>
+                                                <li>Загальна собівартість: <strong>{totalCost} грн.</strong></li>
+                                            </ul>
+                                        </Collapse>
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+
+                            {/* Кнопка для детальнішого перегляду */}
+                            <Grid item xs={12}>
+                                <Button
+                                    endIcon={<KeyboardArrowDownIcon/>}
+                                    variant="contained"
+                                    onClick={toggleExpanded}
+                                    size="small"
+                                    sx={{backgroundColor: '#3f51b5', '&:hover': {backgroundColor: '#303f9f'}}}
+                                >
+                                    {expanded ? 'Згорнути' : 'Детальніше'}
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseSale} color="primary">
+                            Відміна
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSubmit}
+                            disabled={isSubmitDisabled()} // Додаємо перевірку для активності кнопки
+                        >
+                            Підтвердити продаж
+                        </Button>
+                    </DialogActions>
+                </React.Fragment>
+            </CustomDialog>
             <AddNewCustomerDialog
                 handleAddCustomer={handleCreateCustomer}
                 handleCloseAddNewCustomerDialog={() => setOpenAddNewCustomerDialog(false)}
@@ -409,7 +462,8 @@ const SaleProductModal = ({
                 setNewCustomerData={setNewCustomerData}
                 newCustomerData={newCustomerData}
             />
-        </CustomDialog>
+        </React.Fragment>
+
     );
 };
 

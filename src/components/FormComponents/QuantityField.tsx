@@ -11,12 +11,14 @@ const QuantityField: FC<{
     onIncrement: () => void; // Додано проп для інкременту
     onDecrement: () => void; // Додано проп для декременту
     label?: string;
-}> = ({value, onChange, error, onIncrement, onDecrement,label='Кількість'}) => {
+    readonly?: boolean;
+}> = ({value, onChange, error, onIncrement, onDecrement, label = 'Кількість', readonly}) => {
 
     return (
         <Box display="flex" alignItems="center">
 
             <TextField
+                readOnly={readonly}  // Додано проп для запрету редагування поля
                 label={label}
                 type="text"
                 value={value.toString()}
@@ -37,7 +39,7 @@ const QuantityField: FC<{
                         <InputAdornment position="start">
                             <IconButton
                                 onClick={onDecrement}
-                                disabled={value <= 1} // Вимкнути кнопку, якщо значення <= 1
+                                disabled={value <= 1 || readonly} // Вимкнути кнопку, якщо значення <= 1
                             >
                                 <Remove/>
                             </IconButton>
@@ -47,7 +49,7 @@ const QuantityField: FC<{
                         <InputAdornment position="end">
                             <IconButton
                                 onClick={onIncrement}
-                                disabled={value >= 1000} // Вимкнути кнопку, якщо значення >= 1000
+                                disabled={value >= 1000 || readonly} // Вимкнути кнопку, якщо значення >= 1000
                             >
                                 <Add/>
                             </IconButton>
@@ -59,7 +61,6 @@ const QuantityField: FC<{
         </Box>
     );
 };
-
 
 
 export default QuantityField;
