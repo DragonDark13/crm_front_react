@@ -24,8 +24,6 @@ import './scss/main.scss';
 
 import Dashboard from "./components/Dachboard/Dashboard";
 import ProductsCatalog from "./components/pages/ProductsCatalog";
-import ReportsAnalytics from "./components/pages/ReportsAnalytics";
-import Sales from "./components/pages/Sales";
 import ClientsManagement from "./components/pages/ClientsManagement";
 import Purchases from "./components/pages/PurchasesPage/Purchases";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
@@ -36,6 +34,7 @@ import Login from "./components/Login/Login";
 import PackagingMaterialList from "./components/pages/PackagingMaterialList";
 import InvestmentsPage from "./components/pages/InvestmentsPage";
 import SupplierPage from "./components/pages/SupplierPage";
+import Sales from "./components/pages/Sales/Sales";
 
 
 function App() {

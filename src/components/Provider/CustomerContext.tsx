@@ -51,6 +51,7 @@ export const CustomerProvider: React.FC = ({children}) => {
             const newCustomer = await createCustomer(newCustomerData);
             setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список
             showSnackbarMessage('Customer created successfully!', 'success');
+            fetchGetAllCustomersFunc();
         } catch (error: AxiosError) {
             console.error('Error creating customer:', error);
             showSnackbarMessage('Error creating customer: ' + error.response?.data?.error || 'Unknown error', 'error');

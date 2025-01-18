@@ -2,7 +2,7 @@ import {ICustomer, ICustomerDetails} from "../utils/types";
 import {API_ENDPOINTS, axiosInstance, fetchResource, postResource} from "./api";
 
 export const createCustomer = (customerData: ICustomerDetails): Promise<ICustomer> => {
-    return postResource<ICustomer>(API_ENDPOINTS.CUSTOMERS, customerData);
+    return postResource<ICustomer>(API_ENDPOINTS.CREATED_CUSTOMER, customerData);
 };
 
 export const fetchGetAllCustomers = (): Promise<ICustomer[]> => {

@@ -241,10 +241,10 @@ const ProductsCatalog = () => {
             await deleteProduct(productId);
             handleCloseDeleteModal();
             await fetchProductsFunc();
-            showSnackbar('Product deleted successfully!', 'success'); // Show success message
+            showSnackbarMessage('Product deleted successfully!', 'success'); // Show success message
         } catch (error) {
             console.error('There was an error deleting the product!', error);
-            showSnackbar('Failed to delete the product!', 'error'); // Show error message
+            showSnackbarMessage('Failed to delete the product!', 'error'); // Show error message
         }
     };
 
@@ -253,10 +253,10 @@ const ProductsCatalog = () => {
             await addProduct(newProduct);
             await fetchProductsFunc();
             handleModalClose('openAdd');
-            showSnackbar('Product added successfully!', 'success'); // Show success message
+            showSnackbarMessage('Product added successfully!', 'success'); // Show success message
         } catch (error) {
             console.error('There was an error adding the product!', error);
-            showSnackbar('Failed to add the product!', 'error'); // Show error message
+            showSnackbarMessage('Failed to add the product!', 'error'); // Show error message
         }
     };
 
@@ -266,10 +266,10 @@ const ProductsCatalog = () => {
             await updateProduct(editProduct.id, editProduct);
             handleModalClose('openEdit');
             await fetchProductsFunc();
-            showSnackbar('Product updated successfully!', 'success'); // Show success message
+            showSnackbarMessage('Product updated successfully!', 'success'); // Show success message
         } catch (error) {
             console.error('There was an error updating the product!', error);
-            showSnackbar('Failed to update the product!', 'error'); // Show error message
+            showSnackbarMessage('Failed to update the product!', 'error'); // Show error message
         }
     };
     const handlePurchase = (product: IProduct) => {
@@ -310,11 +310,11 @@ const ProductsCatalog = () => {
             try {
                 await addSale(saleData.productId, saleData);
                 handleModalClose('openSale');
+                showSnackbarMessage('Sale completed successfully!', 'success'); // Show success message
                 await fetchProductsFunc();
-                showSnackbar('Sale completed successfully!', 'success'); // Show success message
             } catch (error) {
                 console.error('There was an error saving the sale!', error);
-                showSnackbar('Failed to save the sale!', 'error'); // Show error message
+                showSnackbarMessage('Failed to save the sale!', 'error'); // Show error message
             }
         }
     };

@@ -26,6 +26,7 @@ import React from "react";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import {createCustomer, fetchGetAllCustomers} from "../../../api/_customer";
 
 
 interface ISaleProductModal {
@@ -93,7 +94,6 @@ const SaleProductModal = ({
         price_per_item: '',
         quantity: '',
         packaging: '',
-        packaging_quantity: ''
     });
 
     const validateFields = () => {
@@ -102,29 +102,34 @@ const SaleProductModal = ({
             sale_date: saleData.sale_date === '' ? 'Sale date is required' : '',
             price_per_item: saleData.selling_price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
             quantity: saleData.quantity <= 0 || saleData.quantity > quantityOnStock ? 'Quantity must be greater than 0' : '',
-            packaging: saleData.packaging_id === '' ? 'Packaging must be selected' : '',
-            packaging_quantity: saleData.packaging_quantity < 0 ? 'Packaging quantity must be 0 or greater' : ''
+            packaging: saleData.packaging_id !== '' && saleData.packaging_quantity < 1 ? 'Quantity must be greater' +
+                ' than 0' : '',
         };
 
         setErrors(newErrors);
         return Object.values(newErrors).every(error => error === '');
     };
 
-    const handleSubmit = () => {
+    const handleSaleSubmit = () => {
         if (validateFields()) {
             handleSale();
         }
     };
 
     const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
+        debugger
         createCustomerFunc(newCustomerData)
-            .then(() => {
-                fetchCustomersFunc();  // Оновлення списку покупців
-                setOpenAddNewCustomerDialog(false);  // Закриття діалогу після успішного створення
+            .then(response => {
+                console.log('Response:', response); // Лог для перевірки відповіді
+                setOpenAddNewCustomerDialog(false);
+                showSnackbarMessage('Customer created successfully!', 'success')
+                // Закриваємо модальне вікно після створення
             })
             .catch((error: AxiosError) => {
+                console.log('Error Response:', error.response); // Лог для перевірки помилки
+
+                showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
                 console.error('Error creating customer:', error);
-                showSnackbarMessage('Error creating customer: ' + error.response?.data?.error || 'Unknown error', 'error');
             });
     };
 
@@ -167,8 +172,8 @@ const SaleProductModal = ({
             saleData.customer === '' ||
             saleData.selling_price_per_item <= 0 ||
             saleData.quantity <= 0 || saleData.quantity > quantityOnStock ||
-            saleData.packaging_id === '' ||
-            saleData.packaging_quantity < 0
+            (saleData.packaging_id !== '' &&
+                saleData.packaging_quantity < 1)
         );
     };
 
@@ -287,7 +292,7 @@ const SaleProductModal = ({
                                 {showPackaging && (
                                     <Grid container spacing={2}>
                                         <Grid item xs={12} sm={6} md={3}>
-                                            <FormControl fullWidth margin="normal" error={!!errors.packaging}>
+                                            <FormControl fullWidth margin="normal">
                                                 <InputLabel id="packaging-select-label">Пакування</InputLabel>
                                                 <Select
                                                     label="Пакування"
@@ -304,7 +309,7 @@ const SaleProductModal = ({
                                                         </MenuItem>
                                                     ))}
                                                 </Select>
-                                                {errors.packaging && <span className="error">{errors.packaging}</span>}
+                                                {/*{errors.packaging && <span className="error">{errors.packaging}</span>}*/}
                                             </FormControl>
                                         </Grid>
                                         <Grid item xs={12} sm={6} md={3}>
@@ -344,25 +349,25 @@ const SaleProductModal = ({
                                                             });
                                                         }
                                                     }}
-                                                    error={errors.packaging_quantity}
+                                                    // error={errors.packaging_quantity}
                                                 />
                                             )}
                                         </Grid>
                                         <Grid item xs={12} sm={6} md={3}>
-                                        <Typography>
-                                            Собівартість пакування за 1 одиницю: {roundToDecimalPlaces(
-                                            saleData.packaging_id
-                                                ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0)
-                                                : 0, 2)} грн.
-                                        </Typography>
+                                            <Typography>
+                                                Собівартість пакування за 1 одиницю: {roundToDecimalPlaces(
+                                                saleData.packaging_id
+                                                    ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.purchase_price_per_unit || 0)
+                                                    : 0, 2)} грн.
+                                            </Typography>
 
-                                        <Typography>
-                                            Кількість у наявності: {
-                                            saleData.packaging_id
-                                                ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.available_quantity || 0)
-                                                : 0}
-                                        </Typography>
-                                    </Grid>
+                                            <Typography>
+                                                Кількість у наявності: {
+                                                saleData.packaging_id
+                                                    ? (packagingMaterials.find(material => material.id === saleData.packaging_id)?.available_quantity || 0)
+                                                    : 0}
+                                            </Typography>
+                                        </Grid>
                                         <Grid item xs={12} sm={6} md={3}>
                                             <Button variant={"contained"} endIcon={<DeleteIcon/>}
                                                     onClick={removePackage}
@@ -384,10 +389,10 @@ const SaleProductModal = ({
                             <Grid item xs={12} sm={6}>
                                 <Paper sx={{padding: 2, backgroundColor: '#f4f8f4'}}>
                                     <Typography variant="h6" sx={{color: 'green'}}>
-                                       Чиста Вигода з продажу:
+                                        Чиста Вигода з продажу:
                                         <span style={{fontWeight: 'bold', color: 'green'}}>{cleanProfit} грн.</span>
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography component={"div"} variant="body2" color="textSecondary">
                                         Розрахунок:
                                         <Collapse in={expanded}>
                                             <ul>
@@ -411,7 +416,7 @@ const SaleProductModal = ({
                                         Загальна собівартість:
                                         <span style={{fontWeight: 'bold', color: 'red'}}>{totalCost} грн.</span>
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
+                                    <Typography component={"div"} variant="body2" color="textSecondary">
                                         Розрахунок собівартості:
                                         <Collapse in={expanded}>
                                             <ul>
@@ -447,7 +452,7 @@ const SaleProductModal = ({
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={handleSubmit}
+                            onClick={handleSaleSubmit}
                             disabled={isSubmitDisabled()} // Додаємо перевірку для активності кнопки
                         >
                             Підтвердити продаж

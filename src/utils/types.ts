@@ -55,9 +55,9 @@ export interface ISaleData {
     sale_date: string
     productId: number
     packaging_id?: number | string
-    packaging_quantity: number
+    packaging_quantity?: number
     total_cost_price: number
-    total_packaging_cost: number
+    total_packaging_cost?: number
     purchase_price_per_item: number
 }
 
