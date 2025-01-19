@@ -45,6 +45,7 @@ import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "..
 import {logoutUser} from "../../api/_user";
 import {addNewCategory, fetchGetAllCategories} from "../../api/_categories";
 import {exportToExcel} from "../../api/api";
+import DeleteAllProductsDialog from "../dialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
 
 const ProductsCatalog = () => {
 
@@ -572,8 +573,12 @@ const ProductsCatalog = () => {
                                 variant={"contained"}
                                 onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
                         </Grid>
+                        {isAuthenticated && <Grid item>
+                            <DeleteAllProductsDialog/>
+                        </Grid>
+                        }
                         <Grid item>
-                            <Button variant={"contained"} onClick={handleExportToExcel}>Експортувати в Excel</Button>
+                            <Button disabled={!isAuthenticated} variant={"contained"} onClick={handleExportToExcel}>Експортувати в Excel</Button>
                         </Grid>
                     </Grid>
                     <Drawer classes={{

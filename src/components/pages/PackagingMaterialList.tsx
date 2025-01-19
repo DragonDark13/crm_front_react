@@ -19,10 +19,13 @@ import MarkPackagingAsUsedDialog from "../dialogs/MarkPackagingAsUsedDialog/Mark
 import MaterialHistoryTable from "./MaterialHistoryTable";
 import {usePackaging} from "../Provider/PackagingContext";
 import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../api/_packagingMaterials";
+import DeleteAllMaterialsDialog from "../dialogs/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
+import {useAuth} from "../context/AuthContext";
 
 
 const PackagingMaterialList: React.FC = () => {
         const {packagingMaterials} = usePackaging()
+        const {isAuthenticated} = useAuth();
         const [searchTerm, setSearchTerm] = useState<string>('');
         const [sortBy, setSortBy] = useState<string>('name');
         const [sortOrder, setSortOrder] = useState<string>('asc');
@@ -161,6 +164,11 @@ const PackagingMaterialList: React.FC = () => {
         return (
             <React.Fragment><Paper sx={{width: '100%', overflow: 'hidden'}}>
                 <h1>Список пакувальних матеріалів</h1>
+                {isAuthenticated && <Grid container>
+                    <Grid item>
+                        <DeleteAllMaterialsDialog/>
+                    </Grid>
+                </Grid>}
                 <Grid justifyContent={"flex-end"} alignItems={"center"} container>
                     {/* Search */}
                     <Grid item>

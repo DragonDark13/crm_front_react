@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import {TextField, Button, Table, TableRow, TableCell, TableBody, TableHead} from "@mui/material";
+import {TextField, Button, Table, TableRow, TableCell, TableBody, TableHead, Grid, Paper} from "@mui/material";
 import {axiosInstance} from "../../api/api";
+import DeleteAllMaterialsDialog from "../dialogs/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
+import {useAuth} from "../context/AuthContext";
+import DeleteAllInvestmentsDialog from "../dialogs/DeleteAllInvestmentsDialog/DeleteAllInvestmentsDialog";
 
 interface Investment {
     supplier: string;
@@ -39,9 +42,17 @@ const InvestmentsPage: React.FC = () => {
         fetchInvestments();
     }, []);
 
+    const {isAuthenticated} = useAuth();
+
+
     return (
         <div>
             <h2>Інші вкладення</h2>
+            {isAuthenticated && <Grid container>
+                <Grid item>
+                    <DeleteAllInvestmentsDialog/>
+                </Grid>
+            </Grid>}
             <div>
                 <TextField
                     label="Назва"

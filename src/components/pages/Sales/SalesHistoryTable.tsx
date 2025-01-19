@@ -158,13 +158,6 @@ const SalesHistoryTable: React.FC = () => {
                     value={searchProduct}
                     onChange={(e) => handleFilterChange(e, 'product')}
                 />
-                <TextField
-                    label="Фільтрувати за датою"
-                    type="date"
-                    value={searchDate}
-                    onChange={(e) => handleFilterChange(e, 'date')}
-                    InputLabelProps={{shrink: true}}
-                />
                 <FormControl>
                     <InputLabel>Категорія</InputLabel>
                     <Select
@@ -256,7 +249,7 @@ const SalesHistoryTable: React.FC = () => {
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                    {sale.packaging_details.length<1 ? sale.packaging_details.map((packaging, idx) => (
+                                                    {sale.packaging_details.length>0 ? sale.packaging_details.map((packaging, idx) => (
                                                         <TableRow key={idx}>
                                                             <TableCell>{packaging.packaging_name}</TableCell>
                                                             <TableCell>{packaging.quantity_sold}</TableCell>
