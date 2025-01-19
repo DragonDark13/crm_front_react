@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
     Grid,
     Typography,
@@ -9,21 +9,106 @@ import {
 } from "@mui/material";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
+import {IProduct, IStateFilters} from "../../../utils/types";
+import {useProducts} from "../../Provider/ProductContext";
+import {useCategories} from "../../Provider/CategoryContext";
+import {useSuppliers} from "../../Provider/SupplierContext";
 
-const Filters = ({
-    filters,
-    categories,
-    suppliers,
-    priceMax,
-    filterArrayLength,
-    handleFilterChange,
-    resetFilters,
-    isFiltersChanged,
-    toggleFilter,
-}) => {
+interface IFilterComponentProps {
+    resetFilters: () => void;
+    filterArrayLength: number;
+    setFilteredProducts: (filteredProducts: IProduct[]) => void;
+    filters: IStateFilters;
+    setFilters: React.Dispatch<React.SetStateAction<IStateFilters>>;
+}
+
+const FilterComponent = ({
+                             resetFilters,
+                             filterArrayLength,
+                             setFilteredProducts,
+                             filters,
+                             setFilters
+                         }: IFilterComponentProps) => {
     const [showCategoryFilter, setShowCategoryFilter] = useState(true);
     const [showSupplierFilter, setShowSupplierFilter] = useState(true);
+    const [priceMax, setPriceMax] = useState(0);
+    const [initialFilters, setInitialFilters] = useState(filters); // Доданий стейт для початкових фільтрів
 
+    const {products} = useProducts();
+    const {categories} = useCategories();
+    const {suppliers} = useSuppliers();
+
+// Функція для застосування фільтрів
+    const applyFilters = (callback?) => {
+        let filtered = products;
+
+        const {categories, suppliers, priceRange} = filters;
+
+        // Фільтр за категоріями
+        if (categories.length > 0) {
+            filtered = filtered.filter(product =>
+                product.category_ids.some(categoryId => categories.includes(categoryId))
+            );
+        }
+
+        // Фільтр за постачальниками
+        if (suppliers.length > 0) {
+            filtered = filtered.filter(product => product.supplier && suppliers.includes(product.supplier.id));
+        }
+
+        // Фільтр за ціновим діапазоном
+        filtered = filtered.filter(product =>
+            product.selling_price_per_item >= priceRange[0] && product.selling_price_per_item <= priceRange[1]
+        );
+
+        setFilteredProducts(filtered); // Оновлюємо відфільтровані продукти
+        if (callback) callback(); // Викликаємо callback, якщо він переданий
+    };
+
+    // Коли завантажуються продукти, обчислімо мінімальну і максимальну ціну
+    useEffect(() => {
+        if (products.length > 0) {
+            const prices = products.map(product => product.selling_price_per_item);
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+
+            setFilters(prevState => ({
+                ...prevState,
+                priceRange: [minPrice, maxPrice],
+            }));
+
+            setInitialFilters({
+                categories: [],
+                suppliers: [],
+                priceRange: [minPrice, maxPrice],
+            }); // Ініціалізуємо початкові фільтри
+
+            setPriceMax(maxPrice);
+        }
+    }, [products]);
+
+// Загальний обробник змін фільтрів
+    const handleFilterChange = (filterType: 'categories' | 'suppliers' | 'priceRange', newValue) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [filterType]: newValue,
+        }));
+    };
+
+// Функція для toggle категорій і постачальників
+    const toggleFilter = (currentFilters: number[], id: number) => {
+        return currentFilters.includes(id)
+            ? currentFilters.filter(filterId => filterId !== id)
+            : [...currentFilters, id];
+    };
+
+// Використовуємо useEffect, щоб автоматично застосовувати фільтри при зміні стейту
+    useEffect(() => {
+        applyFilters();
+    }, [filters]);
+
+// Логіка для визначення, чи змінені фільтри
+    const isFiltersChanged = JSON.stringify(filters) !== JSON.stringify(initialFilters);
     return (
         <Grid container px={2}>
             <Grid item xs={12}>
@@ -107,4 +192,4 @@ const Filters = ({
     );
 };
 
-export default Filters;
+export default FilterComponent;
