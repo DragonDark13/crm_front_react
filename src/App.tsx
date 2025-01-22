@@ -35,6 +35,7 @@ import PackagingMaterialList from "./components/pages/PackagingMaterialList";
 import InvestmentsPage from "./components/pages/InvestmentsPage";
 import SupplierPage from "./components/pages/SupplierPage";
 import Sales from "./components/pages/Sales/Sales";
+import GiftSetsPage from "./components/pages/GiftSetsPage/GiftSetsPage";
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
                             }
                         />
                         <Route path="/crm_front_react/" element={<ProductsCatalog/>}/>
+                        <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
                         <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
                         <Route path="/crm_front_react/sales" element={<Sales/>}/>
                         <Route path="/crm_front_react/products" element={<ProductsCatalog/>}/>

@@ -68,6 +68,12 @@ export const Sidebar: React.FC = () => {
                     <Store/>
                 </IconButton>
             </Tooltip>
+            <Tooltip title="ГіфтБокси" placement="right">
+                <IconButton color={isActive("/crm_front_react/gift_sets") ? "primary" : "inherit"} component={Link}
+                            to="/crm_front_react/gift_sets">
+                    <Store/>
+                </IconButton>
+            </Tooltip>
 
             {/* Закупівлі */}
             <Tooltip title="Закупівлі" placement="right">
