@@ -1,6 +1,7 @@
 import React from 'react';
 import {Typography} from "@mui/material";
 import CreateGiftBox from "../../MainMenu/CreateGiftBox";
+import GiftSetList from "./GiftSetList";
 
 const GiftSetsPage = () => {
     return (
@@ -9,7 +10,9 @@ const GiftSetsPage = () => {
                 Подарункові набори
             </Typography>
 
-            <CreateGiftBox/>
+            {/*<CreateGiftBox/>*/}
+
+            <GiftSetList/>
 
             {/*TODO add giftbox*/}
             {/*//TODO add giftbox management*/}

@@ -6,17 +6,19 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import {IMaterial, IProduct} from "../../utils/types";
 import {usePackaging} from "../Provider/PackagingContext";
+import {axiosInstance} from "../../api/api";
 
 const CreateGiftBox = () => {
     const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
     const [items, setItems] = useState([]); // Для всіх товарів
     const {products} = useProducts();
     const {packagingMaterials} = usePackaging();
     const [selectedProducts, setSelectedProducts] = useState<{ product: IProduct, quantity: number }[]>([]);
     const [selectedPackaging, setSelectedPackaging] = useState<{ material: IMaterial, quantity: number }[]>([]);
-    const [showSelectProduct, setShowSelectProduct] = useState(true);
-    const [showSelectPackaging, setShowSelectPackaging] = useState(true);
+    const [showSelectProduct, setShowSelectProduct] = useState(false);
+    const [showSelectPackaging, setShowSelectPackaging] = useState(false);
 
     const handleProductSelect = (event: any, value: any) => {
         if (value) {
@@ -145,37 +147,59 @@ const CreateGiftBox = () => {
     };
 
     const handleSubmit = async () => {
+        if (!name.trim()) {
+            alert("The gift set must have a name.");
+            return;
+        }
+
+        if (selectedProducts.length === 0 && selectedPackaging.length === 0) {
+            alert("The gift set must contain at least one product or packaging.");
+            return;
+        }
+
         const payload = {
             name,
-            price,
+            description,
+            gift_selling_price: price,
             items: [
                 ...selectedProducts.map((item) => ({
                     item_id: item.product.id,
                     item_type: "product",
                     quantity: item.quantity,
+                    price: item.product.purchase_price_per_item
                 })),
                 ...selectedPackaging.map((item) => ({
                     item_id: item.material.id,
                     item_type: "packaging",
                     quantity: item.quantity,
+                    price: item.material.purchase_price_per_unit,
                 })),
             ],
         };
 
-        await axios.post("/gift-sets", payload);
-        alert("Gift set created!");
+        try {
+            await axiosInstance.post("/create_gift_set", payload);
+            alert("Gift set created successfully!");
+        } catch (error) {
+            console.error("Failed to create gift set", error);
+            alert("An error occurred while creating the gift set.");
+        }
     };
-
 
     return (
         <div>
             <h1>Create Gift Set</h1>
-            <input
+
+            <TextField
                 type="text"
                 placeholder="Set name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
+
+            <TextField type="text" placeholder={"description"} value={description}
+                       onChange={(e) => setDescription(e.target.value)}/>
+
             <h2>Products</h2>
             <div>
                 {!showSelectProduct ? (
