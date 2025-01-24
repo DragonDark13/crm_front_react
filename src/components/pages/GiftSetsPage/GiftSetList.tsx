@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Card, CardContent, Typography, Button, Grid, CardActions} from '@mui/material';
-import { Edit, Delete, ShoppingCart } from '@mui/icons-material';
+import {Edit, Delete, ShoppingCart} from '@mui/icons-material';
 import {axiosInstance} from "../../../api/api";
+import EditGiftBoxDialog from "./EditGiftBoxDialog";
 
 interface Product {
     product_id: number;
@@ -30,6 +31,12 @@ interface GiftSet {
 
 const GiftSetList: React.FC = () => {
     const [giftSets, setGiftSets] = useState<GiftSet[]>([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [dialogType, setDialogType] = useState<'edit' | 'purchase'>('edit');
+    const [selectedGiftSet, setSelectedGiftSet] = useState<GiftSet | null>(null);
+    const [inputValue, setInputValue] = useState('');
+    const [products, setProducts] = useState<Product[]>([]); // Assuming you have a list of products
+    const [packagingMaterials, setPackagingMaterials] = useState<Packaging[]>([]); // Assuming you have packaging materials
 
     useEffect(() => {
         // Отримуємо список наборів
@@ -42,6 +49,18 @@ const GiftSetList: React.FC = () => {
             });
     }, []);
 
+    const handleDialogOpen = (type: 'edit' | 'purchase', giftSet: GiftSet) => {
+        setDialogType(type);
+        setSelectedGiftSet(giftSet);
+        setOpenDialog(true);
+    };
+
+    const handleDialogClose = () => {
+        setOpenDialog(false);
+        setSelectedGiftSet(null);
+        setInputValue('');
+    };
+
     const handleEdit = (giftSetId: number) => {
         // Перехід на сторінку редагування або відкриття форми
         console.log("Edit Gift Set", giftSetId);
@@ -51,7 +70,7 @@ const GiftSetList: React.FC = () => {
     const handleDelete = (giftSetId: number) => {
         // Підтвердження і видалення набору
         if (window.confirm("Are you sure you want to delete this gift set?")) {
-            axios.delete(`/api/gift_sets/${giftSetId}`)
+            axiosInstance.delete(`/remove_gift_set/${giftSetId}`)
                 .then(() => {
                     setGiftSets(prevSets => prevSets.filter(giftSet => giftSet.id !== giftSetId));
                 })
@@ -68,6 +87,17 @@ const GiftSetList: React.FC = () => {
         // Можна додати логіку для оформлення покупки
     };
 
+    const handleSaveEdit = (updatedGiftBox: GiftSet) => {
+        // Handle saving the edited gift set
+        axiosInstance.put(`/update_gift_set/${updatedGiftBox.id}`, updatedGiftBox)
+            .then(() => {
+                handleDialogClose();  // Close the dialog after saving
+            })
+            .catch(error => {
+                console.error("Error updating gift set:", error);
+            });
+    };
+
     return (
         <div>
             <Grid container spacing={2}>
@@ -81,7 +111,7 @@ const GiftSetList: React.FC = () => {
                                 <Typography variant="body1" style={{marginTop: '10px'}}>
                                     <strong>Content:</strong>
                                 </Typography>
-                                <Typography variant="body2">
+                                <Typography component={'div'} variant="body2">
                                     <strong>Products:</strong>
                                     <ul>
                                         {giftSet.products.map((product) => (
@@ -107,20 +137,29 @@ const GiftSetList: React.FC = () => {
                                 </Typography>
                             </CardContent>
                             <CardActions>
-                                <Button size="small" color="primary" onClick={() => handleEdit(giftSet.id)}>
-                                    <Edit/> Edit
+                                <Button size="small" color="primary" onClick={() => handleDialogOpen('edit', giftSet)}>
+                                    <Edit /> Edit
                                 </Button>
                                 <Button size="small" color="success" onClick={() => handlePurchase(giftSet.id)}>
-                                    <ShoppingCart/> Buy
+                                    <ShoppingCart /> Buy
                                 </Button>
                                 <Button size="small" color="secondary" onClick={() => handleDelete(giftSet.id)}>
-                                    <Delete/> Delete
+                                    <Delete /> Delete
                                 </Button>
                             </CardActions>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
+
+            {selectedGiftSet && (
+                <EditGiftBoxDialog
+                    open={openDialog}
+                    onClose={handleDialogClose}
+                    giftBox={selectedGiftSet}
+                    onSave={handleSaveEdit}
+                />
+            )}
         </div>
     );
 };
