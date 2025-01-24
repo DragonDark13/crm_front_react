@@ -31,8 +31,8 @@ const EditGiftBoxDialog = ({
     const [price, setPrice] = useState(giftBox.gift_selling_price);
     const [selectedProducts, setSelectedProducts] = useState(giftBox.products);
     const [selectedPackaging, setSelectedPackaging] = useState(giftBox.packagings);
-    const [showSelectProduct, setShowSelectProduct] = useState(false);  // To toggle product selection
-    const [showSelectPackaging, setShowSelectPackaging] = useState(false); // To toggle packaging selection
+    const [showSelectProduct, setShowSelectProduct] = useState(false);
+    const [showSelectPackaging, setShowSelectPackaging] = useState(false);
 
     const calculateTotalCost = () => {
         const productCost = selectedProducts.reduce(
@@ -53,13 +53,61 @@ const EditGiftBoxDialog = ({
         return price - totalCost;
     };
 
-    const handleQuantityChange = (itemId, newQuantity, type) => {
-        if (newQuantity <= 0) return;
+    const handleQuantityChange = (itemId: number, newQuantity: number, type: 'product' | 'packaging') => {
+        if (newQuantity <= 0) return; // Не дозволяємо встановити кількість менше або рівно нулю
 
+        // Функція для отримання доступного об'єкта за типом
+        const getItemById = (id: number, type: 'product' | 'packaging') => {
+            return type === 'product'
+                ? products.find((product) => product.id === id)
+                : packagingMaterials.find((packaging) => packaging.id === id);
+        };
+
+        const availableQuantity = getItemById(itemId, type)?.available_quantity;
+        if (newQuantity <= availableQuantity) {
+            if (type === 'product') {
+                // Оновлюємо кількість продуктів
+                setSelectedProducts((prevSelectedProducts) =>
+                    prevSelectedProducts.map((item) =>
+                        item.product_id === itemId
+                            ? {...item, quantity: newQuantity}
+                            : item
+                    )
+                );
+            } else if (type === 'packaging') {
+                // Оновлюємо кількість пакування
+                setSelectedPackaging((prevSelectedPackaging) =>
+                    prevSelectedPackaging.map((item) =>
+                        item.packaging_id === itemId
+                            ? {...item, quantity: newQuantity}
+                            : item
+                    )
+                );
+            }
+        } else {
+            alert('Quantity exceeds available stock.');
+        }
+    };
+
+
+    const handleIncreaseQuantity = (itemId, type) => {
         const setItems = type === "product" ? setSelectedProducts : setSelectedPackaging;
         setItems((prev) =>
             prev.map((item) =>
-                item.item_id === itemId ? {...item, quantity: newQuantity} : item
+                item.item_id === itemId
+                    ? {...item, quantity: item.quantity + 1}
+                    : item
+            )
+        );
+    };
+
+    const handleDecreaseQuantity = (itemId, type) => {
+        const setItems = type === "product" ? setSelectedProducts : setSelectedPackaging;
+        setItems((prev) =>
+            prev.map((item) =>
+                item.item_id === itemId && item.quantity > 1
+                    ? {...item, quantity: item.quantity - 1}
+                    : item
             )
         );
     };
@@ -71,31 +119,56 @@ const EditGiftBoxDialog = ({
 
     const handleProductSelect = (event, value: IProduct) => {
         if (value) {
-            setSelectedProducts((prev) => [
-                ...prev,
-                {
-                    product_id: value.id,
-                    quantity: 1,
-                    price: value.purchase_price_per_item,
-                    name: value.name,
-                    type: "product"
+            setSelectedProducts((prev) => {
+                const existingProductIndex = prev.findIndex(item => item.product_id === value.id);
+
+                if (existingProductIndex >= 0) {
+                    const updatedProducts = [...prev];
+                    const existingProduct = updatedProducts[existingProductIndex];
+
+                    if (existingProduct.quantity < value.available_quantity) {
+                        existingProduct.quantity += 1;
+                    } else {
+                        alert('Max quantity reached for this product.');
+                    }
+
+                    return updatedProducts;
+                } else {
+                    return [...prev, {
+                        product_id: value.id,
+                        quantity: 1,
+                        price: value.purchase_price_per_item,
+                        name: value.name,
+                        type: "product"
+                    }];
                 }
-            ]);
+            });
         }
     };
 
     const handlePackagingSelect = (event, value: IMaterial) => {
         if (value) {
-            setSelectedPackaging((prev) => [
-                ...prev,
-                {
-                    packaging_id: value.id,
-                    quantity: 1,
-                    price: value.purchase_price_per_unit,
-                    name: value.name,
-                    type: "packaging"
+            setSelectedPackaging((prev) => {
+                const existingIndex = prev.findIndex(item => item.packaging_id === value.id);
+                if (existingIndex >= 0) {
+                    const updated = [...prev];
+                    const existing = updated[existingIndex];
+                    if (existing.quantity < value.available_quantity) {
+                        existing.quantity += 1;
+                    } else {
+                        alert('Max quantity reached for this packaging.');
+                    }
+                    return updated;
+                } else {
+                    return [...prev, {
+                        packaging_id: value.id,
+                        quantity: 1,
+                        price: value.purchase_price_per_unit,
+                        name: value.name,
+                        type: "packaging"
+                    }];
                 }
-            ]);
+            });
         }
     };
 
@@ -139,25 +212,43 @@ const EditGiftBoxDialog = ({
                             {products.find((p) => p.id === item.product_id)?.name}
                         </Grid>
                         <Grid item xs={3}>
-                            <TextField
-                                label="Quantity"
-                                value={item.quantity}
-                                onChange={(e) =>
-                                    handleQuantityChange(
-                                        item.product_id,
-                                        Number(e.target.value),
-                                        "product"
-                                    )
-                                }
-                                type="number"
-                                fullWidth
-                                inputProps={{min: 1}}
-                            />
+                            <Grid container alignItems="center" spacing={1}>
+                                <Grid item>
+                                    <IconButton
+                                        onClick={() => handleDecreaseQuantity(item.product_id, "product")}
+                                    >
+                                        <RemoveIcon/>
+                                    </IconButton>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        label="Quantity"
+                                        value={item.quantity}
+                                        onChange={(e) =>
+                                            handleQuantityChange(
+                                                item.product_id,
+                                                Number(e.target.value),
+                                                "product"
+                                            )
+                                        }
+                                        type="number"
+                                        fullWidth
+                                        inputProps={{min: 1}}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <IconButton
+                                        onClick={() => handleQuantityChange(item.product_id, item.quantity + 1, "product")}
+                                    >
+                                        <AddIcon/>
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid item xs={3}>
                             <IconButton
                                 color="secondary"
-                                onClick={() => handleRemoveItem(item.product_id, "product")}
+                                onClick={() => handleQuantityChange(item.product_id, item.quantity - 1, "product")}
                             >
                                 Remove
                             </IconButton>
@@ -170,7 +261,7 @@ const EditGiftBoxDialog = ({
                         variant="contained"
                         color="primary"
                         startIcon={<AddIcon/>}
-                        onClick={() => setShowSelectProduct(true)} // Show select when button is clicked
+                        onClick={() => setShowSelectProduct(true)}
                     >
                         Add Product
                     </Button>
@@ -203,7 +294,7 @@ const EditGiftBoxDialog = ({
                             <Button
                                 variant="outlined"
                                 color="secondary"
-                                onClick={() => setShowSelectProduct(false)} // Close the selector
+                                onClick={() => setShowSelectProduct(false)}
                             >
                                 Close
                             </Button>
@@ -221,25 +312,43 @@ const EditGiftBoxDialog = ({
                             {packagingMaterials.find((m) => m.id === item.packaging_id)?.name}
                         </Grid>
                         <Grid item xs={3}>
-                            <TextField
-                                label="Quantity"
-                                value={item.quantity}
-                                onChange={(e) =>
-                                    handleQuantityChange(
-                                        item.packaging_id,
-                                        Number(e.target.value),
-                                        "packaging"
-                                    )
-                                }
-                                type="number"
-                                fullWidth
-                                inputProps={{min: 1}}
-                            />
+                            <Grid container alignItems="center" spacing={1}>
+                                <Grid item>
+                                    <IconButton
+                                        onClick={() => handleDecreaseQuantity(item.packaging_id, "packaging")}
+                                    >
+                                        <RemoveIcon/>
+                                    </IconButton>
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        label="Quantity"
+                                        value={item.quantity}
+                                        onChange={(e) =>
+                                            handleQuantityChange(
+                                                item.packaging_id,
+                                                Number(e.target.value),
+                                                "packaging"
+                                            )
+                                        }
+                                        type="number"
+                                        fullWidth
+                                        inputProps={{min: 1}}
+                                    />
+                                </Grid>
+                                <Grid item>
+                                    <IconButton
+                                        onClick={() => handleQuantityChange(item.packaging_id, item.quantity + 1, "packaging")}
+                                    >
+                                        <AddIcon/>
+                                    </IconButton>
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid item xs={3}>
                             <IconButton
                                 color="secondary"
-                                onClick={() => handleRemoveItem(item.packaging_id, "packaging")}
+                                onClick={() => handleQuantityChange(item.packaging_id, item.quantity - 1, "packaging")}
                             >
                                 Remove
                             </IconButton>
@@ -252,7 +361,7 @@ const EditGiftBoxDialog = ({
                         variant="contained"
                         color="primary"
                         startIcon={<AddIcon/>}
-                        onClick={() => setShowSelectPackaging(true)} // Show select when button is clicked
+                        onClick={() => setShowSelectPackaging(true)}
                     >
                         Add Packaging
                     </Button>
@@ -273,7 +382,7 @@ const EditGiftBoxDialog = ({
                                 disableClearable
                                 renderOption={(props, option) => (
                                     <li {...props} key={option.id}>
-                                        {option.name}
+                                        {option.name} ({option.available_quantity} шт)
                                     </li>
                                 )}
                             />
@@ -282,7 +391,7 @@ const EditGiftBoxDialog = ({
                             <Button
                                 variant="outlined"
                                 color="secondary"
-                                onClick={() => setShowSelectPackaging(false)} // Close the selector
+                                onClick={() => setShowSelectPackaging(false)}
                             >
                                 Close
                             </Button>
