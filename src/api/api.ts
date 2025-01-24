@@ -86,3 +86,21 @@ export const exportToExcel = async (productIds: number[]) => {
         console.error("Помилка експорту:", error);
     }
 };
+
+export async function sellGiftSet(giftSetId: number, customerName?: string) {
+    try {
+        const response = await axiosInstance.post(`/sell_gift_set/${giftSetId}`, {
+            customer_name: customerName || null,
+        });
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            // Серверна помилка
+            console.error('Error:', error.response.data);
+            throw new Error(error.response.data.error || 'Failed to sell gift set.');
+        } else {
+            console.error('Error:', error.message);
+            throw new Error('Failed to connect to the server.');
+        }
+    }
+}

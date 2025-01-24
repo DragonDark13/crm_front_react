@@ -31,7 +31,9 @@ interface GiftSet {
 
 const GiftSetList: React.FC = () => {
     const [giftSets, setGiftSets] = useState<GiftSet[]>([]);
-    const [openDialog, setOpenDialog] = useState(false);
+    const [openDialogEdit, setOpenDialogEdit] = useState(false);
+    const [sellDialogOpen, setSellDialogOpen] = useState(false);
+
     const [dialogType, setDialogType] = useState<'edit' | 'purchase'>('edit');
     const [selectedGiftSet, setSelectedGiftSet] = useState<GiftSet | null>(null);
     const [inputValue, setInputValue] = useState('');
@@ -52,11 +54,11 @@ const GiftSetList: React.FC = () => {
     const handleDialogOpen = (type: 'edit' | 'purchase', giftSet: GiftSet) => {
         setDialogType(type);
         setSelectedGiftSet(giftSet);
-        setOpenDialog(true);
+        setOpenDialogEdit(true);
     };
 
     const handleDialogClose = () => {
-        setOpenDialog(false);
+        setOpenDialogEdit(false);
         setSelectedGiftSet(null);
         setInputValue('');
     };
@@ -154,7 +156,7 @@ const GiftSetList: React.FC = () => {
 
             {selectedGiftSet && (
                 <EditGiftBoxDialog
-                    open={openDialog}
+                    open={openDialogEdit}
                     onClose={handleDialogClose}
                     giftBox={selectedGiftSet}
                     onSave={handleSaveEdit}
