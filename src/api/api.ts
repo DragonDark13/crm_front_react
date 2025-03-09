@@ -87,10 +87,19 @@ export const exportToExcel = async (productIds: number[]) => {
     }
 };
 
-export async function sellGiftSet(giftSetId: number, customerName?: string) {
+export async function sellGiftSet(requestData:
+                                      {
+                                          gift_set_id:  number ,
+                                          customer_id: number,
+                                          sale_date: string | null,
+                                          selling_price: number
+                                      }) {
+
     try {
-        const response = await axiosInstance.post(`/sell_gift_set/${giftSetId}`, {
-            customer_name: customerName || null,
+        const response = await axiosInstance.post(`/sell_gift_set/${requestData.gift_set_id}`, {
+            customer_name: requestData.customer_id || null,
+            selling_price: requestData.selling_price,
+            sale_date: requestData.sale_date || null,
         });
         return response.data;
     } catch (error: any) {

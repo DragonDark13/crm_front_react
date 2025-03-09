@@ -10,7 +10,7 @@ const GiftSetsPage = () => {
                 Подарункові набори
             </Typography>
 
-            {/*<CreateGiftBox/>*/}
+            <CreateGiftBox/>
 
             <GiftSetList/>
 

@@ -4,6 +4,7 @@ import {Card, CardContent, Typography, Button, Grid, CardActions} from '@mui/mat
 import {Edit, Delete, ShoppingCart} from '@mui/icons-material';
 import {axiosInstance} from "../../../api/api";
 import EditGiftBoxDialog from "./EditGiftBoxDialog";
+import GiftSetSaleModal from "./GiftSetSaleModal";
 
 interface Product {
     product_id: number;
@@ -34,7 +35,7 @@ const GiftSetList: React.FC = () => {
     const [openDialogEdit, setOpenDialogEdit] = useState(false);
     const [sellDialogOpen, setSellDialogOpen] = useState(false);
 
-    const [dialogType, setDialogType] = useState<'edit' | 'purchase'>('edit');
+    const [dialogType, setDialogType] = useState<'edit' | 'sell'>('edit');
     const [selectedGiftSet, setSelectedGiftSet] = useState<GiftSet | null>(null);
     const [inputValue, setInputValue] = useState('');
     const [products, setProducts] = useState<Product[]>([]); // Assuming you have a list of products
@@ -51,10 +52,14 @@ const GiftSetList: React.FC = () => {
             });
     }, []);
 
-    const handleDialogOpen = (type: 'edit' | 'purchase', giftSet: GiftSet) => {
+    const handleDialogOpen = (type: 'edit' | 'sell', giftSet: GiftSet) => {
         setDialogType(type);
         setSelectedGiftSet(giftSet);
-        setOpenDialogEdit(true);
+        if (dialogType === "edit") {
+            setOpenDialogEdit(true);
+        } else {
+            setSellDialogOpen(true)
+        }
     };
 
     const handleDialogClose = () => {
@@ -63,11 +68,6 @@ const GiftSetList: React.FC = () => {
         setInputValue('');
     };
 
-    const handleEdit = (giftSetId: number) => {
-        // Перехід на сторінку редагування або відкриття форми
-        console.log("Edit Gift Set", giftSetId);
-        // Можна додати логіку для редагування набору
-    };
 
     const handleDelete = (giftSetId: number) => {
         // Підтвердження і видалення набору
@@ -82,12 +82,6 @@ const GiftSetList: React.FC = () => {
         }
     };
 
-    const handlePurchase = (giftSetId: number) => {
-        // Логіка покупки
-        // Відкриття форми покупки або перенаправлення на сторінку оформлення покупки
-        console.log("Purchase Gift Set", giftSetId);
-        // Можна додати логіку для оформлення покупки
-    };
 
     const handleSaveEdit = (updatedGiftBox: GiftSet) => {
         // Handle saving the edited gift set
@@ -139,14 +133,14 @@ const GiftSetList: React.FC = () => {
                                 </Typography>
                             </CardContent>
                             <CardActions>
-                                <Button size="small" color="primary" onClick={() => handleDialogOpen('edit', giftSet)}>
-                                    <Edit /> Edit
+                                <Button fullWidth size="small" color="primary" onClick={() => handleDialogOpen('edit', giftSet)}>
+                                    <Edit/> Edit
                                 </Button>
-                                <Button size="small" color="success" onClick={() => handlePurchase(giftSet.id)}>
-                                    <ShoppingCart /> Buy
+                                <Button fullWidth size="small" color="success" onClick={() => handleDialogOpen("sell", giftSet)}>
+                                    <ShoppingCart/> Sell
                                 </Button>
-                                <Button size="small" color="secondary" onClick={() => handleDelete(giftSet.id)}>
-                                    <Delete /> Delete
+                                <Button fullWidth size="small" color="secondary" onClick={() => handleDelete(giftSet.id)}>
+                                    <Delete/> Delete
                                 </Button>
                             </CardActions>
                         </Card>
@@ -160,6 +154,13 @@ const GiftSetList: React.FC = () => {
                     onClose={handleDialogClose}
                     giftBox={selectedGiftSet}
                     onSave={handleSaveEdit}
+                />
+            )}
+            {selectedGiftSet && (
+                <GiftSetSaleModal
+                    open={sellDialogOpen}
+                    giftSet={selectedGiftSet}
+                    onClose={handleDialogClose}
                 />
             )}
         </div>

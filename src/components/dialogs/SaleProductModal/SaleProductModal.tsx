@@ -117,7 +117,7 @@ const SaleProductModal = ({
     };
 
     const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
-        debugger
+
         createCustomerFunc(newCustomerData)
             .then(response => {
                 console.log('Response:', response); // Лог для перевірки відповіді
