@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, IconButton, Tooltip} from '@mui/material';
+import {Box, IconButton, SvgIconPropsSizeOverrides, Tooltip} from '@mui/material';
 import {
     Home,
     People,
@@ -19,6 +19,21 @@ export const Sidebar: React.FC = () => {
     const location = useLocation(); // Отримуємо поточний шлях
     const isActive = (path: string) => location.pathname === path;
 
+    const iconFontSize = 'small'
+
+    const menuItems = [
+        {title: "Головна", path: "/crm_front_react/", icon: <Home fontSize={iconFontSize} />},
+        {title: "Управління клієнтами", path: "/crm_front_react/clients", icon: <People fontSize={iconFontSize} />},
+        {title: "Продажі", path: "/crm_front_react/sales", icon: <ShoppingCart fontSize={iconFontSize} />},
+        {title: "Каталог товарів", path: "/crm_front_react/products", icon: <Store fontSize={iconFontSize} />},
+        {title: "ГіфтБокси", path: "/crm_front_react/gift_sets", icon: <Store fontSize={iconFontSize} />},
+        {title: "Закупівлі", path: "/crm_front_react/purchases", icon: <Receipt fontSize={iconFontSize} />},
+        {title: "Аналітика та звіти", path: "/crm_front_react/analytics", icon: <BarChart fontSize={iconFontSize} />},
+        {title: "Пакування", path: "/crm_front_react/packaging", icon: <Luggage fontSize={iconFontSize} />},
+        {title: "Інші вкладення", path: "/crm_front_react/other-investments", icon: <AttachMoney fontSize={iconFontSize} />},
+        {title: "Управління постачальниками", path: "/crm_front_react/suppliers", icon: <Business fontSize={iconFontSize} />}
+    ];
+
     return (
         <Box
             sx={{
@@ -37,81 +52,20 @@ export const Sidebar: React.FC = () => {
                 gap: 2, // Проміжок між іконками
             }}
         >
-            {/* Головна */}
-            <Tooltip title="Головна" placement="right">
-                <IconButton color={isActive("/crm_front_react/") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/">
-                    <Home/>
-                </IconButton>
-            </Tooltip>
-
-            {/* Управління клієнтами */}
-            <Tooltip title="Управління клієнтами" placement="right">
-                <IconButton color={isActive("/crm_front_react/clients") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/clients">
-                    <People/>
-                </IconButton>
-            </Tooltip>
-
-            {/* Продажі */}
-            <Tooltip title="Продажі" placement="right">
-                <IconButton color={isActive("/crm_front_react/sales") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/sales">
-                    <ShoppingCart/>
-                </IconButton>
-            </Tooltip>
-
-            {/* Каталог товарів */}
-            <Tooltip title="Каталог товарів" placement="right">
-                <IconButton color={isActive("/crm_front_react/products") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/products">
-                    <Store/>
-                </IconButton>
-            </Tooltip>
-            <Tooltip title="ГіфтБокси" placement="right">
-                <IconButton color={isActive("/crm_front_react/gift_sets") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/gift_sets">
-                    <Store/>
-                </IconButton>
-            </Tooltip>
-
-            {/* Закупівлі */}
-            <Tooltip title="Закупівлі" placement="right">
-                <IconButton color={isActive("/crm_front_react/purchases") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/purchases">
-                    <Receipt/>
-                </IconButton>
-            </Tooltip>
-
-            {/* Аналітика та звіти */}
-            <Tooltip title="Аналітика та звіти" placement="right">
-                <IconButton color={isActive("/crm_front_react/analytics") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/analytics">
-                    <BarChart/>
-                </IconButton>
-            </Tooltip>
-            <Tooltip title="Пакування" placement="right">
-                <IconButton color={isActive("/crm_front_react/packaging") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/packaging">
-                    <Luggage/>
-                </IconButton>
-            </Tooltip>
-            {/* Інші вкладення */}
-            <Tooltip title="Інші вкладення" placement="right">
-                <IconButton color={isActive("/crm_front_react/other-investments") ? "primary" : "inherit"}
+            <>
+                {menuItems.map(({title, path, icon}) => (
+                    <Tooltip key={path} title={title} placement="right">
+                        <IconButton
+                            size={iconFontSize}
+                            color={isActive(path) ? "primary" : "inherit"}
                             component={Link}
-                            to="/crm_front_react/other-investments">
-                    <AttachMoney/> {/* Іконка для вкладень, можна вибрати іншу */}
-                </IconButton>
-            </Tooltip>
-            {/* Управління постачальниками */}
-            <Tooltip title="Управління постачальниками" placement="right">
-                <IconButton color={isActive("/crm_front_react/suppliers") ? "primary" : "inherit"} component={Link}
-                            to="/crm_front_react/suppliers">
-                    <Business/>
-                </IconButton>
-            </Tooltip>
-
+                            to={path}
+                        >
+                            {icon}
+                        </IconButton>
+                    </Tooltip>
+                ))}
+            </>
             <AddButtonWithMenu/>
         </Box>
     );
