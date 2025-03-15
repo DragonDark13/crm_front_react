@@ -1,18 +1,19 @@
-import React, {useState} from 'react';
-import {TextField, Button, Box, Typography, Container} from '@mui/material';
-import {useAuth} from '../context/AuthContext';
-import {useNavigate} from 'react-router-dom';
-import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import {useState} from 'react';
+import {Container, Box, Typography, TextField, Button, IconButton} from '@mui/material';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 import {loginUser} from "../../api/_user";
+import {useAuth} from "../context/AuthContext";
+import {useNavigate} from "react-router-dom";
+import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false); // Стан для показу пароля
     const {login} = useAuth();
     const navigate = useNavigate();
-      const { showSnackbarMessage } = useSnackbarMessage();
-
+    const {showSnackbarMessage} = useSnackbarMessage();
 
     function isLocalStorageAvailable() {
         try {
@@ -70,13 +71,23 @@ const Login: React.FC = () => {
                     />
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'} // Перемикання типу
                         variant="outlined"
                         fullWidth
                         margin="normal"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        InputProps={{
+                            endAdornment: (
+                                <IconButton
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff/> : <Visibility/>}
+                                </IconButton>
+                            ),
+                        }}
                     />
                     {error && (
                         <Typography color="error" variant="body2" align="center" sx={{marginTop: 2}}>
@@ -98,4 +109,4 @@ const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default Login
