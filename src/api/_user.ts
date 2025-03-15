@@ -11,7 +11,7 @@ export const logoutUser = (): Promise<void> => {
         return Promise.reject("No token found");
     }
 
-    return axiosInstance.post(API_ENDPOINTS.LOGOUT, {}, {
+    return axiosInstance.post(API_ENDPOINTS.LOGOUT, null, {
         headers: {'Authorization': `Bearer ${token}`},
     }).then(() => {
         localStorage.removeItem('token');  // Clear token from localStorage
