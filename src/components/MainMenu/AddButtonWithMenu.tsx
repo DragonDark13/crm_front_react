@@ -191,7 +191,7 @@ const AddButtonWithMenu = () => {
         <Box>
             <Tooltip title="Додати" placement="right">
                <span>
-                   <IconButton disabled={!isAuthenticated} color="primary" onClick={handleClick}>
+                   <IconButton size={"small"} disabled={!isAuthenticated} color="primary" onClick={handleClick}>
                                    <AddCircleOutlineIcon/>
                                </IconButton>
                </span>
