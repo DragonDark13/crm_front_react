@@ -5,7 +5,7 @@ import {
     Slider,
     Button,
     Box,
-    Collapse,
+    Collapse, IconButton,
 } from "@mui/material";
 import SupplierFilter from "../SupplierFilter/SupplierFilter";
 import CategoryFilter from "../CategoryFilter/CategoryFilter";
@@ -13,6 +13,9 @@ import {IProduct, IStateFilters} from "../../../utils/types";
 import {useProducts} from "../../Provider/ProductContext";
 import {useCategories} from "../../Provider/CategoryContext";
 import {useSuppliers} from "../../Provider/SupplierContext";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+
 
 interface IFilterComponentProps {
     resetFilters: () => void;
@@ -112,19 +115,17 @@ const FilterComponent = ({
     return (
         <Grid container px={2}>
             <Grid item xs={12}>
-                <h2>Фільтри</h2>
+                <Typography variant={"h5"}>Фільтри</Typography>
 
-                {/* Фільтр за категоріями */}
                 <div>
-                    <Button
-                        variant="text"
-                        onClick={() => setShowCategoryFilter(!showCategoryFilter)}
-                    >
-                        {showCategoryFilter ? "Сховати категорії" : "Показати категорії"}
-                    </Button>
-                    <Collapse in={showCategoryFilter}>
-                        <div>
-                            <h3>Категорії</h3>
+                    <div>
+                        <Typography variant={"h6"}  style={{display: "flex", alignItems: "center", gap: "8px"}}>
+                            Категорії
+                            <IconButton onClick={() => setShowCategoryFilter(!showCategoryFilter)}>
+                                {showCategoryFilter ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                            </IconButton>
+                        </Typography>
+                        <Collapse in={showCategoryFilter}>
                             <CategoryFilter
                                 selectedFilterCategories={filters.categories}
                                 handleCategoryFilterChange={(categoryID: number) => {
@@ -133,21 +134,22 @@ const FilterComponent = ({
                                 }}
                                 categories={categories}
                             />
-                        </div>
-                    </Collapse>
+                        </Collapse>
+                    </div>
+
                 </div>
 
                 {/* Фільтр за постачальниками */}
                 <div>
-                    <Button
-                        variant="text"
-                        onClick={() => setShowSupplierFilter(!showSupplierFilter)}
-                    >
-                        {showSupplierFilter ? "Сховати постачальників" : "Показати постачальників"}
-                    </Button>
-                    <Collapse in={showSupplierFilter}>
-                        <div>
-                            <h3>Постачальники</h3>
+
+                    <div>
+                        <Typography variant={"h6"} style={{display: "flex", alignItems: "center", gap: "4px"}}>
+                            Постачальники
+                            <IconButton onClick={() => setShowSupplierFilter(!showSupplierFilter)}>
+                                {showSupplierFilter ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
+                            </IconButton>
+                        </Typography>
+                        <Collapse in={showSupplierFilter}>
                             <SupplierFilter
                                 selectedFilterSuppliers={filters.suppliers}
                                 handleSupplierFilterChange={(supplierID: number) => {
@@ -156,9 +158,11 @@ const FilterComponent = ({
                                 }}
                                 suppliers={suppliers}
                             />
-                        </div>
-                    </Collapse>
+                        </Collapse>
+                    </div>
+
                 </div>
+
 
                 {/* Фільтр за ціною */}
                 <Typography gutterBottom>Фільтрувати по ціні</Typography>

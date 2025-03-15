@@ -26,6 +26,7 @@ const SupplierFilter: React.FC<ISupplierFilterProps> = ({
                         />
                     }
                     label={supplier.name}
+                    title={supplier.name}
                     componentsProps={{
 
                         typography: {

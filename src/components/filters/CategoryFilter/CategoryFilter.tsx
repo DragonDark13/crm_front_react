@@ -27,6 +27,7 @@ const CategoryFilter: React.FC<ICategoryFilterProps> = ({
                             onChange={() => handleCategoryFilterChange(category.id)}
                         />
                     }
+                    title={category.name}
                     label={category.name}
                 />
             ))}

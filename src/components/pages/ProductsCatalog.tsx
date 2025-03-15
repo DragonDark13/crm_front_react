@@ -578,15 +578,21 @@ const ProductsCatalog = () => {
                         </Grid>
                         }
                         <Grid item>
-                            <Button disabled={!isAuthenticated} variant={"contained"} onClick={handleExportToExcel}>Експортувати в Excel</Button>
+                            <Button disabled={!isAuthenticated} variant={"contained"} onClick={handleExportToExcel}>Експортувати
+                                в Excel</Button>
                         </Grid>
                     </Grid>
                     <Drawer classes={{
                         paper: "filter_container"
                     }} open={modalState.openDrawer} onClose={() => handleModalClose("openDrawer")}>
-                        <Button variant={"outlined"} onClick={() => handleModalClose("openDrawer")}>
-                            Закрити
-                        </Button>
+                        <Grid p={1} container>
+                            <Grid item xs={12}>
+                                <Button fullWidth endIcon={<CloseIcon/>} variant={"outlined"}
+                                        onClick={() => handleModalClose("openDrawer")}>
+                                    Закрити
+                                </Button>
+                            </Grid>
+                        </Grid>
                         <FilterComponent
                             products={products}
                             setFilteredProducts={setFilteredProducts}
@@ -740,12 +746,18 @@ const ProductsCatalog = () => {
 
 
             {/* Drawer Component */}
-            <Drawer anchor="right" open={modalState.openNotificationDrawer}
+            <Drawer classes={{
+                paper: "filter_container"
+            }} anchor="right" open={modalState.openNotificationDrawer}
 
                     onClose={() => handleModalClose("openNotificationDrawer")}>
-                <Button variant={"outlined"} onClick={() => handleModalClose("openNotificationDrawer")}>
-                    Закрити
-                </Button>
+                <Grid p={1} container>
+                    <Grid item xs={12}>
+                        <Button fullWidth endIcon={<CloseIcon/>} variant={"outlined"}
+                                onClick={() => handleModalClose("openNotificationDrawer")}>
+                            Закрити
+                        </Button></Grid>
+                </Grid>
                 <NotificationPanel handleListItemClick={handleListItemClick} lowQuantityProducts={lowQuantityProducts}/>
             </Drawer>
 
