@@ -24,10 +24,10 @@ export const Sidebar: React.FC = () => {
     const menuItems = [
         {title: "Головна", path: "/crm_front_react/", icon: <Home fontSize={iconFontSize} />},
         {title: "Управління клієнтами", path: "/crm_front_react/clients", icon: <People fontSize={iconFontSize} />},
-        {title: "Продажі", path: "/crm_front_react/sales", icon: <ShoppingCart fontSize={iconFontSize} />},
+        {title: "Історія продажів", path: "/crm_front_react/sales", icon: <ShoppingCart fontSize={iconFontSize} />},
         {title: "Каталог товарів", path: "/crm_front_react/products", icon: <Store fontSize={iconFontSize} />},
         {title: "ГіфтБокси", path: "/crm_front_react/gift_sets", icon: <Store fontSize={iconFontSize} />},
-        {title: "Закупівлі", path: "/crm_front_react/purchases", icon: <Receipt fontSize={iconFontSize} />},
+        {title: "Історія закупівель", path: "/crm_front_react/purchases", icon: <Receipt fontSize={iconFontSize} />},
         {title: "Аналітика та звіти", path: "/crm_front_react/analytics", icon: <BarChart fontSize={iconFontSize} />},
         {title: "Пакування", path: "/crm_front_react/packaging", icon: <Luggage fontSize={iconFontSize} />},
         {title: "Інші вкладення", path: "/crm_front_react/other-investments", icon: <AttachMoney fontSize={iconFontSize} />},
