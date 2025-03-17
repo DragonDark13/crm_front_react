@@ -489,9 +489,7 @@ const ProductsCatalog = () => {
 
     }, [filteredProducts, searchTerm]);
 
-    // const filteredAndSearchedProducts = filteredProducts.filter(product =>
-    //     product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
+
 
     const handleListItemClick = (productId: number) => {
         console.log("Натиснули на товар з ID:", productId);
@@ -505,7 +503,6 @@ const ProductsCatalog = () => {
         console.log("Фільтри скинуті");
 
         // Знайти рядок таблиці за ID продукту
-        console.log(filteredAndSearchedProducts);
         const sortedProducts = sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy));
         const rowIndex = sortedProducts.findIndex(product => product.id === productId);
         console.log("Знайдений індекс продукту:", rowIndex);
@@ -565,7 +562,7 @@ const ProductsCatalog = () => {
                 <div>{loadingState.error}</div> // Відображення помилки
             ) : (
                 <Box sx={{paddingTop: 1}}>
-                    <h1>Список товарів</h1>
+                    <Typography marginBlockEnd={3} variant={"h4"}>Список товарів</Typography>
                     <Grid container justifyContent={"space-between"}>
                         <Grid item>
                             <Button

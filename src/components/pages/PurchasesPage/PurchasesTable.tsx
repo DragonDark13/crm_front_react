@@ -10,7 +10,17 @@ import {
     TableRow,
     Paper,
     Typography,
-    TableSortLabel, TextField, FormControl, Select, MenuItem, InputLabel, Box, TablePagination, TableFooter, Button
+    TableSortLabel,
+    TextField,
+    FormControl,
+    Select,
+    MenuItem,
+    InputLabel,
+    Box,
+    TablePagination,
+    TableFooter,
+    Button,
+    Grid
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import clsx from "clsx";
@@ -19,6 +29,7 @@ import {useCategories} from "../../Provider/CategoryContext";
 
 
 interface IPurchasesTable {
+    categories: [number];
     type: string,
     purchase_id: number;
     product_id: number;
@@ -100,7 +111,7 @@ const PurchasesTable: React.FC = () => {
     const handlePriceRangeFilterChange = (field: string, value: string) => {
         setPriceRangeFilter((prev) => ({...prev, [field]: value}));
     };
-     const handleTypeFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {  // Обробка зміни фільтру по типу
+    const handleTypeFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {  // Обробка зміни фільтру по типу
         setTypeFilter(event.target.value as string);
     };
 
@@ -132,7 +143,7 @@ const PurchasesTable: React.FC = () => {
             (!dateRangeFilter.end || new Date(item.date) <= new Date(dateRangeFilter.end));
 
         const matchesCategory = categoryFilter
-            ? item.product_categories.includes(categoryFilter)
+            ? item.categories.includes(categoryFilter)
             : true;
 
         const matchesSupplier = supplierFilter
@@ -175,86 +186,122 @@ const PurchasesTable: React.FC = () => {
 
     return (
         <div>
-            <h1>Purchase History</h1>
-            <TextField
-                label="Search"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={filter}
-                onChange={handleFilterChange}
-            />
-            <Box display="flex" gap={2} marginBottom={2}>
-                <TextField
-                    label="Start Date"
-                    type="date"
-                    fullWidth
-                    value={dateRangeFilter.start}
-                    onChange={(e) => handleDateRangeFilterChange('start', e.target.value)}
-                    InputLabelProps={{shrink: true}}
-                />
-                <TextField
-                    label="End Date"
-                    type="date"
-                    fullWidth
-                    value={dateRangeFilter.end}
-                    onChange={(e) => handleDateRangeFilterChange('end', e.target.value)}
-                    InputLabelProps={{shrink: true}}
-                />
-            </Box>
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Filter by Category</InputLabel>
-                <Select value={categoryFilter} onChange={handleCategoryFilterChange}>
-                    <MenuItem value="">All Categories</MenuItem>
-                    {categories.map((category: ICategory) => (
-                        <MenuItem key={category.id} value={category.id}>
-                            {category.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Filter by Supplier</InputLabel>
-                <Select value={supplierFilter} onChange={handleSupplierFilterChange}>
-                    <MenuItem value="">All Suppliers</MenuItem>
-                    {Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
-                        (supplier, index) => (
-                            <MenuItem key={supplier + `${index}`} value={supplier}>
-                                {supplier}
-                            </MenuItem>
-                        )
-                    )}
-                </Select>
-            </FormControl>
-             <FormControl fullWidth margin="normal">
-                <InputLabel>Filter by Type</InputLabel>
-                <Select value={typeFilter} onChange={handleTypeFilterChange}>  {/* Додано фільтр по типу */}
-                    <MenuItem value="">All Types</MenuItem>
-                    <MenuItem value="Other Investment">Other Investment</MenuItem>
-                    <MenuItem value="Packaging">Packaging</MenuItem>
-                    <MenuItem value="Product">Product</MenuItem>
-                </Select>
-            </FormControl>
-            <TextField
-                label="Min Price"
-                type="number"
-                margin="normal"
-                value={priceRangeFilter.min}
-                onChange={(e) => handlePriceRangeFilterChange('min', e.target.value)}
-            />
-            <TextField
-                label="Max Price"
-                type="number"
-                margin="normal"
-                value={priceRangeFilter.max}
-                onChange={(e) => handlePriceRangeFilterChange('max', e.target.value)}
-            />
-            <Box marginY={2}>
-                <Button variant="contained" color="primary" onClick={resetFilters}>
-                    Reset Filters
-                </Button>
-            </Box>
+            <Typography marginBlockEnd={3} variant={"h4"}>Історія Закупівель</Typography>
 
+
+            <Grid container spacing={1}>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                        sx={{marginTop: 0}}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        label="Пошук"
+                        variant="outlined"
+                        fullWidth
+                        margin="normal"
+                        value={filter}
+                        onChange={handleFilterChange}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                    <TextField
+                        label="Дата початку"
+                        type="date"
+                        fullWidth
+                        value={dateRangeFilter.start}
+                        onChange={(e) => handleDateRangeFilterChange('start', e.target.value)}
+                        InputLabelProps={{shrink: true}}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                    <TextField
+
+                        label="Дата закінчення"
+                        type="date"
+                        fullWidth
+                        value={dateRangeFilter.end}
+                        onChange={(e) => handleDateRangeFilterChange('end', e.target.value)}
+                        InputLabelProps={{shrink: true}}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                    <FormControl fullWidth margin={"dense"}>
+                        <InputLabel>Категорія</InputLabel>
+                        <Select value={categoryFilter} onChange={handleCategoryFilterChange}>
+                            <MenuItem title={"Всі категорії"} value="">Всі категорії</MenuItem>
+                            {categories.map((category: ICategory) => (
+                                <MenuItem title={category.name} key={category.id} value={category.id}>
+                                    {category.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                    <FormControl fullWidth margin={"dense"}>
+                        <InputLabel>Постачальник</InputLabel>
+                        <Select value={supplierFilter} onChange={handleSupplierFilterChange}>
+                            <MenuItem value="">Всі постачальники</MenuItem>
+                            {Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
+                                (supplier, index) => (
+                                    <MenuItem key={supplier + `${index}`} value={supplier}>
+                                        {supplier}
+                                    </MenuItem>
+                                )
+                            )}
+                        </Select>
+                    </FormControl>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
+                    <FormControl fullWidth margin={"dense"}>
+                        <InputLabel>Тип</InputLabel>
+                        <Select value={typeFilter} onChange={handleTypeFilterChange}>
+                            <MenuItem value="">Всі типи</MenuItem>
+                            <MenuItem value="Other Investment">Інші інвестиції</MenuItem>
+                            <MenuItem value="Packaging">Упаковка</MenuItem>
+                            <MenuItem value="Product">Продукт</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
+                    <TextField
+                        fullWidth
+                        label="Мінімальна ціна"
+                        type="number"
+                        margin={"dense"}
+                        value={priceRangeFilter.min}
+                        onChange={(e) => handlePriceRangeFilterChange('min', e.target.value)}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={2}>
+                    <TextField
+                        fullWidth
+                        label="Максимальна ціна"
+                        type="number"
+                        margin={"dense"}
+                        value={priceRangeFilter.max}
+                        onChange={(e) => handlePriceRangeFilterChange('max', e.target.value)}
+                    />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Box marginY={2}>
+                        <Button variant="contained" color="primary" onClick={resetFilters}>
+                            Скинути фільтри
+                        </Button>
+                    </Box>
+                </Grid>
+            </Grid>
+
+            <Typography>Знайдено <b>{filteredData.length}</b> записів про закупку</Typography>
             <TableContainer component={Paper}>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
@@ -278,7 +325,7 @@ const PurchasesTable: React.FC = () => {
                                     direction={sortConfig.direction}
                                     onClick={() => handleSort('name')}
                                 >
-                                    Product Name
+                                    Назва продукту
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>
@@ -287,7 +334,7 @@ const PurchasesTable: React.FC = () => {
                                     direction={sortConfig.direction}
                                     onClick={() => handleSort('supplier_name')}
                                 >
-                                    Supplier Name
+                                    Назва постачальника
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>
@@ -296,7 +343,7 @@ const PurchasesTable: React.FC = () => {
                                     direction={sortConfig.direction}
                                     onClick={() => handleSort('quantity')}
                                 >
-                                    Quantity
+                                    Кількість
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>
@@ -305,7 +352,7 @@ const PurchasesTable: React.FC = () => {
                                     direction={sortConfig.direction}
                                     onClick={() => handleSort('price_per_item')}
                                 >
-                                    Price per Item
+                                    Ціна за одиницю
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>
@@ -314,7 +361,7 @@ const PurchasesTable: React.FC = () => {
                                     direction={sortConfig.direction}
                                     onClick={() => handleSort('total_price')}
                                 >
-                                    Total Price
+                                    Загальна ціна
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>
@@ -323,16 +370,22 @@ const PurchasesTable: React.FC = () => {
                                     direction={sortConfig.direction}
                                     onClick={() => handleSort('date')}
                                 >
-                                    Date
+                                    Дата
                                 </TableSortLabel>
                             </TableCell>
                         </TableRow>
+
                     </TableHead>
                     <TableBody>
                         {paginatedData.map((row, index) => (
                             <TableRow key={index + row.name} style={getRowStyle(row.type)}>
-                                <TableCell>{row.type}</TableCell>
-                                <TableCell>{row.name}</TableCell>
+                                <TableCell>
+                                    <Typography
+                                        variant="subtitle2">{row.type === "Other Investment" ? 'Інше' : (row.type === "Product" ? 'Товар' : 'Пакування')}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="subtitle2">{row.name}</Typography>
+                                </TableCell>
                                 <TableCell>
                                     <Typography
                                         className={clsx("supplier_name")}
@@ -340,14 +393,26 @@ const PurchasesTable: React.FC = () => {
                                         sx={{
                                             textOverflow: 'ellipsis',
                                             whiteSpace: 'nowrap'
-                                        }}>
+                                        }}
+                                        variant="subtitle2"
+                                    >
                                         {row.supplier_name}
                                     </Typography>
                                 </TableCell>
-                                <TableCell>{row.quantity ? row.quantity : "Загалом"}</TableCell>
-                                <TableCell>{row.price_per_item ? row.price_per_item.toFixed(2) : "Загалом"}</TableCell>
-                                <TableCell>{row.total_price.toFixed(2)}</TableCell>
-                                <TableCell>{row.date}</TableCell>
+                                <TableCell>
+                                    <Typography
+                                        variant="subtitle2">{row.quantity ? row.quantity : "Загалом"}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography
+                                        variant="subtitle2">{row.price_per_item ? row.price_per_item.toFixed(2) : "Загалом"}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography variant="subtitle2">{row.total_price.toFixed(2)}</Typography>
+                                </TableCell>
+                                <TableCell size={"small"}>
+                                    <Typography whiteSpace={"nowrap"} variant="subtitle2">{row.date}</Typography>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

@@ -1,7 +1,7 @@
-import React, {forwardRef} from 'react';
+import React, {forwardRef, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
-    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography, TableFooter,
+    TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography, TableFooter, MenuItem, Menu,
 } from '@mui/material';
 import {IconButton, Tooltip} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -10,6 +10,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SellIcon from '@mui/icons-material/Sell';
 import HistoryIcon from '@mui/icons-material/History';
 import {IProduct} from "../../utils/types";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 interface IProductTableProps {
     filteredProducts: IProduct[];
@@ -68,6 +69,22 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
     // Розрахункова сума продажу (оскільки наявність продукції може змінюватися)
     const totalCalculatedSellingSum = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.available_quantity * product.selling_price_per_item), 0);
     // Розрахункова сума закупівель (оскільки наявність продукці�� може змінюватися)
+    const [selectedProduct, setSelectedProduct] = useState(null); // Додаємо стан для зберігання вибраного товару
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event, product) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedProduct(product);  // Встановлюємо обраний товар
+
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSelectedProduct(null);  // Очищаємо вибір товару при закритті меню
+
+    };
 
 
     return (
@@ -77,7 +94,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>ID</TableCell>
+                            <TableCell sx={{display: "none"}}>ID</TableCell>
                             <TableCell>
                                 <TableSortLabel
                                     active={orderBy === 'name'}
@@ -103,6 +120,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                     onClick={() => handleSort('quantity')}
                                 >
                                     Кількість
+
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell>
@@ -140,7 +158,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                 </TableSortLabel>
                             </TableCell>
 
-                            <TableCell>Дія</TableCell>
+                            <TableCell align={"right"} >Дія</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -159,10 +177,18 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                   }
                                               }}
                                               className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
-                                        <TableCell>{product.id}</TableCell>
-                                        <TableCell>{product.name}</TableCell>
+                                        <TableCell sx={{display: "none"}}>
+                                            {product.id}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant={"subtitle2"}>
+                                                {product.name}
+                                            </Typography>
+
+                                        </TableCell>
                                         <TableCell>
                                             <Typography
+                                                variant={"subtitle2"}
                                                 className={clsx("supplier_name")}
                                                 title={product.supplier?.name || 'N/A'}
                                                 sx={{
@@ -173,82 +199,140 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <div>
-                                                <Typography color={"secondary"}>
-                                                    <strong>За весь час:</strong> {product.total_quantity}
-                                                </Typography>
-                                                <Typography color={lowQuantity ? "error" : "secondary"}
-                                                            className={clsx({'low-quantity': lowQuantity})}>
-                                                    <strong>В наявності:</strong> {product.available_quantity}
-                                                </Typography>
-                                                <Typography color={"primary"}>
-                                                    <strong>Продано:</strong> {product.sold_quantity}
-                                                </Typography>
-                                            </div>
+                                            <div><Box display="flex" alignItems="center" gap={2}>
+                                                <Tooltip title="Загальна кількість товару">
+                                                    <Box display="flex" alignItems="center" gap={1}>
+                                                        <Box
+                                                            sx={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius: "50%",
+                                                                backgroundColor: "secondary.main",
+                                                                color: "white",
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                justifyContent: "center",
+                                                                fontWeight: "bold",
+                                                            }}
+                                                        >
+                                                            {product.total_quantity}
+                                                        </Box>
+                                                    </Box>
+                                                </Tooltip>
+
+                                                <Tooltip title="Кількість товару, яка є в наявності">
+                                                    <Box display="flex" alignItems="center" gap={1}>
+
+                                                        <Box
+                                                            sx={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius: "50%",
+                                                                backgroundColor: lowQuantity ? "error.main" : "secondary.dark",
+                                                                color: "white",
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                justifyContent: "center",
+                                                                fontWeight: "bold",
+                                                            }}
+                                                        >
+                                                            {product.available_quantity}
+                                                        </Box>
+                                                    </Box>
+                                                </Tooltip>
+
+                                                <Tooltip title="Кількість проданого товару">
+                                                    <Box display="flex" alignItems="center" gap={1}>
+
+                                                        <Box
+                                                            sx={{
+                                                                width: 32,
+                                                                height: 32,
+                                                                borderRadius: "50%",
+                                                                backgroundColor: "primary.main",
+                                                                color: "white",
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                justifyContent: "center",
+                                                                fontWeight: "bold",
+                                                            }}
+                                                        >
+                                                            {product.sold_quantity}
+                                                        </Box>
+                                                    </Box>
+                                                </Tooltip>
+                                            </Box></div>
                                         </TableCell>
                                         <TableCell>
                                             {isAuthenticated && (
-                                                <Typography color={"secondary"}>
+                                                <Typography color={"secondary"} variant={"subtitle2"}>
                                                     {product.purchase_price_per_item.toFixed(2)}
                                                 </Typography>
                                             )}
-                                            <Typography color={"primary"}>
+                                            <Typography color={"primary"} variant={"subtitle2"}>
                                                 {product.selling_price_per_item.toFixed(2)}
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
                                             {isAuthenticated && (
-                                                <Typography color={"secondary"}>
+                                                <Typography color={"secondary"} variant={"subtitle2"}>
                                                     {(product.purchase_total_price).toFixed(2)}
                                                 </Typography>
                                             )}
-                                            <Typography color={"primary"}>
+                                            <Typography color={"primary"} variant={"subtitle2"}>
                                                 {(product.sold_quantity * product.selling_price_per_item).toFixed(2)}
                                             </Typography>
                                         </TableCell>
-                                        <TableCell>
-                                            <Box display={"flex"}>
-                                                <Tooltip title="Редагувати">
-                                                    <span>
-                                                    <IconButton disabled={!isAuthenticated} color="primary"
-                                                                onClick={() => handleOpenEdit(product)}>
-                                                        <EditIcon fontSize={"small"}/>
-                                                    </IconButton>
-                                                    </span>
-                                                </Tooltip>
-                                                <Tooltip title="Купівля">
-                                                    <span>
-                                                    <IconButton disabled={!isAuthenticated} color="primary"
-                                                                onClick={() => handlePurchase(product)}>
-                                                        <ShoppingCartIcon fontSize={"small"}/>
-                                                    </IconButton>
-                                                    </span>
-                                                </Tooltip>
-                                                <Tooltip title="Продаж">
-                                                    <span>
-                                                    <IconButton disabled={!isAuthenticated} color="primary"
-                                                                onClick={() => handleOpenSale(product)}>
-                                                        <SellIcon fontSize={"small"}/>
-                                                    </IconButton>
-                                                    </span>
-                                                </Tooltip>
-                                                <Tooltip title="Історія">
-                                                    <IconButton size={"small"} onClick={() => {
-                                                        handleOpenHistoryModal(product.id);
-                                                    }}>
-                                                        <HistoryIcon fontSize={"small"}/>
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="Видалити">
-                                                    <span>
-                                                    <IconButton disabled={!isAuthenticated} color="secondary"
-                                                                onClick={() => handleDelete(product.id)}>
-                                                        <DeleteIcon fontSize={"small"}/>
-                                                    </IconButton>
-                                                    </span>
-                                                </Tooltip>
 
-                                            </Box>
+                                        <TableCell align={"right"}>
+                                            <Tooltip title="Дії">
+                                                <IconButton onClick={(event => handleClick(event, product))}>
+                                                    <MoreVertIcon/>
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Menu PaperProps={{
+                                                elevation: 1
+                                            }}
+                                                  anchorOrigin={{
+                                                      vertical: 'top',
+                                                      horizontal: 'right',
+                                                  }}
+                                                  anchorPosition={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
+                                            }} anchorEl={anchorEl} open={open} onClose={handleClose}>
+                                                <MenuItem onClick={() => {
+                                                    handleOpenEdit(selectedProduct);  // Використовуємо selectedProduct
+                                                    handleClose();
+                                                }} disabled={!isAuthenticated}>
+                                                    <EditIcon color="primary" fontSize="small" sx={{mr: 1}}/> Редагувати
+                                                </MenuItem>
+                                                <MenuItem onClick={() => {
+                                                    handlePurchase(selectedProduct);  // Використовуємо selectedProduct
+                                                    handleClose();
+                                                }} disabled={!isAuthenticated}>
+                                                    <ShoppingCartIcon color="primary" fontSize="small"
+                                                                      sx={{mr: 1}}/> Купівля
+                                                </MenuItem>
+                                                <MenuItem onClick={() => {
+                                                    handleOpenSale(selectedProduct);  // Використовуємо selectedProduct
+                                                    handleClose();
+                                                }} disabled={!isAuthenticated}>
+                                                    <SellIcon color="primary" fontSize="small" sx={{mr: 1}}/> Продаж
+                                                </MenuItem>
+                                                <MenuItem onClick={() => {
+                                                    handleOpenHistoryModal(selectedProduct.id);  // Використовуємо selectedProduct
+                                                    handleClose();
+                                                }}>
+                                                    <HistoryIcon fontSize="small" sx={{mr: 1}}/> Історія
+                                                </MenuItem>
+                                                <MenuItem onClick={() => {
+                                                    handleDelete(selectedProduct.id);  // Використовуємо selectedProduct
+                                                    handleClose();
+                                                }} disabled={!isAuthenticated}>
+                                                    <DeleteIcon fontSize="small" sx={{mr: 1}} color="error"/> Видалити
+                                                </MenuItem>
+                                            </Menu>
                                         </TableCell>
                                     </TableRow>
                                 );

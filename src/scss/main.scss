@@ -30,3 +30,12 @@
   width: 200px;
   overflow: hidden;
 }
+
+
+
+.MuiMenuItem-root{
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
