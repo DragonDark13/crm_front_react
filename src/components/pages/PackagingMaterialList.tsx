@@ -11,7 +11,7 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
-    Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog
+    Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog, Box, TablePagination
 } from '@mui/material';
 import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../utils/types";
 import PurchaseMaterialDialog from "../dialogs/AddNewPackagingModal/PurchaseMaterialDialog";
@@ -21,7 +21,8 @@ import {usePackaging} from "../Provider/PackagingContext";
 import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../api/_packagingMaterials";
 import DeleteAllMaterialsDialog from "../dialogs/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
 import {useAuth} from "../context/AuthContext";
-
+import {Tooltip, IconButton} from '@mui/material';
+import {AddShoppingCart, Update, History} from "@mui/icons-material";
 
 const PackagingMaterialList: React.FC = () => {
         const {packagingMaterials} = usePackaging()
@@ -161,17 +162,34 @@ const PackagingMaterialList: React.FC = () => {
             setDefaultPricePerUnit(0);
         };
 
+        const [page, setPage] = useState(0);
+        const [rowsPerPage, setRowsPerPage] = useState(5); // Кількість рядків на сторінці
+
+// Функція для обробки зміни сторінки
+        const handleChangePage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => {
+            setPage(newPage);
+        };
+
+// Функція для обробки зміни кількості рядків на сторінці
+        const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            setRowsPerPage(parseInt(event.target.value, 10));
+            setPage(0); // Після зміни кількості рядків на сторінці скидаємо поточну сторінку на першу
+        };
+
+// Обчислення відображених даних на поточній сторінці
+        const currentMaterials = filteredMaterials.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
         return (
-            <React.Fragment><Paper sx={{width: '100%', overflow: 'hidden'}}>
-                <h1>Список пакувальних матеріалів</h1>
+            <React.Fragment>
+                <Typography marginBlockEnd={3} variant={"h4"}>Список пакувальних матеріалів</Typography>
                 {isAuthenticated && <Grid container>
                     <Grid item>
                         <DeleteAllMaterialsDialog/>
                     </Grid>
                 </Grid>}
-                <Grid justifyContent={"flex-end"} alignItems={"center"} container>
+                <Grid justifyContent={"flex-end"} alignItems={"center"} container spacing={2}>
                     {/* Search */}
-                    <Grid item>
+                    <Grid item xs={12} md={4}>
 
 
                         <TextField
@@ -184,7 +202,7 @@ const PackagingMaterialList: React.FC = () => {
                         />
                     </Grid>
                     {/* Sorting */}
-                    <Grid item>
+                    <Grid item xs={12} md={3}>
                         <Select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
@@ -213,13 +231,21 @@ const PackagingMaterialList: React.FC = () => {
                     </Grid>
                 </Grid>
 
-
+<TablePagination
+  rowsPerPageOptions={[5, 10, 25]}
+  component="div"
+  count={filteredMaterials.length}
+  rowsPerPage={rowsPerPage}
+  page={page}
+  onPageChange={handleChangePage}
+  onRowsPerPageChange={handleChangeRowsPerPage}
+/>
                 {/* IMaterial List Table */}
                 <TableContainer>
-                    <Table sx={{minWidth: 650}}>
+                    <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>
+                                <TableCell size={"small"}>
                                     <TableSortLabel
                                         active={sortBy === 'name'}
                                         direction={sortBy === 'name' ? (sortOrder as 'asc' | 'desc') : 'asc'}
@@ -228,8 +254,8 @@ const PackagingMaterialList: React.FC = () => {
                                         Назва
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>Постачальник</TableCell>
-                                <TableCell>
+                                <TableCell size={"small"}>Постачальник</TableCell>
+                                <TableCell size={"small"}>
                                     <TableSortLabel
                                         active={sortBy === 'purchase_price_per_unit'}
                                         direction={sortBy === 'purchase_price_per_unit' ? (sortOrder as 'asc' | 'desc') : 'asc'}
@@ -238,7 +264,7 @@ const PackagingMaterialList: React.FC = () => {
                                         Ціна
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell size={"small"}>
                                     <TableSortLabel
                                         active={sortBy === 'available_quantity'}
                                         direction={sortBy === 'available_quantity' ? (sortOrder as 'asc' | 'desc') : 'asc'}
@@ -247,11 +273,11 @@ const PackagingMaterialList: React.FC = () => {
                                         Кількість
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell size={"small"}>
                                     Сумма
                                 </TableCell>
 
-                                <TableCell>
+                                <TableCell size={"small"}>
                                     <TableSortLabel
                                         active={sortBy === 'created_date'}
                                         direction={sortBy === 'created_date' ? (sortOrder as 'asc' | 'desc') : 'asc'}
@@ -260,73 +286,90 @@ const PackagingMaterialList: React.FC = () => {
                                         Дата створення
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>Дії</TableCell>
+                                <TableCell size={"small"}>Дії</TableCell>
 
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredMaterials.length > 0 && filteredMaterials.map((material) => (
+                            {currentMaterials.length > 0 && currentMaterials.map((material) => (
                                 <TableRow key={material.id}>
-                                    <TableCell>{material.name}</TableCell>
-                                    <TableCell>
+                                    <TableCell size={"small"}><Typography variant={"subtitle2"}>{material.name}</Typography></TableCell>
+                                    <TableCell size={"small"}>
                                         <Typography
+                                            variant={"subtitle2"}
                                             sx={{
                                                 textOverflow: 'ellipsis',
                                                 whiteSpace: 'nowrap'
                                             }}>{material.supplier.name}</Typography></TableCell>
-                                    <TableCell>{material.purchase_price_per_unit}</TableCell>
-                                    <TableCell>
+                                    <TableCell size={"small"}>{material.purchase_price_per_unit}</TableCell>
+                                    <TableCell size={"small"}>
                                         <div>
-                                            <Typography>
+                                            <Typography variant={"subtitle2"}>
                                                 <strong>Загальна: </strong>{material.total_quantity}
                                             </Typography>
-                                            <Typography>
+                                            <Typography variant={"subtitle2"}>
                                                 <strong>В наявності: </strong>{material.available_quantity}
                                             </Typography>
                                         </div>
 
 
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell size={"small"}>
                                         <div>
-                                            <Typography>
+                                            <Typography variant={"subtitle2"}>
                                                 <strong>Загальна: </strong>{material.total_purchase_cost}
                                             </Typography>
-                                            <Typography>
+                                            <Typography variant={"subtitle2"}>
                                                 <strong>В наявності: </strong>{material.available_stock_cost}
                                             </Typography>
                                         </div>
                                     </TableCell>
-                                    <TableCell>{new Date(material.created_date).toLocaleDateString()}</TableCell>
-                                    <TableCell>
-                                        <Button
-                                            variant="outlined"
-                                            color="primary"
-                                            onClick={() => handleOpenDialog(material)}
-                                        >
-                                            Закупити
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            color="primary"
-                                            onClick={() => handleOpenDialogUpdate(material)}
-                                        >
-                                            Використано
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            color="secondary"
-                                            onClick={() => handleOpenHistoryDialog(material)}
-                                        >
-                                            Історія
-                                        </Button>
+                                    <TableCell
+                                        size={"small"}>{new Date(material.created_date).toLocaleDateString()}</TableCell>
+
+
+                                    <TableCell size={"small"}>
+                                        <Grid container>
+                                            <Grid item>
+                                                <Tooltip title="Закупити" placement="top">
+                                                    <IconButton color="primary" onClick={() => handleOpenDialog(material)}>
+                                                        <AddShoppingCart/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Grid>
+                                            <Grid item>
+                                                <Tooltip title="Використано" placement="top">
+                                                    <IconButton color="primary"
+                                                                onClick={() => handleOpenDialogUpdate(material)}>
+                                                        <Update/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Grid>
+                                            <Grid item>
+                                                <Tooltip title="Історія" placement="top">
+                                                    <IconButton color="secondary"
+                                                                onClick={() => handleOpenHistoryDialog(material)}>
+                                                        <History/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Grid>
+                                        </Grid>
                                     </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Paper>
+
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={filteredMaterials.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
 
                 {/* Dialog for purchasing material */}
                 {selectedMaterialId && (

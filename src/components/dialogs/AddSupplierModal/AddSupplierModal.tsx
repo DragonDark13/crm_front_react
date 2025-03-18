@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from '@mui/material';
+import {DialogContent, TextField, DialogActions, Button} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface INewSupplier {

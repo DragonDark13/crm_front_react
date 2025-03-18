@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {
-    Box,
     Button,
     CircularProgress,
     DialogActions,

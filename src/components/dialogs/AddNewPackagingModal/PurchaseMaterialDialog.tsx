@@ -5,11 +5,11 @@ import {
     DialogContent,
     DialogTitle,
     Button,
-    TextField, Box, MenuItem,
+    TextField, Box, MenuItem, Grid,
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import CustomDialog from "../CustomDialog/CustomDialog";
-import AddPackagingSupplierForm from "./AddPackagingSupplierForm";
+import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 
 interface PurchaseMaterialDialogProps {
     open: boolean;
@@ -86,77 +86,96 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
     };
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Закупити пакувальний матеріал</DialogTitle>
-            <DialogContent>
-                {/* Вибір постачальника */}
-                <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
-                    <TextField
-                        select
-                        label="Постачальник"
-                        value={supplierId || ''}
-                        onChange={(e) => setSupplierId(Number(e.target.value))}
-                        fullWidth
-                        margin="normal"
-                        required
-                    >
-                        {suppliers.map((supplier) => (
-                            <MenuItem key={supplier.id} value={supplier.id}>
-                                {supplier.name}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <Button variant="outlined" onClick={handleOpenAddSupplier}>
-                        Додати
-                    </Button>
-                </Box>
-                <TextField
-                    label="Кількість"
-                    type="number"
-                    value={quantity}
-                    onChange={handleQuantityChange}
-                    fullWidth
-                    margin="dense"
-                />
-                <TextField
-                    label="Ціна за одиницю"
-                    type="number"
-                    value={pricePerUnit}
-                    onChange={handlePriceChange}
-                    fullWidth
-                    margin="dense"
-                />
-                {/* Виведення загальної суми */}
-                <TextField
-                    label="Загальна сума закупівлі"
-                    value={totalPurchaseCost.toFixed(2)} // Форматуємо до 2 знаків після коми
-                    fullWidth
-                    margin="dense"
-                    InputProps={{
-                        readOnly: true,
-                    }}
-                />
+        <React.Fragment>
+            <CustomDialog
+                maxWidth={"sm"}
+                open={open}
+                handleClose={onClose}
+                title="Закупити пакувальний матеріал"
+            ><DialogContent>
+                <Grid container spacing={2} alignItems="center">
+                    {/* Вибір постачальника */}
+                    <Grid item xs={12} sm={8} md={9}>
+                        <TextField
+                            select
+                            label="Постачальник"
+                            value={supplierId || ''}
+                            onChange={(e) => setSupplierId(Number(e.target.value))}
+                            fullWidth
+                            margin="normal"
+                            required
+                        >
+                            {suppliers.map((supplier) => (
+                                <MenuItem key={supplier.id} value={supplier.id}>
+                                    {supplier.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={4} md={3}>
+                        <Button variant="outlined" onClick={handleOpenAddSupplier} fullWidth>
+                            Додати
+                        </Button>
+                    </Grid>
+
+                    {/* Кількість */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            label="Кількість"
+                            type="number"
+                            value={quantity}
+                            onChange={handleQuantityChange}
+                            fullWidth
+                            margin="dense"
+                        />
+                    </Grid>
+
+                    {/* Ціна за одиницю */}
+                    <Grid item xs={12} sm={6} md={4}>
+                        <TextField
+                            label="Ціна за одиницю"
+                            type="number"
+                            value={pricePerUnit}
+                            onChange={handlePriceChange}
+                            fullWidth
+                            margin="dense"
+                        />
+                    </Grid>
+
+                    {/* Загальна сума закупівлі */}
+                    <Grid item xs={12} sm={12}  md={4}>
+                        <TextField
+                            label="Загальна сума закупівлі"
+                            value={totalPurchaseCost.toFixed(2)} // Форматуємо до 2 знаків після коми
+                            fullWidth
+                            margin="dense"
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                </Grid>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="secondary">
-                    Відмінити
-                </Button>
-                <Button onClick={handlePurchase} color="primary" variant="contained">
-                    Закупити
-                </Button>
-            </DialogActions>
+                <DialogActions>
+                    <Button onClick={onClose} color="secondary">
+                        Відмінити
+                    </Button>
+                    <Button onClick={handlePurchase} color="primary" variant="contained">
+                        Закупити
+                    </Button>
+                </DialogActions>
+
+
+            </CustomDialog>
 
             {/* Add Supplier Dialog */}
             {addSupplierOpen && (
-                <CustomDialog
-                    open={addSupplierOpen}
-                    handleClose={handleCloseAddSupplier}
-                    title="Додати постачальника"
-                >
-                    <AddPackagingSupplierForm handleClose={handleCloseAddSupplier}/>
-                </CustomDialog>
+                <AddPackagingSupplierDialog handleCloseAddSupplier={handleCloseAddSupplier}
+
+                                            openAddSupplier={addSupplierOpen}/>
             )}
-        </Dialog>
+        </React.Fragment>
+
     );
 };
 

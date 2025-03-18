@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-    Accordion, AccordionSummary, AccordionDetails, Button, Dialog, DialogActions,
-    DialogContent, DialogTitle, TextField, Typography, IconButton, Tooltip
+    Button,
+    Typography, IconButton, Tooltip
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useCustomers} from "../Provider/CustomerContext";
@@ -21,7 +21,7 @@ import {
     updateCustomerData
 } from "../../api/_customer";
 //TODO перенести у запити у відповідні контексти
-import { Visibility, Edit, Delete } from "@mui/icons-material";
+import {Visibility, Edit, Delete} from "@mui/icons-material";
 
 const CustomerPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
@@ -172,17 +172,17 @@ const CustomerPage: React.FC = () => {
                                               onClick={() => handleGetCustomerDetails(customer)}>
                                         <TableCell><Typography variant="subtitle2">{customer.name}</Typography></TableCell>
                                         <TableCell><Typography variant="subtitle2">{customer.email}</Typography></TableCell>
-                                        <TableCell >
+                                        <TableCell>
                                             <Typography
-                                            variant="subtitle2">{customer.phone_number}</Typography></TableCell>
+                                                variant="subtitle2">{customer.phone_number}</Typography></TableCell>
                                         <TableCell><Typography
                                             variant="subtitle2">{customer.address}</Typography></TableCell>
                                         <TableCell align={"right"}>
                                             <Tooltip title="Деталі">
-                                            <IconButton color="info" onClick={() => handleViewDetails(customer.id)}>
-                                                <Visibility/>
-                                            </IconButton>
-                                        </Tooltip>
+                                                <IconButton color="info" onClick={() => handleViewDetails(customer.id)}>
+                                                    <Visibility/>
+                                                </IconButton>
+                                            </Tooltip>
                                             <Tooltip title="Редагувати">
                                                 <IconButton color="primary" onClick={() => handleOpenEditModal(customer)}>
                                                     <Edit/>
