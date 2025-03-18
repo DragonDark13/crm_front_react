@@ -17,6 +17,11 @@ import {IMaterial, IProduct} from "../../utils/types";
 import {usePackaging} from "../Provider/PackagingContext";
 import {axiosInstance} from "../../api/api";
 import CustomDialog from "../dialogs/CustomDialog/CustomDialog";
+import ProductsSection from "./ProductsSection";
+import PackagingMaterialList from "../pages/PackagingMaterialList";
+import PackagingSection from "./PackagingSection";
+import GiftSetDetailsSection from "./GiftSetDetailsSection";
+import SummarySection from "./SummarySection";
 
 interface ICreateGiftBox {
     handleClose: () => void;
@@ -211,300 +216,37 @@ const CreateGiftBox = ({handleClose, open}: ICreateGiftBox) => {
             fullWidth
         >
             <DialogContent>
+                <GiftSetDetailsSection {...{name, setName, description, setDescription, price, setPrice}} />
+
+
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
-                        <TextField
-                            label={'Назва Набору'}
-                            margin="normal"
-                            fullWidth
-                            type="text"
-                            placeholder="Set name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                    <Grid item xs={12} md={6}>
+                        <ProductsSection
+                            setShowSelectProduct={setShowSelectProduct}
+                            showSelectProduct={showSelectProduct}
+                            products={products}
+                            handleProductSelect={handleProductSelect}
+                            selectedProducts={selectedProducts}
+                            handleQuantityChange={handleQuantityChange}
+                            handleRemoveProduct={handleRemoveProduct}
                         />
+
                     </Grid>
-                    <Grid item xs={12} md={4}>
-                        <TextField
-                            label={'Опис'}
-                            margin="normal"
-                            fullWidth
-                            type="text" placeholder={"description"} value={description}
-                            onChange={(e) => setDescription(e.target.value)}/>
+                    <Grid item xs={12} md={6}>
+                        <PackagingSection handlePackagingSelect={handlePackagingSelect}
+                                          handleQuantityChange={handleQuantityChange}
+                                          handleRemoveMaterial={handleRemoveMaterial}
+                                          packagingMaterials={packagingMaterials}
+                                          selectedPackaging={selectedPackaging}
+                                          setShowSelectPackaging={setShowSelectPackaging}
+                                          showSelectPackaging={showSelectPackaging}/>
                     </Grid>
-                    <Grid item xs={12} md={2}>
-                        <TextField
-                            margin="normal"
-                            fullWidth
-                            label="Ціна продажу"
-                            type="number"
-                            value={price}
-                            onChange={(e) => setPrice(Number(e.target.value))}
-                        />
-                    </Grid>
+
+
                 </Grid>
 
 
-                <h2>Products</h2>
-                <div>
-                    {!showSelectProduct ? (
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddIcon/>}
-                            onClick={() => setShowSelectProduct(true)} // Show select when button is clicked
-                        >
-                            Add Product
-                        </Button>
-                    ) : (
-                        <Grid container>
-                            <Grid item xs={9}>
-                                <Autocomplete
-
-                                    onChange={handleProductSelect}
-                                    options={products.filter((product) => {
-                                        const selected = selectedProducts.find((item) => item.product.id === product.id);
-                                        return (
-                                            product.available_quantity > 0 &&
-                                            (!selected || product.available_quantity > selected.quantity)
-                                        );
-                                    })}
-                                    getOptionLabel={(option) => option.name}
-                                    renderInput={(params) => <TextField {...params} label="Select a Product"/>}
-                                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                                    disableClearable
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.name} ({option.available_quantity} шт)
-                                        </li>
-                                    )}
-                                />
-                            </Grid>
-                            <Grid>
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={() => setShowSelectProduct(false)} // Сховуємо селектор
-                                >
-                                    Закрити
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    )}
-
-                    <div style={{marginTop: 20}}>
-                        {selectedProducts.map((item) => {
-
-                            const product = item.product;
-                            const availableQuantity = product.available_quantity;
-                            const costPerItem = product.purchase_price_per_item;
-                            const totalCost = item.quantity * costPerItem;
-
-                            return (<Grid container key={item.product.id} spacing={2} alignItems="center">
-                                    <Grid item xs={6}>
-                                        {item.product.name}
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            label={`Quantity`}
-                                            value={item.quantity}
-                                            onChange={(e) =>
-                                                handleQuantityChange(
-                                                    product.id,
-                                                    Number(e.target.value),
-                                                    'product'
-                                                )
-                                            }
-                                            type="number"
-                                            fullWidth
-                                            inputProps={{
-                                                min: 1,
-                                                max: availableQuantity,  // Обмеження на кількість
-                                            }}
-                                        />
-                                        <div style={{marginTop: 5}}>
-                                            <small>
-                                                Available: {availableQuantity} pcs
-                                            </small>
-                                        </div>
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <IconButton
-                                            color="primary"
-                                            onClick={() =>
-                                                handleQuantityChange(product.id, item.quantity + 1, "product")
-                                            }
-                                            disabled={item.quantity >= availableQuantity}
-                                        >
-                                            <AddIcon/>
-                                        </IconButton>
-                                        <IconButton
-                                            color="secondary"
-                                            onClick={() =>
-                                                item.quantity > 1
-                                                    ? handleQuantityChange(product.id, item.quantity - 1, "product")
-                                                    : null
-                                            }
-                                        >
-                                            <RemoveIcon/>
-                                        </IconButton>
-                                        <Button
-                                            color="error"
-                                            onClick={() => handleRemoveProduct(product.id)}
-                                        >
-                                            Remove
-                                        </Button>
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <div>
-                                            <strong>Cost per item: </strong>
-                                            {costPerItem} UAH
-                                        </div>
-                                        <div>
-                                            <strong>Total cost: </strong>
-                                            {totalCost.toFixed(2)} UAH
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                            );
-                        })}
-                    </div>
-                </div>
-
-                <h2>Packaging</h2>
-                <div>
-                    {!showSelectPackaging ? (
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddIcon/>}
-                            onClick={() => setShowSelectPackaging(true)}
-                        >
-                            Add Packaging
-                        </Button>
-                    ) : (
-                        <Grid container>
-                            <Grid item xs={9}>
-                                <Autocomplete
-                                    onChange={handlePackagingSelect}
-                                    options={packagingMaterials.filter((material) => {
-                                        const selected = selectedPackaging.find((item) => item.material.id === material.id);
-                                        return (
-                                            material.available_quantity > 0 &&
-                                            (!selected || material.available_quantity > selected.quantity)
-                                        );
-                                    })}
-                                    getOptionLabel={(option) => option.name}
-                                    renderInput={(params) => <TextField {...params} label="Select Packaging"/>}
-                                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                                    disableClearable
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>
-                                            {option.name} ({option.available_quantity} шт)
-                                        </li>
-                                    )}
-                                />
-                            </Grid>
-                            <Grid>
-                                <Button
-                                    variant="outlined"
-                                    color="secondary"
-                                    onClick={() => setShowSelectPackaging(false)}
-                                >
-                                    Закрити
-                                </Button>
-
-
-                            </Grid>
-                        </Grid>
-                    )}
-
-                    {/* Відображення обраного пакування */}
-                    <div>
-                        {selectedPackaging.map((item) => {
-
-                            const material = item.material;
-                            const availableQuantity = material.available_quantity;
-                            const costPerItem = material.purchase_price_per_unit;
-                            const totalCost = item.quantity * costPerItem;
-
-                            return (<Grid container key={item.material.id} spacing={2} alignItems="center">
-                                    <Grid item xs={6}>
-                                        {item.material.name}
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            label={`Quantity`}
-                                            value={item.quantity}
-                                            onChange={(e) =>
-                                                handleQuantityChange(
-                                                    material.id,
-                                                    Number(e.target.value),
-                                                    'packaging'
-                                                )
-                                            }
-                                            type="number"
-                                            fullWidth
-                                            inputProps={{
-                                                min: 1,
-                                                max: availableQuantity,  // Обмеження на кількість
-                                            }}
-                                        />
-                                        <div style={{marginTop: 5}}>
-                                            <small>
-                                                Available: {availableQuantity} pcs
-                                            </small>
-                                        </div>
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <IconButton
-                                            color="primary"
-                                            onClick={() =>
-                                                handleQuantityChange(material.id, item.quantity + 1, "packaging")
-                                            }
-                                            disabled={item.quantity >= availableQuantity}
-                                        >
-                                            <AddIcon/>
-                                        </IconButton>
-                                        <IconButton
-                                            color="secondary"
-                                            onClick={() =>
-                                                item.quantity > 1
-                                                    ? handleQuantityChange(material.id, item.quantity - 1, "packaging")
-                                                    : null
-                                            }
-                                        >
-                                            <RemoveIcon/>
-                                        </IconButton>
-                                        <Button
-                                            color="error"
-                                            onClick={() => handleRemoveMaterial(material.id)}
-                                        >
-                                            Remove
-                                        </Button>
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <div>
-                                            <strong>Cost per item: </strong>
-                                            {costPerItem} UAH
-                                        </div>
-                                        <div>
-                                            <strong>Total cost: </strong>
-                                            {totalCost.toFixed(2)} UAH
-                                        </div>
-                                    </Grid>
-                                </Grid>
-                            );
-                        })}
-                    </div>
-                </div>
-
-
-                <Typography variant="h6" style={{marginTop: 20}}>
-                    Загальна собівартість: {calculateTotalCost().toFixed(2)} грн
-                </Typography>
-                <Typography variant="h6">
-                    Прибуток: {calculateProfit().toFixed(2)} грн
-                </Typography>
+                <SummarySection calculateProfit={calculateProfit} calculateTotalCost={calculateTotalCost}/>
             </DialogContent>
             <DialogActions>
 

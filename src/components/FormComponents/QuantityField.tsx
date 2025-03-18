@@ -1,23 +1,34 @@
 import {ChangeEvent, FC} from "react";
-import {Box, Button, IconButton, InputAdornment, TextField} from "@mui/material";
+import {Box, Button, IconButton, InputAdornment, TextField, TextFieldProps} from "@mui/material";
 //TODO інркремент і дкремент
 import {Add, Remove} from '@mui/icons-material';
 
 
-const QuantityField: FC<{
+interface QuantityFieldProps extends TextFieldProps {
     value: number;
     onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    error: string;
-    onIncrement: () => void; // Додано проп для інкременту
-    onDecrement: () => void; // Додано проп для декременту
-    label?: string;
+    onIncrement: () => void; // Інкремент
+    onDecrement: () => void; // Декремент
     readonly?: boolean;
-}> = ({value, onChange, error, onIncrement, onDecrement, label = 'Кількість', readonly}) => {
+}
+
+
+const QuantityField: FC<QuantityFieldProps> = ({
+                                                   value,
+                                                   onChange,
+                                                   error,
+                                                   onIncrement,
+                                                   onDecrement,
+                                                   label = "Кількість",
+                                                   readonly,
+                                                   ...rest // Деструктуризація для всіх інших пропсів TextField
+                                               }) => {
 
     return (
         <Box display="flex" alignItems="center">
 
             <TextField
+                {...rest}
                 readOnly={readonly}  // Додано проп для запрету редагування поля
                 label={label}
                 type="text"
