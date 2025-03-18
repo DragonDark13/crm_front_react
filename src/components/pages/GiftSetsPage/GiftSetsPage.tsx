@@ -6,11 +6,9 @@ import GiftSetList from "./GiftSetList";
 const GiftSetsPage = () => {
     return (
         <div>
-            <Typography>
-                Подарункові набори
-            </Typography>
+              <Typography marginBlockEnd={3} variant={"h4"}>Create Gift Set</Typography>
 
-            <CreateGiftBox/>
+            {/*<CreateGiftBox/>*/}
 
             <GiftSetList/>
 

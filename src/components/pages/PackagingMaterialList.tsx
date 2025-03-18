@@ -231,15 +231,15 @@ const PackagingMaterialList: React.FC = () => {
                     </Grid>
                 </Grid>
 
-<TablePagination
-  rowsPerPageOptions={[5, 10, 25]}
-  component="div"
-  count={filteredMaterials.length}
-  rowsPerPage={rowsPerPage}
-  page={page}
-  onPageChange={handleChangePage}
-  onRowsPerPageChange={handleChangeRowsPerPage}
-/>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={filteredMaterials.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
                 {/* IMaterial List Table */}
                 <TableContainer>
                     <Table>

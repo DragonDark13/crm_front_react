@@ -86,6 +86,7 @@ export type ModalNames =
     | 'snackbarNotifyOpen'
     | 'createCustomerDialog'
     | 'addNewPackage'
+    | 'addNewGiftBox'
     ;
 
 export const modalNames: ModalNames[] = [
@@ -101,7 +102,8 @@ export const modalNames: ModalNames[] = [
     'openNotificationDrawer',
     'snackbarNotifyOpen',
     'createCustomerDialog',
-    'addNewPackage'
+    'addNewPackage',
+    'addNewGiftBox'
 ];
 
 export interface INotificationPanel {

@@ -92,70 +92,71 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                 open={open}
                 handleClose={onClose}
                 title="Закупити пакувальний матеріал"
-            ><DialogContent>
-                <Grid container spacing={2} alignItems="center">
-                    {/* Вибір постачальника */}
-                    <Grid item xs={12} sm={8} md={9}>
-                        <TextField
-                            select
-                            label="Постачальник"
-                            value={supplierId || ''}
-                            onChange={(e) => setSupplierId(Number(e.target.value))}
-                            fullWidth
-                            margin="normal"
-                            required
-                        >
-                            {suppliers.map((supplier) => (
-                                <MenuItem key={supplier.id} value={supplier.id}>
-                                    {supplier.name}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    </Grid>
-                    <Grid item xs={12} sm={4} md={3}>
-                        <Button variant="outlined" onClick={handleOpenAddSupplier} fullWidth>
-                            Додати
-                        </Button>
-                    </Grid>
+            >
+                <DialogContent>
+                    <Grid container spacing={2} alignItems="center">
+                        {/* Вибір постачальника */}
+                        <Grid item xs={12} sm={8} md={9}>
+                            <TextField
+                                select
+                                label="Постачальник"
+                                value={supplierId || ''}
+                                onChange={(e) => setSupplierId(Number(e.target.value))}
+                                fullWidth
+                                margin="normal"
+                                required
+                            >
+                                {suppliers.map((supplier) => (
+                                    <MenuItem key={supplier.id} value={supplier.id}>
+                                        {supplier.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={4} md={3}>
+                            <Button variant="outlined" onClick={handleOpenAddSupplier} fullWidth>
+                                Додати
+                            </Button>
+                        </Grid>
 
-                    {/* Кількість */}
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Кількість"
-                            type="number"
-                            value={quantity}
-                            onChange={handleQuantityChange}
-                            fullWidth
-                            margin="dense"
-                        />
-                    </Grid>
+                        {/* Кількість */}
+                        <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                                label="Кількість"
+                                type="number"
+                                value={quantity}
+                                onChange={handleQuantityChange}
+                                fullWidth
+                                margin="dense"
+                            />
+                        </Grid>
 
-                    {/* Ціна за одиницю */}
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="Ціна за одиницю"
-                            type="number"
-                            value={pricePerUnit}
-                            onChange={handlePriceChange}
-                            fullWidth
-                            margin="dense"
-                        />
-                    </Grid>
+                        {/* Ціна за одиницю */}
+                        <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                                label="Ціна за одиницю"
+                                type="number"
+                                value={pricePerUnit}
+                                onChange={handlePriceChange}
+                                fullWidth
+                                margin="dense"
+                            />
+                        </Grid>
 
-                    {/* Загальна сума закупівлі */}
-                    <Grid item xs={12} sm={12}  md={4}>
-                        <TextField
-                            label="Загальна сума закупівлі"
-                            value={totalPurchaseCost.toFixed(2)} // Форматуємо до 2 знаків після коми
-                            fullWidth
-                            margin="dense"
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                        />
+                        {/* Загальна сума закупівлі */}
+                        <Grid item xs={12} sm={12} md={4}>
+                            <TextField
+                                label="Загальна сума закупівлі"
+                                value={totalPurchaseCost.toFixed(2)} // Форматуємо до 2 знаків після коми
+                                fullWidth
+                                margin="dense"
+                                InputProps={{
+                                    readOnly: true,
+                                }}
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
-            </DialogContent>
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} color="secondary">
                         Відмінити
