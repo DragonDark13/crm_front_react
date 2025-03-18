@@ -1,6 +1,7 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
 import {ICustomerDetails} from "../../../utils/types";
 import {useState} from "react";
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface IEditCustomerDialog {
     handleEditCustomer: (customerData: ICustomerDetails) => void;
@@ -41,15 +42,18 @@ const EditCustomerDialog: React.FC<IEditCustomerDialog> = ({
     };
 
     return (
-        <Dialog open={openEditCustomerDialog} onClose={handleCloseEditCustomerDialog}>
-            <DialogTitle>Edit Customer</DialogTitle>
+        <CustomDialog
+            open={openEditCustomerDialog}
+            title="Редагувати клієнта"
+            handleClose={handleCloseEditCustomerDialog}
+        >
             <DialogContent>
                 <TextField
                     required
                     autoFocus
                     margin="dense"
                     name="name"
-                    label="Name"
+                    label="Ім'я"
                     type="text"
                     fullWidth
                     value={customerToEdit?.name || ''}
@@ -69,7 +73,7 @@ const EditCustomerDialog: React.FC<IEditCustomerDialog> = ({
                 <TextField
                     margin="dense"
                     name="phone_number"
-                    label="Phone Number"
+                    label="Номер телефону"
                     type="text"
                     fullWidth
                     value={customerToEdit?.phone_number || ''}
@@ -78,7 +82,7 @@ const EditCustomerDialog: React.FC<IEditCustomerDialog> = ({
                 <TextField
                     margin="dense"
                     name="address"
-                    label="Address"
+                    label="Адреса"
                     type="text"
                     fullWidth
                     value={customerToEdit?.address || ''}
@@ -86,14 +90,14 @@ const EditCustomerDialog: React.FC<IEditCustomerDialog> = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseEditCustomerDialog} color="primary">
-                    Cancel
+                <Button variant={"contained"} onClick={handleCloseEditCustomerDialog} color="error">
+                    Скасувати
                 </Button>
-                <Button onClick={handleSave} color="primary">
-                    Save
+                <Button variant={"contained"} onClick={handleSave} color="success">
+                    Зберегти
                 </Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 

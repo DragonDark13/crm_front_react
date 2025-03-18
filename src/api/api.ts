@@ -42,7 +42,8 @@ export const API_ENDPOINTS = {
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
     PRODUCT: (id: number) => `/product/${id}`,
     GET_ALL_PACKAGING_MATERIALS: '/get_all_packaging_materials',  // New endpoint for packaging materials
-    CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`
+    CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`,
+    ADD_NEW_PACKAGING_MATERIAL: '/packaging_materials/purchase',
 };
 
 // Уніфікована обробка помилок

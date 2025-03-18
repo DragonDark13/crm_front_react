@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
     Accordion, AccordionSummary, AccordionDetails, Button, Dialog, DialogActions,
-    DialogContent, DialogTitle, TextField, Typography
+    DialogContent, DialogTitle, TextField, Typography, IconButton, Tooltip
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useCustomers} from "../Provider/CustomerContext";
@@ -21,7 +21,7 @@ import {
     updateCustomerData
 } from "../../api/_customer";
 //TODO перенести у запити у відповідні контексти
-
+import { Visibility, Edit, Delete } from "@mui/icons-material";
 
 const CustomerPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
@@ -158,48 +158,51 @@ const CustomerPage: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Ім'я</TableCell>
-                            <TableCell>Єлектронна пошта</TableCell>
-                            <TableCell>Телефонний номер</TableCell>
-                            <TableCell>Address</TableCell>
-                            <TableCell>Дії</TableCell>
+                            <TableCell><Typography variant="subtitle2">Ім'я</Typography></TableCell>
+                            <TableCell><Typography variant="subtitle2">Єлектронна пошта</Typography></TableCell>
+                            <TableCell><Typography variant="subtitle2">Телефонний номер</Typography></TableCell>
+                            <TableCell><Typography variant="subtitle2">Address</Typography></TableCell>
+                            <TableCell><Typography variant="subtitle2" align={"right"}>Дії</Typography></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {customers.length > 1 ? customers.map((customer, index) => (
-                            <React.Fragment key={customer.id + customer.name}>
-                                <TableRow hover selected={selectedCustomer && selectedCustomer?.id === customer.id}
-                                          onClick={
-                                              () => handleGetCustomerDetails(customer)
-                                          }>
-                                    <TableCell>{customer.name}</TableCell>
-                                    <TableCell>{customer.email}</TableCell>
-                                    <TableCell>{customer.phone_number}</TableCell>
-                                    <TableCell>{customer.address}</TableCell>
-                                    <TableCell>
-                                        <Button
-                                            variant="outlined"
-                                            color="info"
-                                            onClick={() => handleViewDetails(customer.id)}
-                                        >
-                                            Деталі
-                                        </Button>
-                                        <Button onClick={() => handleOpenEditModal(customer)} color="primary">
-                                            Редагувати
-                                        </Button>
-                                        <Button
-                                            onClick={() => handleDeleteCustomer(customer.id)}
-                                            color="secondary"
-                                        >
-                                            Видалити
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            </React.Fragment>
-                        ))
+                        {customers.length > 0 ? customers.map((customer) => (
+                                <React.Fragment key={customer.id + customer.name}>
+                                    <TableRow hover selected={selectedCustomer && selectedCustomer?.id === customer.id}
+                                              onClick={() => handleGetCustomerDetails(customer)}>
+                                        <TableCell><Typography variant="subtitle2">{customer.name}</Typography></TableCell>
+                                        <TableCell><Typography variant="subtitle2">{customer.email}</Typography></TableCell>
+                                        <TableCell >
+                                            <Typography
+                                            variant="subtitle2">{customer.phone_number}</Typography></TableCell>
+                                        <TableCell><Typography
+                                            variant="subtitle2">{customer.address}</Typography></TableCell>
+                                        <TableCell align={"right"}>
+                                            <Tooltip title="Деталі">
+                                            <IconButton color="info" onClick={() => handleViewDetails(customer.id)}>
+                                                <Visibility/>
+                                            </IconButton>
+                                        </Tooltip>
+                                            <Tooltip title="Редагувати">
+                                                <IconButton color="primary" onClick={() => handleOpenEditModal(customer)}>
+                                                    <Edit/>
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title="Видалити">
+                                                <IconButton color="secondary"
+                                                            onClick={() => handleDeleteCustomer(customer.id)}>
+                                                    <Delete/>
+                                                </IconButton>
+                                            </Tooltip>
+                                        </TableCell>
+                                    </TableRow>
+                                </React.Fragment>
+                            ))
                             :
                             <TableRow>
-                                <TableCell colSpan={5}>Немає покупців</TableCell>
+                                <TableCell colSpan={5}>
+                                    <Typography variant="subtitle2">Немає покупців</Typography>
+                                </TableCell>
                             </TableRow>
                         }
                     </TableBody>

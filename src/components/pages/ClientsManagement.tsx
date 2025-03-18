@@ -1,11 +1,12 @@
 import React from 'react';
 import CustomerPage from "./CustomerPage";
+import {Box, Typography} from "@mui/material";
 
 const ClientsManagement = () => {
     return (
         <div>
-            <h1>Управління клієнтами</h1>
-            <p>Інформація про клієнтів.</p>
+            <Typography marginBlockEnd={3} variant={"h4"}>Управління клієнтами</Typography>
+            <Typography>Інформація про клієнтів.</Typography>
             <CustomerPage/>
         </div>
     );

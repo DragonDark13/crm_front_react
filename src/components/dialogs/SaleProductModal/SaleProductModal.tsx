@@ -197,7 +197,7 @@ const SaleProductModal = ({
                 <React.Fragment>
                     <DialogContent>
                         <Grid container alignItems={"center"} spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12} sm={6} md={4} lg={4} >
                                 <FormControl fullWidth margin="normal" error={!!errors.customer}>
                                     <InputLabel id="supplier-select-label">Покупець</InputLabel>
                                     <Select
@@ -224,7 +224,7 @@ const SaleProductModal = ({
                                     Додати
                                 </Button>
                             </Grid>
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} sm={4} md={3}>
                                 <TextField
                                     label="Дата продажу"
                                     type="date"
@@ -236,6 +236,23 @@ const SaleProductModal = ({
                                     helperText={errors.sale_date}
                                 />
                             </Grid>
+                                                        <Grid item xs={12} sm={6} md={3}>
+                                <TextField
+                                    label="Ціна за 1шт (Продаж)"
+                                    type="number"
+                                    value={saleData.selling_price_per_item}
+                                    onChange={(e) => setSaleData({
+                                        ...saleData,
+                                        selling_price_per_item: Number(e.target.value)
+                                    })}
+                                    fullWidth
+                                    margin="normal"
+                                    error={!!errors.price_per_item}
+                                    helperText={errors.price_per_item}
+                                    inputProps={{min: 1, max: 100000}}  // Обмеження значень
+                                />
+                            </Grid>
+
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
                             <Typography> Максимальна кількість {quantityOnStock}шт</Typography>
@@ -262,22 +279,6 @@ const SaleProductModal = ({
                                 />
                             </Grid>
 
-                            <Grid item xs={12} sm={6} md={3}>
-                                <TextField
-                                    label="Ціна за 1шт (Продаж)"
-                                    type="number"
-                                    value={saleData.selling_price_per_item}
-                                    onChange={(e) => setSaleData({
-                                        ...saleData,
-                                        selling_price_per_item: Number(e.target.value)
-                                    })}
-                                    fullWidth
-                                    margin="normal"
-                                    error={!!errors.price_per_item}
-                                    helperText={errors.price_per_item}
-                                    inputProps={{min: 1, max: 100000}}  // Обмеження значень
-                                />
-                            </Grid>
 
                             <Grid item xs={12} sm={6} md={12}>
                                 {/* Кнопка для додавання пакування */}
@@ -446,12 +447,12 @@ const SaleProductModal = ({
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseSale} color="primary">
+                        <Button  variant="contained" onClick={handleCloseSale} color="error">
                             Відміна
                         </Button>
                         <Button
                             variant="contained"
-                            color="primary"
+                            color="success"
                             onClick={handleSaleSubmit}
                             disabled={isSubmitDisabled()} // Додаємо перевірку для активності кнопки
                         >

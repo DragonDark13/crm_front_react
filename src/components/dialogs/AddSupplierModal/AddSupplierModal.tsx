@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button} from '@mui/material';
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 interface INewSupplier {
     name: string;
@@ -42,13 +43,15 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
     };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Додати нового постачальника</DialogTitle>
+        <CustomDialog
+            open={open}
+            title="Додати нового постачальника"
+            handleClose={handleClose}
+        >
             <DialogContent>
                 <TextField
-                    minLength={10}
-                    maxLength={100}
-                    required={true}
+                    inputProps={{minLength: 10, maxLength: 100}}
+                    required
                     autoFocus
                     margin="dense"
                     label="Назва Постачальника"
@@ -88,20 +91,20 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleClose} color="error">
                     Відміна
                 </Button>
 
                 <Button
                     onClick={handleSave}
-                    color="primary"
+                    color="success"
                     variant="contained"
                     disabled={!name.trim()} // Кнопка неактивна, якщо поле порожнє
                 >
                     Зберегти постачальника
                 </Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 

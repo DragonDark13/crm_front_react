@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
+import {Button,DialogActions, DialogContent, TextField} from "@mui/material";
 import {ICustomerDetails} from "../../../utils/types";
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 
 export interface IAddNewCustomerDialog {
@@ -42,26 +43,28 @@ const AddNewCustomerDialog = ({
         }
 
 
-
         handleAddCustomer(newCustomerData);
     };
 
     return (
-        <Dialog open={openAddNewCustomerDialog} onClose={handleCloseAddNewCustomerDialog}>
-            <DialogTitle>Add New Customer</DialogTitle>
+        <CustomDialog
+            open={openAddNewCustomerDialog}
+            title="Додати нового клієнта"
+            handleClose={handleCloseAddNewCustomerDialog}
+        >
             <DialogContent>
                 <TextField
                     required
                     autoFocus
                     margin="dense"
                     name="name"
-                    label="Name"
+                    label="Ім'я"
                     type="text"
                     fullWidth
                     value={newCustomerData.name}
                     onChange={handleInputChange}
-                    error={!!errors.name}  // Встановлюємо статус помилки
-                    helperText={errors.name}  // Виводимо текст помилки
+                    error={!!errors.name}
+                    helperText={errors.name}
                 />
                 <TextField
                     margin="dense"
@@ -75,7 +78,7 @@ const AddNewCustomerDialog = ({
                 <TextField
                     margin="dense"
                     name="phone_number"
-                    label="Phone Number"
+                    label="Номер телефону"
                     type="text"
                     fullWidth
                     value={newCustomerData.phone_number}
@@ -84,7 +87,7 @@ const AddNewCustomerDialog = ({
                 <TextField
                     margin="dense"
                     name="address"
-                    label="Address"
+                    label="Адреса"
                     type="text"
                     fullWidth
                     value={newCustomerData.address}
@@ -92,15 +95,14 @@ const AddNewCustomerDialog = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseAddNewCustomerDialog} color="primary">
-                    Cancel
+                <Button variant="contained" onClick={handleCloseAddNewCustomerDialog} color="error">
+                    Скасувати
                 </Button>
-                <Button onClick={handleCreate} color="primary">
-                    Create
+                <Button variant="contained" onClick={handleCreate} color="success">
+                    Створити
                 </Button>
             </DialogActions>
-        </Dialog>
-    );
+        </CustomDialog>);
 };
 
 export default AddNewCustomerDialog;

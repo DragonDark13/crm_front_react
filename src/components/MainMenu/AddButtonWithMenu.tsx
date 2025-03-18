@@ -1,7 +1,14 @@
 import {Add} from "@mui/icons-material";
 import {Box, Button, Grid, IconButton, Popover, Tooltip} from "@mui/material";
 import React, {useState} from "react";
-import {ICustomerDetails, INewProduct, INewSupplier, modalNames, ModalNames} from "../../utils/types";
+import {
+    ICustomerDetails,
+    INewProduct,
+    INewSupplier,
+    IPurchasePackagingMaterial,
+    modalNames,
+    ModalNames
+} from "../../utils/types";
 import AddProductModal from "../dialogs/AddProductModal/AddProductModal";
 import {useProducts} from "../Provider/ProductContext";
 import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
@@ -18,6 +25,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {addSupplier} from "../../api/_supplier";
 import {addProduct} from "../../api/_product";
 import {addNewCategory} from "../../api/_categories";
+import {axiosInstance} from "../../api/api";
+import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -186,6 +195,18 @@ const AddButtonWithMenu = () => {
 
     const {isAuthenticated} = useAuth();
 
+    const handlePurchaseNewPackaging = (newPackagingData: IPurchasePackagingMaterial) => {
+
+        addNewPackagingMaterial(newPackagingData).then(() => {
+            handleModalClose("addNewPackage")
+            showSnackbarMessage('Packaging Material added successfully!', 'success');
+        }).catch((error: AxiosError) => {
+            console.error('Error creating packaging material:', error);
+            showSnackbarMessage('Error creating packaging material: ' + error.response?.data?.error || 'Unknown error', 'error');
+
+        });
+    };
+
 
     return (
         <Box>
@@ -210,7 +231,7 @@ const AddButtonWithMenu = () => {
                     horizontal: 'left',
                 }}
             >
-                <Box sx={{p: 2}}>
+                <Box maxWidth={300} sx={{p: 2}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <Button variant={"contained"} color="primary" fullWidth onClick={handleOpenAdd}>
@@ -280,7 +301,7 @@ const AddButtonWithMenu = () => {
 
             {modalState.addNewPackage && <AddNewPackagingModal openAddNewPackaging={modalState.addNewPackage}
                                                                handleCloseAddNewPackaging={() => handleModalClose('addNewPackage')}
-                                                               handleAddClick={handleCreateCustomer}/>}
+                                                               handlePurchaseNewPackaging={handlePurchaseNewPackaging}/>}
 
 
         </Box>

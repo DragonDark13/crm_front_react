@@ -215,3 +215,11 @@ export interface PackagingMaterialHistory {
         new_total: number;
     }>;
 }
+
+export interface IPurchasePackagingMaterial {
+    name: string;                // Назва упаковочного матеріалу
+    supplier_id: number;          // ID постачальника
+    quantity_purchased: string;   // Кількість придбаного матеріалу
+    purchase_price_per_unit: string; // Ціна за одиницю матеріалу
+    total_purchase_cost: string;   // Загальна вартість покупки
+}

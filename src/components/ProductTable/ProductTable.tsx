@@ -158,7 +158,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                 </TableSortLabel>
                             </TableCell>
 
-                            <TableCell align={"right"} >Дія</TableCell>
+                            <TableCell align={"right"}>Дія</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -286,21 +286,26 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
 
                                         <TableCell align={"right"}>
                                             <Tooltip title="Дії">
-                                                <IconButton onClick={(event => handleClick(event, product))}>
+                                                <IconButton id="demo-positioned-button"
+                                                            onClick={(event => handleClick(event, product))}>
                                                     <MoreVertIcon/>
                                                 </IconButton>
                                             </Tooltip>
                                             <Menu PaperProps={{
                                                 elevation: 1
                                             }}
+                                                  aria-labelledby="demo-positioned-button"
+                                                  anchorEl={anchorEl}
                                                   anchorOrigin={{
                                                       vertical: 'top',
                                                       horizontal: 'right',
                                                   }}
-                                                  anchorPosition={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }} anchorEl={anchorEl} open={open} onClose={handleClose}>
+                                                  transformOrigin={{
+                                                      vertical: 'top',
+                                                      horizontal: 'right',
+                                                  }}
+
+                                                  open={open} onClose={handleClose}>
                                                 <MenuItem onClick={() => {
                                                     handleOpenEdit(selectedProduct);  // Використовуємо selectedProduct
                                                     handleClose();
