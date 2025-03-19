@@ -1,6 +1,6 @@
 import React from 'react';
 import {Typography} from "@mui/material";
-import CreateGiftBox from "../../MainMenu/CreateGiftBox";
+import AddGiftBoxModal from "../../MainMenu/CreateGiftBox";
 import GiftSetList from "./GiftSetList";
 
 const GiftSetsPage = () => {

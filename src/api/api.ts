@@ -98,7 +98,7 @@ export async function sellGiftSet(requestData:
 
     try {
         const response = await axiosInstance.post(`/sell_gift_set/${requestData.gift_set_id}`, {
-            customer_name: requestData.customer_id || null,
+            customer_id: requestData.customer_id || null,
             selling_price: requestData.selling_price,
             sale_date: requestData.sale_date || null,
         });

@@ -1,11 +1,12 @@
 import React from 'react';
 import SalesHistoryTable from "./SalesHistoryTable";
+import {Typography} from "@mui/material";
 
 const Sales = () => {
     return (
         <div>
-            <h1>Продажі</h1>
-            <p>Перегляд і керування продажами.</p>
+            <Typography marginBlockEnd={1} variant={"h4"}>Продажі</Typography>
+            <Typography marginBottom={4}>Перегляд і керування продажами</Typography>
             <SalesHistoryTable/>
         </div>
     );

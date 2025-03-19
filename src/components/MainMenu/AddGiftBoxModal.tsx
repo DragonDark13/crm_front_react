@@ -29,7 +29,7 @@ interface ICreateGiftBox {
 }
 
 
-const CreateGiftBox = ({handleClose, open}: ICreateGiftBox) => {
+const AddGiftBoxModal = ({handleClose, open}: ICreateGiftBox) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
@@ -258,4 +258,4 @@ const CreateGiftBox = ({handleClose, open}: ICreateGiftBox) => {
     );
 };
 
-export default CreateGiftBox;
+export default AddGiftBoxModal;
