@@ -1,4 +1,4 @@
-import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography} from "@mui/material";
 import {FC} from "react";
 import {ICategory} from "../../utils/types";
 
@@ -26,8 +26,8 @@ const SupplierSelect: FC<ISupplierSelectProps> = ({
             label="Постачальник"
         >
             {suppliers.map((supplier) => (
-                <MenuItem key={supplier.id} value={supplier.id}>
-                    {supplier.name}
+                <MenuItem title={supplier.name} key={supplier.id} value={supplier.id}>
+                    <Typography> {supplier.name}</Typography>
                 </MenuItem>
             ))}
         </Select>

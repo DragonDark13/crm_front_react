@@ -39,7 +39,7 @@ const CategoriesSelect: FC<ICategoriesProps> = ({
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {(selected as number[]).map((id) => (
               <Chip
-                color={"success"}
+                color={"primary"}
                 variant={"filled"}
                 key={id}
                 label={categories.find((category) => category.id === id)?.name}

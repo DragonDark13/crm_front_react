@@ -158,7 +158,7 @@ const AddProductModal = ({
                         />
 
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={2}>
                         <PriceField
                             value={newProduct.purchase_price_per_item}
                             onChange={(e) => {
@@ -188,10 +188,10 @@ const AddProductModal = ({
 
 
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={2}>
                         <TotalPriceField value={newProduct.purchase_total_price}/>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
+                    <Grid item xs={12} sm={6} md={2}>
                         <PriceField
                             label="ціна за 1шт (продаж)"
                             value={newProduct.selling_price_per_item}
@@ -222,13 +222,7 @@ const AddProductModal = ({
 
                     </Grid>
 
-                    <Grid item xs={12} md={4}>
-                        <Typography>
-                            Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.
-                        </Typography>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={3}>
                         <TextField
                             label="Дата створення"
                             type="date"
@@ -239,11 +233,22 @@ const AddProductModal = ({
                         />
 
                     </Grid>
+
+                    <Grid item xs={12} md={12} marginBottom={3}>
+                        <Typography>
+                            Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.
+                        </Typography>
+                    </Grid>
+
+
+                </Grid>
+                <Grid container spacing alignItems={"center"} >
+                    <Grid item xs={12} sm={6} md={8}>
+                        <CategoriesSelect categories={categories} selectedCategories={selectedCategories}
+                                          handleCategoryChange={handleCategoryChange}/>
+                    </Grid>
                 </Grid>
 
-
-                <CategoriesSelect categories={categories} selectedCategories={selectedCategories}
-                                  handleCategoryChange={handleCategoryChange}/>
 
             </DialogContent>
             <DialogActions>

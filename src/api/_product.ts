@@ -6,8 +6,13 @@ export const fetchProducts = (): Promise<IProduct[]> => {
     return fetchResource<IProduct[]>(API_ENDPOINTS.PRODUCTS);
 };
 
-export const addProduct = (newProduct: INewProduct): Promise<IProduct> => {
-    return postResource<IProduct>(API_ENDPOINTS.PRODUCTS, newProduct);
+// Функція для додавання продукту
+export const addProduct = (newProduct: INewProduct) => {
+    return axiosInstance.post('/add_new_product', newProduct)
+        .catch(error => {
+            console.error('Error adding product:', error);
+            throw error;
+        });
 };
 
 export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<void> => {
