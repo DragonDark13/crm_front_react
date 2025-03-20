@@ -25,11 +25,11 @@ import {
 } from "@mui/material";
 import FilterComponent from "../filters/FilterComponent/FilterComponent";
 import ResponsiveProductView from "../ResponsiveProductView/ResponsiveProductView";
-import AddProductModal from "../dialogs/AddProductModal/AddProductModal";
-import EditProductModal from "../dialogs/EditProductModal/EditProductModal";
-import ProductHistoryModal from "../dialogs/ProductHistoryModal/ProductHistoryModal";
-import PurchaseProductModal from "../dialogs/PurchaseProductModal/PurchaseProductModal";
-import SaleProductModal from "../dialogs/SaleProductModal/SaleProductModal";
+import AddProductModal from "../dialogs/productsDialogs/AddProductModal/AddProductModal";
+import EditProductModal from "../dialogs/productsDialogs/EditProductModal/EditProductModal";
+import ProductHistoryModal from "../dialogs/productsDialogs/ProductHistoryModal/ProductHistoryModal";
+import PurchaseProductModal from "../dialogs/productsDialogs/PurchaseProductModal/PurchaseProductModal";
+import SaleProductModal from "../dialogs/productsDialogs/SaleProductModal/SaleProductModal";
 import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
 import ConfirmDeleteModal from "../dialogs/ConfirmDeleteModal/ConfirmDeleteModal";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
@@ -45,7 +45,7 @@ import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "..
 import {logoutUser} from "../../api/_user";
 import {addNewCategory, fetchGetAllCategories} from "../../api/_categories";
 import {exportToExcel} from "../../api/api";
-import DeleteAllProductsDialog from "../dialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
+import DeleteAllProductsDialog from "../dialogs/productsDialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
 
 const ProductsCatalog = () => {
 
@@ -711,7 +711,7 @@ const ProductsCatalog = () => {
             <AddSupplierModal
                 handleAddSupplier={handleAddSupplier}
                 open={modalState.openAddSupplierOpen}
-                handleClose={() => handleModalClose("openAddSupplierOpen")}
+                handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
             />
 
             <div style={{position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: "10px"}}>

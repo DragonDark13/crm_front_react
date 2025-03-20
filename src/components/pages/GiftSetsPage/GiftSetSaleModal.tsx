@@ -16,7 +16,7 @@ import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import {useCustomers} from "../../Provider/CustomerContext";
 import AddIcon from "@mui/icons-material/Add";
 import {ICustomerDetails} from "../../../utils/types";
-import AddNewCustomerDialog from "../../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
+import AddNewCustomerDialog from "../../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {AxiosError} from "axios";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 

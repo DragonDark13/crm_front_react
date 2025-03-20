@@ -68,8 +68,11 @@ export interface ISupplier {
 }
 
 export interface INewSupplier {
+    address?:string
     name: string,
-    contact_info: string
+    contact_info?: string,
+    email?: string,
+    phone_number?: string
 }
 
 export type ModalNames =

@@ -1,6 +1,7 @@
 import {Button, DialogActions, DialogContent, TextField, Typography} from "@mui/material";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import React, {useState} from "react";
+import CancelButton from "../../Buttons/CancelButton";
 
 interface ICreateNewCategoryModal {
     openCategoryCreateModal: boolean;
@@ -21,12 +22,12 @@ const CreateNewCategoryModal = ({
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // Запобігає стандартній поведінці, якщо потрібно
-            handleSave();
+            handleAddNewCategory();
         }
     };
 
     // Функція для збереження категорії
-    const handleSave = () => {
+    const handleAddNewCategory = () => {
         if (categoryName.trim().length < 5) {
             setError('Назва категорії повинна містити не менше 5 символів.');
             return;
@@ -55,13 +56,11 @@ const CreateNewCategoryModal = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseCategoryModal} color="primary">
-                    Відміна
-                </Button>
+                <CancelButton onClick={handleCloseCategoryModal}/>
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleSave} // Виклик функції збереження
+                    onClick={handleAddNewCategory} // Виклик функції збереження
                     disabled={categoryName.trim().length < 5} // Деактивація кнопки, якщо назва занадто коротка
                 >
                     Зберегти категорію

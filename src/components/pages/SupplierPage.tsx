@@ -266,7 +266,7 @@ const SupplierPage: React.FC = () => {
             {/* Модальне вікно для додавання постачальника */}
             <AddSupplierModal
                 open={openAddModal}
-                handleClose={() => setOpenAddModal(false)}
+                handleCloseAddSupplierModal={() => setOpenAddModal(false)}
                 handleAddSupplier={handleAddSupplier}
             />
 

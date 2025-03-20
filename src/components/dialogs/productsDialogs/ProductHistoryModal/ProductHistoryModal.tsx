@@ -14,14 +14,14 @@ import {
     TableRow,
     Tabs, Typography
 } from "@mui/material";
-import CustomDialog from "../CustomDialog/CustomDialog";
-import {ICustomer, ISupplier} from "../../../utils/types";
+import CustomDialog from "../../CustomDialog/CustomDialog";
+import {ICustomer, ISupplier} from "../../../../utils/types";
 import StockHistoryTable from "./StockHistoryTable";
 import PurchaseHistoryTable from "./PurchaseHistoryTable";
 import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
-import {onDeleteHistoryRecord} from "../../../api/_history";
-import {fetchProductHistory} from "../../../api/_product";
+import {onDeleteHistoryRecord} from "../../../../api/_history";
+import {fetchProductHistory} from "../../../../api/_product";
 
 export interface ProductHistoryRecord {
     id: number;

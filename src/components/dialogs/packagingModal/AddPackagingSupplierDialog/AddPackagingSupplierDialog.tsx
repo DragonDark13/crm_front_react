@@ -10,8 +10,8 @@ import {
     Box
 } from '@mui/material';
 import React, {useState} from 'react';
-import {axiosInstance} from "../../../api/api";
-import CustomDialog from "../CustomDialog/CustomDialog";
+import {axiosInstance} from "../../../../api/api";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 
 interface AddPackagingSupplierDialogProps {
     openAddSupplier: boolean;

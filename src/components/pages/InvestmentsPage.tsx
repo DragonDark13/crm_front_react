@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {TextField, Button, Table, TableRow, TableCell, TableBody, TableHead, Grid, Paper} from "@mui/material";
 import {axiosInstance} from "../../api/api";
-import DeleteAllMaterialsDialog from "../dialogs/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
+import DeleteAllMaterialsDialog from "../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
 import {useAuth} from "../context/AuthContext";
 import DeleteAllInvestmentsDialog from "../dialogs/DeleteAllInvestmentsDialog/DeleteAllInvestmentsDialog";
 

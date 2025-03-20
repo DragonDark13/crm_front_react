@@ -1,7 +1,7 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
-import {ICustomerDetails} from "../../../utils/types";
+import {ICustomerDetails} from "../../../../utils/types";
 import {useState} from "react";
-import CustomDialog from "../CustomDialog/CustomDialog";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 
 interface IEditCustomerDialog {
     handleEditCustomer: (customerData: ICustomerDetails) => void;

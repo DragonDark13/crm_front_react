@@ -1,5 +1,5 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography} from "@mui/material";
-import {axiosInstance} from "../../../api/api";
+import {axiosInstance} from "../../../../api/api";
 import React, {useState} from "react";
 
 interface MarkPackagingAsUsedDialogProps {

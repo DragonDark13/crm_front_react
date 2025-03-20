@@ -9,24 +9,24 @@ import {
     MenuItem,
     InputLabel, FormControl, Collapse, Paper
 } from '@mui/material';
-import CustomDialog from "../CustomDialog/CustomDialog";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
-import QuantityField from "../../FormComponents/QuantityField";
-import {roundToDecimalPlaces} from "../../../utils/function";
-import TotalPriceField from "../../FormComponents/TotalPriceField";
-import {ICustomer, ICustomerDetails, IMaterial, ISaleData} from "../../../utils/types";
-import {useCustomers} from "../../Provider/CustomerContext";
+import QuantityField from "../../../FormComponents/QuantityField";
+import {roundToDecimalPlaces} from "../../../../utils/function";
+import TotalPriceField from "../../../FormComponents/TotalPriceField";
+import {ICustomer, ICustomerDetails, IMaterial, ISaleData} from "../../../../utils/types";
+import {useCustomers} from "../../../Provider/CustomerContext";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
-import {usePackaging} from "../../Provider/PackagingContext";
+import {usePackaging} from "../../../Provider/PackagingContext";
 import {AxiosError} from "axios";
-import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
-import AddNewCustomerDialog from "../AddNewCustomerDialog/AddNewCustomerDialog";
+import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
+import AddNewCustomerDialog from "../../CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import {createCustomer, fetchGetAllCustomers} from "../../../api/_customer";
+import {createCustomer, fetchGetAllCustomers} from "../../../../api/_customer";
 
 
 interface ISaleProductModal {

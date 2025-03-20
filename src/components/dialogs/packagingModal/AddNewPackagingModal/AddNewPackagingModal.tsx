@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import CustomDialog from "../CustomDialog/CustomDialog";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 import {
     Button,
     CircularProgress,
@@ -11,7 +11,7 @@ import {
     Typography
 } from "@mui/material";
 import axios from "axios";
-import {axiosInstance} from "../../../api/api";
+import {axiosInstance} from "../../../../api/api";
 import AddPackagingSupplierForm from "./AddPackagingSupplierForm";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 

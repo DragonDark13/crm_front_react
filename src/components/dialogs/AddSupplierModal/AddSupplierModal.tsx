@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {DialogContent, TextField, DialogActions, Button} from '@mui/material';
 import CustomDialog from "../CustomDialog/CustomDialog";
+import CancelButton from "../../Buttons/CancelButton";
 
 interface INewSupplier {
     name: string;
@@ -9,11 +10,11 @@ interface INewSupplier {
 
 interface AddSupplierModalProps {
     open: boolean;
-    handleClose: () => void;
+    handleCloseAddSupplierModal: () => void;
     handleAddSupplier: (supplier: INewSupplier) => void;
 }
 
-const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, handleAddSupplier}) => {
+const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleCloseAddSupplierModal, handleAddSupplier}) => {
     const [name, setName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
     const [email, setEmail] = useState('');
@@ -46,7 +47,7 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
         <CustomDialog
             open={open}
             title="Додати нового постачальника"
-            handleClose={handleClose}
+            handleClose={handleCloseAddSupplierModal}
         >
             <DialogContent>
                 <TextField
@@ -91,13 +92,10 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleClose, h
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="error">
-                    Відміна
-                </Button>
+                <CancelButton onClick={handleCloseAddSupplierModal}/>
 
                 <Button
                     onClick={handleSave}
-                    color="success"
                     variant="contained"
                     disabled={!name.trim()} // Кнопка неактивна, якщо поле порожнє
                 >

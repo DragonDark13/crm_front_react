@@ -7,8 +7,8 @@ import {
     Button,
     TextField, Box, MenuItem, Grid,
 } from '@mui/material';
-import {axiosInstance} from "../../../api/api";
-import CustomDialog from "../CustomDialog/CustomDialog";
+import {axiosInstance} from "../../../../api/api";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 
 interface PurchaseMaterialDialogProps {

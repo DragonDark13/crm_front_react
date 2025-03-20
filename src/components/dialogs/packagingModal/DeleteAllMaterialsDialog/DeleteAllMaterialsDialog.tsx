@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
-import {axiosInstance} from "../../../api/api";
+import {axiosInstance} from "../../../../api/api";
 
 const DeleteAllMaterialsDialog: React.FC = () => {
     const [open, setOpen] = useState(false);

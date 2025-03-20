@@ -4,18 +4,18 @@ import {
     Button,
     DialogActions, Grid, TextField, Typography,
 } from '@mui/material';
-import CustomDialog from "../CustomDialog/CustomDialog";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 
-import ProductNameField from "../../FormComponents/ProductNameField";
-import PriceField from "../../FormComponents/PriceField";
-import TotalPriceField from "../../FormComponents/TotalPriceField";
-import QuantityField from "../../FormComponents/QuantityField";
-import CategoriesSelect from "../../FormComponents/CategoriesSelect";
-import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../utils/function";
-import SupplierSelect from "../../FormComponents/SupplierSelect";
-import { IEditProduct,} from "../../../utils/types";
-import {useCategories} from "../../Provider/CategoryContext";
-import {useSuppliers} from "../../Provider/SupplierContext";
+import ProductNameField from "../../../FormComponents/ProductNameField";
+import PriceField from "../../../FormComponents/PriceField";
+import TotalPriceField from "../../../FormComponents/TotalPriceField";
+import QuantityField from "../../../FormComponents/QuantityField";
+import CategoriesSelect from "../../../FormComponents/CategoriesSelect";
+import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../../utils/function";
+import SupplierSelect from "../../../FormComponents/SupplierSelect";
+import { IEditProduct,} from "../../../../utils/types";
+import {useCategories} from "../../../Provider/CategoryContext";
+import {useSuppliers} from "../../../Provider/SupplierContext";
 
 interface IEditProductModalProps {
     openEdit: boolean;

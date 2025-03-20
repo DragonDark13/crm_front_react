@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Button,DialogActions, DialogContent, TextField} from "@mui/material";
-import {ICustomerDetails} from "../../../utils/types";
-import CustomDialog from "../CustomDialog/CustomDialog";
+import {ICustomerDetails} from "../../../../utils/types";
+import CustomDialog from "../../CustomDialog/CustomDialog";
+import CancelButton from "../../../Buttons/CancelButton";
 
 
 export interface IAddNewCustomerDialog {
@@ -10,7 +11,6 @@ export interface IAddNewCustomerDialog {
     handleAddCustomer: (newCustomer: ICustomerDetails) => void;
     newCustomerData: ICustomerDetails;
     setNewCustomerData: (data: ICustomerDetails) => void;
-
 }
 
 const AddNewCustomerDialog = ({
@@ -49,7 +49,7 @@ const AddNewCustomerDialog = ({
     return (
         <CustomDialog
             open={openAddNewCustomerDialog}
-            title="Додати нового клієнта"
+            title="Додати нового покупця"
             handleClose={handleCloseAddNewCustomerDialog}
         >
             <DialogContent>
@@ -95,10 +95,11 @@ const AddNewCustomerDialog = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={handleCloseAddNewCustomerDialog} color="error">
-                    Скасувати
-                </Button>
-                <Button variant="contained" onClick={handleCreate} color="success">
+
+                <CancelButton onClick={handleCloseAddNewCustomerDialog}
+
+                />
+                <Button variant="contained" onClick={handleCreate} >
                     Створити
                 </Button>
             </DialogActions>

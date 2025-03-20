@@ -4,14 +4,14 @@ import {
     DialogActions,
     DialogContent, Grid,
 } from '@mui/material';
-import CustomDialog from "../CustomDialog/CustomDialog";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 import {useState, useEffect} from "react";
-import SupplierSelect from "../../FormComponents/SupplierSelect";
-import QuantityField from "../../FormComponents/QuantityField";
-import {roundToDecimalPlaces} from "../../../utils/function";
-import TotalPriceField from "../../FormComponents/TotalPriceField";
-import {IPurchaseData, ISupplier} from "../../../utils/types";
-import {useSuppliers} from "../../Provider/SupplierContext";
+import SupplierSelect from "../../../FormComponents/SupplierSelect";
+import QuantityField from "../../../FormComponents/QuantityField";
+import {roundToDecimalPlaces} from "../../../../utils/function";
+import TotalPriceField from "../../../FormComponents/TotalPriceField";
+import {IPurchaseData, ISupplier} from "../../../../utils/types";
+import {useSuppliers} from "../../../Provider/SupplierContext";
 
 interface IPurchaseProductModal {
     openPurchase: boolean;

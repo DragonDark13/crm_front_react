@@ -14,12 +14,12 @@ import {
     Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog, Box, TablePagination
 } from '@mui/material';
 import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../utils/types";
-import PurchaseMaterialDialog from "../dialogs/AddNewPackagingModal/PurchaseMaterialDialog";
-import MarkPackagingAsUsedDialog from "../dialogs/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
+import PurchaseMaterialDialog from "../dialogs/packagingModal/AddNewPackagingModal/PurchaseMaterialDialog";
+import MarkPackagingAsUsedDialog from "../dialogs/packagingModal/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
 import MaterialHistoryTable from "./MaterialHistoryTable";
 import {usePackaging} from "../Provider/PackagingContext";
 import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../api/_packagingMaterials";
-import DeleteAllMaterialsDialog from "../dialogs/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
+import DeleteAllMaterialsDialog from "../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
 import {useAuth} from "../context/AuthContext";
 import {Tooltip, IconButton} from '@mui/material';
 import {AddShoppingCart, Update, History} from "@mui/icons-material";

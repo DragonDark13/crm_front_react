@@ -29,6 +29,7 @@ export const API_ENDPOINTS = {
     LOGOUT: '/logout',
     PRODUCTS: '/products',
     CATEGORIES: '/categories',
+    ADD_NEW_CATEGORIES: '/add_new_category',
     ADD_SUPPLIERS: '/create_supplier',
     EDIT_SUPPLIERS: (id: number) => `/supplier_edit/${id}`,
     GET_ALL_SUPPLIERS: '/suppliers/list',

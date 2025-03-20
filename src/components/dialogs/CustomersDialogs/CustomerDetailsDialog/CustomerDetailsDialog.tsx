@@ -1,7 +1,7 @@
 import React from 'react';
 import {Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography} from '@mui/material';
-import {ICustomerDetails} from "../../../utils/types";
-import CustomDialog from "../CustomDialog/CustomDialog";
+import {ICustomerDetails} from "../../../../utils/types";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 
 interface CustomerDetailsDialogProps {
     open: boolean;

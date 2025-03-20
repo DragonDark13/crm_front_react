@@ -7,12 +7,12 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useCustomers} from "../Provider/CustomerContext";
 import {ICustomerDetails} from "../../utils/types";
-import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
+import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import {AxiosError} from "axios";
 import {useAuth} from "../context/AuthContext";
-import CustomerDetailsDialog from "../dialogs/CustomerDetailsDialog/CustomerDetailsDialog";
-import EditCustomerDialog from "../dialogs/EditCustomerDialog/EditCustomerDialog";
+import CustomerDetailsDialog from "../dialogs/CustomersDialogs/CustomerDetailsDialog/CustomerDetailsDialog";
+import EditCustomerDialog from "../dialogs/CustomersDialogs/EditCustomerDialog/EditCustomerDialog";
 import {
     createCustomer,
     deleteCustomerData,

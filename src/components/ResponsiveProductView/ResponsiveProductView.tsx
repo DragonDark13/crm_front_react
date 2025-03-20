@@ -58,7 +58,6 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const {isAuthenticated} = useAuth();
 
-    console.log("filteredAndSearchedProducts", filteredAndSearchedProducts);
     return (
         <React.Fragment>
             <Grid container justifyContent={"flex-end"}>

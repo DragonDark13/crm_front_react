@@ -9,18 +9,18 @@ import {
     modalNames,
     ModalNames
 } from "../../utils/types";
-import AddProductModal from "../dialogs/AddProductModal/AddProductModal";
+import AddProductModal from "../dialogs/productsDialogs/AddProductModal/AddProductModal";
 import {useProducts} from "../Provider/ProductContext";
 import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import {useCategories} from "../Provider/CategoryContext";
 import {useSuppliers} from "../Provider/SupplierContext";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
-import AddNewCustomerDialog from "../dialogs/AddNewCustomerDialog/AddNewCustomerDialog";
+import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {AxiosError} from "axios";
 import {useCustomers} from "../Provider/CustomerContext";
 import {useAuth} from "../context/AuthContext";
-import AddNewPackagingModal from "../dialogs/AddNewPackagingModal/AddNewPackagingModal";
+import AddNewPackagingModal from "../dialogs/packagingModal/AddNewPackagingModal/AddNewPackagingModal";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {addSupplier} from "../../api/_supplier";
 import {addProduct} from "../../api/_product";
@@ -296,7 +296,7 @@ const AddButtonWithMenu = () => {
             {modalState.openAddSupplierOpen && <AddSupplierModal
                 handleAddSupplier={handleAddSupplier}
                 open={modalState.openAddSupplierOpen}
-                handleClose={() => handleModalClose("openAddSupplierOpen")}
+                handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
             />}
 
             {modalState.createCustomerDialog && <AddNewCustomerDialog

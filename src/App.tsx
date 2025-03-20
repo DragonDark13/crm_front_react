@@ -13,7 +13,7 @@ import {
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 import CloseIcon from '@mui/icons-material/Close';
 
-import ProductHistoryModal from "./components/dialogs/ProductHistoryModal/ProductHistoryModal";
+import ProductHistoryModal from "./components/dialogs/productsDialogs/ProductHistoryModal/ProductHistoryModal";
 import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
 
 //TODO add handle error

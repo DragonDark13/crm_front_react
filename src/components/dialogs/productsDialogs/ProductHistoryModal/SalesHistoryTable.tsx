@@ -10,7 +10,7 @@ import {
     Typography,
     TableFooter, Button
 } from "@mui/material";
-import {ICustomer} from "../../../utils/types";
+import {ICustomer} from "../../../../utils/types";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 
 interface SalesHistoryRecord {
