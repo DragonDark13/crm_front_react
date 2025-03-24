@@ -100,7 +100,7 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({open, onClose, gift
             <CustomDialog
                 open={open}
                 handleClose={onClose}
-                title={`Продаж ${giftSet.name}`}
+                title={`Продаж  подарункового набору ${giftSet.name}`}
                 maxWidth="md"
             >
                 <DialogContent>
@@ -195,6 +195,8 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({open, onClose, gift
                         Cancel
                     </Button>
                     <Button
+                        color="primary"
+                   
                         onClick={handleSell}
                         variant="contained"
                         disabled={loading}

@@ -79,7 +79,7 @@ const ProductsSection = ({
                             </Grid>
                             <Grid item xs={6}>
                                 <QuantityField
-margin={"dense"} margin={"dense"}
+                                    margin={"dense"}
                                     value={item.quantity}
                                     onChange={(e) => handleQuantityChange(product.id, Number(e.target.value), "product")}
                                     onIncrement={() => handleQuantityChange(product.id, item.quantity + 1, "product")}

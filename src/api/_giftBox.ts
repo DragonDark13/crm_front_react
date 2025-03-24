@@ -1,4 +1,4 @@
-import {GiftSetPayload, ICustomer, ICustomerDetails} from "../utils/types";
+import {GiftSetPayload} from "../utils/types";
 import {API_ENDPOINTS, postResource} from "./api";
 
 

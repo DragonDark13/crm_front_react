@@ -6,7 +6,7 @@ import GiftSetList from "./GiftSetList";
 const GiftSetsPage = () => {
     return (
         <div>
-              <Typography marginBlockEnd={3} variant={"h4"}>Create Gift Set</Typography>
+            <Typography marginBlockEnd={3} variant={"h4"}>Подарункові бокси</Typography>
 
             {/*<CreateGiftBox/>*/}
 

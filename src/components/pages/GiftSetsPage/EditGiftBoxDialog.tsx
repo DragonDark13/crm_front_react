@@ -16,6 +16,9 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import {useProducts} from "../../Provider/ProductContext";
 import {usePackaging} from "../../Provider/PackagingContext";
 import {IMaterial, IProduct} from "../../../utils/types";
+import QuantityField from "../../FormComponents/QuantityField";
+import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
+import CancelButton from "../../Buttons/CancelButton";
 
 const EditGiftBoxDialog = ({
                                open,
@@ -33,6 +36,8 @@ const EditGiftBoxDialog = ({
     const [selectedPackaging, setSelectedPackaging] = useState(giftBox.packagings);
     const [showSelectProduct, setShowSelectProduct] = useState(false);
     const [showSelectPackaging, setShowSelectPackaging] = useState(false);
+
+    const {showSnackbarMessage} = useSnackbarMessage()
 
     const calculateTotalCost = () => {
         const productCost = selectedProducts.reduce(
@@ -85,7 +90,8 @@ const EditGiftBoxDialog = ({
                 );
             }
         } else {
-            alert('Quantity exceeds available stock.');
+            showSnackbarMessage('Quantity exceeds available stock.', "warning")
+
         }
     };
 
@@ -129,7 +135,8 @@ const EditGiftBoxDialog = ({
                     if (existingProduct.quantity < value.available_quantity) {
                         existingProduct.quantity += 1;
                     } else {
-                        alert('Max quantity reached for this product.');
+                        showSnackbarMessage('Max quantity reached for this product.', "warning")
+
                     }
 
                     return updatedProducts;
@@ -156,7 +163,7 @@ const EditGiftBoxDialog = ({
                     if (existing.quantity < value.available_quantity) {
                         existing.quantity += 1;
                     } else {
-                        alert('Max quantity reached for this packaging.');
+                        showSnackbarMessage('Max quantity reached for this packaging.', "warning")
                     }
                     return updated;
                 } else {
@@ -172,7 +179,7 @@ const EditGiftBoxDialog = ({
         }
     };
 
-    const handleSubmit = () => {
+    const handleEditGiftBox = () => {
         const updatedGiftBox = {
             id: giftBox.id,
             name,
@@ -186,242 +193,118 @@ const EditGiftBoxDialog = ({
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle>Edit Gift Set</DialogTitle>
+            <DialogTitle>Редагування подарункового набору {giftBox.name}</DialogTitle>
             <DialogContent>
-                <TextField
-                    fullWidth
-                    label="Set Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    margin="normal"
-                />
-                <TextField
-                    fullWidth
-                    label="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    margin="normal"
-                />
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                        <TextField fullWidth label="Назва набору" value={name} onChange={(e) => setName(e.target.value)}
+                                   margin="normal"/>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <TextField fullWidth label="Опис" value={description}
+                                   onChange={(e) => setDescription(e.target.value)}
+                                   margin="normal"/>
+                    </Grid>
+                </Grid>
 
-                <Typography variant="h6" style={{marginTop: 20}}>
-                    Products
-                </Typography>
-                {selectedProducts.map((item) => (
-                    <Grid container key={item.product_id} spacing={2} alignItems="center">
-                        <Grid item xs={6}>
-                            {products.find((p) => p.id === item.product_id)?.name}
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Grid container alignItems="center" spacing={1}>
-                                <Grid item>
-                                    <IconButton
-                                        onClick={() => handleDecreaseQuantity(item.product_id, "product")}
-                                    >
-                                        <RemoveIcon/>
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        label="Quantity"
+                <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                        <TextField fullWidth label="Ціна набору" type="number" value={price}
+                                   onChange={(e) => setPrice(Number(e.target.value))} margin="normal"/>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Typography variant="body1" style={{marginTop: 20}}>Загальна
+                            вартість: {calculateTotalCost().toFixed(2)} UAH</Typography>
+                        <Typography variant="body1">Прибуток: {calculateProfit().toFixed(2)} UAH</Typography>
+                    </Grid>
+                </Grid>
+
+
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                        <Typography variant="h6" style={{marginTop: 20}}>Продукти</Typography>
+                        {selectedProducts.map((item) => (
+                            <Grid container key={item.product_id} spacing={1} alignItems="center">
+                                <Grid item xs={6}>{products.find((p) => p.id === item.product_id)?.name}</Grid>
+                                <Grid item xs={6}>
+                                    <QuantityField
+                                        margin={"dense"}
                                         value={item.quantity}
-                                        onChange={(e) =>
-                                            handleQuantityChange(
-                                                item.product_id,
-                                                Number(e.target.value),
-                                                "product"
-                                            )
-                                        }
-                                        type="number"
-                                        fullWidth
-                                        inputProps={{min: 1}}
+                                        onChange={(e) => handleQuantityChange(item.product_id, Number(e.target.value), "product")}
+                                        onIncrement={() => handleQuantityChange(item.product_id, item.quantity + 1, "product")}
+                                        onDecrement={() => handleDecreaseQuantity(item.product_id, "product")}
+
                                     />
-                                </Grid>
-                                <Grid item>
-                                    <IconButton
-                                        onClick={() => handleQuantityChange(item.product_id, item.quantity + 1, "product")}
-                                    >
-                                        <AddIcon/>
-                                    </IconButton>
+                                    {/*<Grid container alignItems="center" spacing={1}>*/}
+                                    {/*    <Grid item>*/}
+                                    {/*        <IconButton*/}
+                                    {/*            onClick={() => handleDecreaseQuantity(item.product_id, "product")}>*/}
+                                    {/*            <RemoveIcon/>*/}
+                                    {/*        </IconButton>*/}
+                                    {/*    </Grid>*/}
+                                    {/*    <Grid item>*/}
+                                    {/*        <TextField label="Кількість" value={item.quantity}*/}
+                                    {/*                   onChange={(e) => handleQuantityChange(item.product_id, Number(e.target.value), "product")}*/}
+                                    {/*                   type="number" fullWidth inputProps={{min: 1}}/>*/}
+                                    {/*    </Grid>*/}
+                                    {/*    <Grid item>*/}
+                                    {/*        <IconButton*/}
+                                    {/*            onClick={() => handleQuantityChange(item.product_id, item.quantity + 1, "product")}>*/}
+                                    {/*            <AddIcon/>*/}
+                                    {/*        </IconButton>*/}
+                                    {/*    </Grid>*/}
+                                    {/*</Grid>*/}
                                 </Grid>
                             </Grid>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <IconButton
-                                color="secondary"
-                                onClick={() => handleQuantityChange(item.product_id, item.quantity - 1, "product")}
-                            >
-                                Remove
-                            </IconButton>
-                        </Grid>
+                        ))}
                     </Grid>
-                ))}
 
-                {!showSelectProduct ? (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon/>}
-                        onClick={() => setShowSelectProduct(true)}
-                    >
-                        Add Product
-                    </Button>
-                ) : (
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <Autocomplete
-                                onChange={handleProductSelect}
-                                options={products.filter((product) => {
-                                    const selected = selectedProducts.find(
-                                        (item) => item.product_id === product.id
-                                    );
-                                    return (
-                                        product.available_quantity > 0 &&
-                                        (!selected || product.available_quantity > selected.quantity)
-                                    );
-                                })}
-                                getOptionLabel={(option) => option.name}
-                                renderInput={(params) => <TextField {...params} label="Select a Product"/>}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                disableClearable
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.name} ({option.available_quantity} шт)
-                                    </li>
-                                )}
-                            />
-                        </Grid>
-                        <Grid>
-                            <Button
-                                variant="outlined"
-                                color="secondary"
-                                onClick={() => setShowSelectProduct(false)}
-                            >
-                                Close
-                            </Button>
-                        </Grid>
-                    </Grid>
-                )}
-
-                <Typography variant="h6" style={{marginTop: 20}}>
-                    Packaging
-                </Typography>
-
-                {selectedPackaging.map((item) => (
-                    <Grid container key={item.packaging_id} spacing={2} alignItems="center">
-                        <Grid item xs={6}>
-                            {packagingMaterials.find((m) => m.id === item.packaging_id)?.name}
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Grid container alignItems="center" spacing={1}>
-                                <Grid item>
-                                    <IconButton
-                                        onClick={() => handleDecreaseQuantity(item.packaging_id, "packaging")}
-                                    >
-                                        <RemoveIcon/>
-                                    </IconButton>
-                                </Grid>
-                                <Grid item>
-                                    <TextField
-                                        label="Quantity"
+                    <Grid item xs={6}>
+                        <Typography variant="h6" style={{marginTop: 20}}>Пакування</Typography>
+                        {selectedPackaging.map((item) => (
+                            <Grid container key={item.packaging_id} spacing={1} alignItems="center">
+                                <Grid item
+                                      xs={6}>{packagingMaterials.find((m) => m.id === item.packaging_id)?.name}</Grid>
+                                <Grid item xs={6}>
+                                    <QuantityField
+                                        margin={"dense"}
                                         value={item.quantity}
-                                        onChange={(e) =>
-                                            handleQuantityChange(
-                                                item.packaging_id,
-                                                Number(e.target.value),
-                                                "packaging"
-                                            )
-                                        }
-                                        type="number"
-                                        fullWidth
-                                        inputProps={{min: 1}}
+                                        onChange={(e) => handleQuantityChange(item.packaging_id, Number(e.target.value), "packaging")}
+                                        onIncrement={() => handleQuantityChange(item.packaging_id, item.quantity + 1, "product")}
+                                        onDecrement={() => handleDecreaseQuantity(item.packaging_id, "packaging")}
+
                                     />
-                                </Grid>
-                                <Grid item>
-                                    <IconButton
-                                        onClick={() => handleQuantityChange(item.packaging_id, item.quantity + 1, "packaging")}
-                                    >
-                                        <AddIcon/>
-                                    </IconButton>
+
+                                    {/*<Grid container alignItems="center" spacing={1}>*/}
+                                    {/*    <Grid item>*/}
+                                    {/*        <IconButton*/}
+                                    {/*            onClick={() => handleDecreaseQuantity(item.packaging_id, "packaging")}>*/}
+                                    {/*            <RemoveIcon/>*/}
+                                    {/*        </IconButton>*/}
+                                    {/*    </Grid>*/}
+                                    {/*    <Grid item>*/}
+                                    {/*        <TextField label="Кількість" value={item.quantity}*/}
+                                    {/*                   onChange={(e) => handleQuantityChange(item.packaging_id, Number(e.target.value), "packaging")}*/}
+                                    {/*                   type="number" fullWidth inputProps={{min: 1}}/>*/}
+                                    {/*    </Grid>*/}
+                                    {/*    <Grid item>*/}
+                                    {/*        <IconButton*/}
+                                    {/*            onClick={() => handleQuantityChange(item.packaging_id, item.quantity + 1, "packaging")}>*/}
+                                    {/*            <AddIcon/>*/}
+                                    {/*        </IconButton>*/}
+                                    {/*    </Grid>*/}
+                                    {/*</Grid>*/}
                                 </Grid>
                             </Grid>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <IconButton
-                                color="secondary"
-                                onClick={() => handleQuantityChange(item.packaging_id, item.quantity - 1, "packaging")}
-                            >
-                                Remove
-                            </IconButton>
-                        </Grid>
+                        ))}
                     </Grid>
-                ))}
+                </Grid>
 
-                {!showSelectPackaging ? (
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<AddIcon/>}
-                        onClick={() => setShowSelectPackaging(true)}
-                    >
-                        Add Packaging
-                    </Button>
-                ) : (
-                    <Grid container>
-                        <Grid item xs={9}>
-                            <Autocomplete
-                                onChange={handlePackagingSelect}
-                                options={packagingMaterials.filter((packaging) => {
-                                    const selected = selectedPackaging.find(
-                                        (item) => item.packaging_id === packaging.id
-                                    );
-                                    return !selected;
-                                })}
-                                getOptionLabel={(option) => option.name}
-                                renderInput={(params) => <TextField {...params} label="Select Packaging"/>}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                                disableClearable
-                                renderOption={(props, option) => (
-                                    <li {...props} key={option.id}>
-                                        {option.name} ({option.available_quantity} шт)
-                                    </li>
-                                )}
-                            />
-                        </Grid>
-                        <Grid>
-                            <Button
-                                variant="outlined"
-                                color="secondary"
-                                onClick={() => setShowSelectPackaging(false)}
-                            >
-                                Close
-                            </Button>
-                        </Grid>
-                    </Grid>
-                )}
 
-                <TextField
-                    fullWidth
-                    label="Set Price"
-                    type="number"
-                    value={price}
-                    onChange={(e) => setPrice(Number(e.target.value))}
-                    margin="normal"
-                />
-
-                <Typography variant="h6" style={{marginTop: 20}}>
-                    Total Cost: {calculateTotalCost().toFixed(2)} UAH
-                </Typography>
-                <Typography variant="h6">
-                    Profit: {calculateProfit().toFixed(2)} UAH
-                </Typography>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="secondary">
-                    Cancel
-                </Button>
-                <Button onClick={handleSubmit} color="primary">
-                    Save
-                </Button>
+                <CancelButton onClick={onClose}/>
+                <Button onClick={handleEditGiftBox} variant={"contained"} color="primary">Зберегти</Button>
             </DialogActions>
         </Dialog>
     );
