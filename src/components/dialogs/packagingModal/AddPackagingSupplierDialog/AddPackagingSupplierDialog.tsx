@@ -12,6 +12,7 @@ import {
 import React, {useState} from 'react';
 import {axiosInstance} from "../../../../api/api";
 import CustomDialog from "../../CustomDialog/CustomDialog";
+import CancelButton from "../../../Buttons/CancelButton";
 
 interface AddPackagingSupplierDialogProps {
     openAddSupplier: boolean;
@@ -71,9 +72,8 @@ const AddPackagingSupplierDialog = ({openAddSupplier, handleCloseAddSupplier}: A
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseAddSupplier} color="primary">
-                    Скасувати
-                </Button>
+
+                <CancelButton onClick={handleCloseAddSupplier}/>
                 <Button
                     onClick={handleSubmit}
                     variant="contained"

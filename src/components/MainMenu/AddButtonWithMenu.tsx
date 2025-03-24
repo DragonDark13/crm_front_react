@@ -27,7 +27,7 @@ import {addProduct} from "../../api/_product";
 import {addNewCategory} from "../../api/_categories";
 import {axiosInstance} from "../../api/api";
 import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
-import AddGiftBoxModal from "./AddGiftBoxModal";
+import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -311,8 +311,8 @@ const AddButtonWithMenu = () => {
                                                                handlePurchaseNewPackaging={handlePurchaseNewPackaging}/>}
 
             {modalState.addNewGiftBox && <AddGiftBoxModal
-                handleClose={() => handleModalClose('addNewGiftBox')}
-                open={modalState.addNewGiftBox}
+                handleCloseGiftModal={() => handleModalClose('addNewGiftBox')}
+                openGiftModal={modalState.addNewGiftBox}
             />}
 
 

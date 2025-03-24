@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import axios from "axios";
-import {useProducts} from "../Provider/ProductContext";
+import {useProducts} from "../../Provider/ProductContext";
 import {
     Autocomplete,
     Button, DialogActions,
@@ -13,23 +13,24 @@ import {
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import {IMaterial, IProduct} from "../../utils/types";
-import {usePackaging} from "../Provider/PackagingContext";
-import {axiosInstance} from "../../api/api";
-import CustomDialog from "../dialogs/CustomDialog/CustomDialog";
+import {IMaterial, IProduct} from "../../../utils/types";
+import {usePackaging} from "../../Provider/PackagingContext";
+import {axiosInstance} from "../../../api/api";
+import CustomDialog from "../CustomDialog/CustomDialog";
 import ProductsSection from "./ProductsSection";
-import PackagingMaterialList from "../pages/PackagingMaterialList";
+import PackagingMaterialList from "../../pages/PackagingMaterialList";
 import PackagingSection from "./PackagingSection";
 import GiftSetDetailsSection from "./GiftSetDetailsSection";
 import SummarySection from "./SummarySection";
+import CancelButton from "../../Buttons/CancelButton";
 
 interface ICreateGiftBox {
-    handleClose: () => void;
-    open: boolean;
+    handleCloseGiftModal: () => void;
+    openGiftModal: boolean;
 }
 
 
-const AddGiftBoxModal = ({handleClose, open}: ICreateGiftBox) => {
+const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
@@ -209,9 +210,9 @@ const AddGiftBoxModal = ({handleClose, open}: ICreateGiftBox) => {
 
     return (
         <CustomDialog
-            open={open}
+            open={openGiftModal}
             title="Створити подарунковий набір"
-            handleClose={handleClose}
+            handleClose={handleCloseGiftModal}
             maxWidth="md"
             fullWidth
         >
@@ -249,6 +250,7 @@ const AddGiftBoxModal = ({handleClose, open}: ICreateGiftBox) => {
                 <SummarySection calculateProfit={calculateProfit} calculateTotalCost={calculateTotalCost}/>
             </DialogContent>
             <DialogActions>
+                <CancelButton onClick={handleCloseGiftModal}/>
 
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     Save Gift Set

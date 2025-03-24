@@ -14,6 +14,8 @@ import axios from "axios";
 import {axiosInstance} from "../../../../api/api";
 import AddPackagingSupplierForm from "./AddPackagingSupplierForm";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
+import CancelButton from "../../../Buttons/CancelButton";
+import AddIcon from "@mui/icons-material/Add";
 
 interface IAddNewPackaging {
     openAddNewPackaging: boolean;
@@ -92,7 +94,7 @@ const AddNewPackagingModal = ({
                 open={openAddNewPackaging}
                 handleClose={handleCloseAddNewPackaging}
                 title="Додайте нове пакування"
-                maxWidth="sm"
+                maxWidth="md"
             >
                 <DialogContent>
                     <Grid container spacing={2} alignItems={"center"}>
@@ -124,7 +126,7 @@ const AddNewPackagingModal = ({
                             </TextField>
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
-                            <Button variant={"contained"} onClick={handleOpenAddSupplier}>
+                            <Button size={"large"} color={"secondary"} variant={"contained"} onClick={handleOpenAddSupplier} endIcon={<AddIcon/>} >
                                 Додати
                             </Button>
                         </Grid>
@@ -169,7 +171,7 @@ const AddNewPackagingModal = ({
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant="outlined" onClick={handleCloseAddNewPackaging}>Закрити</Button>
+                    <CancelButton onClick={handleCloseAddNewPackaging} />
                     <Button variant="contained" color="primary"
                             onClick={() => handlePurchaseNewPackaging({
                                 name: name,

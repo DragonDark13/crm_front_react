@@ -33,7 +33,7 @@ const CustomDialog: React.FC<ICustomDialogProps> = ({
             fullWidth={fullWidth}
             {...rest}
         >
-            <DialogTitle id="custom-dialog-title">
+            <DialogTitle variant={"h5"} id="custom-dialog-title">
                 {title}
                 <IconButton
                     aria-label="close"

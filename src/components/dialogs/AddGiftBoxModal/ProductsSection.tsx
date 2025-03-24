@@ -2,7 +2,7 @@ import {Autocomplete, Button, DialogContent, Divider, Grid, IconButton, TextFiel
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
-import QuantityField from "../FormComponents/QuantityField";
+import QuantityField from "../../FormComponents/QuantityField";
 
 const ProductsSection = ({
                              showSelectProduct,
@@ -20,7 +20,7 @@ const ProductsSection = ({
             {!showSelectProduct ? (
                 <Button
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     startIcon={<AddIcon/>}
                     onClick={() => setShowSelectProduct(true)} // Show select when button is clicked
                 >
