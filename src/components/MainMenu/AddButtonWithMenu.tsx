@@ -2,7 +2,8 @@ import {Add} from "@mui/icons-material";
 import {Box, Button, Grid, IconButton, Popover, Tooltip} from "@mui/material";
 import React, {useState} from "react";
 import {
-    ICustomerDetails,
+    GiftSetPayload,
+    ICustomerDetails, IHandleAddNewGiftBox, INewGiftBox,
     INewProduct,
     INewSupplier,
     IPurchasePackagingMaterial,
@@ -28,6 +29,7 @@ import {addNewCategory} from "../../api/_categories";
 import {axiosInstance} from "../../api/api";
 import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
 import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
+import {createGiftBox} from "../../api/_giftBox";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -208,6 +210,45 @@ const AddButtonWithMenu = () => {
         });
     };
 
+    const handleAddNewGiftBox = (handleAddNewGiftBox: IHandleAddNewGiftBox) => {
+        if (!handleAddNewGiftBox.name.trim()) {
+            showSnackbarMessage('The gift set must have a name.', 'warning'); // Show success message
+            return;
+        }
+
+        if (handleAddNewGiftBox.selectedProducts.length === 0 && handleAddNewGiftBox.selectedPackaging.length === 0) {
+            showSnackbarMessage('The gift set must contain at least one product or packaging.', 'warning'); // Show success message
+            return;
+        }
+
+        const payload: GiftSetPayload = {
+            name: handleAddNewGiftBox.name,
+            description: handleAddNewGiftBox.description,
+            gift_selling_price: handleAddNewGiftBox.price,
+            items: [
+                ...handleAddNewGiftBox.selectedProducts.map((item) => ({
+                    item_id: item.item_id,
+                    item_type: "product" as const,
+                    quantity: item.quantity,
+                })),
+                ...handleAddNewGiftBox.selectedPackaging.map((item) => ({
+                    item_id: item.item_id,
+                    item_type: "packaging" as const,
+                    quantity: item.quantity,
+                })),
+            ],
+        };
+
+        createGiftBox(payload).then(() => {
+            handleModalClose("addNewGiftBox");
+            showSnackbarMessage('Gift box created successfully!', 'success'); // Show success message
+        }).catch((error: AxiosError) => {
+            console.error('Error creating gift box:', error);
+            showSnackbarMessage('Error creating gift box: ' + error.response?.data?.error || 'Unknown error', 'error');
+        });
+
+    };
+
 
     return (
         <Box>
@@ -313,6 +354,7 @@ const AddButtonWithMenu = () => {
             {modalState.addNewGiftBox && <AddGiftBoxModal
                 handleCloseGiftModal={() => handleModalClose('addNewGiftBox')}
                 openGiftModal={modalState.addNewGiftBox}
+                handleAddNewGiftBox={handleAddNewGiftBox}
             />}
 
 

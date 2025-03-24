@@ -10,9 +10,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import axios from "axios";
 import {axiosInstance} from "../../../../api/api";
-import AddPackagingSupplierForm from "./AddPackagingSupplierForm";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 import CancelButton from "../../../Buttons/CancelButton";
 import AddIcon from "@mui/icons-material/Add";

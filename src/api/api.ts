@@ -45,6 +45,7 @@ export const API_ENDPOINTS = {
     GET_ALL_PACKAGING_MATERIALS: '/get_all_packaging_materials',  // New endpoint for packaging materials
     CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`,
     ADD_NEW_PACKAGING_MATERIAL: '/packaging_materials/purchase',
+    CREATE_GIFT_SET: '/create_gift_set'
 };
 
 // Уніфікована обробка помилок
@@ -91,7 +92,7 @@ export const exportToExcel = async (productIds: number[]) => {
 
 export async function sellGiftSet(requestData:
                                       {
-                                          gift_set_id:  number ,
+                                          gift_set_id: number,
                                           customer_id: number,
                                           sale_date: string | null,
                                           selling_price: number

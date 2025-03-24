@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import {IMaterial, IProduct} from "../../../utils/types";
+import {IHandleAddNewGiftBox, IMaterial, IProduct} from "../../../utils/types";
 import {usePackaging} from "../../Provider/PackagingContext";
 import {axiosInstance} from "../../../api/api";
 import CustomDialog from "../CustomDialog/CustomDialog";
@@ -23,14 +23,16 @@ import PackagingSection from "./PackagingSection";
 import GiftSetDetailsSection from "./GiftSetDetailsSection";
 import SummarySection from "./SummarySection";
 import CancelButton from "../../Buttons/CancelButton";
+import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 
 interface ICreateGiftBox {
     handleCloseGiftModal: () => void;
     openGiftModal: boolean;
+    handleAddNewGiftBox: (IHandleAddNewGiftBox) => void;
 }
 
 
-const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) => {
+const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal, handleAddNewGiftBox}: ICreateGiftBox) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
@@ -41,6 +43,8 @@ const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) 
     const [selectedPackaging, setSelectedPackaging] = useState<{ material: IMaterial, quantity: number }[]>([]);
     const [showSelectProduct, setShowSelectProduct] = useState(false);
     const [showSelectPackaging, setShowSelectPackaging] = useState(false);
+    const {showSnackbarMessage} = useSnackbarMessage()
+
 
     const handleProductSelect = (event: any, value: any) => {
         if (value) {
@@ -59,7 +63,9 @@ const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) 
                         existingProduct.quantity += 1;
                     } else {
                         // Якщо досягнута максимальна кількість, нічого не робимо
-                        alert('Max quantity reached for this product.');
+                        showSnackbarMessage('Max quantity reached for this product.', 'warning'); // Show success
+                        // message
+
                     }
 
                     return updatedProducts;
@@ -82,7 +88,7 @@ const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) 
                     if (existing.quantity < value.available_quantity) {
                         existing.quantity += 1;
                     } else {
-                        alert('Max quantity reached for this packaging.');
+                        showSnackbarMessage('Max quantity reached for this packaging.', 'warning'); //
                     }
                     return updated;
                 } else {
@@ -141,7 +147,7 @@ const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) 
                 );
             }
         } else {
-            alert('Quantity exceeds available stock.');
+            showSnackbarMessage('Quantity exceeds available stock.', "warning")
         }
     };
 
@@ -168,45 +174,6 @@ const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) 
         return price - totalCost;
     };
 
-    const handleSubmit = async () => {
-        if (!name.trim()) {
-            alert("The gift set must have a name.");
-            return;
-        }
-
-        if (selectedProducts.length === 0 && selectedPackaging.length === 0) {
-            alert("The gift set must contain at least one product or packaging.");
-            return;
-        }
-
-        const payload = {
-            name,
-            description,
-            gift_selling_price: price,
-            items: [
-                ...selectedProducts.map((item) => ({
-                    item_id: item.product.id,
-                    item_type: "product",
-                    quantity: item.quantity,
-                    price: item.product.purchase_price_per_item
-                })),
-                ...selectedPackaging.map((item) => ({
-                    item_id: item.material.id,
-                    item_type: "packaging",
-                    quantity: item.quantity,
-                    price: item.material.purchase_price_per_unit,
-                })),
-            ],
-        };
-
-        try {
-            await axiosInstance.post("/create_gift_set", payload);
-            alert("Gift set created successfully!");
-        } catch (error) {
-            console.error("Failed to create gift set", error);
-            alert("An error occurred while creating the gift set.");
-        }
-    };
 
     return (
         <CustomDialog
@@ -252,7 +219,19 @@ const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal}: ICreateGiftBox) 
             <DialogActions>
                 <CancelButton onClick={handleCloseGiftModal}/>
 
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                <Button variant="contained" color="primary" onClick={() =>handleAddNewGiftBox({
+                    name,
+                    description,
+                    price,
+                    selectedProducts: selectedProducts.map((item) => ({
+                        item_id: item.product.id,
+                        quantity: item.quantity,
+                    })),
+                    selectedPackaging: selectedPackaging.map((item) => ({
+                        item_id: item.material.id,
+                        quantity: item.quantity,
+                    }))
+                })}>
                     Save Gift Set
                 </Button>
             </DialogActions>

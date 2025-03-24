@@ -68,7 +68,7 @@ export interface ISupplier {
 }
 
 export interface INewSupplier {
-    address?:string
+    address?: string
     name: string,
     contact_info?: string,
     email?: string,
@@ -227,4 +227,25 @@ export interface IPurchasePackagingMaterial {
     quantity_purchased: string;   // Кількість придбаного матеріалу
     purchase_price_per_unit: string; // Ціна за одиницю матеріалу
     total_purchase_cost: string;   // Загальна вартість покупки
+}
+
+interface GiftSetItem {
+    item_id: number;
+    item_type: "product" | "packaging";
+    quantity: number;
+}
+
+export interface GiftSetPayload {
+    name: string;
+    description: string;
+    gift_selling_price: number;
+    items: GiftSetItem[];
+}
+
+export interface IHandleAddNewGiftBox {
+    name: string,
+    description: string,
+    price: number,
+    selectedProducts: any[],
+    selectedPackaging: any[],
 }
