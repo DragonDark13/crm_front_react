@@ -45,12 +45,17 @@ export const API_ENDPOINTS = {
     GET_ALL_PACKAGING_MATERIALS: '/get_all_packaging_materials',  // New endpoint for packaging materials
     CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`,
     ADD_NEW_PACKAGING_MATERIAL: '/packaging_materials/purchase',
-    CREATE_GIFT_SET: '/create_gift_set'
+    CREATE_GIFT_SET: '/create_gift_set',
+    GET_ALL_GIFT_SETS: '/get_all_gift_sets',
+    REMOVE_GIFT_SET: (id: number) => `/remove_gift_set/${id}`,
+    UPDATE_GIFT_SET: (id: number) => `/update_gift_set/${id}`,
+    SELL_GIFT_SET: (id: number) => `/sell_gift_set/${id}`,
+
 };
 
 // Уніфікована обробка помилок
 export const handleError = (error: AxiosError): never => {
-    const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+    const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
     throw new Error(errorMessage);
 };
 
@@ -63,6 +68,15 @@ export const fetchResource = <T>(endpoint: string): Promise<T> => {
 export const postResource = <T>(endpoint: string, data: any): Promise<T> => {
     return axiosInstance.post(endpoint, data).then(response => response.data).catch(handleError);
 };
+
+export const putResource = <T>(endpoint: string, data: any): Promise<T> => {
+    return axiosInstance.put(endpoint, data).then(response => response.data).catch(handleError);
+};
+
+export const deleteResource = <T>(endpoint: string): Promise<T> => {
+    return axiosInstance.delete(endpoint).then(response => response.data).catch(handleError);
+};
+
 
 export const exportToExcel = async (productIds: number[]) => {
     try {
@@ -89,30 +103,3 @@ export const exportToExcel = async (productIds: number[]) => {
         console.error("Помилка експорту:", error);
     }
 };
-
-export async function sellGiftSet(requestData:
-                                      {
-                                          gift_set_id: number,
-                                          customer_id: number,
-                                          sale_date: string | null,
-                                          selling_price: number
-                                      }) {
-
-    try {
-        const response = await axiosInstance.post(`/sell_gift_set/${requestData.gift_set_id}`, {
-            customer_id: requestData.customer_id || null,
-            selling_price: requestData.selling_price,
-            sale_date: requestData.sale_date || null,
-        });
-        return response.data;
-    } catch (error: any) {
-        if (error.response) {
-            // Серверна помилка
-            console.error('Error:', error.response.data);
-            throw new Error(error.response.data.error || 'Failed to sell gift set.');
-        } else {
-            console.error('Error:', error.message);
-            throw new Error('Failed to connect to the server.');
-        }
-    }
-}

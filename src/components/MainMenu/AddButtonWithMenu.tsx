@@ -30,6 +30,7 @@ import {axiosInstance} from "../../api/api";
 import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
 import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
 import {createGiftBox} from "../../api/_giftBox";
+import {useGiftSet} from "../Provider/GiftSetContext";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -37,6 +38,8 @@ const AddButtonWithMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const {showSnackbarMessage} = useSnackbarMessage()
     const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
+        const {createNewGiftSet} = useGiftSet();
+
 
 
     const handleClick = (event) => {
@@ -210,7 +213,7 @@ const AddButtonWithMenu = () => {
         });
     };
 
-    const handleAddNewGiftBox = (handleAddNewGiftBox: IHandleAddNewGiftBox) => {
+    const handleAddNewGiftBox = async (handleAddNewGiftBox: IHandleAddNewGiftBox) => {
         if (!handleAddNewGiftBox.name.trim()) {
             showSnackbarMessage('The gift set must have a name.', 'warning'); // Show success message
             return;
@@ -239,13 +242,21 @@ const AddButtonWithMenu = () => {
             ],
         };
 
-        createGiftBox(payload).then(() => {
+        try {
+            await createNewGiftSet(payload)
             handleModalClose("addNewGiftBox");
-            showSnackbarMessage('Gift box created successfully!', 'success'); // Show success message
-        }).catch((error: AxiosError) => {
-            console.error('Error creating gift box:', error);
-            showSnackbarMessage('Error creating gift box: ' + error.response?.data?.error || 'Unknown error', 'error');
-        });
+        } catch (error: AxiosError){
+             console.error('Error creating gift box:', error);
+            showSnackbarMessage('Error creating gift box: ' + error || 'Unknown error', 'error');
+        }
+
+        // createGiftBox(payload).then(() => {
+        //     handleModalClose("addNewGiftBox");
+        //     showSnackbarMessage('Gift box created successfully!', 'success'); // Show success message
+        // }).catch((error: AxiosError) => {
+        //     console.error('Error creating gift box:', error);
+        //     showSnackbarMessage('Error creating gift box: ' + error || 'Unknown error', 'error');
+        // });
 
     };
 

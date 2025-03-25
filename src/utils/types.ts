@@ -249,3 +249,28 @@ export interface IHandleAddNewGiftBox {
     selectedProducts: any[],
     selectedPackaging: any[],
 }
+
+export interface IProductForGiftSet {
+    product_id: number;
+    name: string;
+    quantity: number;
+    price: number;
+}
+
+export interface IPackagingForGiftSet {
+    packaging_id: number;
+    name: string;
+    quantity: number;
+    price: number;
+}
+
+
+export interface IGiftSet {
+    id: number;
+    name: string;
+    description: string;
+    total_price: number;
+    gift_selling_price: number;
+    products: IProductForGiftSet[];
+    packagings: IPackagingForGiftSet[];
+}

@@ -5,41 +5,26 @@ import {Edit, Delete, ShoppingCart, ExpandMore} from '@mui/icons-material';
 import {axiosInstance} from "../../../api/api";
 import EditGiftBoxDialog from "./EditGiftBoxDialog";
 import GiftSetSaleModal from "./GiftSetSaleModal";
+import {IGiftSet, IPackagingForGiftSet, IProductForGiftSet} from "../../../utils/types";
+import {fetchGiftSets, removeGiftSet, sellGiftSet, updateGiftSet} from "../../../api/_giftBox";
+import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
+import {useGiftSet} from "../../Provider/GiftSetContext";
 
-interface Product {
-    product_id: number;
-    name: string;
-    quantity: number;
-    price: number;
-}
-
-interface Packaging {
-    packaging_id: number;
-    name: string;
-    quantity: number;
-    price: number;
-}
-
-interface GiftSet {
-    id: number;
-    name: string;
-    description: string;
-    total_price: number;
-    gift_selling_price: number;
-    products: Product[];
-    packagings: Packaging[];
-}
 
 const GiftSetList: React.FC = () => {
-    const [giftSets, setGiftSets] = useState<GiftSet[]>([]);
     const [openDialogEdit, setOpenDialogEdit] = useState(false);
     const [sellDialogOpen, setSellDialogOpen] = useState(false);
 
     const [dialogType, setDialogType] = useState<'edit' | 'sell'>('edit');
-    const [selectedGiftSet, setSelectedGiftSet] = useState<GiftSet | null>(null);
+    const [selectedGiftSet, setSelectedGiftSet] = useState<IGiftSet | null>(null);
     const [inputValue, setInputValue] = useState('');
-    const [products, setProducts] = useState<Product[]>([]); // Assuming you have a list of products
-    const [packagingMaterials, setPackagingMaterials] = useState<Packaging[]>([]); // Assuming you have packaging materials
+    const [products, setProducts] = useState<IProductForGiftSet[]>([]); // Assuming you have a list of products
+    const [packagingMaterials, setPackagingMaterials] = useState<IPackagingForGiftSet[]>([]); // Assuming you have packaging materials
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const {showSnackbarMessage} = useSnackbarMessage();
+    const {giftSets, fetchGiftSetsData, deleteGiftSet, updateExistingGiftSet, sellGiftSetData} = useGiftSet();
+
 
     const [expandedProduct, setExpandedProduct] = useState(null);
     const [expandedPackaging, setExpandedPackaging] = useState(null);
@@ -52,61 +37,79 @@ const GiftSetList: React.FC = () => {
         setExpandedPackaging(expandedPackaging === id ? null : id);
     };
 
+    // Використання у useEffect
     useEffect(() => {
-        // Отримуємо список наборів
-        axiosInstance.get('/get_all_gift_sets')
-            .then(response => {
-                setGiftSets(response.data);
-            })
-            .catch(error => {
-                console.error("Error fetching gift sets:", error);
-            });
+        fetchGiftSetsData();
     }, []);
 
-
-    const handleDialogOpen = (type: 'edit' | 'sell', giftSet: GiftSet) => {
-        setSellDialogOpen(false)
-        setOpenDialogEdit(false)
+// Open dialog for editing or selling
+    const handleDialogOpen = (type: 'edit' | 'sell', giftSet: IGiftSet) => {
+        setSellDialogOpen(false);
+        setOpenDialogEdit(false);
 
         setSelectedGiftSet(giftSet);
         if (type === "edit") {
             setOpenDialogEdit(true);
         } else {
-            setSellDialogOpen(true)
+            setSellDialogOpen(true);
         }
     };
 
     const handleDialogClose = () => {
         setOpenDialogEdit(false);
-        setSellDialogOpen(false)
+        setSellDialogOpen(false);
         setSelectedGiftSet(null);
         setInputValue('');
     };
 
-
+// Handle deleting the gift set
     const handleDelete = (giftSetId: number) => {
         // Підтвердження і видалення набору
         if (window.confirm("Are you sure you want to delete this gift set?")) {
-            axiosInstance.delete(`/remove_gift_set/${giftSetId}`)
-                .then(() => {
-                    setGiftSets(prevSets => prevSets.filter(giftSet => giftSet.id !== giftSetId));
-                })
-                .catch(error => {
-                    console.error("Error deleting gift set:", error);
-                });
+            deleteGiftSet(giftSetId)
         }
     };
 
+// Handle saving the edited gift set
+    const handleSaveEdit = (updatedGiftBox: IGiftSet) => {
 
-    const handleSaveEdit = (updatedGiftBox: GiftSet) => {
-        // Handle saving the edited gift set
-        axiosInstance.put(`/update_gift_set/${updatedGiftBox.id}`, updatedGiftBox)
-            .then(() => {
-                handleDialogClose();  // Close the dialog after saving
-            })
-            .catch(error => {
-                console.error("Error updating gift set:", error);
-            });
+
+        updateExistingGiftSet(updatedGiftBox)
+
+
+    };
+
+// Handle selling the gift set
+    const handleGiftSell = async (
+        giftSet: IGiftSet,
+        customer: number | null,
+        saleDate: string | null,
+        sellingPrice: number,
+    ) => {
+        if (!customer) {
+            showSnackbarMessage('Будь ласка, виберіть покупця для завершення продажу.', 'error');
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        const requestData = {
+            gift_set_id: giftSet.id,
+            customer_id: customer,
+            sale_date: saleDate,
+            selling_price: sellingPrice
+        };
+
+        try {
+            await sellGiftSetData(requestData);
+            handleDialogClose();
+        } catch (err: any) {
+            setError(err.message);
+
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -127,7 +130,7 @@ const GiftSetList: React.FC = () => {
                                     <strong>Зміст:</strong>
                                 </Typography>
 
-                                <Button  fullWidth size="small" onClick={() => handleToggleProduct(giftSet.id)}>
+                                <Button fullWidth size="small" onClick={() => handleToggleProduct(giftSet.id)}>
                                     <ExpandMore/> Продукти
                                 </Button>
 
@@ -135,7 +138,7 @@ const GiftSetList: React.FC = () => {
                                     <ul>
                                         {giftSet.products.map((product) => (
                                             <li key={product.product_id}>{product.name} (x{product.quantity}) -
-                                                ${product.price}</li>
+                                                {product.price}</li>
                                         ))}
                                     </ul>
                                 </Collapse>
@@ -147,17 +150,17 @@ const GiftSetList: React.FC = () => {
                                     <ul>
                                         {giftSet.packagings.map((packaging) => (
                                             <li key={packaging.packaging_id}>{packaging.name} (x{packaging.quantity})
-                                                - ${packaging.price}</li>
+                                                - {packaging.price}</li>
                                         ))}
                                     </ul>
                                 </Collapse>
 
 
                                 <Typography variant="h6" style={{marginTop: '10px'}}>
-                                    <strong>Ціна:</strong> ${giftSet.gift_selling_price}
+                                    <strong>Ціна:</strong> {giftSet.gift_selling_price}
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
-                                    <strong>Собівартість:</strong> ${giftSet.total_price}
+                                    <strong>Собівартість:</strong> {giftSet.total_price}
                                 </Typography>
                             </CardContent>
                             <CardActions>
@@ -189,6 +192,9 @@ const GiftSetList: React.FC = () => {
             )}
             {selectedGiftSet && (
                 <GiftSetSaleModal
+                    error={error}
+                    handleGiftSell={handleGiftSell}
+                    loading={loading}
                     open={sellDialogOpen}
                     giftSet={selectedGiftSet}
                     onClose={handleDialogClose}

@@ -11,28 +11,42 @@ import {
     DialogActions,
     InputLabel, Select, MenuItem, FormControl
 } from '@mui/material';
-import {sellGiftSet} from "../../../api/api";
 import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import {useCustomers} from "../../Provider/CustomerContext";
 import AddIcon from "@mui/icons-material/Add";
-import {ICustomerDetails} from "../../../utils/types";
+import {ICustomerDetails, IGiftSet} from "../../../utils/types";
 import AddNewCustomerDialog from "../../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {AxiosError} from "axios";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
+import CancelButton from "../../Buttons/CancelButton";
 
 interface IGiftSetSaleModalProps {
     open: boolean;
     onClose: () => void;
     giftSet: any; // Модель даних набору
+    handleGiftSell: (
+        giftSet: IGiftSet,
+        customer: number | null,
+        saleDate: string | null,
+        sellingPrice: number,
+    ) => void,
+    loading: boolean,
+    error: string | null,
 }
 
-const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({open, onClose, giftSet}) => {
+const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
+                                                                open,
+                                                                onClose,
+                                                                giftSet,
+                                                                error,
+                                                                handleGiftSell,
+                                                                loading
+                                                            }) => {
     const [saleDate, setSaleDate] = useState<string>(new Date().toISOString().split('T')[0]); // Встановлення поточної дати за замовчуванням
     const [sellingPrice, setSellingPrice] = useState<number>(giftSet.gift_selling_price || 0);
     const [customer, setCustomer] = useState<number>('');
     const [customerName, setCustomerName] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+
     const {customers, fetchCustomersFunc, createCustomerFunc} = useCustomers();
     const {showSnackbarMessage} = useSnackbarMessage();
 
@@ -48,31 +62,31 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({open, onClose, gift
         return packagingCost + productCost;
     };
 
-    const handleSell = async () => {
-        if (!customer) { // Перевірка чи вибрано покупця
-            showSnackbarMessage('Please select a customer to proceed with the sale.', 'error');
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-
-        const requestData = {
-            gift_set_id: giftSet.id,
-            customer_id: customer,
-            sale_date: saleDate,
-            selling_price: sellingPrice
-        };
-
-        try {
-            const result = await sellGiftSet(requestData);
-            onClose();
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const handleGiftSell = async () => {
+    //     if (!customer) { // Перевірка чи вибрано покупця
+    //         showSnackbarMessage('Please select a customer to proceed with the sale.', 'error');
+    //         return;
+    //     }
+    //
+    //     setLoading(true);
+    //     setError(null);
+    //
+    //     const requestData = {
+    //         gift_set_id: giftSet.id,
+    //         customer_id: customer,
+    //         sale_date: saleDate,
+    //         selling_price: sellingPrice
+    //     };
+    //
+    //     try {
+    //         const result = await sellGiftSet(requestData);
+    //         onClose();
+    //     } catch (err: any) {
+    //         setError(err.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false);
     const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
@@ -104,18 +118,17 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({open, onClose, gift
                 maxWidth="md"
             >
                 <DialogContent>
-                    <Typography variant="h6" gutterBottom>
-                        Sell Gift Set
-                    </Typography>
 
                     <Typography variant="subtitle1">
-                        <strong>Name:</strong> {giftSet.name}
+                        <strong>Назва:</strong> {giftSet.name}
                     </Typography>
-                    <Typography variant="body1">{giftSet.description}</Typography>
+                    <Typography variant="body1">
+                        <strong>Опис:</strong>
+                        {giftSet.description}</Typography>
 
                     <Divider sx={{my: 2}}/>
 
-                    <Typography variant="h6">Items</Typography>
+                    <Typography variant="h6">Склад набору</Typography>
                     {giftSet.products.map((product: any, index: number) => (
                         <Grid container key={index} sx={{mb: 1}}>
                             <Grid item xs={5}>{product.name}</Grid>
@@ -137,71 +150,80 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({open, onClose, gift
                     <Divider sx={{my: 2}}/>
 
                     <Typography variant="h6">
-                        Total Cost: {calculateTotalCost().toFixed(2)} UAH
+                        Собівартість: {calculateTotalCost().toFixed(2)} UAH
                     </Typography>
 
                     <Typography variant="h6" sx={{mt: 1}}>
-                        Profit: {(sellingPrice - calculateTotalCost()).toFixed(2)} UAH
+                        Вигода: {(sellingPrice - calculateTotalCost()).toFixed(2)} UAH
                     </Typography>
-
-                    <TextField
-                        label="Sale Date"
-                        type="date"
-                        value={saleDate}
-                        onChange={(e) => setSaleDate(e.target.value)}
-                        fullWidth
-                        sx={{my: 2}}
-                        InputLabelProps={{shrink: true}}
-                    />
-
-                    <TextField
-                        label="Selling Price"
-                        type="number"
-                        value={sellingPrice}
-                        onChange={(e) => setSellingPrice(parseFloat(e.target.value))}
-                        fullWidth
-                        sx={{my: 2}}
-                    />
                     <Grid container alignItems={"center"} spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth margin="normal">
-                                <InputLabel id="supplier-select-label">Покупець</InputLabel>
-                                <Select
-                                    label="Покупець"
-                                    value={customer}
-                                    onChange={(e) => setCustomer(e.target.value)}
-                                    fullWidth
-                                >
-                                    {customers.map((customer) => (
-                                        <MenuItem key={customer.id + customer.name} value={customer.id}>
-                                            {customer.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                        <Grid item xs={12} md={3}>
+                            <TextField
+                                label="Sale Date"
+                                type="date"
+                                value={saleDate}
+                                onChange={(e) => setSaleDate(e.target.value)}
+                                fullWidth
+                                sx={{my: 2}}
+                                InputLabelProps={{shrink: true}}
+                            />
+
                         </Grid>
-                        <Grid item xs={12} sm={2}>
-                            <Button size={"large"} variant={"contained"} endIcon={<AddIcon/>}
-                                    onClick={() => setOpenAddNewCustomerDialog(true)}
-                                    color="secondary">
-                                Додати
-                            </Button>
+                        <Grid item xs={12} md={3}>
+                            <TextField
+                                label="Selling Price"
+                                type="number"
+                                value={sellingPrice}
+                                onChange={(e) => setSellingPrice(parseFloat(e.target.value))}
+                                fullWidth
+                                sx={{my: 2}}
+                            />
+
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Grid container alignItems={"center"} spacing={2}>
+                                <Grid item xs={12} sm={8}>
+                                    <FormControl fullWidth margin="normal">
+                                        <InputLabel id="supplier-select-label">Покупець</InputLabel>
+                                        <Select
+                                            label="Покупець"
+                                            value={customer}
+                                            onChange={(e) => setCustomer(e.target.value)}
+                                            fullWidth
+                                        >
+                                            {customers.map((customer) => (
+                                                <MenuItem key={customer.id + customer.name} value={customer.id}>
+                                                    {customer.name}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <Button size={"large"} variant={"contained"} endIcon={<AddIcon/>}
+                                            onClick={() => setOpenAddNewCustomerDialog(true)}
+                                            color="secondary">
+                                        Додати
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
+
+
                 </DialogContent>
 
                 <DialogActions>
-                    <Button onClick={onClose} disabled={loading} sx={{mr: 1}}>
-                        Cancel
-                    </Button>
+                    <CancelButton onClick={onClose} disabled={loading} sx={{mr: 1}}/>
+
                     <Button
                         color="primary"
-                   
-                        onClick={handleSell}
+
+                        onClick={() => handleGiftSell(giftSet, customer, saleDate, sellingPrice)}
                         variant="contained"
                         disabled={loading}
                     >
-                        {loading ? 'Processing...' : 'Sell'}
+                        {loading ? 'Processing...' : 'Продати'}
                     </Button>
                 </DialogActions>
             </CustomDialog>

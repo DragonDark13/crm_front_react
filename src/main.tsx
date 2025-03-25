@@ -9,22 +9,25 @@ import {ProductProvider} from "./components/Provider/ProductContext";
 import {SnackbarMessageProvider} from "./components/Provider/SnackbarMessageContext";
 import {AuthProvider} from "./components/context/AuthContext";
 import {PackagingProvider} from "./components/Provider/PackagingContext";
+import {GiftSetProvider} from "./components/Provider/GiftSetContext";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.Fragment>
         <AuthProvider>
             <SnackbarMessageProvider>
-                <ProductProvider>
-                    <SupplierProvider>
-                        <CategoryProvider>
-                            <CustomerProvider>
-                                <PackagingProvider>
-                                    <App/>
-                                </PackagingProvider>
-                            </CustomerProvider>
-                        </CategoryProvider>
-                    </SupplierProvider>
-                </ProductProvider>
+                <GiftSetProvider>
+                    <ProductProvider>
+                        <SupplierProvider>
+                            <CategoryProvider>
+                                <CustomerProvider>
+                                    <PackagingProvider>
+                                        <App/>
+                                    </PackagingProvider>
+                                </CustomerProvider>
+                            </CategoryProvider>
+                        </SupplierProvider>
+                    </ProductProvider>
+                </GiftSetProvider>
             </SnackbarMessageProvider>
         </AuthProvider>
     </React.Fragment>

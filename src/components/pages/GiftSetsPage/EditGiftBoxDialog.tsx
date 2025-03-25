@@ -232,7 +232,7 @@ const EditGiftBoxDialog = ({
                                         value={item.quantity}
                                         onChange={(e) => handleQuantityChange(item.product_id, Number(e.target.value), "product")}
                                         onIncrement={() => handleQuantityChange(item.product_id, item.quantity + 1, "product")}
-                                        onDecrement={() => handleDecreaseQuantity(item.product_id, "product")}
+                                        onDecrement={() => handleQuantityChange(item.product_id, item.quantity - 1, "product")}
 
                                     />
                                     {/*<Grid container alignItems="center" spacing={1}>*/}
@@ -271,7 +271,7 @@ const EditGiftBoxDialog = ({
                                         value={item.quantity}
                                         onChange={(e) => handleQuantityChange(item.packaging_id, Number(e.target.value), "packaging")}
                                         onIncrement={() => handleQuantityChange(item.packaging_id, item.quantity + 1, "product")}
-                                        onDecrement={() => handleDecreaseQuantity(item.packaging_id, "packaging")}
+                                        onDecrement={() => handleQuantityChange(item.packaging_id, item.quantity - 1, "packaging")}
 
                                     />
 
