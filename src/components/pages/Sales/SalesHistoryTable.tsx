@@ -10,7 +10,7 @@ import {
     TableSortLabel,
     TablePagination,
     TextField,
-    Button, MenuItem, Checkbox, InputLabel, FormControl, Select, Tooltip, IconButton, Collapse, Box, Modal,
+    Button, MenuItem, Checkbox, InputLabel, FormControl, Select, Tooltip, IconButton, Collapse, Box, Modal, Paper,
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import {ShoppingBag, Inventory, CardGiftcard, Info, ExpandMore, Luggage} from "@mui/icons-material";
@@ -215,7 +215,7 @@ const SalesHistoryTable: React.FC = () => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
 
-            <TableContainer>
+            <TableContainer component={Paper} style={{marginTop: '20px'}}>
                 <Table>
                     <TableHead>
                         <TableRow>

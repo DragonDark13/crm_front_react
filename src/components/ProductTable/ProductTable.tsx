@@ -368,11 +368,11 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                     {totalSumSelling.toFixed(2)}
                                 </Typography>
 
-                                <Typography color={"primary"}
-                                            variant={"subtitle2"}>
-                                    <strong>залишку: </strong>
-                                    {totalCalculatedSellingSum.toFixed(2)}
-                                </Typography>
+                                {/*<Typography color={"primary"}*/}
+                                {/*            variant={"subtitle2"}>*/}
+                                {/*    <strong>залишку: </strong>*/}
+                                {/*    {totalCalculatedSellingSum.toFixed(2)}*/}
+                                {/*</Typography>*/}
                             </TableCell>
                         </TableRow>
                     </TableFooter>

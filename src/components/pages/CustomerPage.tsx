@@ -22,6 +22,8 @@ import {
 } from "../../api/_customer";
 //TODO перенести у запити у відповідні контексти
 import {Visibility, Edit, Delete} from "@mui/icons-material";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 const CustomerPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
@@ -158,9 +160,14 @@ const CustomerPage: React.FC = () => {
     };
 
     const handleDeleteCustomer = (customerId: number) => {
-        deleteCustomerData(customerId); // Викликаємо API для видалення клієнта
-        fetchGetAllCustomersFunc()
-        showSnackbarMessage('Customer deleted successfully!', 'success');
+        deleteCustomerData(customerId).then(() => {
+            fetchGetAllCustomersFunc()
+            showSnackbarMessage('Customer deleted successfully!', 'success');
+        }).catch((error: AxiosError) => {
+            showSnackbarMessage('Error deleting customer: ' + error.response.data.error, 'error');
+            console.error('Error deleting customer:', error);
+        })
+
 
     };
 
@@ -185,16 +192,18 @@ const CustomerPage: React.FC = () => {
                     <TableBody>
                         {customers.length > 0 ? customers.map((customer) => (
                                 <React.Fragment key={customer.id + customer.name}>
-                                    <TableRow hover selected={selectedCustomer && selectedCustomer?.id === customer.id}
-                                              onClick={() => handleGetCustomerDetails(customer)}>
-                                        <TableCell><Typography variant="subtitle2">{customer.name}</Typography></TableCell>
-                                        <TableCell><Typography variant="subtitle2">{customer.email}</Typography></TableCell>
-                                        <TableCell>
+                                    <TableRow
+                                              >
+                                        <TableCell size={"small"}><Typography
+                                            variant="subtitle2">{customer.name}</Typography></TableCell>
+                                        <TableCell size={"small"}><Typography
+                                            variant="subtitle2">{customer.email}</Typography></TableCell>
+                                        <TableCell size={"small"}>
                                             <Typography
                                                 variant="subtitle2">{customer.phone_number}</Typography></TableCell>
-                                        <TableCell><Typography
+                                        <TableCell size={"small"}><Typography
                                             variant="subtitle2">{customer.address}</Typography></TableCell>
-                                        <TableCell align={"right"}>
+                                        <TableCell align={"right"} size={"small"}>
                                             <Tooltip title="Деталі">
                                                 <IconButton color="info" onClick={() => handleViewDetails(customer.id)}>
                                                     <Visibility/>

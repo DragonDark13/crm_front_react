@@ -10,12 +10,17 @@ import {
 import {axiosInstance} from "../../../../api/api";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
+import CancelButton from "../../../Buttons/CancelButton";
+import AddButton from "../../../Buttons/AddButton";
+import {IMaterialSupplier} from "../../../../utils/types";
 
 interface PurchaseMaterialDialogProps {
     open: boolean;
     onClose: () => void;
     materialId: number;
     onPurchaseSuccess: () => void;
+    defaultSupplierId: number | null;
+    defaultPricePerUnit: number | null;
 }
 
 const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
@@ -25,18 +30,32 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                                                                            onPurchaseSuccess,
                                                                            defaultSupplierId,
                                                                            defaultPricePerUnit,
-                                                                           suppliers,
                                                                        }) => {
     const [supplierId, setSupplierId] = useState<number | null>(defaultSupplierId || null);
     const [quantity, setQuantity] = useState<number>(1); // Замовчуванням 1
     const [pricePerUnit, setPricePerUnit] = useState<number>(defaultPricePerUnit || 0);
-    const [totalPurchaseCost, setTotalPurchaseCost] = useState<number>(0); // Загальна вартість закупівлі
+    const [totalPurchaseCost, setTotalPurchaseCost] = useState<number>(quantity * (defaultPricePerUnit || 0)); // Загальна вартість закупівлі
     const [addSupplierOpen, setAddSupplierOpen] = useState(false);
+    const [suppliers, setSuppliers] = useState<any[]>([]);
+
 
     // Функція для розрахунку загальної суми закупівлі
     const calculateTotalCost = (quantity: number, pricePerUnit: number) => {
         return quantity * pricePerUnit;
     };
+
+    const fetchSuppliers = async () => {
+        try {
+            const response = await axiosInstance.get("/get_all_packaging_suppliers");
+            setSuppliers(response.data);
+        } catch (error) {
+            console.error("Error fetching suppliers", error);
+        }
+    };
+
+    React.useEffect(() => {
+        fetchSuppliers();
+    }, []);
 
     // Викликається при зміні кількості
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,17 +125,15 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                                 margin="normal"
                                 required
                             >
-                                {suppliers.map((supplier) => (
-                                    <MenuItem key={supplier.id} value={supplier.id}>
+                                {suppliers.map((supplier, index) => (
+                                    <MenuItem key={supplier.id + supplier.name + index} value={supplier.id}>
                                         {supplier.name}
                                     </MenuItem>
                                 ))}
                             </TextField>
                         </Grid>
                         <Grid item xs={12} sm={4} md={3}>
-                            <Button variant="outlined" onClick={handleOpenAddSupplier} fullWidth>
-                                Додати
-                            </Button>
+                            <AddButton onClick={handleOpenAddSupplier}/>
                         </Grid>
 
                         {/* Кількість */}
@@ -158,9 +175,7 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={onClose} color="secondary">
-                        Відмінити
-                    </Button>
+                    <CancelButton onClick={onClose}/>
                     <Button onClick={handlePurchase} color="primary" variant="contained">
                         Закупити
                     </Button>

@@ -38,9 +38,6 @@ const AddNewPackagingModal = ({
     const [error, setError] = useState("");
     const [openAddSupplier, setOpenAddSupplier] = useState(false);
 
-    React.useEffect(() => {
-        fetchSuppliers();
-    }, []);
 
     const fetchSuppliers = async () => {
         try {
@@ -50,6 +47,10 @@ const AddNewPackagingModal = ({
             console.error("Error fetching suppliers", error);
         }
     };
+
+    React.useEffect(() => {
+        fetchSuppliers();
+    }, []);
 
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -124,7 +125,8 @@ const AddNewPackagingModal = ({
                             </TextField>
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
-                            <Button size={"large"} color={"secondary"} variant={"contained"} onClick={handleOpenAddSupplier} endIcon={<AddIcon/>} >
+                            <Button size={"large"} color={"secondary"} variant={"contained"}
+                                    onClick={handleOpenAddSupplier} endIcon={<AddIcon/>}>
                                 Додати
                             </Button>
                         </Grid>
@@ -169,7 +171,7 @@ const AddNewPackagingModal = ({
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <CancelButton onClick={handleCloseAddNewPackaging} />
+                    <CancelButton onClick={handleCloseAddNewPackaging}/>
                     <Button variant="contained" color="primary"
                             onClick={() => handlePurchaseNewPackaging({
                                 name: name,

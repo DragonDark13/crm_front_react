@@ -241,7 +241,7 @@ const PackagingMaterialList: React.FC = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
                 {/* IMaterial List Table */}
-                <TableContainer>
+                <TableContainer component={Paper} style={{marginTop: '20px'}}>
                     <Table>
                         <TableHead>
                             <TableRow>
