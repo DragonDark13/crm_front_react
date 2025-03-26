@@ -1,9 +1,8 @@
-import {Add} from "@mui/icons-material";
 import {Box, Button, Grid, IconButton, Popover, Tooltip} from "@mui/material";
 import React, {useState} from "react";
 import {
     GiftSetPayload,
-    ICustomerDetails, IHandleAddNewGiftBox, INewGiftBox,
+    ICustomerDetails, IHandleAddNewGiftBox,
     INewProduct,
     INewSupplier,
     IPurchasePackagingMaterial,
@@ -31,6 +30,7 @@ import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
 import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
 import {createGiftBox} from "../../api/_giftBox";
 import {useGiftSet} from "../Provider/GiftSetContext";
+import {usePackaging} from "../Provider/PackagingContext";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -39,6 +39,7 @@ const AddButtonWithMenu = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
     const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
     const {createNewGiftSet} = useGiftSet();
+    const {fetchPackagingOptions} = usePackaging();
 
 
     const handleClick = (event) => {
@@ -246,6 +247,7 @@ const AddButtonWithMenu = () => {
             handleModalClose("addNewGiftBox");
 
             fetchProductsFunc()
+            fetchPackagingOptions();
 
         } catch (error: AxiosError) {
             console.error('Error creating gift box:', error);
