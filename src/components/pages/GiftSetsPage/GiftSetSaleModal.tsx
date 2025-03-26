@@ -47,7 +47,7 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
     const [customer, setCustomer] = useState<number>('');
     const [customerName, setCustomerName] = useState<string>('');
 
-    const {customers, fetchCustomersFunc, createCustomerFunc} = useCustomers();
+    const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
     const {showSnackbarMessage} = useSnackbarMessage();
 
     const calculateTotalCost = () => {

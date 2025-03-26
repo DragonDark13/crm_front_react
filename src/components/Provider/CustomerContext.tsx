@@ -16,7 +16,7 @@ interface ICustomer {
 // Типізація для контексту
 interface CustomerContextProps {
     customers: ICustomer[];
-    fetchCustomersFunc: () => void;
+    fetchGetAllCustomersFunc: () => void;
     createCustomerFunc: (newCustomerData: ICustomerDetails) => Promise<void>; // Додаємо функцію для створення
     loading: boolean; // Додаємо поле для перевірки завантаження
 }
@@ -63,7 +63,7 @@ export const CustomerProvider: React.FC = ({children}) => {
     }, []);
 
     return (
-        <CustomerContext.Provider value={{customers, fetchCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc, loading}}>
+        <CustomerContext.Provider value={{customers, fetchGetAllCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc, loading}}>
             {children}
         </CustomerContext.Provider>
     );

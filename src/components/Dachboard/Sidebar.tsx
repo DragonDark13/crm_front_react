@@ -13,6 +13,8 @@ import {
 } from '@mui/icons-material';
 import {Link, useLocation} from 'react-router-dom';
 import AddButtonWithMenu from "../MainMenu/AddButtonWithMenu";
+import { CardGiftcard } from "@mui/icons-material";
+
 
 
 export const Sidebar: React.FC = () => {
@@ -26,7 +28,7 @@ export const Sidebar: React.FC = () => {
         {title: "Управління клієнтами", path: "/crm_front_react/clients", icon: <People fontSize={iconFontSize} />},
         {title: "Історія продажів", path: "/crm_front_react/sales", icon: <ShoppingCart fontSize={iconFontSize} />},
         {title: "Каталог товарів", path: "/crm_front_react/products", icon: <Store fontSize={iconFontSize} />},
-        {title: "ГіфтБокси", path: "/crm_front_react/gift_sets", icon: <Store fontSize={iconFontSize} />},
+        {title: "ГіфтБокси", path: "/crm_front_react/gift_sets", icon: <CardGiftcard fontSize={iconFontSize} />},
         {title: "Історія закупівель", path: "/crm_front_react/purchases", icon: <Receipt fontSize={iconFontSize} />},
         {title: "Аналітика та звіти", path: "/crm_front_react/analytics", icon: <BarChart fontSize={iconFontSize} />},
         {title: "Пакування", path: "/crm_front_react/packaging", icon: <Luggage fontSize={iconFontSize} />},

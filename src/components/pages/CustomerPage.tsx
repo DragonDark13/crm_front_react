@@ -25,7 +25,7 @@ import {Visibility, Edit, Delete} from "@mui/icons-material";
 
 const CustomerPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
-    const {customers} = useCustomers();
+    const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
     const [selectedCustomer, setSelectedCustomer] = useState<ICustomerDetails | null>(null);
     const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false);
     const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
@@ -83,24 +83,32 @@ const CustomerPage: React.FC = () => {
 
     // Функція для створення нового покупця
     const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
-        createCustomer(newCustomerData)
-            .then(response => {
-                console.log('Response:', response); // Лог для перевірки відповіді
 
 
-                setOpenAddNewCustomerDialog(false);
-                fetchGetAllCustomers()
-                showSnackbarMessage('Customer created successfully!', 'success')
-
-
-                // Закриваємо модальне вікно після створення
-            })
-            .catch((error: AxiosError) => {
-                console.log('Error Response:', error.response); // Лог для перевірки помилки
-
-                showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
-                console.error('Error creating customer:', error);
-            });
+        createCustomerFunc(newCustomerData).then(() => {
+            setOpenAddNewCustomerDialog(false);
+        }).catch((error: AxiosError) => {
+            showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
+            console.error('Error creating customer:', error);
+        })
+        // createCustomer(newCustomerData)
+        //     .then(response => {
+        //         console.log('Response:', response); // Лог для перевірки відповіді
+        //
+        //
+        //         setOpenAddNewCustomerDialog(false);
+        //         fetchGetAllCustomersFunc()
+        //         showSnackbarMessage('Customer created successfully!', 'success')
+        //
+        //
+        //         // Закриваємо модальне вікно після створення
+        //     })
+        //     .catch((error: AxiosError) => {
+        //         console.log('Error Response:', error.response); // Лог для перевірки помилки
+        //
+        //         showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
+        //         console.error('Error creating customer:', error);
+        //     });
     };
 
     // Відкриття модального вікна
@@ -132,9 +140,16 @@ const CustomerPage: React.FC = () => {
 
     const handleEditCustomer = (customerData: ICustomerDetails) => {
         // Логіка для редагування клієнта
-        updateCustomerData(customerData); // Викликаємо API для оновлення клієнта
-        setOpenEditCustomerDialog(false);
-        showSnackbarMessage('Customer updated successfully!', 'success');
+        updateCustomerData(customerData).then(() => {
+            fetchGetAllCustomersFunc()
+            setOpenEditCustomerDialog(false);
+            showSnackbarMessage('Customer updated successfully!', 'success');
+        }).catch((error: AxiosError) => {
+            showSnackbarMessage('Error updating customer: ' + error.response.data.error, 'error');
+            console.error('Error updating customer:', error);
+        })
+
+
     };
 
     const handleOpenEditModal = (customer: ICustomerDetails) => {
@@ -144,7 +159,9 @@ const CustomerPage: React.FC = () => {
 
     const handleDeleteCustomer = (customerId: number) => {
         deleteCustomerData(customerId); // Викликаємо API для видалення клієнта
+        fetchGetAllCustomersFunc()
         showSnackbarMessage('Customer deleted successfully!', 'success');
+
     };
 
     return (

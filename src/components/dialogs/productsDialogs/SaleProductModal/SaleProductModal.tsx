@@ -51,7 +51,7 @@ const SaleProductModal = ({
                               quantityOnStock
                           }: ISaleProductModal) => {
 
-    const {customers, fetchCustomersFunc, createCustomerFunc} = useCustomers();
+    const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
     const {packagingMaterials, fetchPackagingOptions} = usePackaging();
     const [expanded, setExpanded] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage()
@@ -83,7 +83,7 @@ const SaleProductModal = ({
 
     useEffect(() => {
         if (openSale) {
-            fetchCustomersFunc();
+            fetchGetAllCustomersFunc();
             fetchPackagingOptions(); // Завантажуємо доступні пакувальні матеріали
         }
     }, [openSale]);
