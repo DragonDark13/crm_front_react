@@ -38,8 +38,7 @@ const AddButtonWithMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const {showSnackbarMessage} = useSnackbarMessage()
     const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
-        const {createNewGiftSet} = useGiftSet();
-
+    const {createNewGiftSet} = useGiftSet();
 
 
     const handleClick = (event) => {
@@ -245,8 +244,11 @@ const AddButtonWithMenu = () => {
         try {
             await createNewGiftSet(payload)
             handleModalClose("addNewGiftBox");
-        } catch (error: AxiosError){
-             console.error('Error creating gift box:', error);
+
+            fetchProductsFunc()
+
+        } catch (error: AxiosError) {
+            console.error('Error creating gift box:', error);
             showSnackbarMessage('Error creating gift box: ' + error || 'Unknown error', 'error');
         }
 

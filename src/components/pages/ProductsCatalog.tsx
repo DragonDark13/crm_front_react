@@ -133,6 +133,7 @@ const ProductsCatalog = () => {
     useEffect(() => {
         fetchSuppliersFunc();
         fetchCategoriesFunc();
+        fetchProductsFunc();
     }, []);
 
     useEffect(() => {
@@ -488,7 +489,6 @@ const ProductsCatalog = () => {
         }
 
     }, [filteredProducts, searchTerm]);
-
 
 
     const handleListItemClick = (productId: number) => {
