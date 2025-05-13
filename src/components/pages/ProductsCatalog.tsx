@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {forwardRef, useEffect, useRef, useState} from 'react';
 import {useProducts} from "../Provider/ProductContext";
 import {
     ICategory,
@@ -47,33 +47,85 @@ import {addNewCategory, fetchGetAllCategories} from "../../api/_categories";
 import {exportToExcel} from "../../api/api";
 import DeleteAllProductsDialog from "../dialogs/productsDialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
 
-const ProductsCatalog = () => {
+export interface IProductsCatalogProps {
+    products: IProduct[];
+    isAuthenticated: boolean;
+    showSnackbarMessage: (message: string, severity: 'success' | 'error' | 'info' | 'warning') => void;
+    lowQuantityProducts: IProduct[];
+    modalState: Record<ModalNames, boolean>;
+    setModalState: React.Dispatch<React.SetStateAction<Record<ModalNames, boolean>>>;
+    order: 'asc' | 'desc';
+    setOrder: React.Dispatch<React.SetStateAction<'asc' | 'desc'>>;
+    itemsPerPage: number;
+    setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+    currentPage: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+    sortProducts: (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => IProduct[];
+    filters: IStateFilters;
+    setFilters: React.Dispatch<React.SetStateAction<IStateFilters>>;
+    orderBy: keyof IProduct;
+    setOrderBy: React.Dispatch<React.SetStateAction<keyof IProduct>>;
+    selectedLowProductId: number | null;
+    setSelectedLowProductId: React.Dispatch<React.SetStateAction<number | null>>;
+    filteredAndSearchedProducts: IProduct[];
+    setFilteredAndSearchedProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
+    getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
+    getFieldValue: (product: IProduct, field: keyof IProduct) => any;
+    searchTerm:string
+}
 
-    const {products, loadingState, fetchProductsFunc} = useProducts();
-    const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
+const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
+                                                                         currentPage,
+                                                                         setCurrentPage,
+                                                                         filteredAndSearchedProducts,
+                                                                         filters,
+                                                                         setFilters,
+                                                                         getComparator,
+                                                                         setFilteredAndSearchedProducts,
+                                                                         getFieldValue,
+                                                                         setItemsPerPage,
+                                                                         itemsPerPage
+                                                                         ,
+                                                                         setLowQuantityProducts,
+                                                                         lowQuantityProducts,
+                                                                         setModalState, modalState,
+                                                                         setOrder, order, setOrderBy, orderBy,
+                                                                         setSearchTerm, searchTerm,
+                                                                         setSelectedLowProductId,
+                                                                         products,
+                                                                         isAuthenticated,
+                                                                         selectedLowProductId,
+                                                                         showSnackbarMessage,
+                                                                         sortProducts,
+                                                                         resetFilters
+
+
+                                                                     }: IProductsCatalogProps, ref) => {
+
+    const {fetchProductsFunc,loadingState} = useProducts();
+    // const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
     const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
-    const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
-    const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
-    let navigate = useNavigate();
+    // const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
+    // const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
+    // let navigate = useNavigate();
 
 
-    const {isAuthenticated, logout} = useAuth();
-    const {showSnackbarMessage} = useSnackbarMessage()
+    // const {logout} = useAuth();
 
 
-    const handleLogout = async () => {
-        try {
-            await logoutUser(); // Call the logout API function
-            logout(); // Clear token from context and localStorage
-            showSnackbarMessage('Ви розлогінилися', 'success')
-
-            // Redirect to home page or login page (e.g., using React Router)
-        } catch (error) {
-            console.error('Error logging out:', error);
-        }
-    };
+    // const handleLogout = async () => {
+    //     try {
+    //         await logoutUser(); // Call the logout API function
+    //         logout(); // Clear token from context and localStorage
+    //         showSnackbarMessage('Ви розлогінилися', 'success')
+    //
+    //         // Redirect to home page or login page (e.g., using React Router)
+    //     } catch (error) {
+    //         console.error('Error logging out:', error);
+    //     }
+    // };
 
     const [newProduct, setNewProduct] = useState<INewProduct>({
         available_quantity: 1, sold_quantity: 0, total_quantity: 0,
@@ -90,9 +142,9 @@ const ProductsCatalog = () => {
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
 
     // Modal States
-    const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
-        Object.fromEntries(modalNames.map(modal => [modal, false])) as Record<ModalNames, boolean>
-    );
+    // const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
+    //     Object.fromEntries(modalNames.map(modal => [modal, false])) as Record<ModalNames, boolean>
+    // );
 
     const [productId, setProductId] = useState<number | null>(null);
     const [purchaseDetails, setPurchaseDetails] = useState<IPurchaseData>({
@@ -108,25 +160,24 @@ const ProductsCatalog = () => {
 
     const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = useState<number | null>(null);
 
-    const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
-    const [orderBy, setOrderBy] = useState<keyof IProduct>('name'); // Колонка для сортування
+    // const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
+    // const [orderBy, setOrderBy] = useState<keyof IProduct>('name'); // Колонка для сортування
     const [snackbar, setSnackbar] = useState<{ message: string; severity: 'success' | 'error' | 'info' | 'warning' | undefined }>({
         message: '',
         severity: undefined,
     });
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10); // Додайте цей рядок
-    const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = useState<IProduct[]>([])
+    // const [searchTerm, setSearchTerm] = useState('');
+    // const [itemsPerPage, setItemsPerPage] = useState(10); // Додайте цей рядок
+    // const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = useState<IProduct[]>([])
 
     // Стейт для фільтрів
-    const [filters, setFilters] = useState<IStateFilters>({
-        categories: [] as number[],
-        suppliers: [] as number[],
-        priceRange: [0, 1000] as [number, number],
-    });
+    // const [filters, setFilters] = useState<IStateFilters>({
+    //     categories: [] as number[],
+    //     suppliers: [] as number[],
+    //     priceRange: [0, 1000] as [number, number],
+    // });
 
 
     // Load products and suppliers
@@ -137,7 +188,9 @@ const ProductsCatalog = () => {
     }, []);
 
     useEffect(() => {
-        setFilteredProducts(products)
+        if (products.length > 0) {
+            setFilteredProducts(products)
+        }
     }, [products])
 
 
@@ -366,28 +419,28 @@ const ProductsCatalog = () => {
         setOrderBy(property);
     };
 
-    const sortProducts = (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => {
-        const stabilizedProducts = products.map((el, index) => [el, index] as [IProduct, number]);
-        stabilizedProducts.sort((a, b) => {
-            const order = comparator(a[0], b[0]);
-            if (order !== 0) return order;
-            return a[1] - b[1];  // This is fine because index is a number
-        });
-        return stabilizedProducts.map((el) => el[0]);
-    };
+    // const sortProducts = (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => {
+    //     const stabilizedProducts = products.map((el, index) => [el, index] as [IProduct, number]);
+    //     stabilizedProducts.sort((a, b) => {
+    //         const order = comparator(a[0], b[0]);
+    //         if (order !== 0) return order;
+    //         return a[1] - b[1];  // This is fine because index is a number
+    //     });
+    //     return stabilizedProducts.map((el) => el[0]);
+    // };
 
-    const getFieldValue = (product: IProduct, field: keyof IProduct): any => {
-        if (field === 'supplier') {
-            return product.supplier?.name || ''; // Повертає ім'я постачальника або порожній рядок
-        }
-        return product[field];
-    };
+    // const getFieldValue = (product: IProduct, field: keyof IProduct): any => {
+    //     if (field === 'supplier') {
+    //         return product.supplier?.name || ''; // Повертає ім'я постачальника або порожній рядок
+    //     }
+    //     return product[field];
+    // };
 
-    const getComparator = (order: 'asc' | 'desc', orderBy: keyof IProduct) => {
-        return order === 'desc'
-            ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
-            : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
-    };
+    // const getComparator = (order: 'asc' | 'desc', orderBy: keyof IProduct) => {
+    //     return order === 'desc'
+    //         ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
+    //         : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
+    // };
 
     const handleOpenSale = (product: IProduct) => {
         setEditProduct({
@@ -463,79 +516,79 @@ const ProductsCatalog = () => {
     };
 
     // Use this effect to set low quantity products when data changes
-    useEffect(() => {
-        const lowQuantity = products.filter(product => product.available_quantity < 5);
-        setLowQuantityProducts(lowQuantity);
-        lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
-    }, [products]);
+    // useEffect(() => {
+    //     const lowQuantity = products.filter(product => product.available_quantity < 5);
+    //     setLowQuantityProducts(lowQuantity);
+    //     lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
+    // }, [products]);
 
-    const resetFilters = () => {
-        setFilters({
-            categories: [],
-            suppliers: [],
-            priceRange: [0, Math.max(...products.map(product => product.selling_price_per_item)) || 1000]
-        })
-        // Скидаємо діапазон цін
-    }
+    // const resetFilters = () => {
+    //     setFilters({
+    //         categories: [],
+    //         suppliers: [],
+    //         priceRange: [0, Math.max(...products.map(product => product.selling_price_per_item)) || 1000]
+    //     })
+    //     // Скидаємо діапазон цін
+    // }
 
     useEffect(() => {
-        if (filteredProducts.length > 0) {
-            const array = filteredProducts.filter(product =>
-                product.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setFilteredAndSearchedProducts(array)
+        if (filteredProducts.length > 0 && typeof searchTerm === 'string') {
+            const array = filteredProducts.filter(product => {
+                const name = product.name ?? '';
+                return name.toLowerCase().includes(searchTerm.toLowerCase());
+            });
+            setFilteredAndSearchedProducts(array);
         } else {
-            setFilteredAndSearchedProducts([])
+            setFilteredAndSearchedProducts([]);
         }
-
     }, [filteredProducts, searchTerm]);
 
 
-    const handleListItemClick = (productId: number) => {
-        console.log("Натиснули на товар з ID:", productId);
-
-        // Спочатку скидаємо фільтри
-        // resetFiltersAndOrderAndSearch();
-        resetFilters()
-        setSelectedLowProductId(productId);  // Встановлюємо ID обраного продукту
-
-        setSearchTerm(''); // Скидання пошуку
-        console.log("Фільтри скинуті");
-
-        // Знайти рядок таблиці за ID продукту
-        const sortedProducts = sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy));
-        const rowIndex = sortedProducts.findIndex(product => product.id === productId);
-        console.log("Знайдений індекс продукту:", rowIndex);
-
-        if (rowIndex !== -1) {
-            // Обчислити, на якій сторінці знаходиться цей продукт
-            const targetPage = Math.floor(rowIndex / itemsPerPage);
-            console.log("Продукт знаходиться на сторінці:", targetPage);
-
-            // Змінюємо сторінку
-            setCurrentPage(targetPage);
-
-            // Використати setTimeout для прокрутки, щоб дати час на оновлення сторінки
-            setTimeout(() => {
-                const rowElement = tableRowRefs.current[rowIndex];
-                console.log("Елемент рядка таблиці:", rowElement);
-
-                if (rowElement) {
-                    handleModalClose("openNotificationDrawer")
-                    console.log("Прокрутка до елемента:", rowElement);
-                    rowElement.scrollIntoView({behavior: 'smooth', block: 'center'});
-                } else {
-                    console.log("Елемент не знайдено для індексу:", rowIndex);
-                }
-            }, 100);
-
-            setTimeout(() => {
-                setSelectedLowProductId(null)
-            }, 3000)
-        } else {
-            console.log("Продукт з ID", productId, "не знайдений");
-        }
-    };
+    // const handleListItemClick = (productId: number) => {
+    //     console.log("Натиснули на товар з ID:", productId);
+    //
+    //     // Спочатку скидаємо фільтри
+    //     // resetFiltersAndOrderAndSearch();
+    //     resetFilters()
+    //     setSelectedLowProductId(productId);  // Встановлюємо ID обраного продукту
+    //
+    //     setSearchTerm(''); // Скидання пошуку
+    //     console.log("Фільтри скинуті");
+    //
+    //     // Знайти рядок таблиці за ID продукту
+    //     const sortedProducts = sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy));
+    //     const rowIndex = sortedProducts.findIndex(product => product.id === productId);
+    //     console.log("Знайдений індекс продукту:", rowIndex);
+    //
+    //     if (rowIndex !== -1) {
+    //         // Обчислити, на якій сторінці знаходиться цей продукт
+    //         const targetPage = Math.floor(rowIndex / itemsPerPage);
+    //         console.log("Продукт знаходиться на сторінці:", targetPage);
+    //
+    //         // Змінюємо сторінку
+    //         setCurrentPage(targetPage);
+    //
+    //         // Використати setTimeout для прокрутки, щоб дати час на оновлення сторінки
+    //         setTimeout(() => {
+    //             const rowElement = tableRowRefs.current[rowIndex];
+    //             console.log("Елемент рядка таблиці:", rowElement);
+    //
+    //             if (rowElement) {
+    //                 handleModalClose("openNotificationDrawer")
+    //                 console.log("Прокрутка до елемента:", rowElement);
+    //                 rowElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+    //             } else {
+    //                 console.log("Елемент не знайдено для індексу:", rowIndex);
+    //             }
+    //         }, 100);
+    //
+    //         setTimeout(() => {
+    //             setSelectedLowProductId(null)
+    //         }, 3000)
+    //     } else {
+    //         console.log("Продукт з ID", productId, "не знайдений");
+    //     }
+    // };
 
     const handleExportToExcel = () => {
         const productIds = filteredAndSearchedProducts.map(product => product.id);
@@ -604,9 +657,7 @@ const ProductsCatalog = () => {
                     <ResponsiveProductView
                         selectedLowProductId={selectedLowProductId}
                         filteredAndSearchedProducts={filteredAndSearchedProducts}
-                        ref={(el, index) => {
-                            tableRowRefs.current[index] = el;
-                        }}
+                        ref={ref}
                         currentPage={currentPage}
                         itemsPerPage={itemsPerPage}
                         setCurrentPage={setCurrentPage}
@@ -718,49 +769,49 @@ const ProductsCatalog = () => {
                 handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
             />
 
-            <div style={{position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: "10px"}}>
-                {lowQuantityProducts.length > 0 && (
-                    <IconButton
-                        onClick={() => handleModalOpen("openNotificationDrawer")}
-                        title={`Low quantity products: ${lowQuantityProducts.length}`} // Tooltip for low quantity products
-                    >
-                        <Badge badgeContent={lowQuantityProducts.length} color="error">
-                            <NotificationImportantIcon/>
-                        </Badge>
-                    </IconButton>
-                )}
-                {isAuthenticated ? (
-                    <Button variant={"text"} onClick={handleLogout} title="Logout" endIcon={<ExitToAppIcon/>}>
-                        Вийти
-                    </Button>
-                ) : (
-                    <Button
-                        variant={"text"}
-                        onClick={() => navigate('/crm_front_react/login')}
-                        title="Login"
-                        endIcon={<LoginIcon/>}
-                    >
-                        Увійти
-                    </Button>
-                )}
-            </div>
+            {/*<div style={{position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: "10px"}}>*/}
+            {/*    {lowQuantityProducts.length > 0 && (*/}
+            {/*        <IconButton*/}
+            {/*            onClick={() => handleModalOpen("openNotificationDrawer")}*/}
+            {/*            title={`Low quantity products: ${lowQuantityProducts.length}`} // Tooltip for low quantity products*/}
+            {/*        >*/}
+            {/*            <Badge badgeContent={lowQuantityProducts.length} color="error">*/}
+            {/*                <NotificationImportantIcon/>*/}
+            {/*            </Badge>*/}
+            {/*        </IconButton>*/}
+            {/*    )}*/}
+            {/*    {isAuthenticated ? (*/}
+            {/*        <Button variant={"text"} onClick={handleLogout} title="Logout" endIcon={<ExitToAppIcon/>}>*/}
+            {/*            Вийти*/}
+            {/*        </Button>*/}
+            {/*    ) : (*/}
+            {/*        <Button*/}
+            {/*            variant={"text"}*/}
+            {/*            onClick={() => navigate('/crm_front_react/login')}*/}
+            {/*            title="Login"*/}
+            {/*            endIcon={<LoginIcon/>}*/}
+            {/*        >*/}
+            {/*            Увійти*/}
+            {/*        </Button>*/}
+            {/*    )}*/}
+            {/*</div>*/}
 
 
             {/* Drawer Component */}
-            <Drawer classes={{
-                paper: "filter_container"
-            }} anchor="right" open={modalState.openNotificationDrawer}
+            {/*<Drawer classes={{*/}
+            {/*    paper: "filter_container"*/}
+            {/*}} anchor="right" open={modalState.openNotificationDrawer}*/}
 
-                    onClose={() => handleModalClose("openNotificationDrawer")}>
-                <Grid p={1} container>
-                    <Grid item xs={12}>
-                        <Button fullWidth endIcon={<CloseIcon/>} variant={"outlined"}
-                                onClick={() => handleModalClose("openNotificationDrawer")}>
-                            Закрити
-                        </Button></Grid>
-                </Grid>
-                <NotificationPanel handleListItemClick={handleListItemClick} lowQuantityProducts={lowQuantityProducts}/>
-            </Drawer>
+            {/*        onClose={() => handleModalClose("openNotificationDrawer")}>*/}
+            {/*    <Grid p={1} container>*/}
+            {/*        <Grid item xs={12}>*/}
+            {/*            <Button fullWidth endIcon={<CloseIcon/>} variant={"outlined"}*/}
+            {/*                    onClick={() => handleModalClose("openNotificationDrawer")}>*/}
+            {/*                Закрити*/}
+            {/*            </Button></Grid>*/}
+            {/*    </Grid>*/}
+            {/*    <NotificationPanel handleListItemClick={handleListItemClick} lowQuantityProducts={lowQuantityProducts}/>*/}
+            {/*</Drawer>*/}
 
 
             <Snackbar
@@ -781,6 +832,6 @@ const ProductsCatalog = () => {
         </React.Fragment>
 
     );
-};
+});
 
 export default ProductsCatalog;

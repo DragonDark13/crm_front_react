@@ -10,6 +10,7 @@ import {SnackbarMessageProvider} from "./components/Provider/SnackbarMessageCont
 import {AuthProvider} from "./components/context/AuthContext";
 import {PackagingProvider} from "./components/Provider/PackagingContext";
 import {GiftSetProvider} from "./components/Provider/GiftSetContext";
+import {BrowserRouter} from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.Fragment>
@@ -21,7 +22,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                             <CategoryProvider>
                                 <CustomerProvider>
                                     <PackagingProvider>
-                                        <App/>
+                                        <BrowserRouter>
+                                            <App/>
+                                        </BrowserRouter>
                                     </PackagingProvider>
                                 </CustomerProvider>
                             </CategoryProvider>
