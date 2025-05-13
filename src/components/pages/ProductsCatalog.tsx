@@ -654,6 +654,7 @@ const ProductsCatalog = () => {
 
             {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
             <EditProductModal suppliers={suppliers}
+                              isAuthenticated={isAuthenticated}
                               selectedCategories={selectedCategories} categories={categories}
                               openEdit={modalState.openEdit}
                               handleCloseEdit={() => handleModalClose("openEdit")}
@@ -672,7 +673,9 @@ const ProductsCatalog = () => {
 
             {(modalState.openPurchase && purchaseDetails && editProduct?.name) &&
             <PurchaseProductModal
-                nameProduct={editProduct.name} openPurchase={modalState.openPurchase}
+                isAuthenticated={isAuthenticated}
+                nameProduct={editProduct.name}
+                openPurchase={modalState.openPurchase}
                 suppliers={suppliers}
                 handleClosePurchase={() => handleModalClose("openPurchase")}
                 purchaseDetails={purchaseDetails}
@@ -683,6 +686,7 @@ const ProductsCatalog = () => {
             {
                 (modalState.openSale && saleData && editProduct) &&
                 <SaleProductModal
+                    isAuthenticated={isAuthenticated}
                     nameProduct={editProduct.name}
                     purchasePricePerItem={editProduct.purchase_price_per_item}
                     quantityOnStock={editProduct.available_quantity}

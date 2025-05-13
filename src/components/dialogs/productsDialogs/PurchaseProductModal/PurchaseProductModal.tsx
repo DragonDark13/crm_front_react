@@ -20,6 +20,7 @@ interface IPurchaseProductModal {
     setPurchaseDetails: (details: IPurchaseData) => void;
     handleSubmitPurchase: () => void;
     nameProduct: string
+    isAuthenticated: boolean;
 }
 
 const PurchaseProductModal = ({
@@ -28,7 +29,8 @@ const PurchaseProductModal = ({
                                   purchaseDetails,
                                   setPurchaseDetails,
                                   handleSubmitPurchase,
-                                  nameProduct
+                                  nameProduct,
+                                  isAuthenticated
                               }: IPurchaseProductModal) => {
     const [errors, setErrors] = useState({
         quantity: '',
@@ -173,7 +175,7 @@ const PurchaseProductModal = ({
             <DialogActions>
                 <Button variant={"outlined"} onClick={handleClosePurchase}>Закрити</Button>
 
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                <Button variant="contained" color="primary" disabled={!isAuthenticated} onClick={handleSubmit}>
                     Підтвердити
                 </Button>
             </DialogActions>

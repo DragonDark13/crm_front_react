@@ -8,10 +8,12 @@ import {
     TableRow,
     Paper,
     TableFooter,
-    Typography, Button
+    Typography, Button, IconButton
 } from "@mui/material";
 import {ISupplier} from "../../../../utils/types";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {useAuth} from "../../../context/AuthContext";
 
 interface PurchaseHistoryRecord {
     id: number;
@@ -34,6 +36,8 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                                                                        sortByDate,
                                                                        onDeleteHistoryRecord
                                                                    }) => {
+    const {isAuthenticated} = useAuth();
+
     return (
         <TableContainer component={Paper}>
             <Table>
@@ -44,7 +48,7 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                         <TableCell>Ціна за одиницю</TableCell>
                         <TableCell>Кількість закупівлі</TableCell>
                         <TableCell>Загальна ціна</TableCell>
-                        <TableCell>Дії</TableCell>
+                        <TableCell align={"right"}>Дії</TableCell>
 
                     </TableRow>
                 </TableHead>
@@ -57,13 +61,12 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                                 <TableCell>{record.purchase_price_per_item}</TableCell>
                                 <TableCell>{record.quantity_purchase}</TableCell>
                                 <TableCell>{record.purchase_total_price}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        color="secondary"
-                                        onClick={() => onDeleteHistoryRecord('purchase', record.id)}
-                                    >
-                                        Видалити
-                                    </Button>
+                                <TableCell align={"right"}>
+                                    <IconButton disabled={!isAuthenticated} color="error"
+                                                onClick={() => onDeleteHistoryRecord('purchase', record.id)}>
+                                        <DeleteIcon fontSize="small"/>
+                                    </IconButton>
+
                                 </TableCell>
                             </TableRow>
                         ))

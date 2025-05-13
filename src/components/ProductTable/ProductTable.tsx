@@ -309,20 +309,20 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                 <MenuItem onClick={() => {
                                                     handleOpenEdit(selectedProduct);  // Використовуємо selectedProduct
                                                     handleClose();
-                                                }} disabled={!isAuthenticated}>
+                                                }} >
                                                     <EditIcon color="primary" fontSize="small" sx={{mr: 1}}/> Редагувати
                                                 </MenuItem>
                                                 <MenuItem onClick={() => {
                                                     handlePurchase(selectedProduct);  // Використовуємо selectedProduct
                                                     handleClose();
-                                                }} disabled={!isAuthenticated}>
+                                                }} >
                                                     <ShoppingCartIcon color="primary" fontSize="small"
                                                                       sx={{mr: 1}}/> Купівля
                                                 </MenuItem>
                                                 <MenuItem onClick={() => {
                                                     handleOpenSale(selectedProduct);  // Використовуємо selectedProduct
                                                     handleClose();
-                                                }} disabled={!isAuthenticated}>
+                                                }} >
                                                     <SellIcon color="primary" fontSize="small" sx={{mr: 1}}/> Продаж
                                                 </MenuItem>
                                                 <MenuItem onClick={() => {

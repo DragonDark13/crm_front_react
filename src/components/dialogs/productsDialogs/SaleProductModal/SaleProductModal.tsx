@@ -38,6 +38,8 @@ interface ISaleProductModal {
     nameProduct: string;
     purchasePricePerItem: number
     quantityOnStock: number,
+    isAuthenticated: boolean;
+
 }
 
 const SaleProductModal = ({
@@ -48,7 +50,8 @@ const SaleProductModal = ({
                               handleSale,
                               nameProduct,
                               purchasePricePerItem,
-                              quantityOnStock
+                              quantityOnStock,
+                              isAuthenticated
                           }: ISaleProductModal) => {
 
     const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
@@ -197,7 +200,7 @@ const SaleProductModal = ({
                 <React.Fragment>
                     <DialogContent>
                         <Grid container alignItems={"center"} spacing={2}>
-                            <Grid item xs={12} sm={6} md={4} lg={4} >
+                            <Grid item xs={12} sm={6} md={4} lg={4}>
                                 <FormControl fullWidth margin="normal" error={!!errors.customer}>
                                     <InputLabel id="supplier-select-label">Покупець</InputLabel>
                                     <Select
@@ -236,7 +239,7 @@ const SaleProductModal = ({
                                     helperText={errors.sale_date}
                                 />
                             </Grid>
-                                                        <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={3}>
                                 <TextField
                                     label="Ціна за 1шт (Продаж)"
                                     type="number"
@@ -447,14 +450,14 @@ const SaleProductModal = ({
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button  variant="contained" onClick={handleCloseSale} color="error">
+                        <Button variant="contained" onClick={handleCloseSale} color="error">
                             Відміна
                         </Button>
                         <Button
                             variant="contained"
                             color="success"
                             onClick={handleSaleSubmit}
-                            disabled={isSubmitDisabled()} // Додаємо перевірку для активності кнопки
+                            disabled={isSubmitDisabled() || !isAuthenticated} // Додаємо перевірку для активності кнопки
                         >
                             Підтвердити продаж
                         </Button>

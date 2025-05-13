@@ -13,7 +13,7 @@ import QuantityField from "../../../FormComponents/QuantityField";
 import CategoriesSelect from "../../../FormComponents/CategoriesSelect";
 import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../../utils/function";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
-import { IEditProduct,} from "../../../../utils/types";
+import {IEditProduct,} from "../../../../utils/types";
 import {useCategories} from "../../../Provider/CategoryContext";
 import {useSuppliers} from "../../../Provider/SupplierContext";
 
@@ -23,6 +23,7 @@ interface IEditProductModalProps {
     editProduct: IEditProduct;
     setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct | null>>;
     handleEditSave: () => void;
+    isAuthenticated: boolean
 }
 
 const EditProductModal: React.FC<IEditProductModalProps> = ({
@@ -32,6 +33,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 setEditProduct,
                                                                 handleEditSave,
                                                                 selectedCategories,
+                                                                isAuthenticated
                                                             }) => {
 
 
@@ -143,25 +145,24 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     };
 
 
-    const handleCategoryChange = (categoryId: number[]) => {
+    const handleCategoryChange = (newCategoryIds: number[]) => {
         setEditProduct((prevProduct) => {
-            // Якщо prevProduct = null, повертаємо початковий стан
             if (!prevProduct) return prevProduct;
 
-            // const updatedCategories = prevProduct.category_ids.includes(categoryId)
-            //     ? prevProduct.category_ids.filter(id => id !== categoryId) // Відміна вибору
-            //     : [...prevProduct.category_ids, categoryId]; // Додавання вибраної категорії
-
-            // Перевіряємо, чи були зміни в категоріях
-            const isModified = compareCategories(originalProduct.category_ids, categoryId);
+            const isModified = compareCategories(originalProduct.category_ids, newCategoryIds);
             setIsModified(isModified);
 
-            // Повертаємо оновлений продукт
             return {
                 ...prevProduct,
-                category_ids: categoryId // Оновлення категорій
+                category_ids: newCategoryIds,
             };
         });
+    };
+
+    const handleRemoveCategory = (idToRemove: number) => {
+        if (!editProduct) return;
+        const updated = editProduct.category_ids.filter(id => id !== idToRemove);
+        handleCategoryChange(updated);
     };
 
     const compareObjects = (originalProduct: Record<string, any>, updatedProduct: Record<string, any>) => {
@@ -239,7 +240,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         <CustomDialog
             open={openEdit}
             handleClose={handleCloseEdit}
-            title="Редагування товару"
+            title={"Редагування товару: " + editProduct.name}
             maxWidth="md"
         >
             <DialogContent>
@@ -340,6 +341,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                         </Typography>
                     </Grid>
 
+
+                </Grid>
+                <Grid container>
                     <Grid item xs={12} sm={6} md={4}>
                         <TextField
                             required
@@ -352,21 +356,27 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                         />
 
                     </Grid>
+                    {/*<Grid item xs={12} sm={6} md={8}>*/}
+                    {/*   */}
+                    {/*</Grid>*/}
 
                 </Grid>
 
                 <CategoriesSelect
                     categories={categories}
+                    handleRemoveCategory={handleRemoveCategory}
                     selectedCategories={editProduct.category_ids}
                     handleCategoryChange={handleCategoryChange}
                 />
+
             </DialogContent>
 
             <DialogActions>
                 <Button variant="outlined" onClick={handleCloseEdit}>
                     Закрити
                 </Button>
-                <Button disabled={!isModified} variant="contained" color="primary" onClick={handleSave}>
+                <Button disabled={!isModified || !isAuthenticated} variant="contained" color="primary"
+                        onClick={handleSave}>
                     Зберігти Зміни
                 </Button>
             </DialogActions>
