@@ -1,6 +1,17 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import {TextField, Button, Table, TableRow, TableCell, TableBody, TableHead, Grid, Paper} from "@mui/material";
+import {
+    TextField,
+    Button,
+    Table,
+    TableRow,
+    TableCell,
+    TableBody,
+    TableHead,
+    Grid,
+    Paper,
+    TableContainer
+} from "@mui/material";
 import {axiosInstance} from "../../api/api";
 import DeleteAllMaterialsDialog from "../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
 import {useAuth} from "../context/AuthContext";
@@ -75,33 +86,35 @@ const InvestmentsPage: React.FC = () => {
                     Додати
                 </Button>
             </div>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Назва</TableCell>
-                        <TableCell>Вартість</TableCell>
-                        <TableCell>Постачальник</TableCell>
-                        <TableCell>Дата</TableCell>
-                        <TableCell>Дії</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {investments.map((inv) => (
-                        <TableRow key={inv.id}>
-                            <TableCell>{inv.type_name}</TableCell>
-                            <TableCell>{inv.cost}</TableCell>
-                            <TableCell>{inv.supplier}</TableCell>
-                            <TableCell>{inv.date}</TableCell>
-                            <TableCell>
-                                <Button variant="outlined" color="secondary"
-                                        onClick={() => handleDeleteInvestment(inv.id)}>
-                                    Видалити
-                                </Button>
-                            </TableCell>
+            <TableContainer component={Paper} style={{marginTop: '20px'}}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Назва</TableCell>
+                            <TableCell>Вартість</TableCell>
+                            <TableCell>Постачальник</TableCell>
+                            <TableCell>Дата</TableCell>
+                            <TableCell>Дії</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    </TableHead>
+                    <TableBody>
+                        {investments.map((inv) => (
+                            <TableRow key={inv.id}>
+                                <TableCell>{inv.type_name}</TableCell>
+                                <TableCell>{inv.cost}</TableCell>
+                                <TableCell>{inv.supplier}</TableCell>
+                                <TableCell>{inv.date}</TableCell>
+                                <TableCell>
+                                    <Button variant="outlined" color="secondary"
+                                            onClick={() => handleDeleteInvestment(inv.id)}>
+                                        Видалити
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     );
 };
