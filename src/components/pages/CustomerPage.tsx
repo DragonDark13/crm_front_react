@@ -22,13 +22,10 @@ import {
 } from "../../api/_customer";
 //TODO перенести у запити у відповідні контексти
 import {Visibility, Edit, Delete} from "@mui/icons-material";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 const CustomerPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
     const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
-    const [selectedCustomer, setSelectedCustomer] = useState<ICustomerDetails | null>(null);
     const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false);
     const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
         id: 0,
@@ -37,36 +34,14 @@ const CustomerPage: React.FC = () => {
         phone_number: '',
         address: '',
     });
-    const {isAuthenticated,} = useAuth();
+    const {isAuthenticated} = useAuth();
 
     const [selectedCustomerDetails, setSelectedCustomerDetails] = useState<ICustomerDetails | null>(null);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
 
-    // Отримуємо список покупців при завантаженні компоненту
-    // useEffect(() => {
-    //     fetchGetAllCustomers()
-    //         .then(customers => setCustomers(customers))
-    //         .catch(error => {
-    //             console.error('Error fetching customers:', error);
-    //         });
-    // }, []);
 
-    // Функція для отримання деталей покупця
-    const handleGetCustomerDetails = (customer: ICustomerDetails) => {
-        setSelectedCustomer(customer); // Починаємо з пустого стану
-        fetchCustomerDetails(customer.id)
-            .then(response => {
-                if (response && response) {
-                    setSelectedCustomer(response); // Витягуємо дані з AxiosResponse
-                } else {
-                    setSelectedCustomer(null); // Якщо відповідь порожня
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching customer details:', error);
-            });
-    };
+
 
     // Функція для відкриття деталей клієнта
     const handleViewDetails = (customerId: number) => {
@@ -93,24 +68,7 @@ const CustomerPage: React.FC = () => {
             showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
             console.error('Error creating customer:', error);
         })
-        // createCustomer(newCustomerData)
-        //     .then(response => {
-        //         console.log('Response:', response); // Лог для перевірки відповіді
-        //
-        //
-        //         setOpenAddNewCustomerDialog(false);
-        //         fetchGetAllCustomersFunc()
-        //         showSnackbarMessage('Customer created successfully!', 'success')
-        //
-        //
-        //         // Закриваємо модальне вікно після створення
-        //     })
-        //     .catch((error: AxiosError) => {
-        //         console.log('Error Response:', error.response); // Лог для перевірки помилки
-        //
-        //         showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
-        //         console.error('Error creating customer:', error);
-        //     });
+
     };
 
     // Відкриття модального вікна
@@ -173,7 +131,7 @@ const CustomerPage: React.FC = () => {
 
     return (
         <div>
-            <Button disabled={!isAuthenticated} variant="contained" color="primary" onClick={handleOpenModal}>
+            <Button  variant="contained" color="primary" onClick={handleOpenModal}>
                 Додати нового Кліента
             </Button>
 
@@ -237,6 +195,7 @@ const CustomerPage: React.FC = () => {
 
             {/* Модальне вікно для додавання нового покупця */}
             <AddNewCustomerDialog
+                isAuthenticated={isAuthenticated}
                 setNewCustomerData={setNewCustomerData}
                 newCustomerData={newCustomerData}
                 openAddNewCustomerDialog={openAddNewCustomerDialog}

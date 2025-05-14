@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button,DialogActions, DialogContent, TextField} from "@mui/material";
+import {Button, DialogActions, DialogContent, TextField} from "@mui/material";
 import {ICustomerDetails} from "../../../../utils/types";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import CancelButton from "../../../Buttons/CancelButton";
@@ -11,6 +11,7 @@ export interface IAddNewCustomerDialog {
     handleAddCustomer: (newCustomer: ICustomerDetails) => void;
     newCustomerData: ICustomerDetails;
     setNewCustomerData: (data: ICustomerDetails) => void;
+    isAuthenticated: boolean;
 }
 
 const AddNewCustomerDialog = ({
@@ -18,7 +19,8 @@ const AddNewCustomerDialog = ({
                                   handleCloseAddNewCustomerDialog,
                                   openAddNewCustomerDialog,
                                   setNewCustomerData,
-                                  newCustomerData
+                                  newCustomerData,
+                                  isAuthenticated
                               }: IAddNewCustomerDialog) => {
 
 
@@ -99,7 +101,7 @@ const AddNewCustomerDialog = ({
                 <CancelButton onClick={handleCloseAddNewCustomerDialog}
 
                 />
-                <Button variant="contained" onClick={handleCreate} >
+                <Button disabled={!isAuthenticated} variant="contained" onClick={handleCreate}>
                     Створити
                 </Button>
             </DialogActions>

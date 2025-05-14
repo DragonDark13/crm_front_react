@@ -291,35 +291,37 @@ function App() {
                         <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
                         <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
                         <Route path="/crm_front_react/sales" element={<Sales/>}/>
-                        <Route path="/crm_front_react/products" element={<ProductsCatalog
-                            ref={(el, index) => {
-                                tableRowRefs.current[index] = el;
-                            }}
-                            products={products}
-                            isAuthenticated={isAuthenticated}
-                            showSnackbarMessage={showSnackbarMessage}
-                            lowQuantityProducts={lowQuantityProducts}
-                            modalState={modalState}
-                            setModalState={setModalState}
-                            order={order}
-                            setOrder={setOrder}
-                            itemsPerPage={itemsPerPage}
-                            setItemsPerPage={setItemsPerPage}
-                            currentPage={currentPage}
-                            setCurrentPage={setCurrentPage}
-                            sortProducts={sortProducts}
-                            filters={filters}
-                            setFilters={setFilters}
-                            orderBy={orderBy}
-                            setOrderBy={setOrderBy}
-                            selectedLowProductId={selectedLowProductId}
-                            setSelectedLowProductId={setSelectedLowProductId}
-                            filteredAndSearchedProducts={filteredAndSearchedProducts}
-                            getComparator={getComparator}
-                            getFieldValue={getFieldValue}
-                            setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
-                            searchTerm={searchTerm}
-                        />
+                        <Route path="/crm_front_react/products" element={
+                            <ProductsCatalog
+                                ref={(el, index) => {
+                                    tableRowRefs.current[index] = el;
+                                }}
+                                searchTerm={searchTerm}
+                                products={products}
+                                isAuthenticated={isAuthenticated}
+                                showSnackbarMessage={showSnackbarMessage}
+                                lowQuantityProducts={lowQuantityProducts}
+                                modalState={modalState}
+                                setModalState={setModalState}
+                                order={order}
+                                setOrder={setOrder}
+                                itemsPerPage={itemsPerPage}
+                                setItemsPerPage={setItemsPerPage}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                sortProducts={sortProducts}
+                                filters={filters}
+                                setFilters={setFilters}
+                                orderBy={orderBy}
+                                setOrderBy={setOrderBy}
+                                selectedLowProductId={selectedLowProductId}
+                                setSelectedLowProductId={setSelectedLowProductId}
+                                filteredAndSearchedProducts={filteredAndSearchedProducts}
+                                getComparator={getComparator}
+                                getFieldValue={getFieldValue}
+                                setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
+                            />
+
                         }/>
                         <Route path="/crm_front_react/purchases" element={<Purchases/>}/>
                         <Route path="/crm_front_react/analytics" element={<Dashboard/>}/>

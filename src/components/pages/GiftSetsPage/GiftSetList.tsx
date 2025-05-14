@@ -115,71 +115,78 @@ const GiftSetList: React.FC = () => {
     return (
         <div>
             <Grid container spacing={2}>
-                {giftSets.map((giftSet) => (
-                    <Grid item xs={12} sm={6} md={4} key={giftSet.id}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5" gutterBottom>
-                                    <strong>Назва:</strong> {giftSet.name}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    <strong>Опис:</strong> {giftSet.description}
-                                </Typography>
+                {giftSets.length > 0 ? (giftSets.map((giftSet) => (
+                        <Grid item xs={12} sm={6} md={4} key={giftSet.id}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h5" gutterBottom>
+                                        <strong>Назва:</strong> {giftSet.name}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        <strong>Опис:</strong> {giftSet.description}
+                                    </Typography>
 
-                                <Typography variant="body1" style={{marginTop: '10px'}}>
-                                    <strong>Зміст:</strong>
-                                </Typography>
+                                    <Typography variant="body1" style={{marginTop: '10px'}}>
+                                        <strong>Зміст:</strong>
+                                    </Typography>
 
-                                <Button fullWidth size="small" onClick={() => handleToggleProduct(giftSet.id)}>
-                                    <ExpandMore/> Продукти
-                                </Button>
+                                    <Button fullWidth size="small" onClick={() => handleToggleProduct(giftSet.id)}>
+                                        <ExpandMore/> Продукти
+                                    </Button>
 
-                                <Collapse in={expandedProduct === giftSet.id}>
-                                    <ul>
-                                        {giftSet.products.map((product) => (
-                                            <li key={product.product_id}>{product.name} (x{product.quantity}) -
-                                                {product.price}</li>
-                                        ))}
-                                    </ul>
-                                </Collapse>
+                                    <Collapse in={expandedProduct === giftSet.id}>
+                                        <ul>
+                                            {giftSet.products.map((product) => (
+                                                <li key={product.product_id}>{product.name} (x{product.quantity}) -
+                                                    {product.price}</li>
+                                            ))}
+                                        </ul>
+                                    </Collapse>
 
-                                <Button fullWidth size="small" onClick={() => handleTogglePackaging(giftSet.id)}>
-                                    <ExpandMore/> Пакування
-                                </Button>
-                                <Collapse in={expandedPackaging === giftSet.id}>
-                                    <ul>
-                                        {giftSet.packagings.map((packaging) => (
-                                            <li key={packaging.packaging_id}>{packaging.name} (x{packaging.quantity})
-                                                - {packaging.price}</li>
-                                        ))}
-                                    </ul>
-                                </Collapse>
+                                    <Button fullWidth size="small" onClick={() => handleTogglePackaging(giftSet.id)}>
+                                        <ExpandMore/> Пакування
+                                    </Button>
+                                    <Collapse in={expandedPackaging === giftSet.id}>
+                                        <ul>
+                                            {giftSet.packagings.map((packaging) => (
+                                                <li key={packaging.packaging_id}>{packaging.name} (x{packaging.quantity})
+                                                    - {packaging.price}</li>
+                                            ))}
+                                        </ul>
+                                    </Collapse>
 
 
-                                <Typography variant="h6" style={{marginTop: '10px'}}>
-                                    <strong>Ціна:</strong> {giftSet.gift_selling_price}
-                                </Typography>
-                                <Typography variant="body2" color="textSecondary">
-                                    <strong>Собівартість:</strong> {giftSet.total_price}
-                                </Typography>
-                            </CardContent>
-                            <CardActions>
-                                <Button fullWidth size="small" color="primary"
-                                        onClick={() => handleDialogOpen('edit', giftSet)}>
-                                    <Edit/> Редагувати
-                                </Button>
-                                <Button fullWidth size="small" color="success"
-                                        onClick={() => handleDialogOpen("sell", giftSet)}>
-                                    <ShoppingCart/> Продати
-                                </Button>
-                                <Button fullWidth size="small" color="secondary"
-                                        onClick={() => handleDelete(giftSet.id)}>
-                                    <Delete/> Видалити
-                                </Button>
-                            </CardActions>
-                        </Card>
+                                    <Typography variant="h6" style={{marginTop: '10px'}}>
+                                        <strong>Ціна:</strong> {giftSet.gift_selling_price}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary">
+                                        <strong>Собівартість:</strong> {giftSet.total_price}
+                                    </Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button fullWidth size="small" color="primary"
+                                            onClick={() => handleDialogOpen('edit', giftSet)}>
+                                        <Edit/> Редагувати
+                                    </Button>
+                                    <Button fullWidth size="small" color="success"
+                                            onClick={() => handleDialogOpen("sell", giftSet)}>
+                                        <ShoppingCart/> Продати
+                                    </Button>
+                                    <Button fullWidth size="small" color="secondary"
+                                            onClick={() => handleDelete(giftSet.id)}>
+                                        <Delete/> Видалити
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    )))
+                    :
+                    <Grid item xs={12}>
+                        <Typography>
+                            Подарункові набори відсутні
+                        </Typography>
                     </Grid>
-                ))}
+                }
             </Grid>
 
             {selectedGiftSet && (

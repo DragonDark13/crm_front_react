@@ -10,7 +10,19 @@ import {
     TableSortLabel,
     TablePagination,
     TextField,
-    Button, MenuItem, Checkbox, InputLabel, FormControl, Select, Tooltip, IconButton, Collapse, Box, Modal, Paper,
+    Button,
+    MenuItem,
+    Checkbox,
+    InputLabel,
+    FormControl,
+    Select,
+    Tooltip,
+    IconButton,
+    Collapse,
+    Box,
+    Modal,
+    Paper,
+    Typography,
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import {ShoppingBag, Inventory, CardGiftcard, Info, ExpandMore, Luggage} from "@mui/icons-material";
@@ -241,89 +253,37 @@ const SalesHistoryTable: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((sale) => (
-                            <React.Fragment key={sale.sale_history_id}>
-                                <TableRow>
-                                    <TableCell size={"small"}>{getSaleIcon(sale.type)}</TableCell>
-                                    <TableCell
-                                        size={"small"}>{sale.type === "product_with_packaging" && sale.packaging_details.length > 0
-                                        ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}`
-                                        : sale.product_name}</TableCell>
-                                    <TableCell>{sale.customer.name}</TableCell>
+                        {filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length > 0 ? filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((sale) => (
+                                <React.Fragment key={sale.sale_history_id}>
+                                    <TableRow>
+                                        <TableCell size={"small"}>{getSaleIcon(sale.type)}</TableCell>
+                                        <TableCell
+                                            size={"small"}>{sale.type === "product_with_packaging" && sale.packaging_details.length > 0
+                                            ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}`
+                                            : sale.product_name}</TableCell>
+                                        <TableCell>{sale.customer.name}</TableCell>
 
-                                    {/*<TableCell size={"small"}>{sale.quantity_sold}</TableCell>*/}
-                                    {/*<TableCell size={"small"}>{sale.unit_price}</TableCell>*/}
-                                    <TableCell size={"small"}>{sale.total_price}</TableCell>
-                                    <TableCell size={"small"}>{sale.cost_price}</TableCell>
-                                    <TableCell size={"small"}>{sale.profit}</TableCell>
-                                    <TableCell size={"small"}>{sale.sale_date}</TableCell>
-                                    <TableCell>
+                                        {/*<TableCell size={"small"}>{sale.quantity_sold}</TableCell>*/}
+                                        {/*<TableCell size={"small"}>{sale.unit_price}</TableCell>*/}
+                                        <TableCell size={"small"}>{sale.total_price}</TableCell>
+                                        <TableCell size={"small"}>{sale.cost_price}</TableCell>
+                                        <TableCell size={"small"}>{sale.profit}</TableCell>
+                                        <TableCell size={"small"}>{sale.sale_date}</TableCell>
+                                        <TableCell>
 
-                                        <IconButton onClick={() => handleExpandClick(sale.sale_history_id)}>
-                                            <ExpandMore/>
-                                        </IconButton>
-                                        <IconButton onClick={() => handleModalOpen(sale)}>
-                                            <Tooltip title="Інформація">
-                                                <Info/>
-                                            </Tooltip>
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                                {(expandedSale === sale.sale_history_id) && (sale.type === 'gift_set'
-                                    ?
-                                    (<TableRow>
-                                        <TableCell colSpan={7}>
-                                            <Collapse in={expandedSale === sale.sale_history_id} timeout="auto"
-                                                      unmountOnExit>
-                                                <Table size="small">
-                                                    <TableHead>
-                                                        <TableRow>
-                                                            <TableCell>Тип</TableCell>
-                                                            <TableCell>Назва</TableCell>
-                                                            <TableCell>Постачальник</TableCell>
-                                                            <TableCell>Ціна за од.</TableCell>
-                                                            <TableCell>Кількість</TableCell>
-                                                            <TableCell>Сума</TableCell>
-                                                        </TableRow>
-                                                    </TableHead>
-                                                    <TableBody>
-                                                        {sale.products && sale.products.map((product) => (
-                                                            <TableRow key={product.product_id}>
-                                                                <TableCell>
-                                                                    <Tooltip title="Одиничний товар">
-                                                                        <ShoppingBag fontSize={"small"}
-                                                                        />
-                                                                    </Tooltip>
-                                                                </TableCell>
-                                                                <TableCell>{product.name}</TableCell>
-                                                                <TableCell>{product.supplier.name}</TableCell>
-                                                                <TableCell>{product.unit_price}</TableCell>
-                                                                <TableCell>{product.quantity}</TableCell>
-                                                                <TableCell>{product.total_price}</TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                        {sale.packagings && sale.packagings.map((packaging) => (
-                                                            <TableRow key={packaging.packaging_id}>
-                                                                <TableCell>
-                                                                    <Tooltip title="Пакування">
-                                                                        <Luggage fontSize={"small"}/>
-                                                                    </Tooltip>
-                                                                </TableCell>
-                                                                <TableCell>{packaging.packaging_name}</TableCell>
-                                                                <TableCell>{packaging.supplier.name}</TableCell>
-                                                                <TableCell>{packaging.unit_price}</TableCell>
-                                                                <TableCell>{packaging.quantity}</TableCell>
-                                                                <TableCell>{packaging.total_price}</TableCell>
-                                                            </TableRow>
-                                                        ))}
-                                                    </TableBody>
-                                                </Table>
-                                            </Collapse>
+                                            <IconButton onClick={() => handleExpandClick(sale.sale_history_id)}>
+                                                <ExpandMore/>
+                                            </IconButton>
+                                            <IconButton onClick={() => handleModalOpen(sale)}>
+                                                <Tooltip title="Інформація">
+                                                    <Info/>
+                                                </Tooltip>
+                                            </IconButton>
                                         </TableCell>
-                                    </TableRow>)
-                                    :
-                                    (
-                                        <TableRow>
+                                    </TableRow>
+                                    {(expandedSale === sale.sale_history_id) && (sale.type === 'gift_set'
+                                        ?
+                                        (<TableRow>
                                             <TableCell colSpan={7}>
                                                 <Collapse in={expandedSale === sale.sale_history_id} timeout="auto"
                                                           unmountOnExit>
@@ -339,37 +299,97 @@ const SalesHistoryTable: React.FC = () => {
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
-                                                            {/* Основний товар */}
-                                                            <TableRow>
-                                                                <TableCell>Товар</TableCell>
-                                                                <TableCell>{sale.product_name}</TableCell>
-                                                                <TableCell>{sale.supplier?.name || 'Невідомо'}</TableCell>
-                                                                <TableCell>{sale.unit_price}</TableCell>
-                                                                <TableCell>{sale.quantity_sold}</TableCell>
-                                                                <TableCell>{sale.total_price}</TableCell>
-                                                            </TableRow>
-
-                                                            {/* Пакування (якщо є) */}
-                                                            {sale.packaging_details && sale.packaging_details.length > 0 && (
-                                                                sale.packaging_details.map(packaging => (
-                                                                    <TableRow key={packaging.package_id}>
-                                                                        <TableCell>Пакування</TableCell>
-                                                                        <TableCell>{packaging.packaging_name}</TableCell>
-                                                                        <TableCell>{packaging.supplier?.name || 'Невідомо'}</TableCell>
-                                                                        <TableCell>{packaging.unit_price}</TableCell>
-                                                                        <TableCell>{packaging.quantity_sold}</TableCell>
-                                                                        <TableCell>{packaging.total_price}</TableCell>
-                                                                    </TableRow>
-                                                                ))
-                                                            )}
+                                                            {sale.products && sale.products.map((product) => (
+                                                                <TableRow key={product.product_id}>
+                                                                    <TableCell>
+                                                                        <Tooltip title="Одиничний товар">
+                                                                            <ShoppingBag fontSize={"small"}
+                                                                            />
+                                                                        </Tooltip>
+                                                                    </TableCell>
+                                                                    <TableCell>{product.name}</TableCell>
+                                                                    <TableCell>{product.supplier.name}</TableCell>
+                                                                    <TableCell>{product.unit_price}</TableCell>
+                                                                    <TableCell>{product.quantity}</TableCell>
+                                                                    <TableCell>{product.total_price}</TableCell>
+                                                                </TableRow>
+                                                            ))}
+                                                            {sale.packagings && sale.packagings.map((packaging) => (
+                                                                <TableRow key={packaging.packaging_id}>
+                                                                    <TableCell>
+                                                                        <Tooltip title="Пакування">
+                                                                            <Luggage fontSize={"small"}/>
+                                                                        </Tooltip>
+                                                                    </TableCell>
+                                                                    <TableCell>{packaging.packaging_name}</TableCell>
+                                                                    <TableCell>{packaging.supplier.name}</TableCell>
+                                                                    <TableCell>{packaging.unit_price}</TableCell>
+                                                                    <TableCell>{packaging.quantity}</TableCell>
+                                                                    <TableCell>{packaging.total_price}</TableCell>
+                                                                </TableRow>
+                                                            ))}
                                                         </TableBody>
                                                     </Table>
                                                 </Collapse>
                                             </TableCell>
-                                        </TableRow>
-                                    ))}
-                            </React.Fragment>
-                        ))}
+                                        </TableRow>)
+                                        :
+                                        (
+                                            <TableRow>
+                                                <TableCell colSpan={7}>
+                                                    <Collapse in={expandedSale === sale.sale_history_id} timeout="auto"
+                                                              unmountOnExit>
+                                                        <Table size="small">
+                                                            <TableHead>
+                                                                <TableRow>
+                                                                    <TableCell>Тип</TableCell>
+                                                                    <TableCell>Назва</TableCell>
+                                                                    <TableCell>Постачальник</TableCell>
+                                                                    <TableCell>Ціна за од.</TableCell>
+                                                                    <TableCell>Кількість</TableCell>
+                                                                    <TableCell>Сума</TableCell>
+                                                                </TableRow>
+                                                            </TableHead>
+                                                            <TableBody>
+                                                                {/* Основний товар */}
+                                                                <TableRow>
+                                                                    <TableCell>Товар</TableCell>
+                                                                    <TableCell>{sale.product_name}</TableCell>
+                                                                    <TableCell>{sale.supplier?.name || 'Невідомо'}</TableCell>
+                                                                    <TableCell>{sale.unit_price}</TableCell>
+                                                                    <TableCell>{sale.quantity_sold}</TableCell>
+                                                                    <TableCell>{sale.total_price}</TableCell>
+                                                                </TableRow>
+
+                                                                {/* Пакування (якщо є) */}
+                                                                {sale.packaging_details && sale.packaging_details.length > 0 && (
+                                                                    sale.packaging_details.map(packaging => (
+                                                                        <TableRow key={packaging.package_id}>
+                                                                            <TableCell>Пакування</TableCell>
+                                                                            <TableCell>{packaging.packaging_name}</TableCell>
+                                                                            <TableCell>{packaging.supplier?.name || 'Невідомо'}</TableCell>
+                                                                            <TableCell>{packaging.unit_price}</TableCell>
+                                                                            <TableCell>{packaging.quantity_sold}</TableCell>
+                                                                            <TableCell>{packaging.total_price}</TableCell>
+                                                                        </TableRow>
+                                                                    ))
+                                                                )}
+                                                            </TableBody>
+                                                        </Table>
+                                                    </Collapse>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                </React.Fragment>
+                            )
+                            )
+                            :
+                            <TableRow>
+                                <TableCell colSpan={6}>
+                                    <Typography variant="subtitle2">Відсутня історія продажів</Typography>
+                                </TableCell>
+                            </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>

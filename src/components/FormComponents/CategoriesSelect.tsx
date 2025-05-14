@@ -31,7 +31,7 @@ const CategoriesSelect: FC<ICategoriesProps> = ({
 
     return (
         <FormControl fullWidth variant="outlined">
-            <InputLabel id="categories-select-label">Categories</InputLabel>
+            <InputLabel id="categories-select-label">Категорії</InputLabel>
             <Select
                 labelId="categories-select-label"
                 multiple
