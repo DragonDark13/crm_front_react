@@ -20,12 +20,14 @@ import {
     TablePagination,
     TableFooter,
     Button,
-    Grid
+    Grid, Slider, Collapse
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import clsx from "clsx";
 import {ICategory} from "../../../utils/types";
 import {useCategories} from "../../Provider/CategoryContext";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 
 
 interface IPurchasesTable {
@@ -50,10 +52,13 @@ const PurchasesTable: React.FC = () => {
     const [dateRangeFilter, setDateRangeFilter] = useState({start: '', end: ''});
     const [categoryFilter, setCategoryFilter] = useState<number | ''>('');
     const [supplierFilter, setSupplierFilter] = useState('');
-    const [priceRangeFilter, setPriceRangeFilter] = useState({min: '', max: ''});
+    const [priceRangeFilterSlider, setPriceRangeFilterSlider] = useState<number[]>([0, 0]);
+
+    const [priceBounds, setPriceBounds] = useState<[number, number]>([0, 0]);
     const [typeFilter, setTypeFilter] = useState<string | ''>('');  // Додано фільтр по типу
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [filtersOpen, setFiltersOpen] = useState(false);
 
     const {categories} = useCategories(); // Отримання всіх категорій
 
@@ -72,6 +77,21 @@ const PurchasesTable: React.FC = () => {
             }));
 
             setPurchaseHistory(formattedData);
+
+            const prices = formattedData
+                .map((item) => parseFloat(item.price_per_item))
+                .filter((price) => !isNaN(price));
+
+            if (prices.length > 0) {
+                const min = Math.min(...prices);
+                const max = Math.max(...prices);
+                setPriceBounds([min, max]);
+                setPriceRangeFilterSlider([min, max]);
+            } else {
+                // fallback: якщо нема цін — встановлюємо дефолтні межі
+                setPriceBounds([0, 1000]);
+                setPriceRangeFilterSlider([0, 1000]);
+            }
         } catch (error) {
             console.error('Error fetching purchase history:', error);
         }
@@ -108,9 +128,7 @@ const PurchasesTable: React.FC = () => {
         setSupplierFilter(event.target.value as string);
     };
 
-    const handlePriceRangeFilterChange = (field: string, value: string) => {
-        setPriceRangeFilter((prev) => ({...prev, [field]: value}));
-    };
+
     const handleTypeFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {  // Обробка зміни фільтру по типу
         setTypeFilter(event.target.value as string);
     };
@@ -120,7 +138,7 @@ const PurchasesTable: React.FC = () => {
         setDateRangeFilter({start: '', end: ''});
         setCategoryFilter('');
         setSupplierFilter('');
-        setPriceRangeFilter({min: '', max: ''});
+        setPriceRangeFilterSlider(priceBounds)
         setTypeFilter(''); // Скидаємо фільтр по типу
     };
 
@@ -151,8 +169,8 @@ const PurchasesTable: React.FC = () => {
             : true;
 
         const matchesPriceRange =
-            (priceRangeFilter.min === '' || item.price_per_item >= parseFloat(priceRangeFilter.min)) &&
-            (priceRangeFilter.max === '' || item.price_per_item <= parseFloat(priceRangeFilter.max));
+            item.price_per_item >= priceRangeFilterSlider[0] &&
+            item.price_per_item <= priceRangeFilterSlider[1];
 
         const matchesType = typeFilter ? item.type === typeFilter : true; // Додаємо перевірку для фільтру по типу
 
@@ -184,117 +202,139 @@ const PurchasesTable: React.FC = () => {
         }
     };
 
+    const isAnyFilterActive =
+        filter !== '' ||
+        dateRangeFilter.start !== '' ||
+        dateRangeFilter.end !== '' ||
+        categoryFilter !== '' ||
+        supplierFilter !== '' ||
+        typeFilter !== '' ||
+        priceRangeFilterSlider[0] !== priceBounds[0] ||
+        priceRangeFilterSlider[1] !== priceBounds[1];
+
     return (
         <div>
             <Typography marginBlockEnd={3} variant={"h4"}>Історія Закупівель</Typography>
 
+            <Button
+                startIcon={filtersOpen ? <FilterListOffIcon/> : <FilterListIcon/>}
+                variant="outlined"
+                onClick={() => setFiltersOpen(!filtersOpen)}
+                style={{marginBottom: '10px'}}
+            >
+                {filtersOpen ? 'Сховати фільтри' : 'Показати фільтри'}
+            </Button>
+            <Collapse in={filtersOpen}>
+                <Grid container spacing={1}>
+                    <Grid item xs={12} sm={6} md={5}>
+                        <TextField
+                            margin="dense"
 
-            <Grid container spacing={1}>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        sx={{marginTop: 0}}
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        label="Пошук"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={filter}
-                        onChange={handleFilterChange}
-                    />
-                </Grid>
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            label="Пошук"
+                            variant="outlined"
+                            fullWidth
+                            value={filter}
+                            onChange={handleFilterChange}
+                        />
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                        label="Дата початку"
-                        type="date"
-                        fullWidth
-                        value={dateRangeFilter.start}
-                        onChange={(e) => handleDateRangeFilterChange('start', e.target.value)}
-                        InputLabelProps={{shrink: true}}
-                    />
-                </Grid>
+                    <Grid item xs={12} sm={6} md={2} lg={2}>
+                        <TextField
+                            margin="dense"
+                            label="Дата початку"
+                            type="date"
+                            fullWidth
+                            value={dateRangeFilter.start}
+                            onChange={(e) => handleDateRangeFilterChange('start', e.target.value)}
+                            InputLabelProps={{shrink: true}}
+                        />
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={3}>
-                    <TextField
+                    <Grid item xs={12} sm={6} md={2}>
+                        <TextField
+                            margin="dense"
+                            label="Дата закінчення"
+                            type="date"
+                            fullWidth
+                            value={dateRangeFilter.end}
+                            onChange={(e) => handleDateRangeFilterChange('end', e.target.value)}
+                            inputProps={{
+                                min: dateRangeFilter.start || undefined  // заборонити дати до початкової
+                            }}
+                            InputLabelProps={{shrink: true, min: dateRangeFilter.start,}}
+                        />
+                    </Grid>
 
-                        label="Дата закінчення"
-                        type="date"
-                        fullWidth
-                        value={dateRangeFilter.end}
-                        onChange={(e) => handleDateRangeFilterChange('end', e.target.value)}
-                        InputLabelProps={{shrink: true}}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <FormControl fullWidth margin={"dense"}>
-                        <InputLabel>Категорія</InputLabel>
-                        <Select value={categoryFilter} onChange={handleCategoryFilterChange}>
-                            <MenuItem title={"Всі категорії"} value="">Всі категорії</MenuItem>
-                            {categories.map((category: ICategory) => (
-                                <MenuItem title={category.name} key={category.id} value={category.id}>
-                                    {category.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                    <FormControl fullWidth margin={"dense"}>
-                        <InputLabel>Постачальник</InputLabel>
-                        <Select value={supplierFilter} onChange={handleSupplierFilterChange}>
-                            <MenuItem value="">Всі постачальники</MenuItem>
-                            {Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
-                                (supplier, index) => (
-                                    <MenuItem key={supplier + `${index}`} value={supplier}>
-                                        {supplier}
+                    <Grid item xs={12} sm={6} md={3}>
+                        <FormControl fullWidth margin={"dense"}>
+                            <InputLabel>Категорія</InputLabel>
+                            <Select label={'Категорія'} value={categoryFilter} onChange={handleCategoryFilterChange}>
+                                <MenuItem title={"Всі категорії"} value="">Всі категорії</MenuItem>
+                                {categories.map((category: ICategory) => (
+                                    <MenuItem title={category.name} key={category.id} value={category.id}>
+                                        {category.name}
                                     </MenuItem>
-                                )
-                            )}
-                        </Select>
-                    </FormControl>
-                </Grid>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={2}>
-                    <FormControl fullWidth margin={"dense"}>
-                        <InputLabel>Тип</InputLabel>
-                        <Select value={typeFilter} onChange={handleTypeFilterChange}>
-                            <MenuItem value="">Всі типи</MenuItem>
-                            <MenuItem value="Other Investment">Інші інвестиції</MenuItem>
-                            <MenuItem value="Packaging">Упаковка</MenuItem>
-                            <MenuItem value="Product">Продукт</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
+                    <Grid item xs={12} sm={6} md={3}>
+                        <FormControl fullWidth margin={"dense"}>
+                            <InputLabel>Постачальник</InputLabel>
+                            <Select label={'Постачальник'} value={supplierFilter} onChange={handleSupplierFilterChange}>
+                                <MenuItem value="">Всі постачальники</MenuItem>
+                                {Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
+                                    (supplier, index) => (
+                                        <MenuItem key={supplier + `${index}`} value={supplier}>
+                                            {supplier}
+                                        </MenuItem>
+                                    )
+                                )}
+                            </Select>
+                        </FormControl>
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={2}>
-                    <TextField
-                        fullWidth
-                        label="Мінімальна ціна"
-                        type="number"
-                        margin={"dense"}
-                        value={priceRangeFilter.min}
-                        onChange={(e) => handlePriceRangeFilterChange('min', e.target.value)}
-                    />
-                </Grid>
+                    <Grid item xs={12} sm={6} md={2}>
+                        <FormControl fullWidth margin={"dense"}>
+                            <InputLabel>Тип</InputLabel>
+                            <Select label={'Тип'} value={typeFilter} onChange={handleTypeFilterChange}>
+                                <MenuItem value="">Всі типи</MenuItem>
+                                <MenuItem value="Other Investment">Інші інвестиції</MenuItem>
+                                <MenuItem value="Packaging">Упаковка</MenuItem>
+                                <MenuItem value="Product">Продукт</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={2}>
-                    <TextField
-                        fullWidth
-                        label="Максимальна ціна"
-                        type="number"
-                        margin={"dense"}
-                        value={priceRangeFilter.max}
-                        onChange={(e) => handlePriceRangeFilterChange('max', e.target.value)}
-                    />
-                </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <Typography gutterBottom>Діапазон ціни (за од.)</Typography>
+                        <Box px={"10px"}>
+                            {Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && (<Slider
+                                value={priceRangeFilterSlider} // <- має бути масив: [min, max]
+                                onChange={(_, newValue) => {
+                                    setPriceRangeFilterSlider(newValue as number[]);
+                                }}
+                                valueLabelDisplay="auto"
+                                min={priceBounds[0]}
+                                max={priceBounds[1]}
+                                marks={[
+                                    {value: priceBounds[0], label: `${priceBounds[0]}₴`},
+                                    {value: priceBounds[1], label: `${priceBounds[1]}₴`}
+                                ]}
+                            />)} </Box>
+                    </Grid>
 
+                </Grid>
+            </Collapse>
+            <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <Box marginY={2}>
-                        <Button variant="contained" color="primary" onClick={resetFilters}>
+                        <Button disabled={!isAnyFilterActive} variant="contained" color="primary"
+                                onClick={resetFilters}>
                             Скинути фільтри
                         </Button>
                     </Box>
@@ -419,8 +459,15 @@ const PurchasesTable: React.FC = () => {
                     <TableFooter>
                         <TableRow>
 
-                            <TableCell colSpan={2}>{totalPrice.toFixed(2)}</TableCell>
-                            <TableCell></TableCell>
+                            <TableCell align={"right"} colSpan={7}>
+
+                                <Typography color={"secondary"}
+                                            variant={"subtitle2"}>
+                                    <strong> Загальна сумма закупівель: </strong> {totalPrice.toFixed(2)}
+                                </Typography>
+
+                            </TableCell>
+
                         </TableRow>
                     </TableFooter>
                 </Table>
