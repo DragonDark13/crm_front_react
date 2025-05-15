@@ -23,6 +23,8 @@ import DeleteAllMaterialsDialog from "../dialogs/packagingModal/DeleteAllMateria
 import {useAuth} from "../context/AuthContext";
 import {Tooltip, IconButton} from '@mui/material';
 import {AddShoppingCart, Update, History} from "@mui/icons-material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import HistoryIcon from "@mui/icons-material/History";
 
 const PackagingMaterialList: React.FC = () => {
         const {packagingMaterials} = usePackaging()
@@ -187,7 +189,7 @@ const PackagingMaterialList: React.FC = () => {
                         <DeleteAllMaterialsDialog/>
                     </Grid>
                 </Grid>}
-                <Grid justifyContent={"flex-end"} alignItems={"center"} container spacing={2}>
+                <Grid  alignItems={"center"} container spacing={2}>
                     {/* Search */}
                     <Grid item xs={12} md={4}>
 
@@ -224,7 +226,7 @@ const PackagingMaterialList: React.FC = () => {
                                 створення</MenuItem> {/* Added sorting option for created_date */}
                         </Select>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={12} md={2}>
 
 
                         <Select
@@ -263,14 +265,14 @@ const PackagingMaterialList: React.FC = () => {
                                         Назва
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell size={"small"}>Постачальник</TableCell>
+                                <TableCell size={"small"}><Typography>Постачальник</Typography></TableCell>
                                 <TableCell size={"small"}>
                                     <TableSortLabel
                                         active={sortBy === 'purchase_price_per_unit'}
                                         direction={sortBy === 'purchase_price_per_unit' ? (sortOrder as 'asc' | 'desc') : 'asc'}
                                         onClick={() => handleSort('purchase_price_per_unit')}
                                     >
-                                        Ціна
+                                        Собівартість
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell size={"small"}>
@@ -283,7 +285,15 @@ const PackagingMaterialList: React.FC = () => {
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell size={"small"}>
-                                    Сумма
+                                   <div>
+                                        Сумма
+                                        {/*<Typography variant={"subtitle2"} color={"secondary"}>*/}
+                                        {/*    За весь час*/}
+                                        {/*</Typography>*/}
+                                        {/*<Typography variant={"subtitle2"} color={"primary"}>*/}
+                                        {/*    В наявності*/}
+                                        {/*</Typography>*/}
+                                    </div>
                                 </TableCell>
 
                                 <TableCell size={"small"}>
@@ -295,7 +305,7 @@ const PackagingMaterialList: React.FC = () => {
                                         Дата створення
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell sx={{minWidth:160}} size={"small"}>Дії</TableCell>
+                                <TableCell sx={{minWidth:160}} size={"small"}><Typography>Дії</Typography></TableCell>
 
                             </TableRow>
                         </TableHead>
@@ -309,28 +319,108 @@ const PackagingMaterialList: React.FC = () => {
                                             sx={{
                                                 textOverflow: 'ellipsis',
                                                 whiteSpace: 'nowrap'
-                                            }}>{material.supplier.name}</Typography></TableCell>
-                                    <TableCell size={"small"}>{material.purchase_price_per_unit}</TableCell>
+                                            }}>{material.supplier.name}
+                                        </Typography>
+                                    </TableCell>
                                     <TableCell size={"small"}>
-                                        <div>
-                                            <Typography variant={"subtitle2"}>
-                                                <strong>Загальна: </strong>{material.total_quantity}
-                                            </Typography>
-                                            <Typography variant={"subtitle2"}>
-                                                <strong>В наявності: </strong>{material.available_quantity}
-                                            </Typography>
-                                        </div>
-
-
+                                        {material.purchase_price_per_unit}
                                     </TableCell>
                                     <TableCell size={"small"}>
                                         <div>
-                                            <Typography variant={"subtitle2"}>
-                                                <strong>Загальна: </strong>{material.total_purchase_cost}
-                                            </Typography>
-                                            <Typography variant={"subtitle2"}>
-                                                <strong>В наявності: </strong>{material.available_stock_cost}
-                                            </Typography>
+                                            <Box display="flex" alignItems="center" gap={2}>
+                                                    <Tooltip title="За весь час">
+                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    borderRadius: "50%",
+                                                                    backgroundColor: "secondary.main",
+                                                                    color: "white",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                {material.total_quantity}
+                                                            </Box>
+                                                        </Box>
+                                                    </Tooltip>
+
+                                                    <Tooltip title="Кількість товару, яка є в наявності">
+                                                        <Box display="flex" alignItems="center" gap={1}>
+
+                                                            <Box
+                                                                sx={{
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    borderRadius: "50%",
+                                                                    backgroundColor: "secondary.dark",
+                                                                    color: "white",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                {material.available_quantity}
+                                                            </Box>
+                                                        </Box>
+                                                    </Tooltip>
+                                            </Box>
+                                            {/*<Typography variant={"subtitle2"}>*/}
+                                            {/*    <strong>Загальна: </strong>{material.total_quantity}*/}
+                                            {/*</Typography>*/}
+                                            {/*<Typography variant={"subtitle2"}>*/}
+                                            {/*    <strong>В наявності: </strong>{material.available_quantity}*/}
+                                            {/*</Typography>*/}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell size={"small"}>
+                                        <div>
+                                            <Box display="flex" alignItems="center" gap={2}>
+                                                    <Tooltip title="За весь час">
+                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    borderRadius: "50%",
+                                                                    backgroundColor: "secondary.main",
+                                                                    color: "white",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                {material.total_purchase_cost}
+                                                            </Box>
+                                                        </Box>
+                                                    </Tooltip>
+
+                                                    <Tooltip title="За наявне пакування">
+                                                        <Box display="flex" alignItems="center" gap={1}>
+
+                                                            <Box
+                                                                sx={{
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    borderRadius: "50%",
+                                                                    backgroundColor:  "secondary.dark",
+                                                                    color: "white",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                {material.available_stock_cost}
+                                                            </Box>
+                                                        </Box>
+                                                    </Tooltip>
+                                            </Box>
                                         </div>
                                     </TableCell>
                                     <TableCell
@@ -342,7 +432,8 @@ const PackagingMaterialList: React.FC = () => {
                                             <Grid item>
                                                 <Tooltip title="Закупити" placement="top">
                                                     <IconButton  color="primary" onClick={() => handleOpenDialog(material)}>
-                                                        <AddShoppingCart fontSize={"small"}/>
+                                                                        <ShoppingCartIcon color="primary" fontSize="small" />
+
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>
@@ -358,7 +449,8 @@ const PackagingMaterialList: React.FC = () => {
                                                 <Tooltip title="Історія" placement="top">
                                                     <IconButton color="secondary"
                                                                 onClick={() => handleOpenHistoryDialog(material)}>
-                                                        <History fontSize={"small"}/>
+
+                                                        <HistoryIcon fontSize="small" />
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>
