@@ -107,7 +107,7 @@ const PackagingSelector = ({
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
                 <Button sx={{marginTop: '16px'}} variant="contained" endIcon={<DeleteIcon/>} onClick={removePackage}
-                        color="secondary">
+                        color="error">
                     Видалити
                 </Button>
             </Grid>

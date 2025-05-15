@@ -32,6 +32,7 @@ import AddButton from "../../../Buttons/AddButton";
 import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import PackagingSelector from "./PackagingSelector";
 import {useTheme} from "@mui/material/styles";
+import CancelButton from "../../../Buttons/CancelButton";
 
 
 const SaleProductModal = ({
@@ -377,9 +378,10 @@ const SaleProductModal = ({
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button variant="contained" onClick={handleCloseSale} color="error">
-                            Відміна
-                        </Button>
+                        {/*<Button variant="contained" onClick={handleCloseSale} color="error">*/}
+                        {/*    Відміна*/}
+                        {/*</Button>*/}
+                        <CancelButton onClick={handleCloseSale} />
                         <Button
                             variant="contained"
                             color="success"
