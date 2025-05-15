@@ -146,21 +146,7 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                         <Grid item xs={12} sm={8} md={9}>
                             <SupplierSelect suppliers={suppliers} value={supplierId || ''}
                                             onChange={(e) => setSupplierId(Number(e.target.value))}/>
-                            {/*<TextField*/}
-                            {/*    select*/}
-                            {/*    label="Постачальник"*/}
-                            {/*    value={supplierId || ''}*/}
-                            {/*    onChange={(e) => setSupplierId(Number(e.target.value))}*/}
-                            {/*    fullWidth*/}
-                            {/*    margin="normal"*/}
-                            {/*    required*/}
-                            {/*>*/}
-                            {/*    {suppliers.map((supplier, index) => (*/}
-                            {/*        <MenuItem key={supplier.id + supplier.name + index} value={supplier.id}>*/}
-                            {/*            {supplier.name}*/}
-                            {/*        </MenuItem>*/}
-                            {/*    ))}*/}
-                            {/*</TextField>*/}
+
                         </Grid>
                         <Grid item xs={12} sm={4} md={3}>
                             <AddButton sx={{marginTop: 1}} onClick={handleOpenAddSupplier}/>
@@ -171,41 +157,18 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                             <QuantityField min={MIN_QUANTITY} value={quantity} onChange={handleQuantityChange}
                                            onIncrement={handleIncrement}
                                            onDecrement={handleDecrement}/>
-                            {/*<TextField*/}
-                            {/*    label="Кількість"*/}
-                            {/*    type="number"*/}
-                            {/*    value={quantity}*/}
-                            {/*    onChange={handleQuantityChange}*/}
-                            {/*    fullWidth*/}
-                            {/*    margin="dense"*/}
-                            {/*/>*/}
+
                         </Grid>
 
                         {/* Ціна за одиницю */}
                         <Grid item xs={12} sm={6} md={4}>
                             <PriceField value={pricePerUnit} onChange={handlePriceChange} error={null}/>
-                            {/*<TextField*/}
-                            {/*    label="Ціна за одиницю"*/}
-                            {/*    type="number"*/}
-                            {/*    value={pricePerUnit}*/}
-                            {/*    onChange={handlePriceChange}*/}
-                            {/*    fullWidth*/}
-                            {/*    margin="dense"*/}
-                            {/*/>*/}
+
                         </Grid>
 
                         {/* Загальна сума закупівлі */}
                         <Grid item xs={12} sm={12} md={4}>
                             <TotalPriceField value={totalPurchaseCost.toFixed(2)}/>
-                            {/*<TextField*/}
-                            {/*    label="Загальна сума закупівлі"*/}
-                            {/*    value={totalPurchaseCost.toFixed(2)} // Форматуємо до 2 знаків після коми*/}
-                            {/*    fullWidth*/}
-                            {/*    margin="dense"*/}
-                            {/*    InputProps={{*/}
-                            {/*        readOnly: true,*/}
-                            {/*    }}*/}
-                            {/*/>*/}
                         </Grid>
                     </Grid>
                 </DialogContent>
