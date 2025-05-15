@@ -17,6 +17,7 @@ import SupplierSelect from "../../../FormComponents/SupplierSelect";
 import QuantityField from "../../../FormComponents/QuantityField";
 import PriceField from "../../../FormComponents/PriceField";
 import {parseDecimalInput} from "../../../../utils/_validation";
+import TotalPriceField from "../../../FormComponents/TotalPriceField";
 
 
 const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
@@ -195,15 +196,16 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
 
                         {/* Загальна сума закупівлі */}
                         <Grid item xs={12} sm={12} md={4}>
-                            <TextField
-                                label="Загальна сума закупівлі"
-                                value={totalPurchaseCost.toFixed(2)} // Форматуємо до 2 знаків після коми
-                                fullWidth
-                                margin="dense"
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                            />
+                            <TotalPriceField value={totalPurchaseCost.toFixed(2)}/>
+                            {/*<TextField*/}
+                            {/*    label="Загальна сума закупівлі"*/}
+                            {/*    value={totalPurchaseCost.toFixed(2)} // Форматуємо до 2 знаків після коми*/}
+                            {/*    fullWidth*/}
+                            {/*    margin="dense"*/}
+                            {/*    InputProps={{*/}
+                            {/*        readOnly: true,*/}
+                            {/*    }}*/}
+                            {/*/>*/}
                         </Grid>
                     </Grid>
                 </DialogContent>
@@ -219,9 +221,11 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
 
             {/* Add Supplier Dialog */}
             {addSupplierOpen && (
-                <AddPackagingSupplierDialog handleCloseAddSupplier={handleCloseAddSupplier}
+                <AddPackagingSupplierDialog
+                    isAuthenticated={isAuthenticated}
+                    handleCloseAddSupplier={handleCloseAddSupplier}
 
-                                            openAddSupplier={addSupplierOpen}/>
+                    openAddSupplier={addSupplierOpen}/>
             )}
         </React.Fragment>
 

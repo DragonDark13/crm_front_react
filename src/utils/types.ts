@@ -297,3 +297,9 @@ export interface PurchaseMaterialDialogProps {
     defaultPricePerUnit: number | null;
     isAuthenticated: boolean;
 }
+
+export interface AddPackagingSupplierDialogProps {
+    openAddSupplier: boolean;
+    handleCloseAddSupplier: () => void;
+    isAuthenticated: boolean;
+}

@@ -13,13 +13,14 @@ import React, {useState} from 'react';
 import {axiosInstance} from "../../../../api/api";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import CancelButton from "../../../Buttons/CancelButton";
+import {AddPackagingSupplierDialogProps} from "../../../../utils/types";
 
-interface AddPackagingSupplierDialogProps {
-    openAddSupplier: boolean;
-    handleCloseAddSupplier: () => void;
-}
 
-const AddPackagingSupplierDialog = ({openAddSupplier, handleCloseAddSupplier}: AddPackagingSupplierDialogProps) => {
+const AddPackagingSupplierDialog = ({
+                                        openAddSupplier,
+                                        handleCloseAddSupplier,
+                                        isAuthenticated=false
+                                    }: AddPackagingSupplierDialogProps) => {
     const [name, setName] = useState("");
     const [contactInfo, setContactInfo] = useState("");
     const [loading, setLoading] = useState(false);
@@ -44,13 +45,14 @@ const AddPackagingSupplierDialog = ({openAddSupplier, handleCloseAddSupplier}: A
 
     return (
         <CustomDialog
-            maxWidth={"sm"}
+            maxWidth={"xs"}
             open={openAddSupplier}
             handleClose={handleCloseAddSupplier}
             title="Додати постачальника"
         >
             <DialogContent>
                 <TextField
+                    size={"small"}
                     label="Назва постачальника"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -59,6 +61,7 @@ const AddPackagingSupplierDialog = ({openAddSupplier, handleCloseAddSupplier}: A
                     required
                 />
                 <TextField
+                    size={"small"}
                     label="Контактна інформація"
                     value={contactInfo}
                     onChange={(e) => setContactInfo(e.target.value)}
@@ -78,7 +81,7 @@ const AddPackagingSupplierDialog = ({openAddSupplier, handleCloseAddSupplier}: A
                     onClick={handleSubmit}
                     variant="contained"
                     color="primary"
-                    disabled={loading}
+                    disabled={loading || !isAuthenticated}
                 >
                     {loading ? <CircularProgress size={24}/> : "Додати"}
                 </Button>
