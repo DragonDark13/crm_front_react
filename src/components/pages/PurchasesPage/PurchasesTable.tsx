@@ -320,23 +320,24 @@ const PurchasesTable: React.FC = () => {
 
                     <Grid item xs={12} sm={6} md={5}>
                         <Grid container alignItems={"center"}>
-                            <Grid item xs={12} md={4}><Typography variant={"caption"} gutterBottom>Діапазон ціни (за од.):</Typography></Grid>
+                            <Grid item xs={12} md={4}><Typography variant={"caption"} gutterBottom>Діапазон ціни (за
+                                од.):</Typography></Grid>
                             <Grid item xs={12} md={8}>
                                 <Box px={"10px"}>
-                                {Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && (<Slider
-                                    value={priceRangeFilterSlider} // <- має бути масив: [min, max]
-                                    onChange={(_, newValue) => {
-                                        setPriceRangeFilterSlider(newValue as number[]);
-                                    }}
-                                    valueLabelDisplay="auto"
+                                    {Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && (<Slider
+                                        value={priceRangeFilterSlider} // <- має бути масив: [min, max]
+                                        onChange={(_, newValue) => {
+                                            setPriceRangeFilterSlider(newValue as number[]);
+                                        }}
+                                        valueLabelDisplay="auto"
 
-                                    min={priceBounds[0]}
-                                    max={priceBounds[1]}
-                                    marks={[
-                                        {value: priceBounds[0], label: `${priceBounds[0]}₴`},
-                                        {value: priceBounds[1], label: `${priceBounds[1]}₴`}
-                                    ]}
-                                />)} </Box></Grid>
+                                        min={priceBounds[0]}
+                                        max={priceBounds[1]}
+                                        marks={[
+                                            {value: priceBounds[0], label: `${priceBounds[0]}₴`},
+                                            {value: priceBounds[1], label: `${priceBounds[1]}₴`}
+                                        ]}
+                                    />)} </Box></Grid>
                         </Grid>
 
 
@@ -439,9 +440,20 @@ const PurchasesTable: React.FC = () => {
                                             row.type === "Packaging" ? "Пакування" : "Інше"
                                     }>
                                         <Typography variant="subtitle2" component="span">
-                                            {row.type === "Product" && <ShoppingBag fontSize="small"/>}
-                                            {row.type === "Packaging" && <Luggage fontSize="small"/>}
-                                            {row.type === "Other Investment" && <AttachMoney fontSize="small"/>}
+                                            {row.type === "Product" && <Tooltip title="Товар">
+                                                <ShoppingBag fontSize="small"/>
+                                            </Tooltip>
+                                            }
+                                            {row.type === "Packaging" &&
+                                            <Tooltip title="Пакування">
+                                                <Luggage fontSize="small"/>
+                                            </Tooltip>
+                                            }
+                                            {row.type === "Other Investment" &&
+                                            <Tooltip title="Інші вкладення">
+                                                <AttachMoney fontSize="small"/>
+                                            </Tooltip>
+                                            }
                                         </Typography>
 
                                     </Tooltip>

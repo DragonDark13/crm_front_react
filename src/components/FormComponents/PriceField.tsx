@@ -5,7 +5,7 @@ import {TextField} from "@mui/material";
 export interface IPriceField {
     value: number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    error: string;
+    error?: string;
     label?: string,
 }
 

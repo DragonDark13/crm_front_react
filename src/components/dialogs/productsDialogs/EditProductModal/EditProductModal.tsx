@@ -16,6 +16,7 @@ import SupplierSelect from "../../../FormComponents/SupplierSelect";
 import {IEditProduct,} from "../../../../utils/types";
 import {useCategories} from "../../../Provider/CategoryContext";
 import {useSuppliers} from "../../../Provider/SupplierContext";
+import {parseDecimalInput} from "../../../../utils/_validation";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -289,16 +290,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                         <PriceField
                             value={editProduct.purchase_price_per_item}
                             onChange={(e) => {
-                                let value = e.target.value;
-
-                                // Заміна коми на крапку для введення десяткових чисел
-
-                                // Регулярний вираз для числа з двома знаками після крапки
-                                const regex = /^\d*\.?\d{0,2}$/;
-
-                                // Якщо введення відповідає регулярному виразу, оновлюємо state
-                                if (regex.test(value) || value.endsWith('.')) {
-                                    handleFieldChange('purchase_price_per_item', value === '' ? 0 : parseFloat(value));
+                                const parsed = parseDecimalInput(e.target.value);
+                                if (parsed !== null) {
+                                    handleFieldChange('purchase_price_per_item', parsed);
 
 
                                 }
@@ -315,18 +309,10 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             label="ціна за 1шт (продаж)"
                             value={editProduct.selling_price_per_item}
                             onChange={(e) => {
-                                let value = e.target.value;
+                                const parsed = parseDecimalInput(e.target.value);
+                                if (parsed !== null) {
 
-
-                                // Заміна коми на крапку для введення десяткових чисел
-
-                                // Регулярний вираз для числа з двома знаками після крапки
-                                const regex = /^\d*\.?\d{0,2}$/;
-
-                                // Якщо введення відповідає регулярному виразу, оновлюємо state
-                                if (regex.test(value) || value.endsWith('.')) {
-
-                                    handleFieldChange('selling_price_per_item', value === '' ? 0 : parseFloat(value));
+                                    handleFieldChange('selling_price_per_item', parsed);
                                 }
 
                             }}

@@ -19,6 +19,7 @@ import AddSupplierModal from "../../AddSupplierModal/AddSupplierModal";
 import {addSupplier} from "../../../../api/_supplier";
 import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
 import AddIcon from "@mui/icons-material/Add";
+import {parseDecimalInput} from "../../../../utils/_validation";
 //TODO додай постачальників таблиці
 // TODO Повідомлення про успіх
 // TODO Окремі поля для ціни закупівельної і проданої
@@ -221,20 +222,12 @@ const AddProductModal = ({
                             <PriceField
                                 value={newProduct.purchase_price_per_item}
                                 onChange={(e) => {
-                                    let value = e.target.value;
-
-
-                                    // Заміна коми на крапку для введення десяткових чисел
-
-                                    // Регулярний вираз для числа з двома знаками після крапки
-                                    const regex = /^\d*\.?\d{0,2}$/;
-
-                                    // Якщо введення відповідає регулярному виразу, оновлюємо state
-                                    if (regex.test(value) || value.endsWith('.')) {
+                                    const parsed = parseDecimalInput(e.target.value);
+                                    if (parsed !== null) {
 
                                         setNewProduct({
                                             ...newProduct,
-                                            purchase_price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо
+                                            purchase_price_per_item: parsed  // Оновлюємо
                                             // значення або
                                             // ставимо 0
                                         });
@@ -255,20 +248,12 @@ const AddProductModal = ({
                                 label="ціна за 1шт (продаж)"
                                 value={newProduct.selling_price_per_item}
                                 onChange={(e) => {
-                                    let value = e.target.value;
-
-
-                                    // Заміна коми на крапку для введення десяткових чисел
-
-                                    // Регулярний вираз для числа з двома знаками після крапки
-                                    const regex = /^\d*\.?\d{0,2}$/;
-
-                                    // Якщо введення відповідає регулярному виразу, оновлюємо state
-                                    if (regex.test(value) || value.endsWith('.')) {
+                                    const parsed = parseDecimalInput(e.target.value);
+                                    if (parsed !== null) {
 
                                         setNewProduct({
                                             ...newProduct,
-                                            selling_price_per_item: value === '' ? 0 : parseFloat(value)  // Оновлюємо
+                                            selling_price_per_item: parsed  // Оновлюємо
                                             // значення або
                                             // ставимо 0
                                         });

@@ -12,16 +12,12 @@ import CustomDialog from "../../CustomDialog/CustomDialog";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 import CancelButton from "../../../Buttons/CancelButton";
 import AddButton from "../../../Buttons/AddButton";
-import {IMaterialSupplier} from "../../../../utils/types";
+import {IMaterialSupplier, PurchaseMaterialDialogProps} from "../../../../utils/types";
+import SupplierSelect from "../../../FormComponents/SupplierSelect";
+import QuantityField from "../../../FormComponents/QuantityField";
+import PriceField from "../../../FormComponents/PriceField";
+import {parseDecimalInput} from "../../../../utils/_validation";
 
-interface PurchaseMaterialDialogProps {
-    open: boolean;
-    onClose: () => void;
-    materialId: number;
-    onPurchaseSuccess: () => void;
-    defaultSupplierId: number | null;
-    defaultPricePerUnit: number | null;
-}
 
 const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                                                                            open,
@@ -30,6 +26,8 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                                                                            onPurchaseSuccess,
                                                                            defaultSupplierId,
                                                                            defaultPricePerUnit,
+                                                                           materialName,
+                                                                           isAuthenticated = false
                                                                        }) => {
     const [supplierId, setSupplierId] = useState<number | null>(defaultSupplierId || null);
     const [quantity, setQuantity] = useState<number>(1); // Замовчуванням 1
@@ -58,17 +56,46 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
     }, []);
 
     // Викликається при зміні кількості
+    const MIN_QUANTITY = 0;
+    const MAX_QUANTITY = 1000;
+
+// Обробка зміни вручну
     const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newQuantity = Number(e.target.value);
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.startsWith('0')) {
+            value = value.replace(/^0+/, '') || '0';
+        }
+
+        const newQuantity = Math.min(Math.max(Number(value), MIN_QUANTITY), MAX_QUANTITY);
         setQuantity(newQuantity);
         setTotalPurchaseCost(calculateTotalCost(newQuantity, pricePerUnit));
     };
 
+// Кнопка +
+    const handleIncrement = () => {
+        if (quantity < MAX_QUANTITY) {
+            const newQuantity = quantity + 1;
+            setQuantity(newQuantity);
+            setTotalPurchaseCost(calculateTotalCost(newQuantity, pricePerUnit));
+        }
+    };
+
+// Кнопка -
+    const handleDecrement = () => {
+        if (quantity > MIN_QUANTITY) {
+            const newQuantity = quantity - 1;
+            setQuantity(newQuantity);
+            setTotalPurchaseCost(calculateTotalCost(newQuantity, pricePerUnit));
+        }
+    };
+
     // Викликається при зміні ціни за одиницю
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newPrice = Number(e.target.value);
-        setPricePerUnit(newPrice);
-        setTotalPurchaseCost(calculateTotalCost(quantity, newPrice));
+        const parsed = parseDecimalInput(e.target.value);
+        if (parsed !== null) {
+            setPricePerUnit(parsed);
+            setTotalPurchaseCost(calculateTotalCost(quantity, parsed));
+        }
     };
 
     const handlePurchase = async () => {
@@ -110,54 +137,60 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                 maxWidth={"sm"}
                 open={open}
                 handleClose={onClose}
-                title="Закупити пакувальний матеріал"
+                title={"Закупити " + materialName}
             >
                 <DialogContent>
                     <Grid container spacing={2} alignItems="center">
                         {/* Вибір постачальника */}
                         <Grid item xs={12} sm={8} md={9}>
-                            <TextField
-                                select
-                                label="Постачальник"
-                                value={supplierId || ''}
-                                onChange={(e) => setSupplierId(Number(e.target.value))}
-                                fullWidth
-                                margin="normal"
-                                required
-                            >
-                                {suppliers.map((supplier, index) => (
-                                    <MenuItem key={supplier.id + supplier.name + index} value={supplier.id}>
-                                        {supplier.name}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
+                            <SupplierSelect suppliers={suppliers} value={supplierId || ''}
+                                            onChange={(e) => setSupplierId(Number(e.target.value))}/>
+                            {/*<TextField*/}
+                            {/*    select*/}
+                            {/*    label="Постачальник"*/}
+                            {/*    value={supplierId || ''}*/}
+                            {/*    onChange={(e) => setSupplierId(Number(e.target.value))}*/}
+                            {/*    fullWidth*/}
+                            {/*    margin="normal"*/}
+                            {/*    required*/}
+                            {/*>*/}
+                            {/*    {suppliers.map((supplier, index) => (*/}
+                            {/*        <MenuItem key={supplier.id + supplier.name + index} value={supplier.id}>*/}
+                            {/*            {supplier.name}*/}
+                            {/*        </MenuItem>*/}
+                            {/*    ))}*/}
+                            {/*</TextField>*/}
                         </Grid>
                         <Grid item xs={12} sm={4} md={3}>
-                            <AddButton onClick={handleOpenAddSupplier}/>
+                            <AddButton sx={{marginTop: 1}} onClick={handleOpenAddSupplier}/>
                         </Grid>
 
                         {/* Кількість */}
                         <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                label="Кількість"
-                                type="number"
-                                value={quantity}
-                                onChange={handleQuantityChange}
-                                fullWidth
-                                margin="dense"
-                            />
+                            <QuantityField min={MIN_QUANTITY} value={quantity} onChange={handleQuantityChange}
+                                           onIncrement={handleIncrement}
+                                           onDecrement={handleDecrement}/>
+                            {/*<TextField*/}
+                            {/*    label="Кількість"*/}
+                            {/*    type="number"*/}
+                            {/*    value={quantity}*/}
+                            {/*    onChange={handleQuantityChange}*/}
+                            {/*    fullWidth*/}
+                            {/*    margin="dense"*/}
+                            {/*/>*/}
                         </Grid>
 
                         {/* Ціна за одиницю */}
                         <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                label="Ціна за одиницю"
-                                type="number"
-                                value={pricePerUnit}
-                                onChange={handlePriceChange}
-                                fullWidth
-                                margin="dense"
-                            />
+                            <PriceField value={pricePerUnit} onChange={handlePriceChange} error={null}/>
+                            {/*<TextField*/}
+                            {/*    label="Ціна за одиницю"*/}
+                            {/*    type="number"*/}
+                            {/*    value={pricePerUnit}*/}
+                            {/*    onChange={handlePriceChange}*/}
+                            {/*    fullWidth*/}
+                            {/*    margin="dense"*/}
+                            {/*/>*/}
                         </Grid>
 
                         {/* Загальна сума закупівлі */}
@@ -176,7 +209,7 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                 </DialogContent>
                 <DialogActions>
                     <CancelButton onClick={onClose}/>
-                    <Button onClick={handlePurchase} color="primary" variant="contained">
+                    <Button disabled={!isAuthenticated} onClick={handlePurchase} color="primary" variant="contained">
                         Закупити
                     </Button>
                 </DialogActions>

@@ -153,6 +153,7 @@ const PackagingMaterialList: React.FC = () => {
 
         const handleOpenDialog = (material: IMaterial) => {
             setSelectedMaterialId(material.id);
+            setSelectedMaterial(material);
             setSelectedSupplierId(material.supplier.id || null); // Передаємо ID постачальника
             setDefaultPricePerUnit(material.purchase_price_per_unit || 0); // Передаємо ціну за одиницю
             setDialogOpen(true);
@@ -163,6 +164,7 @@ const PackagingMaterialList: React.FC = () => {
             setSelectedMaterialId(null);
             setSelectedSupplierId(null);
             setDefaultPricePerUnit(0);
+            setSelectedMaterial(null)
         };
 
         const [page, setPage] = useState(0);
@@ -485,6 +487,7 @@ const PackagingMaterialList: React.FC = () => {
                 {/* Dialog for purchasing material */}
                 {selectedMaterialId && (
                     <PurchaseMaterialDialog
+                        materialName={selectedMaterial?.name}
                         open={dialogOpen}
                         onClose={handleCloseDialog}
                         materialId={selectedMaterialId}
