@@ -7,6 +7,7 @@ const ProductNameField: FC<{
     error: string;
 }> = ({value, onChange, error}) => (
     <TextField
+        size={"small"}
         label="Назва товару"
         value={value}
         onChange={onChange}

@@ -16,6 +16,7 @@ const PriceField: FC<{
     error: string;
 }> = ({value, onChange, error,label='"Ціна за 1шт (Закупівельна)"'}: IPriceField) => (
     <TextField
+        size={"small"}
         label={label}
         type="number"
         value={value}

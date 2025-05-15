@@ -8,6 +8,7 @@ export interface ITotalPriceField {
 
 const TotalPriceField: FC<{ value: number }> = ({value, label = "Загальна сума (Закупівельна)"}: ITotalPriceField) => (
     <TextField
+        size={"small"}
         label={label}
         type="number"
         value={value}

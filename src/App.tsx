@@ -175,15 +175,9 @@ function App() {
     }, [products]);
 
     const handleLogout = async () => {
-        try {
-            await logoutUser(); // Call the logout API function
-            logout(); // Clear token from context and localStorage
-            showSnackbarMessage('Ви розлогінилися', 'success')
 
-            // Redirect to home page or login page (e.g., using React Router)
-        } catch (error) {
-            console.error('Error logging out:', error);
-        }
+        logout(); // Clear token from context and localStorage
+
     };
 
     let navigate = useNavigate();

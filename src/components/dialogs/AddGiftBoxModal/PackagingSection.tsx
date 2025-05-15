@@ -3,6 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
 import QuantityField from "../../FormComponents/QuantityField";
+import AddButton from "../../Buttons/AddButton";
 
 const PackagingSection = ({
                               showSelectPackaging,
@@ -18,14 +19,7 @@ const PackagingSection = ({
         <Divider sx={{my: 1}}/>
         <div>
             {!showSelectPackaging ? (
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<AddIcon/>}
-                    onClick={() => setShowSelectPackaging(true)}
-                >
-                    Add Packaging
-                </Button>
+                <AddButton  text={'Додати'}  onClick={() => setShowSelectPackaging(true)}/>
             ) : (
                 <Grid container>
                     <Grid item xs={9}>

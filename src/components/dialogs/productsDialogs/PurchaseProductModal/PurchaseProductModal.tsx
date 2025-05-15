@@ -99,7 +99,9 @@ const PurchaseProductModal = ({
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={8}>
-                        <SupplierSelect disabled={true} suppliers={suppliers} value={purchaseDetails.supplier_id}
+                        <SupplierSelect disabled={true}
+                                        suppliers={suppliers}
+                                        value={purchaseDetails.supplier_id}
                                         onChange={(e) => setPurchaseDetails({
                                             ...purchaseDetails,
                                             supplier_id: Number(e.target.value)
@@ -109,6 +111,7 @@ const PurchaseProductModal = ({
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
+                            size={"small"}
                             label="Purchase Date"
                             type="date"
                             value={purchaseDetails.purchase_date}
@@ -151,6 +154,7 @@ const PurchaseProductModal = ({
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                         <TextField
+                            size={"small"}
                             label="Ціна за 1шт"
                             type="number"
                             value={purchaseDetails.purchase_price_per_item}

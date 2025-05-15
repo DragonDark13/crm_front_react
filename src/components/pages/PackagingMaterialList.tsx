@@ -193,17 +193,25 @@ const PackagingMaterialList: React.FC = () => {
 
 
                         <TextField
-                            label="Пошук за назвою"
+                            size={"small"}
+                            hiddenLabel={true}
+                            placeholder="Пошук за назвою"
                             variant="outlined"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             fullWidth
-                            margin="dense"
+                            margin="none"
                         />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <Typography align={"right"}>
+                            Сортування по:
+                        </Typography>
                     </Grid>
                     {/* Sorting */}
                     <Grid item xs={12} md={3}>
                         <Select
+                            size={"small"}
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
                             fullWidth
@@ -220,6 +228,7 @@ const PackagingMaterialList: React.FC = () => {
 
 
                         <Select
+                            size={"small"}
                             value={sortOrder}
                             onChange={(e) => setSortOrder(e.target.value)}
                             fullWidth
@@ -286,7 +295,7 @@ const PackagingMaterialList: React.FC = () => {
                                         Дата створення
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell size={"small"}>Дії</TableCell>
+                                <TableCell sx={{minWidth:160}} size={"small"}>Дії</TableCell>
 
                             </TableRow>
                         </TableHead>
@@ -332,8 +341,8 @@ const PackagingMaterialList: React.FC = () => {
                                         <Grid container>
                                             <Grid item>
                                                 <Tooltip title="Закупити" placement="top">
-                                                    <IconButton color="primary" onClick={() => handleOpenDialog(material)}>
-                                                        <AddShoppingCart/>
+                                                    <IconButton  color="primary" onClick={() => handleOpenDialog(material)}>
+                                                        <AddShoppingCart fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>
@@ -341,7 +350,7 @@ const PackagingMaterialList: React.FC = () => {
                                                 <Tooltip title="Використано" placement="top">
                                                     <IconButton color="primary"
                                                                 onClick={() => handleOpenDialogUpdate(material)}>
-                                                        <Update/>
+                                                        <Update fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>
@@ -349,7 +358,7 @@ const PackagingMaterialList: React.FC = () => {
                                                 <Tooltip title="Історія" placement="top">
                                                     <IconButton color="secondary"
                                                                 onClick={() => handleOpenHistoryDialog(material)}>
-                                                        <History/>
+                                                        <History fontSize={"small"}/>
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>

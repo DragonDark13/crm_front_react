@@ -10,6 +10,8 @@ interface QuantityFieldProps extends TextFieldProps {
     onIncrement: () => void; // Інкремент
     onDecrement: () => void; // Декремент
     readonly?: boolean;
+    max?: number,
+    min?: number
 }
 
 
@@ -21,6 +23,8 @@ const QuantityField: FC<QuantityFieldProps> = ({
                                                    onDecrement,
                                                    label = "Кількість",
                                                    readonly,
+                                                   max = 1000,
+                                                   min = 1,
                                                    ...rest // Деструктуризація для всіх інших пропсів TextField
                                                }) => {
 
@@ -29,6 +33,7 @@ const QuantityField: FC<QuantityFieldProps> = ({
 
             <TextField
                 {...rest}
+                size={"small"}
                 readOnly={readonly}  // Додано проп для запрету редагування поля
                 label={label}
                 type="text"
@@ -39,18 +44,18 @@ const QuantityField: FC<QuantityFieldProps> = ({
                 error={!!error}
                 helperText={error}
                 inputProps={{
-                    min: 1,
-                    max: 1000,
+                    min: min,
+                    max: max,
                     step: 1,
                     pattern: "[1-9][0-9]*"
-                }} // Обмеження значення від 1 до 1000
+                }}
 
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
                             <IconButton
                                 onClick={onDecrement}
-                                disabled={value <= 1 || readonly} // Вимкнути кнопку, якщо значення <= 1
+                                disabled={value <= min || readonly} // Вимкнути кнопку, якщо значення <= 1
                             >
                                 <Remove/>
                             </IconButton>
@@ -60,7 +65,7 @@ const QuantityField: FC<QuantityFieldProps> = ({
                         <InputAdornment position="end">
                             <IconButton
                                 onClick={onIncrement}
-                                disabled={value >= 1000 || readonly} // Вимкнути кнопку, якщо значення >= 1000
+                                disabled={value >= max || readonly} // Вимкнути кнопку, якщо значення >= 1000
                             >
                                 <Add/>
                             </IconButton>

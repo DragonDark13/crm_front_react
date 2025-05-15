@@ -346,6 +346,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                 <Grid container>
                     <Grid item xs={12} sm={6} md={4}>
                         <TextField
+                            size={"small"}
                             required
                             label="Дата створення"
                             type="date"

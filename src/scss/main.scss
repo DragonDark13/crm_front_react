@@ -32,14 +32,28 @@
 }
 
 
-
-.MuiMenuItem-root .MuiTypography-root{
+.MuiMenuItem-root .MuiTypography-root {
   max-width: 300px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.MuiPopover-paper.MuiMenu-paper .MuiMenuItem-root.Mui-selected{
-    background-color: rgba(25, 118, 210, 0.5);
+.MuiPopover-paper.MuiMenu-paper .MuiMenuItem-root.Mui-selected {
+  background-color: rgba(25, 118, 210, 0.5);
+}
+
+.MuiTableHead-root *, .MuiTableHead-root .MuiTypography-root {
+  font-weight: bold;
+}
+
+.MuiButton-sizeMedium.MuiButtonBase-root.MuiButton-root {
+  padding-bottom: 7px;
+  padding-top:  7px;
+}
+
+.sale_form__customer_field.MuiFormLabel-root:not(.MuiInputLabel-shrink),
+.sale_form__packaging_field.MuiFormLabel-root:not(.MuiInputLabel-shrink)
+{
+  top: -7px;
 }

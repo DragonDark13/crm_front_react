@@ -48,7 +48,7 @@ export interface IPurchaseData extends ISupplierID {
 }
 
 export interface ISaleData {
-    customer: string,
+    customer: number | '',
     quantity: number,
     selling_price_per_item: number,
     selling_total_price: number,
@@ -273,4 +273,16 @@ export interface IGiftSet {
     gift_selling_price: number;
     products: IProductForGiftSet[];
     packagings: IPackagingForGiftSet[];
+}
+
+export interface ISaleProductModal {
+    openSale: boolean;
+    handleCloseSale: () => void;
+    saleData: ISaleData;
+    setSaleData: (data: ISaleData) => void;
+    handleSale: () => void;
+    nameProduct: string;
+    purchasePricePerItem: number
+    quantityOnStock: number,
+    isAuthenticated: boolean;
 }

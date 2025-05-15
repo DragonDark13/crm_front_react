@@ -59,9 +59,9 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
     const totalQuantityPurchaseAllTime = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_quantity, 0);
 
     const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.available_quantity, 0);
-    const totalSumPurchase = isAuthenticated
-        ? filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_price_per_item), 0) // Загальна сума закупівель
-        : 0; // Сума закупівлі тільки для залогінених
+    const totalSumPurchase =
+         filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_price_per_item), 0) // Загальна сума закупівель
+         // Сума закупівлі тільки для залогінених
 
     const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.sold_quantity, 0);
     const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.sold_quantity * product.selling_price_per_item), 0);
@@ -95,7 +95,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{display: "none"}}>ID</TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <TableSortLabel
                                     active={orderBy === 'name'}
                                     direction={orderBy === 'name' ? order : 'asc'}
@@ -104,7 +104,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                     Назва
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <TableSortLabel
                                     active={orderBy === 'supplier'}
                                     direction={orderBy === 'supplier' ? order : 'asc'}
@@ -113,17 +113,28 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                     Постачальник
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <TableSortLabel
-                                    active={orderBy === 'quantity'}
-                                    direction={orderBy === 'quantity' ? order : 'asc'}
-                                    onClick={() => handleSort('quantity')}
+                                    active={orderBy === 'available_quantity'}
+                                    direction={orderBy === 'available_quantity' ? order : 'asc'}
+                                    onClick={() => handleSort('available_quantity')}
                                 >
-                                    Кількість
+                                    <div>
+                                        <Typography> Кількість</Typography>
+                                        <Typography color={"secondary.main"}>
+                                            За весь час
+                                        </Typography>
+                                        <Typography color={"secondary.dark"}>
+                                            В наявності
+                                        </Typography>
+                                        <Typography color={"primary"}>
+                                            Продаж
+                                        </Typography>
 
+                                    </div>
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <TableSortLabel
                                     active={orderBy === 'purchase_price_per_item'}
                                     direction={orderBy === 'purchase_price_per_item' ? order : 'asc'}
@@ -140,7 +151,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         </Typography></div>
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <TableSortLabel
                                     active={orderBy === 'purchase_total_price'}
                                     direction={orderBy === 'purchase_total_price' ? order : 'asc'}
@@ -158,7 +169,12 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                 </TableSortLabel>
                             </TableCell>
 
-                            <TableCell align={"right"}>Дія</TableCell>
+                            <TableCell size={"small"} align={"right"}>
+                                <Typography>
+                                     Дія
+                                </Typography>
+
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -199,86 +215,87 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            <div><Box display="flex" alignItems="center" gap={2}>
-                                                <Tooltip title="Загальна кількість товару">
-                                                    <Box display="flex" alignItems="center" gap={1}>
-                                                        <Box
-                                                            sx={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius: "50%",
-                                                                backgroundColor: "secondary.main",
-                                                                color: "white",
-                                                                display: "flex",
-                                                                alignItems: "center",
-                                                                justifyContent: "center",
-                                                                fontWeight: "bold",
-                                                            }}
-                                                        >
-                                                            {product.total_quantity}
+                                            <div>
+                                                <Box display="flex" alignItems="center" gap={2}>
+                                                    <Tooltip title="Загальна кількість товару">
+                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                            <Box
+                                                                sx={{
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    borderRadius: "50%",
+                                                                    backgroundColor: "secondary.main",
+                                                                    color: "white",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                {product.total_quantity}
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
-                                                </Tooltip>
+                                                    </Tooltip>
 
-                                                <Tooltip title="Кількість товару, яка є в наявності">
-                                                    <Box display="flex" alignItems="center" gap={1}>
+                                                    <Tooltip title="Кількість товару, яка є в наявності">
+                                                        <Box display="flex" alignItems="center" gap={1}>
 
-                                                        <Box
-                                                            sx={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius: "50%",
-                                                                backgroundColor: lowQuantity ? "error.main" : "secondary.dark",
-                                                                color: "white",
-                                                                display: "flex",
-                                                                alignItems: "center",
-                                                                justifyContent: "center",
-                                                                fontWeight: "bold",
-                                                            }}
-                                                        >
-                                                            {product.available_quantity}
+                                                            <Box
+                                                                sx={{
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    borderRadius: "50%",
+                                                                    backgroundColor: lowQuantity ? "error.main" : "secondary.dark",
+                                                                    color: "white",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                {product.available_quantity}
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
-                                                </Tooltip>
+                                                    </Tooltip>
 
-                                                <Tooltip title="Кількість проданого товару">
-                                                    <Box display="flex" alignItems="center" gap={1}>
+                                                    <Tooltip title="Кількість проданого товару">
+                                                        <Box display="flex" alignItems="center" gap={1}>
 
-                                                        <Box
-                                                            sx={{
-                                                                width: 32,
-                                                                height: 32,
-                                                                borderRadius: "50%",
-                                                                backgroundColor: "primary.main",
-                                                                color: "white",
-                                                                display: "flex",
-                                                                alignItems: "center",
-                                                                justifyContent: "center",
-                                                                fontWeight: "bold",
-                                                            }}
-                                                        >
-                                                            {product.sold_quantity}
+                                                            <Box
+                                                                sx={{
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    borderRadius: "50%",
+                                                                    backgroundColor: "primary.main",
+                                                                    color: "white",
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    fontWeight: "bold",
+                                                                }}
+                                                            >
+                                                                {product.sold_quantity}
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
-                                                </Tooltip>
-                                            </Box></div>
+                                                    </Tooltip>
+                                                </Box></div>
                                         </TableCell>
                                         <TableCell>
-                                            {isAuthenticated && (
+
                                                 <Typography color={"secondary"} variant={"subtitle2"}>
                                                     {product.purchase_price_per_item.toFixed(2)}
                                                 </Typography>
-                                            )}
+
                                             <Typography color={"primary"} variant={"subtitle2"}>
                                                 {product.selling_price_per_item.toFixed(2)}
                                             </Typography>
                                         </TableCell>
                                         <TableCell>
-                                            {isAuthenticated && (
+
                                                 <Typography color={"secondary"} variant={"subtitle2"}>
                                                     {(product.purchase_total_price).toFixed(2)}
                                                 </Typography>
-                                            )}
+
                                             <Typography color={"primary"} variant={"subtitle2"}>
                                                 {(product.sold_quantity * product.selling_price_per_item).toFixed(2)}
                                             </Typography>
@@ -309,20 +326,20 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                 <MenuItem onClick={() => {
                                                     handleOpenEdit(selectedProduct);  // Використовуємо selectedProduct
                                                     handleClose();
-                                                }} >
+                                                }}>
                                                     <EditIcon color="primary" fontSize="small" sx={{mr: 1}}/> Редагувати
                                                 </MenuItem>
                                                 <MenuItem onClick={() => {
                                                     handlePurchase(selectedProduct);  // Використовуємо selectedProduct
                                                     handleClose();
-                                                }} >
+                                                }}>
                                                     <ShoppingCartIcon color="primary" fontSize="small"
                                                                       sx={{mr: 1}}/> Купівля
                                                 </MenuItem>
                                                 <MenuItem onClick={() => {
                                                     handleOpenSale(selectedProduct);  // Використовуємо selectedProduct
                                                     handleClose();
-                                                }} >
+                                                }}>
                                                     <SellIcon color="primary" fontSize="small" sx={{mr: 1}}/> Продаж
                                                 </MenuItem>
                                                 <MenuItem onClick={() => {

@@ -64,6 +64,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
 
                 <Grid item xs={12} md={6}>
                     <TextField
+                        size={"small"}
                         label="Пошук товару"
                         variant="outlined"
                         fullWidth

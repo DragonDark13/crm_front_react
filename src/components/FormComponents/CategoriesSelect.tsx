@@ -33,6 +33,7 @@ const CategoriesSelect: FC<ICategoriesProps> = ({
         <FormControl fullWidth variant="outlined">
             <InputLabel id="categories-select-label">Категорії</InputLabel>
             <Select
+                size={"small"}
                 labelId="categories-select-label"
                 multiple
                 value={selectedCategories}
