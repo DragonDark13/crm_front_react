@@ -335,53 +335,13 @@ const PackagingMaterialList: React.FC = () => {
                                                 {/*    <Box display="flex" alignItems="center" gap={1}>*/}
                                                 <CircleBadge title="За весь час"
                                                              color={"secondary.main"}> {material.total_quantity}</CircleBadge>
-                                                {/*<Box*/}
-                                                {/*    sx={{*/}
-                                                {/*        width: 32,*/}
-                                                {/*        height: 32,*/}
-                                                {/*        borderRadius: "50%",*/}
-                                                {/*        backgroundColor: "secondary.main",*/}
-                                                {/*        color: "white",*/}
-                                                {/*        display: "flex",*/}
-                                                {/*        alignItems: "center",*/}
-                                                {/*        justifyContent: "center",*/}
-                                                {/*        fontWeight: "bold",*/}
-                                                {/*    }}*/}
-                                                {/*>*/}
-                                                {/*            {material.total_quantity}*/}
-                                                {/*        </Box>*/}
-                                                {/*    </Box>*/}
-                                                {/*</Tooltip>*/}
+
                                                 <CircleBadge title="Кількість товару, яка є в наявності"
                                                              color={"secondary.dark"}> {material.available_quantity}</CircleBadge>
 
-                                                {/*<Tooltip title="Кількість товару, яка є в наявності">*/}
-                                                {/*    <Box display="flex" alignItems="center" gap={1}>*/}
 
-                                                {/*        <Box*/}
-                                                {/*            sx={{*/}
-                                                {/*                width: 32,*/}
-                                                {/*                height: 32,*/}
-                                                {/*                borderRadius: "50%",*/}
-                                                {/*                backgroundColor: "secondary.dark",*/}
-                                                {/*                color: "white",*/}
-                                                {/*                display: "flex",*/}
-                                                {/*                alignItems: "center",*/}
-                                                {/*                justifyContent: "center",*/}
-                                                {/*                fontWeight: "bold",*/}
-                                                {/*            }}*/}
-                                                {/*        >*/}
-                                                {/*            {material.available_quantity}*/}
-                                                {/*        </Box>*/}
-                                                {/*    </Box>*/}
-                                                {/*</Tooltip>*/}
                                             </Box>
-                                            {/*<Typography variant={"subtitle2"}>*/}
-                                            {/*    <strong>Загальна: </strong>{material.total_quantity}*/}
-                                            {/*</Typography>*/}
-                                            {/*<Typography variant={"subtitle2"}>*/}
-                                            {/*    <strong>В наявності: </strong>{material.available_quantity}*/}
-                                            {/*</Typography>*/}
+
                                         </div>
                                     </TableCell>
                                     <TableCell size={"small"}>
@@ -389,49 +349,12 @@ const PackagingMaterialList: React.FC = () => {
                                             <Box display="flex" alignItems="center" gap={1}>
                                                 <CircleBadge title="За весь час"
                                                              color={"secondary.main"}>  {material.total_purchase_cost}</CircleBadge>
-                                                {/*<Tooltip title="За весь час">*/}
-                                                {/*    <Box display="flex" alignItems="center" gap={1}>*/}
-                                                {/*        <Box*/}
-                                                {/*            sx={{*/}
-                                                {/*                width: 32,*/}
-                                                {/*                height: 32,*/}
-                                                {/*                borderRadius: "50%",*/}
-                                                {/*                backgroundColor: "secondary.main",*/}
-                                                {/*                color: "white",*/}
-                                                {/*                display: "flex",*/}
-                                                {/*                alignItems: "center",*/}
-                                                {/*                justifyContent: "center",*/}
-                                                {/*                fontWeight: "bold",*/}
-                                                {/*            }}*/}
-                                                {/*        >*/}
-                                                {/*            {material.total_purchase_cost}*/}
-                                                {/*        </Box>*/}
-                                                {/*    </Box>*/}
-                                                {/*</Tooltip>*/}
+
 
                                                 <CircleBadge title="За наявне пакування"
                                                              color={"secondary.dark"}>  {material.total_purchase_cost}</CircleBadge>
 
-                                                {/*<Tooltip title="За наявне пакування">*/}
-                                                {/*    <Box display="flex" alignItems="center" gap={1}>*/}
 
-                                                {/*        <Box*/}
-                                                {/*            sx={{*/}
-                                                {/*                width: 32,*/}
-                                                {/*                height: 32,*/}
-                                                {/*                borderRadius: "50%",*/}
-                                                {/*                backgroundColor: "secondary.dark",*/}
-                                                {/*                color: "white",*/}
-                                                {/*                display: "flex",*/}
-                                                {/*                alignItems: "center",*/}
-                                                {/*                justifyContent: "center",*/}
-                                                {/*                fontWeight: "bold",*/}
-                                                {/*            }}*/}
-                                                {/*        >*/}
-                                                {/*            {material.available_stock_cost}*/}
-                                                {/*        </Box>*/}
-                                                {/*    </Box>*/}
-                                                {/*</Tooltip>*/}
                                             </Box>
                                         </div>
                                     </TableCell>
