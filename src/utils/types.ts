@@ -286,3 +286,14 @@ export interface ISaleProductModal {
     quantityOnStock: number,
     isAuthenticated: boolean;
 }
+
+export interface PurchaseMaterialDialogProps {
+    open: boolean;
+    onClose: () => void;
+    materialName: string;
+    materialId: number;
+    onPurchaseSuccess: () => void;
+    defaultSupplierId: number | null;
+    defaultPricePerUnit: number | null;
+    isAuthenticated: boolean;
+}
