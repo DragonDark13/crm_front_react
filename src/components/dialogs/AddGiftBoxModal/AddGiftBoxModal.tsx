@@ -18,7 +18,7 @@ import {usePackaging} from "../../Provider/PackagingContext";
 import {axiosInstance} from "../../../api/api";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import ProductsSection from "./ProductsSection";
-import PackagingMaterialList from "../../pages/PackagingMaterialList";
+import PackagingMaterialList from "../../pages/PackagingMaterial/PackagingMaterialList";
 import PackagingSection from "./PackagingSection";
 import GiftSetDetailsSection from "./GiftSetDetailsSection";
 import SummarySection from "./SummarySection";

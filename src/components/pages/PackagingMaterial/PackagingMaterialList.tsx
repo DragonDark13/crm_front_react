@@ -13,19 +13,22 @@ import {
     TableSortLabel,
     Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog, Box, TablePagination
 } from '@mui/material';
-import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../utils/types";
-import PurchaseMaterialDialog from "../dialogs/packagingModal/AddNewPackagingModal/PurchaseMaterialDialog";
-import MarkPackagingAsUsedDialog from "../dialogs/packagingModal/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
-import MaterialHistoryTable from "./MaterialHistoryTable";
-import {usePackaging} from "../Provider/PackagingContext";
-import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../api/_packagingMaterials";
-import DeleteAllMaterialsDialog from "../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
-import {useAuth} from "../context/AuthContext";
+import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../../utils/types";
+import PurchaseMaterialDialog from "../../dialogs/packagingModal/AddNewPackagingModal/PurchaseMaterialDialog";
+import MarkPackagingAsUsedDialog from "../../dialogs/packagingModal/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
+import MaterialHistoryTable from "../../dialogs/packagingModal/MaterialHistoryDialog/MaterialHistoryTable";
+import {usePackaging} from "../../Provider/PackagingContext";
+import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../../api/_packagingMaterials";
+import DeleteAllMaterialsDialog from "../../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
+import {useAuth} from "../../context/AuthContext";
 import {Tooltip, IconButton} from '@mui/material';
 import {AddShoppingCart, Update, History} from "@mui/icons-material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HistoryIcon from "@mui/icons-material/History";
-import CircleBadge from "../_elements/CircleBadge";
+import CircleBadge from "../../_elements/CircleBadge";
+import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
+import CancelButton from "../../Buttons/CancelButton";
+import MaterialHistoryDialog from "../../dialogs/packagingModal/MaterialHistoryDialog/MaterialHistoryDialog";
 
 const PackagingMaterialList: React.FC = () => {
         const {packagingMaterials} = usePackaging()
@@ -436,15 +439,13 @@ const PackagingMaterialList: React.FC = () => {
 
                 {/* History Dialog */}
                 {selectedMaterial && (
-                    <Dialog open={historyDialogOpen} onClose={handleCloseHistoryDialog}>
-                        <DialogTitle>Історія {selectedMaterial.name}</DialogTitle>
-                        <DialogContent>
-                            <MaterialHistoryTable materialHistory={materialHistory}/>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseHistoryDialog} color="primary">Закрити</Button>
-                        </DialogActions>
-                    </Dialog>)}
+                    <MaterialHistoryDialog
+                        open={historyDialogOpen}
+                        handleClose={handleCloseHistoryDialog}
+                        selectedMaterial={selectedMaterial}
+                        materialHistory={materialHistory}
+                    />
+                )}
             </React.Fragment>
         );
     }

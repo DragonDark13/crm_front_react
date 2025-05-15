@@ -31,7 +31,7 @@ import {Sidebar} from "./components/Dachboard/Sidebar";
 import SpeedDial from "./components/SpeedDial/SpeedDial";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Login from "./components/Login/Login";
-import PackagingMaterialList from "./components/pages/PackagingMaterialList";
+import PackagingMaterialList from "./components/pages/PackagingMaterial/PackagingMaterialList";
 import InvestmentsPage from "./components/pages/InvestmentsPage";
 import SupplierPage from "./components/pages/SupplierPage";
 import Sales from "./components/pages/Sales/Sales";
