@@ -241,14 +241,12 @@ const SalesHistoryTable: React.FC = () => {
                                     Назва
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell>Покупець</TableCell> {/* Додаємо колонку для покупця */}
-                            {/*<TableCell>Quantity Sold</TableCell>*/}
-                            {/*<TableCell>Ціна за од</TableCell>*/}
-                            <TableCell>Сумма</TableCell>
-                            <TableCell>Собівартість</TableCell>
-                            <TableCell>Вигода</TableCell>
-                            <TableCell>Sale Date</TableCell>
-                            <TableCell>Дії</TableCell>
+                            <TableCell><Typography>Покупець</Typography></TableCell> {/* Додаємо колонку для покупця */}
+                            <TableCell><Typography>Сумма</Typography></TableCell>
+                            <TableCell><Typography>Собівартість</Typography></TableCell>
+                            <TableCell><Typography>Вигода</Typography></TableCell>
+                            <TableCell><Typography>Дата</Typography></TableCell>
+                            <TableCell><Typography>Дії</Typography></TableCell>
 
                         </TableRow>
                     </TableHead>
@@ -263,8 +261,6 @@ const SalesHistoryTable: React.FC = () => {
                                             : sale.product_name}</TableCell>
                                         <TableCell>{sale.customer.name}</TableCell>
 
-                                        {/*<TableCell size={"small"}>{sale.quantity_sold}</TableCell>*/}
-                                        {/*<TableCell size={"small"}>{sale.unit_price}</TableCell>*/}
                                         <TableCell size={"small"}>{sale.total_price}</TableCell>
                                         <TableCell size={"small"}>{sale.cost_price}</TableCell>
                                         <TableCell size={"small"}>{sale.profit}</TableCell>
