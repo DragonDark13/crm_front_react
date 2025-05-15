@@ -620,7 +620,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
                         <Grid item>
                             <Button
                                 startIcon={<FilterListIcon/>}
-                                variant={"contained"}
+                                variant={"outlined"}
                                 onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
                         </Grid>
                         {isAuthenticated && <Grid item>
