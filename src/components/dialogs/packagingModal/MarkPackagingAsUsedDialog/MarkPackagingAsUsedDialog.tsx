@@ -13,6 +13,7 @@ interface MarkPackagingAsUsedDialogProps {
     materialName: string;
     availableQuantity: number;
     onUpdateSuccess: () => void;
+    isAuthenticated: boolean
 }
 
 const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
@@ -22,6 +23,7 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
                                                                                  materialName,
                                                                                  availableQuantity,
                                                                                  onUpdateSuccess,
+                                                                                 isAuthenticated = false
                                                                              }) => {
     const [quantityUsed, setQuantityUsed] = useState<number>(0);
     const [error, setError] = useState<string>('');
@@ -103,7 +105,8 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
                 {/*<Button onClick={onClose} color="secondary">*/}
                 {/*    Відмінити*/}
                 {/*</Button>*/}
-                <Button onClick={handleUsePackaging} color="primary" variant="contained" disabled={loading}>
+                <Button onClick={handleUsePackaging} color="primary" variant="contained"
+                        disabled={loading || !isAuthenticated}>
                     {loading ? 'Завантаження...' : 'Позначити як використане'}
                 </Button>
             </DialogActions>

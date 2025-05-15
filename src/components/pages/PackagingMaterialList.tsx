@@ -500,6 +500,7 @@ const PackagingMaterialList: React.FC = () => {
 
                 {selectedMaterial && (
                     <MarkPackagingAsUsedDialog
+                        isAuthenticated={isAuthenticated}
                         open={openDialogUpdate}
                         onClose={handleCloseDialogUpdate}
                         materialId={selectedMaterial.id}
