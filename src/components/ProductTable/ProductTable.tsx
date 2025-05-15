@@ -32,7 +32,8 @@ interface IProductTableProps {
 
 }
 
-import clsx from 'clsx'; // Бібліотека для зручної роботи з класами
+import clsx from 'clsx';
+import EditProductMenu from "./EditProductMenu"; // Бібліотека для зручної роботи з класами
 
 
 const ProductTable: React.FC<IProductTableProps> = forwardRef(({
@@ -60,8 +61,8 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
 
     const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.available_quantity, 0);
     const totalSumPurchase =
-         filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_price_per_item), 0) // Загальна сума закупівель
-         // Сума закупівлі тільки для залогінених
+        filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_price_per_item), 0) // Загальна сума закупівель
+    // Сума закупівлі тільки для залогінених
 
     const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.sold_quantity, 0);
     const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.sold_quantity * product.selling_price_per_item), 0);
@@ -171,7 +172,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
 
                             <TableCell size={"small"} align={"right"}>
                                 <Typography>
-                                     Дія
+                                    Дія
                                 </Typography>
 
                             </TableCell>
@@ -282,9 +283,9 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         </TableCell>
                                         <TableCell>
 
-                                                <Typography color={"secondary"} variant={"subtitle2"}>
-                                                    {product.purchase_price_per_item.toFixed(2)}
-                                                </Typography>
+                                            <Typography color={"secondary"} variant={"subtitle2"}>
+                                                {product.purchase_price_per_item.toFixed(2)}
+                                            </Typography>
 
                                             <Typography color={"primary"} variant={"subtitle2"}>
                                                 {product.selling_price_per_item.toFixed(2)}
@@ -292,9 +293,9 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                         </TableCell>
                                         <TableCell>
 
-                                                <Typography color={"secondary"} variant={"subtitle2"}>
-                                                    {(product.purchase_total_price).toFixed(2)}
-                                                </Typography>
+                                            <Typography color={"secondary"} variant={"subtitle2"}>
+                                                {(product.purchase_total_price).toFixed(2)}
+                                            </Typography>
 
                                             <Typography color={"primary"} variant={"subtitle2"}>
                                                 {(product.sold_quantity * product.selling_price_per_item).toFixed(2)}
@@ -308,54 +309,18 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                     <MoreVertIcon/>
                                                 </IconButton>
                                             </Tooltip>
-                                            <Menu PaperProps={{
-                                                elevation: 1
-                                            }}
-                                                  aria-labelledby="demo-positioned-button"
-                                                  anchorEl={anchorEl}
-                                                  anchorOrigin={{
-                                                      vertical: 'top',
-                                                      horizontal: 'right',
-                                                  }}
-                                                  transformOrigin={{
-                                                      vertical: 'top',
-                                                      horizontal: 'right',
-                                                  }}
-
-                                                  open={open} onClose={handleClose}>
-                                                <MenuItem onClick={() => {
-                                                    handleOpenEdit(selectedProduct);  // Використовуємо selectedProduct
-                                                    handleClose();
-                                                }}>
-                                                    <EditIcon color="primary" fontSize="small" sx={{mr: 1}}/> Редагувати
-                                                </MenuItem>
-                                                <MenuItem onClick={() => {
-                                                    handlePurchase(selectedProduct);  // Використовуємо selectedProduct
-                                                    handleClose();
-                                                }}>
-                                                    <ShoppingCartIcon color="primary" fontSize="small"
-                                                                      sx={{mr: 1}}/> Купівля
-                                                </MenuItem>
-                                                <MenuItem onClick={() => {
-                                                    handleOpenSale(selectedProduct);  // Використовуємо selectedProduct
-                                                    handleClose();
-                                                }}>
-                                                    <SellIcon color="primary" fontSize="small" sx={{mr: 1}}/> Продаж
-                                                </MenuItem>
-                                                <MenuItem onClick={() => {
-                                                    handleOpenHistoryModal(selectedProduct.id);  // Використовуємо selectedProduct
-                                                    handleClose();
-                                                }}>
-                                                    <HistoryIcon fontSize="small" sx={{mr: 1}}/> Історія
-                                                </MenuItem>
-                                                <MenuItem onClick={() => {
-                                                    handleDelete(selectedProduct.id);  // Використовуємо selectedProduct
-                                                    handleClose();
-                                                }} disabled={!isAuthenticated}>
-                                                    <DeleteIcon fontSize="small" sx={{mr: 1}} color="error"/> Видалити
-                                                </MenuItem>
-                                            </Menu>
-                                        </TableCell>
+                                            <EditProductMenu
+                                                anchorEl={anchorEl}
+                                                open={open}
+                                                handleClose={handleClose}
+                                                selectedProduct={selectedProduct}
+                                                handleOpenEdit={handleOpenEdit}
+                                                handlePurchase={handlePurchase}
+                                                handleOpenSale={handleOpenSale}
+                                                handleOpenHistoryModal={handleOpenHistoryModal}
+                                                handleDelete={handleDelete}
+                                                isAuthenticated={isAuthenticated}
+                                            /> </TableCell>
                                     </TableRow>
                                 );
                             })}
