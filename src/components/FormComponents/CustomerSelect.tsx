@@ -25,8 +25,8 @@ const CustomerSelect: React.FC<CustomerSelectProps> = ({
                                                        }) => {
     return (
 
-        <FormControl fullWidth margin="normal" sx={{marginBottom: 0}} error={!!error} {...rest}>
-            <InputLabel className="sale_form__customer_field" id="customer-select-label">
+        <FormControl   size="small" fullWidth margin="normal" sx={{marginBottom: 0}} error={!!error} {...rest}>
+            <InputLabel   size="small" id="customer-select-label">
                 {label}
             </InputLabel>
             <Select

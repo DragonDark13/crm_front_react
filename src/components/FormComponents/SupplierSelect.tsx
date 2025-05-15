@@ -1,5 +1,5 @@
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography} from "@mui/material";
-import {FC} from "react";
+import React, {FC} from "react";
 import {ICategory} from "../../utils/types";
 
 interface ISupplierSelectProps {
@@ -17,8 +17,8 @@ const SupplierSelect: FC<ISupplierSelectProps> = ({
                                                       onChange,
                                                       error,
                                                   }) => (
-    <FormControl disabled={disabled} fullWidth margin="normal" error={!!error}>
-        <InputLabel id="supplier-select-label">Постачальник</InputLabel>
+    <FormControl size="small" disabled={disabled} fullWidth margin="normal" error={!!error}>
+        <InputLabel size="small" id="supplier-select-label">Постачальник</InputLabel>
         <Select
             size={"small"}
             labelId="supplier-select-label"

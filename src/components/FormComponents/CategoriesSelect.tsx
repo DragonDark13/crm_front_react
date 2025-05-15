@@ -30,8 +30,8 @@ const CategoriesSelect: FC<ICategoriesProps> = ({
 
 
     return (
-        <FormControl fullWidth variant="outlined">
-            <InputLabel id="categories-select-label">Категорії</InputLabel>
+        <FormControl size={"small"} fullWidth variant="outlined">
+            <InputLabel size={"small"} id="categories-select-label">Категорії</InputLabel>
             <Select
                 size={"small"}
                 labelId="categories-select-label"
