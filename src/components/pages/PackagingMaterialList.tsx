@@ -487,6 +487,7 @@ const PackagingMaterialList: React.FC = () => {
                 {/* Dialog for purchasing material */}
                 {selectedMaterialId && (
                     <PurchaseMaterialDialog
+                        isAuthenticated={isAuthenticated}
                         materialName={selectedMaterial?.name}
                         open={dialogOpen}
                         onClose={handleCloseDialog}
