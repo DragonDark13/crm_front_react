@@ -1,3 +1,4 @@
+import React, {ChangeEvent} from "react";
 
 export function roundToDecimalPlaces(num: number, decimalPlaces: number) {
     const factor = Math.pow(10, decimalPlaces);
@@ -28,3 +29,45 @@ export const formatDateToBack = (dateString) => {
         return false
     }
 }
+
+export const handleQuantityChangeGlobal = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    max: number,
+    setValue: (value: number) => void,
+    setError: (msg: string) => void
+) => {
+    const value = e.target.value.replace(/\D/g, '').replace(/^0+/, '');
+    const numericValue = Number(value);
+
+    if (numericValue <= max) {
+        setValue(numericValue);
+        setError('');
+    } else {
+        setError('Кількість не може бути більшою за доступну кількість.');
+    }
+};
+
+export const handleIncrementGlobal = (
+    value: number,
+    max: number,
+    setValue: (value: number) => void,
+    setError: (msg: string) => void
+) => {
+    if (value < max) {
+        setValue(value + 1);
+        setError('');
+    } else {
+        setError('Кількість не може бути більшою за доступну кількість.');
+    }
+};
+
+export const handleDecrementGlobal = (
+    value: number,
+    setValue: (value: number) => void,
+    setError: (msg: string) => void
+) => {
+    if (value > 0) {
+        setValue(value - 1);
+        setError('');
+    }
+};

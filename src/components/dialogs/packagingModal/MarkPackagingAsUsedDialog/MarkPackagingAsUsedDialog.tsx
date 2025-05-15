@@ -1,6 +1,10 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography} from "@mui/material";
 import {axiosInstance} from "../../../../api/api";
 import React, {useState} from "react";
+import CustomDialog from "../../CustomDialog/CustomDialog";
+import CancelButton from "../../../Buttons/CancelButton";
+import QuantityField from "../../../FormComponents/QuantityField";
+import {handleDecrementGlobal, handleIncrementGlobal, handleQuantityChangeGlobal} from "../../../../utils/function";
 
 interface MarkPackagingAsUsedDialogProps {
     open: boolean;
@@ -48,21 +52,46 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
         }
     };
 
+    const handleQuantityUsed = (e) => {
+        const value = e.target.value.replace(/\D/g, '').replace(/^0+/, '');
+        const numericValue = Number(value);
+
+        if (numericValue <= availableQuantity) {
+            setQuantityUsed(numericValue);
+            setError('');
+        } else {
+            setError('Кількість не може бути більшою за доступну кількість.');
+        }
+
+    }
+
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Позначити пакування як використане</DialogTitle>
+        <CustomDialog
+            maxWidth={"xs"}
+            open={open}
+            handleClose={onClose}
+            title="Позначити пакування як використане"
+        >
             <DialogContent>
                 <Typography variant="body1">
                     Пакування: {materialName} (Доступна кількість: {availableQuantity})
                 </Typography>
-                <TextField
+                <QuantityField
+                    min={0}
                     label="Кількість використаного пакування"
-                    type="number"
                     value={quantityUsed}
-                    onChange={(e) => setQuantityUsed(Number(e.target.value))}
-                    fullWidth
-                    margin="dense"
+                    onChange={(e) =>
+                        handleQuantityChangeGlobal(e, availableQuantity, setQuantityUsed, setError)
+                    }
+                    onIncrement={() =>
+                        handleIncrementGlobal(quantityUsed, availableQuantity, setQuantityUsed, setError)
+                    }
+                    onDecrement={() =>
+                        handleDecrementGlobal(quantityUsed, setQuantityUsed, setError)
+                    }
+                    error={error}
                 />
+
                 {error && (
                     <Typography color="error" variant="body2" mb={2}>
                         {error}
@@ -70,14 +99,15 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="secondary">
-                    Відмінити
-                </Button>
+                <CancelButton onClick={onClose} text={'Відмінити'}/>
+                {/*<Button onClick={onClose} color="secondary">*/}
+                {/*    Відмінити*/}
+                {/*</Button>*/}
                 <Button onClick={handleUsePackaging} color="primary" variant="contained" disabled={loading}>
                     {loading ? 'Завантаження...' : 'Позначити як використане'}
                 </Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 
