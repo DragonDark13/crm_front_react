@@ -25,6 +25,7 @@ import {Tooltip, IconButton} from '@mui/material';
 import {AddShoppingCart, Update, History} from "@mui/icons-material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HistoryIcon from "@mui/icons-material/History";
+import CircleBadge from "../_elements/CircleBadge";
 
 const PackagingMaterialList: React.FC = () => {
         const {packagingMaterials} = usePackaging()
@@ -189,7 +190,7 @@ const PackagingMaterialList: React.FC = () => {
                         <DeleteAllMaterialsDialog/>
                     </Grid>
                 </Grid>}
-                <Grid  alignItems={"center"} container spacing={2}>
+                <Grid alignItems={"center"} container spacing={2}>
                     {/* Search */}
                     <Grid item xs={12} md={4}>
 
@@ -285,7 +286,7 @@ const PackagingMaterialList: React.FC = () => {
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell size={"small"}>
-                                   <div>
+                                    <div>
                                         Сумма
                                         {/*<Typography variant={"subtitle2"} color={"secondary"}>*/}
                                         {/*    За весь час*/}
@@ -305,7 +306,7 @@ const PackagingMaterialList: React.FC = () => {
                                         Дата створення
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell sx={{minWidth:160}} size={"small"}><Typography>Дії</Typography></TableCell>
+                                <TableCell sx={{minWidth: 160}} size={"small"}><Typography>Дії</Typography></TableCell>
 
                             </TableRow>
                         </TableHead>
@@ -327,47 +328,51 @@ const PackagingMaterialList: React.FC = () => {
                                     </TableCell>
                                     <TableCell size={"small"}>
                                         <div>
-                                            <Box display="flex" alignItems="center" gap={2}>
-                                                    <Tooltip title="За весь час">
-                                                        <Box display="flex" alignItems="center" gap={1}>
-                                                            <Box
-                                                                sx={{
-                                                                    width: 32,
-                                                                    height: 32,
-                                                                    borderRadius: "50%",
-                                                                    backgroundColor: "secondary.main",
-                                                                    color: "white",
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "center",
-                                                                    fontWeight: "bold",
-                                                                }}
-                                                            >
-                                                                {material.total_quantity}
-                                                            </Box>
-                                                        </Box>
-                                                    </Tooltip>
+                                            <Box display="flex" alignItems="center" gap={1}>
+                                                {/*<Tooltip title="За весь час">*/}
+                                                {/*    <Box display="flex" alignItems="center" gap={1}>*/}
+                                                <CircleBadge title="За весь час"
+                                                             color={"secondary.main"}> {material.total_quantity}</CircleBadge>
+                                                {/*<Box*/}
+                                                {/*    sx={{*/}
+                                                {/*        width: 32,*/}
+                                                {/*        height: 32,*/}
+                                                {/*        borderRadius: "50%",*/}
+                                                {/*        backgroundColor: "secondary.main",*/}
+                                                {/*        color: "white",*/}
+                                                {/*        display: "flex",*/}
+                                                {/*        alignItems: "center",*/}
+                                                {/*        justifyContent: "center",*/}
+                                                {/*        fontWeight: "bold",*/}
+                                                {/*    }}*/}
+                                                {/*>*/}
+                                                {/*            {material.total_quantity}*/}
+                                                {/*        </Box>*/}
+                                                {/*    </Box>*/}
+                                                {/*</Tooltip>*/}
+                                                <CircleBadge title="Кількість товару, яка є в наявності"
+                                                             color={"secondary.dark"}> {material.available_quantity}</CircleBadge>
 
-                                                    <Tooltip title="Кількість товару, яка є в наявності">
-                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                {/*<Tooltip title="Кількість товару, яка є в наявності">*/}
+                                                {/*    <Box display="flex" alignItems="center" gap={1}>*/}
 
-                                                            <Box
-                                                                sx={{
-                                                                    width: 32,
-                                                                    height: 32,
-                                                                    borderRadius: "50%",
-                                                                    backgroundColor: "secondary.dark",
-                                                                    color: "white",
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "center",
-                                                                    fontWeight: "bold",
-                                                                }}
-                                                            >
-                                                                {material.available_quantity}
-                                                            </Box>
-                                                        </Box>
-                                                    </Tooltip>
+                                                {/*        <Box*/}
+                                                {/*            sx={{*/}
+                                                {/*                width: 32,*/}
+                                                {/*                height: 32,*/}
+                                                {/*                borderRadius: "50%",*/}
+                                                {/*                backgroundColor: "secondary.dark",*/}
+                                                {/*                color: "white",*/}
+                                                {/*                display: "flex",*/}
+                                                {/*                alignItems: "center",*/}
+                                                {/*                justifyContent: "center",*/}
+                                                {/*                fontWeight: "bold",*/}
+                                                {/*            }}*/}
+                                                {/*        >*/}
+                                                {/*            {material.available_quantity}*/}
+                                                {/*        </Box>*/}
+                                                {/*    </Box>*/}
+                                                {/*</Tooltip>*/}
                                             </Box>
                                             {/*<Typography variant={"subtitle2"}>*/}
                                             {/*    <strong>Загальна: </strong>{material.total_quantity}*/}
@@ -379,47 +384,52 @@ const PackagingMaterialList: React.FC = () => {
                                     </TableCell>
                                     <TableCell size={"small"}>
                                         <div>
-                                            <Box display="flex" alignItems="center" gap={2}>
-                                                    <Tooltip title="За весь час">
-                                                        <Box display="flex" alignItems="center" gap={1}>
-                                                            <Box
-                                                                sx={{
-                                                                    width: 32,
-                                                                    height: 32,
-                                                                    borderRadius: "50%",
-                                                                    backgroundColor: "secondary.main",
-                                                                    color: "white",
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "center",
-                                                                    fontWeight: "bold",
-                                                                }}
-                                                            >
-                                                                {material.total_purchase_cost}
-                                                            </Box>
-                                                        </Box>
-                                                    </Tooltip>
+                                            <Box display="flex" alignItems="center" gap={1}>
+                                                <CircleBadge title="За весь час"
+                                                             color={"secondary.main"}>  {material.total_purchase_cost}</CircleBadge>
+                                                {/*<Tooltip title="За весь час">*/}
+                                                {/*    <Box display="flex" alignItems="center" gap={1}>*/}
+                                                {/*        <Box*/}
+                                                {/*            sx={{*/}
+                                                {/*                width: 32,*/}
+                                                {/*                height: 32,*/}
+                                                {/*                borderRadius: "50%",*/}
+                                                {/*                backgroundColor: "secondary.main",*/}
+                                                {/*                color: "white",*/}
+                                                {/*                display: "flex",*/}
+                                                {/*                alignItems: "center",*/}
+                                                {/*                justifyContent: "center",*/}
+                                                {/*                fontWeight: "bold",*/}
+                                                {/*            }}*/}
+                                                {/*        >*/}
+                                                {/*            {material.total_purchase_cost}*/}
+                                                {/*        </Box>*/}
+                                                {/*    </Box>*/}
+                                                {/*</Tooltip>*/}
 
-                                                    <Tooltip title="За наявне пакування">
-                                                        <Box display="flex" alignItems="center" gap={1}>
+                                                <CircleBadge title="За наявне пакування"
+                                                             color={"secondary.dark"}>  {material.total_purchase_cost}</CircleBadge>
 
-                                                            <Box
-                                                                sx={{
-                                                                    width: 32,
-                                                                    height: 32,
-                                                                    borderRadius: "50%",
-                                                                    backgroundColor:  "secondary.dark",
-                                                                    color: "white",
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "center",
-                                                                    fontWeight: "bold",
-                                                                }}
-                                                            >
-                                                                {material.available_stock_cost}
-                                                            </Box>
-                                                        </Box>
-                                                    </Tooltip>
+                                                {/*<Tooltip title="За наявне пакування">*/}
+                                                {/*    <Box display="flex" alignItems="center" gap={1}>*/}
+
+                                                {/*        <Box*/}
+                                                {/*            sx={{*/}
+                                                {/*                width: 32,*/}
+                                                {/*                height: 32,*/}
+                                                {/*                borderRadius: "50%",*/}
+                                                {/*                backgroundColor: "secondary.dark",*/}
+                                                {/*                color: "white",*/}
+                                                {/*                display: "flex",*/}
+                                                {/*                alignItems: "center",*/}
+                                                {/*                justifyContent: "center",*/}
+                                                {/*                fontWeight: "bold",*/}
+                                                {/*            }}*/}
+                                                {/*        >*/}
+                                                {/*            {material.available_stock_cost}*/}
+                                                {/*        </Box>*/}
+                                                {/*    </Box>*/}
+                                                {/*</Tooltip>*/}
                                             </Box>
                                         </div>
                                     </TableCell>
@@ -431,8 +441,8 @@ const PackagingMaterialList: React.FC = () => {
                                         <Grid container>
                                             <Grid item>
                                                 <Tooltip title="Закупити" placement="top">
-                                                    <IconButton  color="primary" onClick={() => handleOpenDialog(material)}>
-                                                                        <ShoppingCartIcon color="primary" fontSize="small" />
+                                                    <IconButton color="primary" onClick={() => handleOpenDialog(material)}>
+                                                        <ShoppingCartIcon color="primary" fontSize="small"/>
 
                                                     </IconButton>
                                                 </Tooltip>
@@ -450,7 +460,7 @@ const PackagingMaterialList: React.FC = () => {
                                                     <IconButton color="secondary"
                                                                 onClick={() => handleOpenHistoryDialog(material)}>
 
-                                                        <HistoryIcon fontSize="small" />
+                                                        <HistoryIcon fontSize="small"/>
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>
