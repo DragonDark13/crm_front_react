@@ -20,7 +20,7 @@ import {
     TablePagination,
     TableFooter,
     Button,
-    Grid, Slider, Collapse
+    Grid, Slider, Collapse, Tooltip
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import clsx from "clsx";
@@ -28,7 +28,10 @@ import {ICategory} from "../../../utils/types";
 import {useCategories} from "../../Provider/CategoryContext";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
-
+import Inventory2Icon from '@mui/icons-material/Inventory2'; // Товар
+import AllInboxIcon from '@mui/icons-material/AllInbox';     // Пакування
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import {AttachMoney, Luggage, ShoppingBag} from "@mui/icons-material";   // Інше
 
 interface IPurchasesTable {
     categories: [number];
@@ -228,8 +231,9 @@ const PurchasesTable: React.FC = () => {
                 <Grid container spacing={1}>
                     <Grid item xs={12} sm={6} md={5}>
                         <TextField
+                            placeholder={'Назва'}
+                            size={"small"}
                             margin="dense"
-
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -243,6 +247,7 @@ const PurchasesTable: React.FC = () => {
 
                     <Grid item xs={12} sm={6} md={2} lg={2}>
                         <TextField
+                            size={"small"}
                             margin="dense"
                             label="Дата початку"
                             type="date"
@@ -255,6 +260,7 @@ const PurchasesTable: React.FC = () => {
 
                     <Grid item xs={12} sm={6} md={2}>
                         <TextField
+                            size={"small"}
                             margin="dense"
                             label="Дата закінчення"
                             type="date"
@@ -269,9 +275,10 @@ const PurchasesTable: React.FC = () => {
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={3}>
-                        <FormControl fullWidth margin={"dense"}>
-                            <InputLabel>Категорія</InputLabel>
-                            <Select label={'Категорія'} value={categoryFilter} onChange={handleCategoryFilterChange}>
+                        <FormControl size={"small"} fullWidth margin={"dense"}>
+                            <InputLabel size={"small"}>Категорія</InputLabel>
+                            <Select size={"small"} label={'Категорія'} value={categoryFilter}
+                                    onChange={handleCategoryFilterChange}>
                                 <MenuItem title={"Всі категорії"} value="">Всі категорії</MenuItem>
                                 {categories.map((category: ICategory) => (
                                     <MenuItem title={category.name} key={category.id} value={category.id}>
@@ -283,9 +290,10 @@ const PurchasesTable: React.FC = () => {
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={3}>
-                        <FormControl fullWidth margin={"dense"}>
-                            <InputLabel>Постачальник</InputLabel>
-                            <Select label={'Постачальник'} value={supplierFilter} onChange={handleSupplierFilterChange}>
+                        <FormControl size={"small"} fullWidth margin={"dense"}>
+                            <InputLabel size={"small"}>Постачальник</InputLabel>
+                            <Select size={"small"} label={'Постачальник'} value={supplierFilter}
+                                    onChange={handleSupplierFilterChange}>
                                 <MenuItem value="">Всі постачальники</MenuItem>
                                 {Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
                                     (supplier, index) => (
@@ -299,9 +307,9 @@ const PurchasesTable: React.FC = () => {
                     </Grid>
 
                     <Grid item xs={12} sm={6} md={2}>
-                        <FormControl fullWidth margin={"dense"}>
-                            <InputLabel>Тип</InputLabel>
-                            <Select label={'Тип'} value={typeFilter} onChange={handleTypeFilterChange}>
+                        <FormControl size={"small"} fullWidth margin={"dense"}>
+                            <InputLabel size={"small"}>Тип</InputLabel>
+                            <Select size={"small"} label={'Тип'} value={typeFilter} onChange={handleTypeFilterChange}>
                                 <MenuItem value="">Всі типи</MenuItem>
                                 <MenuItem value="Other Investment">Інші інвестиції</MenuItem>
                                 <MenuItem value="Packaging">Упаковка</MenuItem>
@@ -310,29 +318,35 @@ const PurchasesTable: React.FC = () => {
                         </FormControl>
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={4}>
-                        <Typography gutterBottom>Діапазон ціни (за од.)</Typography>
-                        <Box px={"10px"}>
-                            {Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && (<Slider
-                                value={priceRangeFilterSlider} // <- має бути масив: [min, max]
-                                onChange={(_, newValue) => {
-                                    setPriceRangeFilterSlider(newValue as number[]);
-                                }}
-                                valueLabelDisplay="auto"
-                                min={priceBounds[0]}
-                                max={priceBounds[1]}
-                                marks={[
-                                    {value: priceBounds[0], label: `${priceBounds[0]}₴`},
-                                    {value: priceBounds[1], label: `${priceBounds[1]}₴`}
-                                ]}
-                            />)} </Box>
+                    <Grid item xs={12} sm={6} md={5}>
+                        <Grid container alignItems={"center"}>
+                            <Grid item xs={12} md={4}><Typography variant={"caption"} gutterBottom>Діапазон ціни (за од.):</Typography></Grid>
+                            <Grid item xs={12} md={8}>
+                                <Box px={"10px"}>
+                                {Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && (<Slider
+                                    value={priceRangeFilterSlider} // <- має бути масив: [min, max]
+                                    onChange={(_, newValue) => {
+                                        setPriceRangeFilterSlider(newValue as number[]);
+                                    }}
+                                    valueLabelDisplay="auto"
+
+                                    min={priceBounds[0]}
+                                    max={priceBounds[1]}
+                                    marks={[
+                                        {value: priceBounds[0], label: `${priceBounds[0]}₴`},
+                                        {value: priceBounds[1], label: `${priceBounds[1]}₴`}
+                                    ]}
+                                />)} </Box></Grid>
+                        </Grid>
+
+
                     </Grid>
 
                 </Grid>
             </Collapse>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <Box marginY={2}>
+                    <Box marginBottom={2}>
                         <Button disabled={!isAnyFilterActive} variant="contained" color="primary"
                                 onClick={resetFilters}>
                             Скинути фільтри
@@ -357,7 +371,7 @@ const PurchasesTable: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>
-                                Тип
+                                <Typography> Тип</Typography>
                             </TableCell>
                             <TableCell>
                                 <TableSortLabel
@@ -420,8 +434,17 @@ const PurchasesTable: React.FC = () => {
                         {paginatedData.map((row, index) => (
                             <TableRow key={index + row.name} style={getRowStyle(row.type)}>
                                 <TableCell>
-                                    <Typography
-                                        variant="subtitle2">{row.type === "Other Investment" ? 'Інше' : (row.type === "Product" ? 'Товар' : 'Пакування')}</Typography>
+                                    <Tooltip title={
+                                        row.type === "Product" ? "Товар" :
+                                            row.type === "Packaging" ? "Пакування" : "Інше"
+                                    }>
+                                        <Typography variant="subtitle2" component="span">
+                                            {row.type === "Product" && <ShoppingBag fontSize="small"/>}
+                                            {row.type === "Packaging" && <Luggage fontSize="small"/>}
+                                            {row.type === "Other Investment" && <AttachMoney fontSize="small"/>}
+                                        </Typography>
+
+                                    </Tooltip>
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="subtitle2">{row.name}</Typography>
