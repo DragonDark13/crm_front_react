@@ -215,9 +215,9 @@ export interface PackagingMaterialHistory {
     stock_history: Array<{
         id: number;
         material_id: number;
-        change_date: string;
-        quantity_changed: number;
-        new_total: number;
+        timestamp: string;
+        change_amount: number;
+        change_type:string
     }>;
 }
 

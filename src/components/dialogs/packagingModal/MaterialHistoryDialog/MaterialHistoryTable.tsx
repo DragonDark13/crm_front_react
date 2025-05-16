@@ -32,9 +32,9 @@ const MaterialHistoryTable = ({materialHistory}: IMaterialHistoryTable) => {
                 {materialHistory.length > 0 ? (
                     materialHistory.map((historyItem, index) => (
                         <TableRow key={index}>
-                            <TableCell>{new Date(historyItem.date).toLocaleDateString()}</TableCell>
-                            <TableCell>{historyItem.description}</TableCell>
-                            <TableCell>{historyItem.quantity}</TableCell>
+                            <TableCell size={"small"}>{new Date(historyItem.date).toLocaleDateString()}</TableCell>
+                            <TableCell size={"small"}>{historyItem.description}</TableCell>
+                            <TableCell size={"small"}>{historyItem.quantity}</TableCell>
                         </TableRow>
                     ))
                 ) : (

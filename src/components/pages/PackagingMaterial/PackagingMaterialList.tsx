@@ -16,7 +16,6 @@ import {
 import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../../utils/types";
 import PurchaseMaterialDialog from "../../dialogs/packagingModal/AddNewPackagingModal/PurchaseMaterialDialog";
 import MarkPackagingAsUsedDialog from "../../dialogs/packagingModal/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
-import MaterialHistoryTable from "../../dialogs/packagingModal/MaterialHistoryDialog/MaterialHistoryTable";
 import {usePackaging} from "../../Provider/PackagingContext";
 import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../../api/_packagingMaterials";
 import DeleteAllMaterialsDialog from "../../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
@@ -26,8 +25,6 @@ import {AddShoppingCart, Update, History} from "@mui/icons-material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import HistoryIcon from "@mui/icons-material/History";
 import CircleBadge from "../../_elements/CircleBadge";
-import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
-import CancelButton from "../../Buttons/CancelButton";
 import MaterialHistoryDialog from "../../dialogs/packagingModal/MaterialHistoryDialog/MaterialHistoryDialog";
 
 const PackagingMaterialList: React.FC = () => {
@@ -59,9 +56,9 @@ const PackagingMaterialList: React.FC = () => {
             }));
 
             const stockMapped = history.stock_history.map(stock => ({
-                date: stock.change_date,
-                description: `Зміна на складі, новий залишок: ${stock.new_total}`,
-                quantity: stock.quantity_changed,
+                date: stock.timestamp,
+                description: `Новий тип пакування (ID:${stock.material_id}) на складі у кількості: ${stock.change_amount}`,
+                quantity: stock.change_amount,
             }));
 
             // Об'єднання всіх подій, сортування за датою

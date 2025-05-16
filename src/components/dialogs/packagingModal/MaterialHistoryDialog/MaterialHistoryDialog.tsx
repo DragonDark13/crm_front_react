@@ -20,7 +20,7 @@ const MaterialHistoryDialog: React.FC<MaterialHistoryDialogProps> = ({
                                                                      }) => {
     return (
         <CustomDialog
-            maxWidth="md"
+            maxWidth="sm"
             open={open}
             handleClose={handleClose}
             title={`Історія ${selectedMaterial?.name || ""}`}
