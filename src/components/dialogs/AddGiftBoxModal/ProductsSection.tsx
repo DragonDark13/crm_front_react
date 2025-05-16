@@ -3,6 +3,8 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
 import QuantityField from "../../FormComponents/QuantityField";
+import AddButton from "../../Buttons/AddButton";
+import {Delete} from "@mui/icons-material";
 
 const ProductsSection = ({
                              showSelectProduct,
@@ -18,19 +20,20 @@ const ProductsSection = ({
         <Divider sx={{my: 1}}/>
         <div>
             {!showSelectProduct ? (
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<AddIcon/>}
-                    onClick={() => setShowSelectProduct(true)} // Show select when button is clicked
-                >
-                    Add Product
-                </Button>
+                <AddButton onClick={() => setShowSelectProduct(true)}/>
+                // <Button
+                //     variant="contained"
+                //     color="secondary"
+                //     startIcon={<AddIcon/>}
+                //     onClick={() => setShowSelectProduct(true)} // Show select when button is clicked
+                // >
+                //     Add Product
+                // </Button>
             ) : (
                 <Grid container>
                     <Grid item xs={9}>
                         <Autocomplete
-
+                            size={"small"}
                             onChange={handleProductSelect}
                             options={products.filter((product) => {
                                 const selected = selectedProducts.find((item) => item.product.id === product.id);
@@ -88,6 +91,20 @@ const ProductsSection = ({
                                 />
 
                             </Grid>
+                            <Grid item xs={6}>
+
+                            <Button
+                                sx={{marginTop:1}}
+                                variant={"contained"}
+                                color="error"
+                                endIcon={<Delete/>}
+                                onClick={() => handleRemoveProduct(product.id)}
+                            >
+                                Видалити
+                            </Button>
+                            </Grid>
+
+
                             {/*кількість<Grid item xs={3}>*/}
                             {/*    <TextField*/}
                             {/*        label={`Quantity`}*/}
@@ -133,12 +150,7 @@ const ProductsSection = ({
                             {/*    >*/}
                             {/*        <RemoveIcon/>*/}
                             {/*    </IconButton>*/}
-                            {/*    <Button*/}
-                            {/*        color="error"*/}
-                            {/*        onClick={() => handleRemoveProduct(product.id)}*/}
-                            {/*    >*/}
-                            {/*        Remove*/}
-                            {/*    </Button>*/}
+
                             {/*</Grid>*/}
                             <Grid item xs={6}>
                                 <div>

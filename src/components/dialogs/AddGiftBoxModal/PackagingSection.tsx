@@ -4,6 +4,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import React from "react";
 import QuantityField from "../../FormComponents/QuantityField";
 import AddButton from "../../Buttons/AddButton";
+import {Delete} from "@mui/icons-material";
 
 const PackagingSection = ({
                               showSelectPackaging,
@@ -19,11 +20,12 @@ const PackagingSection = ({
         <Divider sx={{my: 1}}/>
         <div>
             {!showSelectPackaging ? (
-                <AddButton  text={'Додати'}  onClick={() => setShowSelectPackaging(true)}/>
+                <AddButton text={'Додати'} onClick={() => setShowSelectPackaging(true)}/>
             ) : (
                 <Grid container>
                     <Grid item xs={9}>
                         <Autocomplete
+                            size={"small"}
                             onChange={handlePackagingSelect}
                             options={packagingMaterials.filter((material) => {
                                 const selected = selectedPackaging.find((item) => item.material.id === material.id);
@@ -83,6 +85,17 @@ const PackagingSection = ({
                                     onDecrement={() => handleQuantityChange(material.id, item.quantity - 1, "packaging")}
                                     error={item.quantity > material.available_quantity ? "Перевищено доступну кількість" : ""}
                                 />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Button
+                                    sx={{marginTop: 1}}
+                                    variant={"contained"}
+                                    color="error"
+                                    endIcon={<Delete/>}
+                                    onClick={() => handleRemoveMaterial(material.id)}
+                                >
+                                    Remove
+                                </Button>
                             </Grid>
                             {/*<Grid item xs={3}>*/}
                             {/*    <TextField*/}

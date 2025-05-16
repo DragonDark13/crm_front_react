@@ -29,10 +29,11 @@ interface ICreateGiftBox {
     handleCloseGiftModal: () => void;
     openGiftModal: boolean;
     handleAddNewGiftBox: (IHandleAddNewGiftBox) => void;
+    isAuthenticated: boolean
 }
 
 
-const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal, handleAddNewGiftBox}: ICreateGiftBox) => {
+const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal, handleAddNewGiftBox,isAuthenticated}: ICreateGiftBox) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
@@ -219,19 +220,21 @@ const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal, handleAddNewGiftB
             <DialogActions>
                 <CancelButton onClick={handleCloseGiftModal}/>
 
-                <Button variant="contained" color="primary" onClick={() =>handleAddNewGiftBox({
-                    name,
-                    description,
-                    price,
-                    selectedProducts: selectedProducts.map((item) => ({
-                        item_id: item.product.id,
-                        quantity: item.quantity,
-                    })),
-                    selectedPackaging: selectedPackaging.map((item) => ({
-                        item_id: item.material.id,
-                        quantity: item.quantity,
-                    }))
-                })}>
+                <Button variant="contained" color="primary"
+                        disabled={!isAuthenticated}
+                        onClick={() => handleAddNewGiftBox({
+                            name,
+                            description,
+                            price,
+                            selectedProducts: selectedProducts.map((item) => ({
+                                item_id: item.product.id,
+                                quantity: item.quantity,
+                            })),
+                            selectedPackaging: selectedPackaging.map((item) => ({
+                                item_id: item.material.id,
+                                quantity: item.quantity,
+                            }))
+                        })}>
                     Save Gift Set
                 </Button>
             </DialogActions>

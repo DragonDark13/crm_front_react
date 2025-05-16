@@ -370,6 +370,7 @@ const AddButtonWithMenu = () => {
                                                                handlePurchaseNewPackaging={handlePurchaseNewPackaging}/>}
 
             {modalState.addNewGiftBox && <AddGiftBoxModal
+                isAuthenticated={isAuthenticated}
                 handleCloseGiftModal={() => handleModalClose('addNewGiftBox')}
                 openGiftModal={modalState.addNewGiftBox}
                 handleAddNewGiftBox={handleAddNewGiftBox}

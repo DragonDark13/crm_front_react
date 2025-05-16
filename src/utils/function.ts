@@ -51,23 +51,23 @@ export const handleIncrementGlobal = (
     value: number,
     max: number,
     setValue: (value: number) => void,
-    setError: (msg: string) => void
+    setError?: (msg: string) => void
 ) => {
     if (value < max) {
         setValue(value + 1);
-        setError('');
+        setError && setError('');
     } else {
-        setError('Кількість не може бути більшою за доступну кількість.');
+        setError && setError('Кількість не може бути більшою за доступну кількість.');
     }
 };
 
 export const handleDecrementGlobal = (
     value: number,
     setValue: (value: number) => void,
-    setError: (msg: string) => void
+    setError?: (msg: string) => void
 ) => {
     if (value > 0) {
         setValue(value - 1);
-        setError('');
+        setError && setError('');
     }
 };
