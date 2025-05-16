@@ -20,6 +20,9 @@ import {addSupplier} from "../../../../api/_supplier";
 import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
 import AddIcon from "@mui/icons-material/Add";
 import {parseDecimalInput} from "../../../../utils/_validation";
+import CancelButton from "../../../Buttons/CancelButton";
+import AddButton from "../../../Buttons/AddButton";
+import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 //TODO додай постачальників таблиці
 // TODO Повідомлення про успіх
 // TODO Окремі поля для ціни закупівельної і проданої
@@ -33,6 +36,9 @@ interface IAddProductModal {
     selectedCategories: number[],
     handleCategoryChange: (categoryID: number[]) => void,
     handleAdd: () => void
+    isAuthenticated: boolean
+    handleRemoveCategory: (idToRemove: number) => void;
+
 }
 
 const AddProductModal = ({
@@ -43,6 +49,8 @@ const AddProductModal = ({
                              selectedCategories,
                              handleCategoryChange,
                              handleAdd,
+                             isAuthenticated,
+                             handleRemoveCategory
                          }: IAddProductModal) => {
     const [errors, setErrors] = useState({
         name: '',
@@ -163,12 +171,14 @@ const AddProductModal = ({
                         <Grid item xs={12} sm={6}>
                             <ProductNameField
                                 value={newProduct.name}
-                                onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                                onChange={(e) => {
+                                    setNewProduct({...newProduct, name: e.target.value})
+                                }}
                                 error={errors.name}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Grid container alignItems={"center"}>
+                            <Grid container spacing={2} alignItems={"start"}>
                                 <Grid item xs={12} md={8}>
                                     <SupplierSelect
                                         suppliers={suppliers}
@@ -181,18 +191,75 @@ const AddProductModal = ({
                                     />
                                 </Grid>
                                 <Grid item xs={12} md={4}>
-                                    <Button
-                                        color="secondary"
-                                        size={"large"} variant={"contained"} endIcon={<AddIcon/>}
-                                        onClick={() => handleModalOpen("openAddSupplierOpen")}
-                                    >
-                                        Додати
-                                    </Button>
+                                    <AddButton sx={{marginTop: '16px'}}
+                                               onClick={() => handleModalOpen("openAddSupplierOpen")}/>
+                                    {/*<Button*/}
+                                    {/*    color="secondary"*/}
+                                    {/*    size={"large"} variant={"contained"} endIcon={<AddIcon/>}*/}
+                                    {/*    onClick={() => handleModalOpen("openAddSupplierOpen")}*/}
+                                    {/*>*/}
+                                    {/*    Додати*/}
+                                    {/*</Button>*/}
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid container spacing={2}>
+                        <Grid item xs={6} md={3}>
+
+
+                            <PriceField
+
+                                label={'Ціна за 1шт (Закупівельна)'}
+                                value={newProduct.purchase_price_per_item}
+                                onChange={(e) => {
+                                    const parsed = parseDecimalInput(e.target.value);
+                                    if (parsed !== null) {
+
+                                        setNewProduct({
+                                            ...newProduct,
+                                            purchase_price_per_item: parsed  // Оновлюємо
+                                            // значення або
+                                            // ставимо 0
+                                        });
+                                    }
+
+                                }}
+
+                                helperText={errors.price_per_item ? errors.price_per_item : ''}
+                                error={errors.price_per_item}
+                            />
+
+                        </Grid>
+                        <Grid item xs={6} md={"auto"}>
+                            <Typography variant={"caption"}>
+                                Вигода за 1шт:
+                            </Typography>
+                            <Typography align={"center"}>
+                                {diffWithPrice.toFixed(2)} грн.
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <PriceField
+                                label="ціна за 1шт (продаж)"
+                                value={newProduct.selling_price_per_item}
+                                onChange={(e) => {
+                                    const parsed = parseDecimalInput(e.target.value);
+                                    if (parsed !== null) {
+
+                                        setNewProduct({
+                                            ...newProduct,
+                                            selling_price_per_item: parsed  // Оновлюємо
+                                            // значення або
+                                            // ставимо 0
+                                        });
+                                    }
+
+                                }}
+
+                                error={errors.price_per_item}
+                            />
+                        </Grid>
                         <Grid item xs={12} sm={6} md={3}>
                             <QuantityField
                                 onIncrement={incrementQuantity}
@@ -218,92 +285,103 @@ const AddProductModal = ({
                             />
 
                         </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
-                            <PriceField
-                                value={newProduct.purchase_price_per_item}
-                                onChange={(e) => {
-                                    const parsed = parseDecimalInput(e.target.value);
-                                    if (parsed !== null) {
+                    </Grid>
+                    <Grid container spacing={2}>
 
-                                        setNewProduct({
-                                            ...newProduct,
-                                            purchase_price_per_item: parsed  // Оновлюємо
-                                            // значення або
-                                            // ставимо 0
-                                        });
-                                    }
+                        {/*<Grid item xs={12} sm={6} md={2}>*/}
+                        {/*    <PriceField*/}
+                        {/*        value={newProduct.purchase_price_per_item}*/}
+                        {/*        onChange={(e) => {*/}
+                        {/*            const parsed = parseDecimalInput(e.target.value);*/}
+                        {/*            if (parsed !== null) {*/}
 
-                                }}
+                        {/*                setNewProduct({*/}
+                        {/*                    ...newProduct,*/}
+                        {/*                    purchase_price_per_item: parsed  // Оновлюємо*/}
+                        {/*                    // значення або*/}
+                        {/*                    // ставимо 0*/}
+                        {/*                });*/}
+                        {/*            }*/}
 
-                                error={errors.price_per_item}
-                            />
+                        {/*        }}*/}
+
+                        {/*        error={errors.price_per_item}*/}
+                        {/*    />*/}
 
 
-                        </Grid>
+                        {/*</Grid>*/}
                         <Grid item xs={12} sm={6} md={2}>
                             <TotalPriceField value={newProduct.purchase_total_price}/>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
-                            <PriceField
-                                label="ціна за 1шт (продаж)"
-                                value={newProduct.selling_price_per_item}
-                                onChange={(e) => {
-                                    const parsed = parseDecimalInput(e.target.value);
-                                    if (parsed !== null) {
+                        {/*<Grid item xs={12} sm={6} md={2}>*/}
+                        {/*    <PriceField*/}
+                        {/*        label="ціна за 1шт (продаж)"*/}
+                        {/*        value={newProduct.selling_price_per_item}*/}
+                        {/*        onChange={(e) => {*/}
+                        {/*            const parsed = parseDecimalInput(e.target.value);*/}
+                        {/*            if (parsed !== null) {*/}
 
-                                        setNewProduct({
-                                            ...newProduct,
-                                            selling_price_per_item: parsed  // Оновлюємо
-                                            // значення або
-                                            // ставимо 0
-                                        });
-                                    }
+                        {/*                setNewProduct({*/}
+                        {/*                    ...newProduct,*/}
+                        {/*                    selling_price_per_item: parsed  // Оновлюємо*/}
+                        {/*                    // значення або*/}
+                        {/*                    // ставимо 0*/}
+                        {/*                });*/}
+                        {/*            }*/}
 
-                                }}
+                        {/*        }}*/}
 
-                                error={errors.price_per_item}
-                            />
+                        {/*        error={errors.price_per_item}*/}
+                        {/*    />*/}
 
-                        </Grid>
+                        {/*</Grid>*/}
 
                         <Grid item xs={12} sm={6} md={3}>
-                            <TextField
-                                label="Дата створення"
-                                type="date"
-                                value={newProduct.created_date}
-                                onChange={(e) => setNewProduct({...newProduct, created_date: e.target.value})}
-                                fullWidth
-                                margin="normal"
-                            />
+                            <DateFieldCustom  value={newProduct.created_date} label="Дата створення"
+                                             onChange={(e) => setNewProduct({
+                                                 ...newProduct,
+                                                 created_date: e.target.value
+                                             })}/>
+                            {/*<TextField*/}
+                            {/*    label="Дата створення"*/}
+                            {/*    type="date"*/}
+                            {/*    value={newProduct.created_date}*/}
+                            {/*    onChange={(e) => setNewProduct({...newProduct, created_date: e.target.value})}*/}
+                            {/*    fullWidth*/}
+                            {/*    margin="normal"*/}
+                            {/*/>*/}
 
                         </Grid>
 
-                        <Grid item xs={12} md={12} marginBottom={3}>
-                            <Typography>
-                                Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.
-                            </Typography>
-                        </Grid>
+                        {/*<Grid item xs={12} md={12} marginBottom={3}>*/}
+                        {/*    <Typography>*/}
+                        {/*        Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.*/}
+                        {/*    </Typography>*/}
+                        {/*</Grid>*/}
 
 
                     </Grid>
-                    <Grid container spacing alignItems={"center"}>
-                        <Grid item xs={12} sm={6} md={8}>
-                            <CategoriesSelect categories={categories} selectedCategories={selectedCategories}
-                                              handleCategoryChange={handleCategoryChange}/>
+                    <Grid mt={2} container alignItems={"center"}>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <CategoriesSelect  categories={categories} selectedCategories={selectedCategories}
+                                              handleCategoryChange={handleCategoryChange}
+                                              handleRemoveCategory={handleRemoveCategory}/>
                         </Grid>
                     </Grid>
 
 
                 </DialogContent>
                 <DialogActions>
-                    <Button variant={"outlined"} onClick={handleCloseAdd}>Закрити</Button>
-                    <Button variant="contained" color="primary" onClick={handleAddClick} disabled={isAddButtonDisabled}>
+                    <CancelButton onClick={handleCloseAdd}/>
+                    <Button variant="contained" color="primary" onClick={handleAddClick}
+                            disabled={isAddButtonDisabled || !isAuthenticated}>
                         Додати
                     </Button>
                 </DialogActions>
             </CustomDialog>
             {modalState.openAddSupplierOpen &&
             <AddSupplierModal
+                isAuthenticated={isAuthenticated}
                 handleAddSupplier={handleAddSupplier}
                 open={modalState.openAddSupplierOpen}
                 handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}

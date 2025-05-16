@@ -25,10 +25,8 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {addSupplier} from "../../api/_supplier";
 import {addProduct} from "../../api/_product";
 import {addNewCategory} from "../../api/_categories";
-import {axiosInstance} from "../../api/api";
 import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
 import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
-import {createGiftBox} from "../../api/_giftBox";
 import {useGiftSet} from "../Provider/GiftSetContext";
 import {usePackaging} from "../Provider/PackagingContext";
 
@@ -134,18 +132,20 @@ const AddButtonWithMenu = () => {
     };
 
     const handleCategoryChange = (categoryId: number[]) => {
-
         setSelectedCategories(categoryId);
 
-
         setNewProduct((prevProduct) => {
-
-
             return {
                 ...prevProduct,
                 category_ids: categoryId // Оновлення категорій
             };
         });
+    };
+
+    const handleRemoveCategory = (idToRemove: number) => {
+        if (!newProduct) return;
+        const updated = newProduct.category_ids.filter(id => id !== idToRemove);
+        handleCategoryChange(updated);
     };
 
     const createNewCategory = (categoryName: string) => {
@@ -269,7 +269,7 @@ const AddButtonWithMenu = () => {
         <Box>
             <Tooltip title="Додати" placement="right">
                <span>
-                   <IconButton size={"small"} disabled={!isAuthenticated} color="primary" onClick={handleClick}>
+                   <IconButton size={"small"} color="primary" onClick={handleClick}>
                                    <AddCircleOutlineIcon/>
                                </IconButton>
                </span>
@@ -331,11 +331,12 @@ const AddButtonWithMenu = () => {
             </Popover>
             {
                 modalState.openAdd && <AddProductModal
-
+                    isAuthenticated={isAuthenticated}
                     setNewProduct={setNewProduct}
                     newProduct={newProduct}
                     openAdd={modalState.openAdd}
                     handleAdd={handleAddProduct}
+                    handleRemoveCategory={handleRemoveCategory}
                     handleCategoryChange={handleCategoryChange}
                     handleCloseAdd={() => handleModalClose("openAdd")}
                     selectedCategories={selectedCategories}/>
@@ -350,12 +351,14 @@ const AddButtonWithMenu = () => {
             }
 
             {modalState.openAddSupplierOpen && <AddSupplierModal
+                isAuthenticated={isAuthenticated}
                 handleAddSupplier={handleAddSupplier}
                 open={modalState.openAddSupplierOpen}
                 handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
             />}
 
             {modalState.createCustomerDialog && <AddNewCustomerDialog
+                isAuthenticated={isAuthenticated}
                 setNewCustomerData={setNewCustomerData}
                 newCustomerData={newCustomerData}
                 openAddNewCustomerDialog={modalState.createCustomerDialog}

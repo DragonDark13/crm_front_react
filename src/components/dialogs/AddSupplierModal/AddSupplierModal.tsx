@@ -12,9 +12,10 @@ interface AddSupplierModalProps {
     open: boolean;
     handleCloseAddSupplierModal: () => void;
     handleAddSupplier: (supplier: INewSupplier) => void;
+    isAuthenticated:boolean
 }
 
-const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleCloseAddSupplierModal, handleAddSupplier}) => {
+const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleCloseAddSupplierModal, handleAddSupplier,isAuthenticated}) => {
     const [name, setName] = useState('');
     const [contactInfo, setContactInfo] = useState('');
     const [email, setEmail] = useState('');
@@ -97,7 +98,7 @@ const AddSupplierModal: React.FC<AddSupplierModalProps> = ({open, handleCloseAdd
                 <Button
                     onClick={handleSave}
                     variant="contained"
-                    disabled={!name.trim()} // Кнопка неактивна, якщо поле порожнє
+                    disabled={!name.trim() || !isAuthenticated} // Кнопка неактивна, якщо поле порожнє
                 >
                     Зберегти постачальника
                 </Button>
