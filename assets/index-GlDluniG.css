@@ -1,0 +1,57 @@
+@charset "UTF-8";
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.low-quantity {
+  color: red;
+  text-decoration: underline;
+}
+
+.selected-row {
+  background-color: rgba(0, 123, 255, 0.1); /* Підсвічування */
+  border-left: 4px solid #007bff; /* Лінія збоку для виділення */
+}
+
+.MuiDialogContent-root > .MuiFormControl-root {
+  margin-top: 8px;
+}
+
+.filter_container {
+  max-width: 400px;
+}
+
+.MuiMenu-paper.MuiPopover-paper {
+  max-height: 300px;
+}
+
+.supplier_name {
+  width: 200px;
+  overflow: hidden;
+}
+
+.MuiMenuItem-root .MuiTypography-root {
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.MuiPopover-paper.MuiMenu-paper .MuiMenuItem-root.Mui-selected {
+  background-color: rgba(25, 118, 210, 0.5);
+}
+
+.MuiTableHead-root *, .MuiTableHead-root .MuiTypography-root {
+  font-weight: bold;
+}
+
+.MuiButton-sizeMedium.MuiButtonBase-root.MuiButton-root {
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+
+.sale_form__customer_field.MuiFormLabel-root:not(.MuiInputLabel-shrink),
+.sale_form__packaging_field.MuiFormLabel-root:not(.MuiInputLabel-shrink) {
+  top: -7px;
+}
