@@ -3,7 +3,7 @@ import axios, {AxiosError, AxiosResponse} from 'axios';
 const getBaseURL = (): string => {
     return window.location.hostname === 'localhost'
         ? 'http://127.0.0.1:5000/api/'
-        : 'https://aleksandrforupwork.pythonanywhere.com/api/';
+        : 'http://127.0.0.1:5000/api/';
 };
 
 // Створення екземпляра axios з базовою конфігурацією

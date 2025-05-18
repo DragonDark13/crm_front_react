@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --mode production",
+    "build": "vite build --mode development",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
@@ -40,8 +40,5 @@
     "sass-embedded": "^1.83.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
-  },
-  "msw": {
-    "workerDirectory": "public"
   }
 }
