@@ -1,4 +1,5 @@
 import NotificationPanel from "../components/NotificationPanel/NotificationPanel";
+import ex = CSS.ex;
 
 export interface IBaseProduct {
     name: string;
@@ -217,7 +218,7 @@ export interface PackagingMaterialHistory {
         material_id: number;
         timestamp: string;
         change_amount: number;
-        change_type:string
+        change_type: string
     }>;
 }
 
@@ -302,4 +303,19 @@ export interface AddPackagingSupplierDialogProps {
     openAddSupplier: boolean;
     handleCloseAddSupplier: () => void;
     isAuthenticated: boolean;
+}
+
+export interface Investment {
+    supplier: string;
+    id: number;
+    type_name: string;
+    cost: number;
+    date: string;
+}
+
+export interface INewInvestment {
+    supplier: string;
+    type_name: string;
+    cost: number;
+    date: string;
 }

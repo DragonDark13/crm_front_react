@@ -15,7 +15,7 @@ interface QuantityFieldProps extends TextFieldProps {
 }
 
 
-const QuantityField: FC<QuantityFieldProps> = ({
+const  QuantityField: FC<QuantityFieldProps> = ({
                                                    value,
                                                    onChange,
                                                    error,
