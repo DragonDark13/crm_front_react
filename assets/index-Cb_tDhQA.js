@@ -48336,7 +48336,7 @@ axios.getAdapter = adapters.getAdapter;
 axios.HttpStatusCode = HttpStatusCode;
 axios.default = axios;
 const getBaseURL = () => {
-  return window.location.hostname === "localhost" ? "http://127.0.0.1:5000/api/" : "https://aleksandrforupwork.pythonanywhere.com/api/";
+  return window.location.hostname === "localhost" ? "http://127.0.0.1:5000/api/" : "http://127.0.0.1:5000/api/";
 };
 const axiosInstance = axios.create({
   baseURL: getBaseURL(),
