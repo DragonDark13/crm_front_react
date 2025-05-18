@@ -11,6 +11,13 @@ import {AuthProvider} from "./components/context/AuthContext";
 import {PackagingProvider} from "./components/Provider/PackagingContext";
 import {GiftSetProvider} from "./components/Provider/GiftSetContext";
 import {BrowserRouter} from "react-router-dom";
+import {worker} from "./mocks/browser";
+
+
+if (import.meta.env.DEV) {
+  worker.start();
+}
+
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.Fragment>
