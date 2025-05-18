@@ -10,7 +10,7 @@ import {
     TableFooter,
     Typography, Button, IconButton
 } from "@mui/material";
-import {ISupplier} from "../../../../utils/types";
+import {ISupplierFull} from "../../../../utils/types";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {useAuth} from "../../../context/AuthContext";
@@ -21,7 +21,7 @@ interface PurchaseHistoryRecord {
     quantity_purchase: number;
     purchase_price_per_item: number;
     purchase_total_price: number;
-    supplier: ISupplier;
+    supplier: ISupplierFull;
 }
 
 

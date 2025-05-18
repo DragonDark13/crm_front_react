@@ -10,7 +10,7 @@ import SupplierSelect from "../../../FormComponents/SupplierSelect";
 import QuantityField from "../../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../../utils/function";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
-import {IPurchaseData, ISupplier} from "../../../../utils/types";
+import {IPurchaseData, ISupplierFull} from "../../../../utils/types";
 import {useSuppliers} from "../../../Provider/SupplierContext";
 
 interface IPurchaseProductModal {

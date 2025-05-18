@@ -15,7 +15,7 @@ import {
     Tabs, Typography
 } from "@mui/material";
 import CustomDialog from "../../CustomDialog/CustomDialog";
-import {ICustomer, ISupplier} from "../../../../utils/types";
+import {ICustomer, ISupplierFull} from "../../../../utils/types";
 import StockHistoryTable from "./StockHistoryTable";
 import PurchaseHistoryTable from "./PurchaseHistoryTable";
 import SalesHistoryTable from "./SalesHistoryTable";
@@ -34,7 +34,7 @@ export interface ProductHistoryRecord {
     selling_total_price?: number;
     purchase_price_per_item?: number;
     purchase_total_price?: number;
-    supplier?: ISupplier;
+    supplier?: ISupplierFull;
     sale_date?: string;
     price?: number;
     quantity_sold?: number;

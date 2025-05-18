@@ -16,7 +16,7 @@ export interface IBaseProduct {
 export interface IProduct extends IBaseProduct {
     id: number;
     category_ids: number[]
-    supplier: ISupplier | null
+    supplier: ISupplierFull | null
     created_date: string
 }
 
@@ -137,7 +137,7 @@ export interface ICustomer {
     phone_number?: string;   // Номер телефону, може бути відсутній
 }
 
-export interface ISupplier {
+export interface ISupplierFull {
     id: number;              // Унікальний ідентифікатор постачальника
     name: string;            // Ім'я постачальника, унікальне,
     contact_info: string;   // Контактна інформація, може бути відсутня

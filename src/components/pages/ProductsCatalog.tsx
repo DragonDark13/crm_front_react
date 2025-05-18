@@ -6,7 +6,7 @@ import {
     INewProduct, INewSupplier,
     IProduct,
     IPurchaseData, ISaleData, IStateFilters,
-    ISupplier,
+    ISupplierFull,
     modalNames,
     ModalNames
 } from "../../utils/types";
@@ -105,7 +105,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
     const {fetchProductsFunc,loadingState} = useProducts();
     // const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
-    const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
+    const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const [categories, setCategories] = useState<ICategory[]>([]);
     // const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     // const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);

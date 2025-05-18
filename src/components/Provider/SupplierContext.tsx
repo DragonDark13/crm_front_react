@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import {ISupplier} from "../../utils/types";
+import {ISupplierFull} from "../../utils/types";
 import {fetchGetAllSuppliers} from "../../api/_supplier";
 
 // Типізація постачальників
@@ -10,7 +10,7 @@ import {fetchGetAllSuppliers} from "../../api/_supplier";
 
 // Типізація для контексту
 interface SupplierContextProps {
-  suppliers: ISupplier[];
+  suppliers: ISupplierFull[];
   fetchSuppliersFunc: () => void;
 }
 
@@ -19,7 +19,7 @@ const SupplierContext = createContext<SupplierContextProps | undefined>(undefine
 
 // Створення Провайдера
 export const SupplierProvider: React.FC = ({ children }) => {
-  const [suppliers, setSuppliers] = useState<ISupplier[]>([]);
+  const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
 
   const fetchSuppliersFunc = async () => {
     try {

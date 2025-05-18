@@ -1,11 +1,11 @@
 import React from 'react';
 import {Checkbox, FormControlLabel, FormGroup} from '@mui/material';
-import {ISupplier} from "../../../utils/types";
+import {ISupplierFull} from "../../../utils/types";
 
 interface ISupplierFilterProps {
     selectedFilterSuppliers: number[];
     handleSupplierFilterChange: (supplierID: number) => void;
-    suppliers: ISupplier[];
+    suppliers: ISupplierFull[];
 }
 
 const SupplierFilter: React.FC<ISupplierFilterProps> = ({
