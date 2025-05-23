@@ -91,45 +91,16 @@ if (import.meta.env.VITE_USE_MOCKS === 'true') {
 
         }
 
-
-
         const match = request.url.match(/^\/product\/(\d+)\/history$/);
 
         if (match) {
-            const productId = match[1]; // ← тут буде '9', '12' і т.д.
+            const productId = Number(match[1]);
 
             request.adapter = async () => {
                 return {
-                    data: {
-                        "purchase_history": [
-                            {
-                                "id": productId,
-                                "product_id": productId,
-                                "purchase_date": "2024-09-15",
-                                "purchase_price_per_item": 200,
-                                "purchase_total_price": 1000,
-                                "quantity_purchase": 5,
-                                "supplier": {
-                                    "contact_info": null,
-                                    "id": productId,
-                                    "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/"
-                                },
-                                "supplier_id": productId
-                            }
-                        ],
-                        "sale_history": [],
-                        "stock_history": [
-                            {
-                                "change_amount": 5,
-                                "change_type": "create",
-                                "id": productId,
-                                "product_id": productId,
-                                "timestamp": "2024-09-15 00:00:00"
-                            }
-                        ]
-                    },
+                    data: fakeDate.getProductHistory(productId),
                     status: 200,
-                    statusText: 'OK',
+                    statusText: "OK",
                     headers: {},
                     config: request,
                 };
@@ -138,38 +109,11 @@ if (import.meta.env.VITE_USE_MOCKS === 'true') {
 
         const material_history = request.url.match(/^\/materials\/(\d+)\/history$/);
         if (material_history) {
-            const productId = material_history[1]; // ← тут буде '9', '12' і т.д.
+            const materialId = Number(material_history[1]); // ← тут буде '9', '12' і т.д.
 
             request.adapter = async () => {
                 return {
-                    data: {
-                        "purchase_history": [
-                            {
-                                "id": productId,
-                                "product_id": productId,
-                                "purchase_date": "2024-09-15",
-                                "purchase_price_per_item": 200,
-                                "purchase_total_price": 1000,
-                                "quantity_purchase": 5,
-                                "supplier": {
-                                    "contact_info": null,
-                                    "id": productId,
-                                    "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/"
-                                },
-                                "supplier_id": productId
-                            }
-                        ],
-                        "sale_history": [],
-                        "stock_history": [
-                            {
-                                "change_amount": 5,
-                                "change_type": "create",
-                                "id": productId,
-                                "product_id": productId,
-                                "timestamp": "2024-09-15 00:00:00"
-                            }
-                        ]
-                    },
+                    data: fakeDate.getMaterialHistory(materialId),
                     status: 200,
                     statusText: 'OK',
                     headers: {},
