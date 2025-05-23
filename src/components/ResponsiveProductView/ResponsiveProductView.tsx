@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react';
+import React, {forwardRef, useState} from 'react';
 import {useTheme} from '@mui/material/styles';
 import {Grid, IconButton, InputAdornment, TablePagination, TextField, useMediaQuery} from '@mui/material';
 import {IProduct} from "../../utils/types";
@@ -6,6 +6,9 @@ import ProductCardView from "../ProductCardView/ProductCardView";
 import ProductTable from "../ProductTable/ProductTable";
 import {useAuth} from "../context/AuthContext";
 import ClearIcon from '@mui/icons-material/Clear';
+import {useNewProduct} from "../../hooks/useNewProduct";
+import AddButton from "../Buttons/AddButton";
+import AddProductModal from "../dialogs/productsDialogs/AddProductModal/AddProductModal";
 
 
 // TODO Внизу загальну сумму і кількість
@@ -58,9 +61,25 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const {isAuthenticated} = useAuth();
 
+    const [openAddProductModal, setOpenAddProductModal] = useState(false);
+    const {
+        newProduct,
+        setNewProduct,
+        selectedCategories,
+        handleCategoryChange,
+        handleRemoveCategory,
+        handleAddProduct,
+    } = useNewProduct();
+
     return (
         <React.Fragment>
-            <Grid container justifyContent={"flex-end"}>
+            <Grid container alignItems={"center"} justifyContent={"flex-end"}>
+                <Grid item xs={12} md={6} sx={{marginTop:1}}>
+                    <AddButton onClick={() => setOpenAddProductModal(true)}
+                               text={'Hовий товар'} title={'Придбати' +
+                    ' новий товар'}/>
+
+                </Grid>
 
                 <Grid item xs={12} md={6}>
                     <TextField
@@ -154,6 +173,18 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                     setItemsPerPage(parseInt(event.target.value, 10));
                     setCurrentPage(0); // Скидаємо на першу сторінку
                 }}
+            />
+
+            <AddProductModal
+                openAdd={openAddProductModal}
+                handleCloseAdd={() => setOpenAddProductModal(false)}
+                isAuthenticated={isAuthenticated}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                selectedCategories={selectedCategories}
+                handleCategoryChange={handleCategoryChange}
+                handleRemoveCategory={handleRemoveCategory}
+                handleAdd={() => handleAddProduct(() => setOpenAddProductModal(false))}
             />
 
         </React.Fragment>

@@ -384,7 +384,6 @@ const SaleProductModal = ({
                         <CancelButton onClick={handleCloseSale} />
                         <Button
                             variant="contained"
-                            color="success"
                             onClick={handleSaleSubmit}
                             disabled={isSubmitDisabled() || !isAuthenticated} // Додаємо перевірку для активності кнопки
                         >

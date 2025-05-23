@@ -24,3 +24,5 @@
   handleIncrementGlobal,
   handleQuantityChangeGlobal
   Для роботи з QuantityField.tsx
+### 2025-05-23: Створив хук для додавання нового товару
+-хук для додавання нового товару src/hooks/useNewProduct.ts
