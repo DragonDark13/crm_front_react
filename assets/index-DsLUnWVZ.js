@@ -49970,50 +49970,24 @@ const useGiftSet = () => {
   }
   return context;
 };
-const AddButtonWithMenu = () => {
-  const [anchorEl, setAnchorEl] = reactExports.useState(null);
-  const { showSnackbarMessage } = useSnackbarMessage();
-  const { createCustomerFunc } = useCustomers();
-  const { createNewGiftSet } = useGiftSet();
-  const { fetchPackagingOptions } = usePackaging();
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const open = Boolean(anchorEl);
-  const id2 = open ? "simple-popover" : void 0;
+const useNewProduct = () => {
   const [newProduct, setNewProduct] = reactExports.useState({
-    available_quantity: 0,
-    sold_quantity: 0,
-    total_quantity: 0,
     name: "",
     supplier_id: "",
+    total_quantity: 0,
+    available_quantity: 0,
+    sold_quantity: 0,
     purchase_total_price: 0,
     purchase_price_per_item: 0,
     category_ids: [],
     created_date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
-    selling_price_per_item: 0,
     selling_total_price: 0,
+    selling_price_per_item: 0,
     selling_quantity: 0
   });
-  const [modalState, setModalState] = reactExports.useState(
-    Object.fromEntries(modalNames.map((modal) => [modal, false]))
-  );
-  const handleModalOpen = (modal) => {
-    setModalState((prevState) => ({ ...prevState, [modal]: true }));
-    handleClose();
-  };
   const [selectedCategories, setSelectedCategories] = reactExports.useState([]);
-  const handleOpenAdd = () => {
-    handleModalOpen("openAdd");
-    setNewProduct((newProduct2) => {
-      return {
-        ...newProduct2
-      };
-    });
-  };
+  const { fetchProductsFunc } = useProducts();
+  const { showSnackbarMessage } = useSnackbarMessage();
   const resetNewProduct = () => {
     setNewProduct({
       name: "",
@@ -50031,9 +50005,68 @@ const AddButtonWithMenu = () => {
     });
     setSelectedCategories([]);
   };
-  const resetStatesMap = {
-    openAdd: resetNewProduct
+  const handleCategoryChange = (categoryIds) => {
+    setSelectedCategories(categoryIds);
+    setNewProduct((prev2) => ({
+      ...prev2,
+      category_ids: categoryIds
+    }));
   };
+  const handleRemoveCategory = (categoryIdToRemove) => {
+    handleCategoryChange(selectedCategories.filter((id2) => id2 !== categoryIdToRemove));
+  };
+  const handleAddProduct = async (onSuccess) => {
+    try {
+      await addProduct(newProduct);
+      await fetchProductsFunc();
+      resetNewProduct();
+      showSnackbarMessage("Product added successfully!", "success");
+      onSuccess == null ? void 0 : onSuccess();
+    } catch (error) {
+      console.error("Failed to add product", error);
+      showSnackbarMessage("Failed to add product!", "error");
+    }
+  };
+  return {
+    newProduct,
+    setNewProduct,
+    selectedCategories,
+    handleCategoryChange,
+    handleRemoveCategory,
+    handleAddProduct,
+    resetNewProduct
+  };
+};
+const AddButtonWithMenu = () => {
+  const [anchorEl, setAnchorEl] = reactExports.useState(null);
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const { createCustomerFunc } = useCustomers();
+  const { createNewGiftSet } = useGiftSet();
+  const { fetchPackagingOptions } = usePackaging();
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const id2 = open ? "simple-popover" : void 0;
+  const [modalState, setModalState] = reactExports.useState(
+    Object.fromEntries(modalNames.map((modal) => [modal, false]))
+  );
+  const handleModalOpen = (modal) => {
+    setModalState((prevState) => ({ ...prevState, [modal]: true }));
+    handleClose();
+  };
+  const handleOpenAdd = () => {
+    handleModalOpen("openAdd");
+    setNewProduct((newProduct2) => {
+      return {
+        ...newProduct2
+      };
+    });
+  };
+  const resetStatesMap = {};
   const { fetchProductsFunc } = useProducts();
   const { fetchCategoriesFunc } = useCategories();
   const { fetchSuppliersFunc } = useSuppliers();
@@ -50041,32 +50074,6 @@ const AddButtonWithMenu = () => {
     var _a2;
     setModalState((prevState) => ({ ...prevState, [modal]: false }));
     (_a2 = resetStatesMap[modal]) == null ? void 0 : _a2.call(resetStatesMap);
-  };
-  const handleAddProduct = async () => {
-    try {
-      await addProduct(newProduct);
-      await fetchProductsFunc();
-      handleModalClose("openAdd");
-      showSnackbarMessage("Product added successfully!", "success");
-    } catch (error) {
-      console.error("There was an error adding the product!", error);
-      showSnackbarMessage("Failed to add the product!", "error");
-    }
-  };
-  const handleCategoryChange = (categoryId) => {
-    setSelectedCategories(categoryId);
-    setNewProduct((prevProduct) => {
-      return {
-        ...prevProduct,
-        category_ids: categoryId
-        // Оновлення категорій
-      };
-    });
-  };
-  const handleRemoveCategory = (idToRemove) => {
-    if (!newProduct) return;
-    const updated = newProduct.category_ids.filter((id22) => id22 !== idToRemove);
-    handleCategoryChange(updated);
   };
   const createNewCategory = (categoryName) => {
     addNewCategory(categoryName).then(() => {
@@ -50151,6 +50158,14 @@ const AddButtonWithMenu = () => {
       showSnackbarMessage("Error creating gift box: " + error || "Unknown error", "error");
     }
   };
+  const {
+    newProduct,
+    setNewProduct,
+    selectedCategories,
+    handleCategoryChange,
+    handleRemoveCategory,
+    handleAddProduct
+  } = useNewProduct();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Додати", placement: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { size: "small", color: "primary", onClick: handleClick, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AddCircleOutlineIcon, {}) }) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -50230,7 +50245,7 @@ const AddButtonWithMenu = () => {
         setNewProduct,
         newProduct,
         openAdd: modalState.openAdd,
-        handleAdd: handleAddProduct,
+        handleAdd: () => handleAddProduct(() => handleModalClose("openAdd")),
         handleRemoveCategory,
         handleCategoryChange,
         handleCloseAdd: () => handleModalClose("openAdd"),
@@ -51097,30 +51112,49 @@ const ResponsiveProductView = reactExports.forwardRef(({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { isAuthenticated } = useAuth();
+  const [openAddProductModal, setOpenAddProductModal] = reactExports.useState(false);
+  const {
+    newProduct,
+    setNewProduct,
+    selectedCategories,
+    handleCategoryChange,
+    handleRemoveCategory,
+    handleAddProduct
+  } = useNewProduct();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, justifyContent: "flex-end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-      TextField,
-      {
-        size: "small",
-        label: "Пошук товару",
-        variant: "outlined",
-        fullWidth: true,
-        margin: "normal",
-        value: searchTerm,
-        onChange: (e2) => setSearchTerm(e2.target.value),
-        InputProps: {
-          endAdornment: searchTerm && /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornment, { position: "end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            IconButton,
-            {
-              onClick: () => setSearchTerm(""),
-              edge: "end",
-              "aria-label": "Очистити поле",
-              children: /* @__PURE__ */ jsxRuntimeExports.jsx(ClearIcon, {})
-            }
-          ) })
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, alignItems: "center", justifyContent: "flex-end", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, sx: { marginTop: 1 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        AddButton,
+        {
+          onClick: () => setOpenAddProductModal(true),
+          text: "Hовий товар",
+          title: "Придбати новий товар"
         }
-      }
-    ) }) }),
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TextField,
+        {
+          size: "small",
+          label: "Пошук товару",
+          variant: "outlined",
+          fullWidth: true,
+          margin: "normal",
+          value: searchTerm,
+          onChange: (e2) => setSearchTerm(e2.target.value),
+          InputProps: {
+            endAdornment: searchTerm && /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornment, { position: "end", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              IconButton,
+              {
+                onClick: () => setSearchTerm(""),
+                edge: "end",
+                "aria-label": "Очистити поле",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ClearIcon, {})
+              }
+            ) })
+          }
+        }
+      ) })
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       TablePagination,
       {
@@ -51192,6 +51226,20 @@ const ResponsiveProductView = reactExports.forwardRef(({
           setItemsPerPage(parseInt(event.target.value, 10));
           setCurrentPage(0);
         }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddProductModal,
+      {
+        openAdd: openAddProductModal,
+        handleCloseAdd: () => setOpenAddProductModal(false),
+        isAuthenticated,
+        newProduct,
+        setNewProduct,
+        selectedCategories,
+        handleCategoryChange,
+        handleRemoveCategory,
+        handleAdd: () => handleAddProduct(() => setOpenAddProductModal(false))
       }
     )
   ] });
@@ -52830,7 +52878,6 @@ const SaleProductModal = ({
               Button,
               {
                 variant: "contained",
-                color: "success",
                 onClick: handleSaleSubmit,
                 disabled: isSubmitDisabled() || !isAuthenticated,
                 children: "Підтвердити продаж"
@@ -55353,6 +55400,112 @@ const SupplierPage = () => {
     )
   ] });
 };
+const SaleGiftSetDetails = ({ sale }) => {
+  var _a2, _b2;
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 7, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: true, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Назва" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за од." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Сума" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(TableBody, { children: [
+      (_a2 = sale.products) == null ? void 0 : _a2.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Одиничний товар", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingBag, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.supplier.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.unit_price }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.quantity }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.total_price })
+      ] }, product.product_id)),
+      (_b2 = sale.packagings) == null ? void 0 : _b2.map((packaging) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Пакування", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Luggage, { fontSize: "small" }) }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.packaging_name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.supplier.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.unit_price }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.quantity }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.total_price })
+      ] }, packaging.packaging_id))
+    ] })
+  ] }) }) }) });
+};
+const SaleProductDetails = ({ sale }) => {
+  var _a2, _b2;
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 7, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: true, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Назва" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за од." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Сума" })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(TableBody, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Товар" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.product_name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a2 = sale.supplier) == null ? void 0 : _a2.name) || "Невідомо" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.unit_price }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.quantity_sold }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.total_price })
+      ] }),
+      (_b2 = sale.packaging_details) == null ? void 0 : _b2.map((packaging) => {
+        var _a3;
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Пакування" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.packaging_name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a3 = packaging.supplier) == null ? void 0 : _a3.name) || "Невідомо" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.unit_price }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.quantity_sold }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.total_price })
+        ] }, packaging.package_id);
+      })
+    ] })
+  ] }) }) }) });
+};
+const SalesHistoryInfoModal = ({ handleModalInfoClose, modalOpen, selectedSale }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    CustomDialog,
+    {
+      maxWidth: "xs",
+      title: "Інформація про продаж",
+      open: modalOpen,
+      handleClose: handleModalInfoClose,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: selectedSale && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Назва:" }),
+            " ",
+            selectedSale.product_name
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Кількість:" }),
+            " ",
+            selectedSale.quantity_sold
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Ціна:" }),
+            " ",
+            selectedSale.unit_price
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Сума:" }),
+            " ",
+            selectedSale.total_price
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Дата:" }),
+            " ",
+            selectedSale.sale_date
+          ] })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActions, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleModalInfoClose }) })
+      ]
+    }
+  );
+};
 const SalesHistoryTable = () => {
   const [salesData, setSalesData] = reactExports.useState([]);
   const [page, setPage] = reactExports.useState(0);
@@ -55380,11 +55533,11 @@ const SalesHistoryTable = () => {
   const handleExpandClick = (saleId) => {
     setExpandedSale(expandedSale === saleId ? null : saleId);
   };
-  const handleModalOpen = (sale) => {
+  const handleModalInfoOpen = (sale) => {
     setSelectedSale(sale);
     setModalOpen(true);
   };
-  const handleModalClose = () => {
+  const handleModalInfoClose = () => {
     setModalOpen(false);
     setSelectedSale(null);
   };
@@ -55451,7 +55604,6 @@ const SalesHistoryTable = () => {
           }
         ) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Покупець" }) }),
-        " ",
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Сумма" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Собівартість" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Вигода" }) }),
@@ -55459,109 +55611,28 @@ const SalesHistoryTable = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Дії" }) })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length > 0 ? filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(
-        (sale) => {
-          var _a2;
-          return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: getSaleIcon(sale.type) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                TableCell,
-                {
-                  size: "small",
-                  children: sale.type === "product_with_packaging" && sale.packaging_details.length > 0 ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}` : sale.product_name
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.customer.name }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.total_price }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.cost_price }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.profit }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.sale_date }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { onClick: () => handleExpandClick(sale.sale_history_id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { onClick: () => handleModalOpen(sale), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Інформація", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Info, {}) }) })
-              ] })
-            ] }),
-            expandedSale === sale.sale_history_id && (sale.type === "gift_set" ? /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 7, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Collapse,
+        (sale) => /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: getSaleIcon(sale.type) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              TableCell,
               {
-                in: expandedSale === sale.sale_history_id,
-                timeout: "auto",
-                unmountOnExit: true,
-                children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Назва" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за од." }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Сума" })
-                  ] }) }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(TableBody, { children: [
-                    sale.products && sale.products.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Одиничний товар", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        ShoppingBag,
-                        {
-                          fontSize: "small"
-                        }
-                      ) }) }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.supplier.name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.unit_price }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.quantity }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: product.total_price })
-                    ] }, product.product_id)),
-                    sale.packagings && sale.packagings.map((packaging) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Пакування", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Luggage, { fontSize: "small" }) }) }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.packaging_name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.supplier.name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.unit_price }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.quantity }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.total_price })
-                    ] }, packaging.packaging_id))
-                  ] })
-                ] })
+                size: "small",
+                children: sale.type === "product_with_packaging" && sale.packaging_details.length > 0 ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}` : sale.product_name
               }
-            ) }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 7, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Collapse,
-              {
-                in: expandedSale === sale.sale_history_id,
-                timeout: "auto",
-                unmountOnExit: true,
-                children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Назва" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за од." }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Сума" })
-                  ] }) }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs(TableBody, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Товар" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.product_name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a2 = sale.supplier) == null ? void 0 : _a2.name) || "Невідомо" }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.unit_price }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.quantity_sold }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.total_price })
-                    ] }),
-                    sale.packaging_details && sale.packaging_details.length > 0 && sale.packaging_details.map((packaging) => {
-                      var _a3;
-                      return /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Пакування" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.packaging_name }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: ((_a3 = packaging.supplier) == null ? void 0 : _a3.name) || "Невідомо" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.unit_price }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.quantity_sold }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: packaging.total_price })
-                      ] }, packaging.package_id);
-                    })
-                  ] })
-                ] })
-              }
-            ) }) }))
-          ] }, sale.sale_history_id);
-        }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: sale.customer.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.total_price }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.cost_price }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.profit }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: sale.sale_date }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { onClick: () => handleExpandClick(sale.sale_history_id), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(IconButton, { onClick: () => handleModalInfoOpen(sale), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Інформація", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Info, {}) }) })
+            ] })
+          ] }),
+          expandedSale === sale.sale_history_id && (sale.type === "gift_set" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SaleGiftSetDetails, { sale }) : /* @__PURE__ */ jsxRuntimeExports.jsx(SaleProductDetails, { sale }))
+        ] }, sale.sale_history_id)
       ) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", children: "Відсутня історія продажів" }) }) }) })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -55576,36 +55647,14 @@ const SalesHistoryTable = () => {
         onRowsPerPageChange: handleChangeRowsPerPage
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Modal, { open: modalOpen, onClose: handleModalClose, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { sx: { width: 400, backgroundColor: "white", padding: 2, margin: "auto", mt: 10 }, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Інформація про продаж" }),
-      selectedSale && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Назва:" }),
-          " ",
-          selectedSale.product_name
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Кількість:" }),
-          " ",
-          selectedSale.quantity_sold
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Ціна:" }),
-          " ",
-          selectedSale.unit_price
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Сума:" }),
-          " ",
-          selectedSale.total_price
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Дата:" }),
-          " ",
-          selectedSale.sale_date
-        ] })
-      ] })
-    ] }) })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      SalesHistoryInfoModal,
+      {
+        handleModalInfoClose,
+        modalOpen,
+        selectedSale
+      }
+    )
   ] });
 };
 const Sales = () => {
