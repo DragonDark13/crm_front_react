@@ -29,6 +29,7 @@ import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
 import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
 import {useGiftSet} from "../Provider/GiftSetContext";
 import {usePackaging} from "../Provider/PackagingContext";
+import {useNewProduct} from "../../hooks/useNewProduct";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -51,18 +52,18 @@ const AddButtonWithMenu = () => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    const [newProduct, setNewProduct] = useState<INewProduct>({
-        available_quantity: 0, sold_quantity: 0, total_quantity: 0,
-        name: '',
-        supplier_id: '',
-        purchase_total_price: 0.00,
-        purchase_price_per_item: 0.00,
-        category_ids: [],
-        created_date: new Date().toISOString().slice(0, 10),
-        selling_price_per_item: 0.00,
-        selling_total_price: 0.00,
-        selling_quantity: 0
-    });
+    // const [newProduct, setNewProduct] = useState<INewProduct>({
+    //     available_quantity: 0, sold_quantity: 0, total_quantity: 0,
+    //     name: '',
+    //     supplier_id: '',
+    //     purchase_total_price: 0.00,
+    //     purchase_price_per_item: 0.00,
+    //     category_ids: [],
+    //     created_date: new Date().toISOString().slice(0, 10),
+    //     selling_price_per_item: 0.00,
+    //     selling_total_price: 0.00,
+    //     selling_quantity: 0
+    // });
 
 
     const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
@@ -74,7 +75,7 @@ const AddButtonWithMenu = () => {
         handleClose()
     };
 
-    const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+    // const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 
 
     const handleOpenAdd = () => {
@@ -86,28 +87,26 @@ const AddButtonWithMenu = () => {
         })
     };
 
-    const resetNewProduct = () => {
-        setNewProduct({
-            name: '',
-            supplier_id: '',
-            total_quantity: 0,
-            available_quantity: 0,
-            sold_quantity: 0,
-            purchase_total_price: 0.00,
-            purchase_price_per_item: 0.00,
-            category_ids: [],
-            created_date: new Date().toISOString().slice(0, 10),
-            selling_total_price: 0.00,
-            selling_price_per_item: 0.00,
-            selling_quantity: 0
-        });
-        setSelectedCategories([])
-    };
+    // const resetNewProduct = () => {
+    //     setNewProduct({
+    //         name: '',
+    //         supplier_id: '',
+    //         total_quantity: 0,
+    //         available_quantity: 0,
+    //         sold_quantity: 0,
+    //         purchase_total_price: 0.00,
+    //         purchase_price_per_item: 0.00,
+    //         category_ids: [],
+    //         created_date: new Date().toISOString().slice(0, 10),
+    //         selling_total_price: 0.00,
+    //         selling_price_per_item: 0.00,
+    //         selling_quantity: 0
+    //     });
+    //     setSelectedCategories([])
+    // };
 
 
-    const resetStatesMap = {
-        openAdd: resetNewProduct,
-    };
+    const resetStatesMap = {};
 
     const {fetchProductsFunc} = useProducts();
     const {fetchCategoriesFunc} = useCategories()
@@ -119,34 +118,34 @@ const AddButtonWithMenu = () => {
     };
 
 
-    const handleAddProduct = async () => {
-        try {
-            await addProduct(newProduct);
-            await fetchProductsFunc();
-            handleModalClose('openAdd');
-            showSnackbarMessage('Product added successfully!', 'success'); // Show success message
-        } catch (error) {
-            console.error('There was an error adding the product!', error);
-            showSnackbarMessage('Failed to add the product!', 'error'); // Show error message
-        }
-    };
+    // const handleAddProduct = async () => {
+    //     try {
+    //         await addProduct(newProduct);
+    //         await fetchProductsFunc();
+    //         handleModalClose('openAdd');
+    //         showSnackbarMessage('Product added successfully!', 'success'); // Show success message
+    //     } catch (error) {
+    //         console.error('There was an error adding the product!', error);
+    //         showSnackbarMessage('Failed to add the product!', 'error'); // Show error message
+    //     }
+    // };
 
-    const handleCategoryChange = (categoryId: number[]) => {
-        setSelectedCategories(categoryId);
+    // const handleCategoryChange = (categoryId: number[]) => {
+    //     setSelectedCategories(categoryId);
+    //
+    //     setNewProduct((prevProduct) => {
+    //         return {
+    //             ...prevProduct,
+    //             category_ids: categoryId // Оновлення категорій
+    //         };
+    //     });
+    // };
 
-        setNewProduct((prevProduct) => {
-            return {
-                ...prevProduct,
-                category_ids: categoryId // Оновлення категорій
-            };
-        });
-    };
-
-    const handleRemoveCategory = (idToRemove: number) => {
-        if (!newProduct) return;
-        const updated = newProduct.category_ids.filter(id => id !== idToRemove);
-        handleCategoryChange(updated);
-    };
+    // const handleRemoveCategory = (idToRemove: number) => {
+    //     if (!newProduct) return;
+    //     const updated = newProduct.category_ids.filter(id => id !== idToRemove);
+    //     handleCategoryChange(updated);
+    // };
 
     const createNewCategory = (categoryName: string) => {
         addNewCategory(categoryName).then(() => {
@@ -264,6 +263,15 @@ const AddButtonWithMenu = () => {
 
     };
 
+    const {
+        newProduct,
+        setNewProduct,
+        selectedCategories,
+        handleCategoryChange,
+        handleRemoveCategory,
+        handleAddProduct,
+    } = useNewProduct();
+
 
     return (
         <Box>
@@ -335,7 +343,7 @@ const AddButtonWithMenu = () => {
                     setNewProduct={setNewProduct}
                     newProduct={newProduct}
                     openAdd={modalState.openAdd}
-                    handleAdd={handleAddProduct}
+                    handleAdd={() => handleAddProduct(() => handleModalClose("openAdd"))}
                     handleRemoveCategory={handleRemoveCategory}
                     handleCategoryChange={handleCategoryChange}
                     handleCloseAdd={() => handleModalClose("openAdd")}
