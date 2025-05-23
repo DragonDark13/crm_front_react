@@ -56426,7 +56426,11 @@ const fakeDate = {
   suppliersListFake: [],
   packagingMaterialsFake: [],
   purchaseHistoryFake: [],
-  investmentsFake: []
+  investmentsFake: [],
+  getProductHistory: (productId) => {
+  },
+  getMaterialHistory: (materialId) => {
+  }
 };
 fakeDate.productsFake = [
   {
@@ -57101,6 +57105,67 @@ fakeDate.investmentsFake = [
     "type_name": "hjghjhgj"
   }
 ];
+fakeDate.getProductHistory = (productId) => ({
+  purchase_history: [
+    {
+      id: productId,
+      product_id: productId,
+      purchase_date: "2024-09-15",
+      purchase_price_per_item: 200,
+      purchase_total_price: 1e3,
+      quantity_purchase: 5,
+      supplier: {
+        contact_info: null,
+        id: productId,
+        name: "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/"
+      },
+      supplier_id: productId
+    }
+  ],
+  sale_history: [],
+  stock_history: [
+    {
+      change_amount: 5,
+      change_type: "create",
+      id: productId,
+      product_id: productId,
+      timestamp: "2024-09-15 00:00:00"
+    }
+  ]
+});
+fakeDate.getMaterialHistory = (materialId) => ({
+  "packaging_material_id": materialId,
+  "purchase_history": [
+    {
+      "id": materialId,
+      "material_id": materialId,
+      "purchase_date": "2025-01-15T00:00:00",
+      "purchase_price_per_unit": 2,
+      "purchase_total_price": 100,
+      "quantity_purchased": 50,
+      "supplier_id": 4
+    },
+    {
+      "id": 6,
+      "material_id": materialId,
+      "purchase_date": "2025-05-16T08:45:14.130048",
+      "purchase_price_per_unit": 2,
+      "purchase_total_price": 2,
+      "quantity_purchased": 1,
+      "supplier_id": 4
+    }
+  ],
+  "sales_history": [],
+  "stock_history": [
+    {
+      "change_amount": 50,
+      "change_type": "purchase",
+      "id": materialId,
+      "material_id": materialId,
+      "timestamp": "2025-01-15T00:00:00"
+    }
+  ]
+});
 {
   axiosInstance.interceptors.request.use((request) => {
     console.log("Mock enabled:", request.url);
@@ -57178,37 +57243,10 @@ fakeDate.investmentsFake = [
     }
     const match2 = request.url.match(/^\/product\/(\d+)\/history$/);
     if (match2) {
-      const productId = match2[1];
+      const productId = Number(match2[1]);
       request.adapter = async () => {
         return {
-          data: {
-            "purchase_history": [
-              {
-                "id": productId,
-                "product_id": productId,
-                "purchase_date": "2024-09-15",
-                "purchase_price_per_item": 200,
-                "purchase_total_price": 1e3,
-                "quantity_purchase": 5,
-                "supplier": {
-                  "contact_info": null,
-                  "id": productId,
-                  "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/"
-                },
-                "supplier_id": productId
-              }
-            ],
-            "sale_history": [],
-            "stock_history": [
-              {
-                "change_amount": 5,
-                "change_type": "create",
-                "id": productId,
-                "product_id": productId,
-                "timestamp": "2024-09-15 00:00:00"
-              }
-            ]
-          },
+          data: fakeDate.getProductHistory(productId),
           status: 200,
           statusText: "OK",
           headers: {},
@@ -57218,37 +57256,10 @@ fakeDate.investmentsFake = [
     }
     const material_history = request.url.match(/^\/materials\/(\d+)\/history$/);
     if (material_history) {
-      const productId = material_history[1];
+      const materialId = Number(material_history[1]);
       request.adapter = async () => {
         return {
-          data: {
-            "purchase_history": [
-              {
-                "id": productId,
-                "product_id": productId,
-                "purchase_date": "2024-09-15",
-                "purchase_price_per_item": 200,
-                "purchase_total_price": 1e3,
-                "quantity_purchase": 5,
-                "supplier": {
-                  "contact_info": null,
-                  "id": productId,
-                  "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/"
-                },
-                "supplier_id": productId
-              }
-            ],
-            "sale_history": [],
-            "stock_history": [
-              {
-                "change_amount": 5,
-                "change_type": "create",
-                "id": productId,
-                "product_id": productId,
-                "timestamp": "2024-09-15 00:00:00"
-              }
-            ]
-          },
+          data: fakeDate.getMaterialHistory(materialId),
           status: 200,
           statusText: "OK",
           headers: {},
