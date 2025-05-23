@@ -101,7 +101,7 @@ if (import.meta.env.VITE_USE_MOCKS === 'true') {
             request.adapter = async () => {
                 return {
                     data: {
-                        "purchaseHistoryFake": [
+                        "purchase_history": [
                             {
                                 "id": productId,
                                 "product_id": productId,
@@ -143,7 +143,7 @@ if (import.meta.env.VITE_USE_MOCKS === 'true') {
             request.adapter = async () => {
                 return {
                     data: {
-                        "purchaseHistoryFake": [
+                        "purchase_history": [
                             {
                                 "id": productId,
                                 "product_id": productId,
