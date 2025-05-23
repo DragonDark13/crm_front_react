@@ -22,10 +22,15 @@ import {
     Box,
     Modal,
     Paper,
-    Typography,
+    Typography, DialogContent, DialogActions,
 } from '@mui/material';
 import {axiosInstance} from "../../../api/api";
 import {ShoppingBag, Inventory, CardGiftcard, Info, ExpandMore, Luggage} from "@mui/icons-material";
+import SaleGiftSetDetails from "./SaleGiftSetDetails";
+import SaleProductDetails from "./SaleProductDetails";
+import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
+import CancelButton from "../../Buttons/CancelButton";
+import SalesHistoryInfoModal from "./SalesHistoryInfoModal";
 
 
 // Інтерфейс для постачальника
@@ -58,7 +63,7 @@ interface Product {
 }
 
 // Основний інтерфейс для даних про продаж
-interface Sale {
+export interface SaleItemInfo {
     packagings: Packaging[];  // Список пакувань
     products: Product[];  // Список продуктів
     cost_price: number;  // Собівартість продажу
@@ -79,7 +84,7 @@ interface Sale {
 
 
 const SalesHistoryTable: React.FC = () => {
-    const [salesData, setSalesData] = useState<Sale[]>([]);
+    const [salesData, setSalesData] = useState<SaleItemInfo[]>([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -92,7 +97,7 @@ const SalesHistoryTable: React.FC = () => {
 
     const [expandedSale, setExpandedSale] = useState<number | null>(null);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
-    const [selectedSale, setSelectedSale] = useState<Sale | null>(null);
+    const [selectedSale, setSelectedSale] = useState<SaleItemInfo | null>(null);
 
     useEffect(() => {
         axiosInstance
@@ -134,12 +139,12 @@ const SalesHistoryTable: React.FC = () => {
         setExpandedSale(expandedSale === saleId ? null : saleId);
     };
 
-    const handleModalOpen = (sale: Sale) => {
+    const handleModalInfoOpen = (sale: SaleItemInfo) => {
         setSelectedSale(sale);
         setModalOpen(true);
     };
 
-    const handleModalClose = () => {
+    const handleModalInfoClose = () => {
         setModalOpen(false);
         setSelectedSale(null);
     };
@@ -241,7 +246,7 @@ const SalesHistoryTable: React.FC = () => {
                                     Назва
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell><Typography>Покупець</Typography></TableCell> {/* Додаємо колонку для покупця */}
+                            <TableCell><Typography>Покупець</Typography></TableCell>
                             <TableCell><Typography>Сумма</Typography></TableCell>
                             <TableCell><Typography>Собівартість</Typography></TableCell>
                             <TableCell><Typography>Вигода</Typography></TableCell>
@@ -260,17 +265,15 @@ const SalesHistoryTable: React.FC = () => {
                                             ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}`
                                             : sale.product_name}</TableCell>
                                         <TableCell>{sale.customer.name}</TableCell>
-
                                         <TableCell size={"small"}>{sale.total_price}</TableCell>
                                         <TableCell size={"small"}>{sale.cost_price}</TableCell>
                                         <TableCell size={"small"}>{sale.profit}</TableCell>
                                         <TableCell size={"small"}>{sale.sale_date}</TableCell>
                                         <TableCell>
-
                                             <IconButton onClick={() => handleExpandClick(sale.sale_history_id)}>
                                                 <ExpandMore/>
                                             </IconButton>
-                                            <IconButton onClick={() => handleModalOpen(sale)}>
+                                            <IconButton onClick={() => handleModalInfoOpen(sale)}>
                                                 <Tooltip title="Інформація">
                                                     <Info/>
                                                 </Tooltip>
@@ -279,103 +282,10 @@ const SalesHistoryTable: React.FC = () => {
                                     </TableRow>
                                     {(expandedSale === sale.sale_history_id) && (sale.type === 'gift_set'
                                         ?
-                                        (<TableRow>
-                                            <TableCell colSpan={7}>
-                                                <Collapse in={expandedSale === sale.sale_history_id} timeout="auto"
-                                                          unmountOnExit>
-                                                    <Table size="small">
-                                                        <TableHead>
-                                                            <TableRow>
-                                                                <TableCell>Тип</TableCell>
-                                                                <TableCell>Назва</TableCell>
-                                                                <TableCell>Постачальник</TableCell>
-                                                                <TableCell>Ціна за од.</TableCell>
-                                                                <TableCell>Кількість</TableCell>
-                                                                <TableCell>Сума</TableCell>
-                                                            </TableRow>
-                                                        </TableHead>
-                                                        <TableBody>
-                                                            {sale.products && sale.products.map((product) => (
-                                                                <TableRow key={product.product_id}>
-                                                                    <TableCell>
-                                                                        <Tooltip title="Одиничний товар">
-                                                                            <ShoppingBag fontSize={"small"}
-                                                                            />
-                                                                        </Tooltip>
-                                                                    </TableCell>
-                                                                    <TableCell>{product.name}</TableCell>
-                                                                    <TableCell>{product.supplier.name}</TableCell>
-                                                                    <TableCell>{product.unit_price}</TableCell>
-                                                                    <TableCell>{product.quantity}</TableCell>
-                                                                    <TableCell>{product.total_price}</TableCell>
-                                                                </TableRow>
-                                                            ))}
-                                                            {sale.packagings && sale.packagings.map((packaging) => (
-                                                                <TableRow key={packaging.packaging_id}>
-                                                                    <TableCell>
-                                                                        <Tooltip title="Пакування">
-                                                                            <Luggage fontSize={"small"}/>
-                                                                        </Tooltip>
-                                                                    </TableCell>
-                                                                    <TableCell>{packaging.packaging_name}</TableCell>
-                                                                    <TableCell>{packaging.supplier.name}</TableCell>
-                                                                    <TableCell>{packaging.unit_price}</TableCell>
-                                                                    <TableCell>{packaging.quantity}</TableCell>
-                                                                    <TableCell>{packaging.total_price}</TableCell>
-                                                                </TableRow>
-                                                            ))}
-                                                        </TableBody>
-                                                    </Table>
-                                                </Collapse>
-                                            </TableCell>
-                                        </TableRow>)
+                                        <SaleGiftSetDetails sale={sale}/>
                                         :
-                                        (
-                                            <TableRow>
-                                                <TableCell colSpan={7}>
-                                                    <Collapse in={expandedSale === sale.sale_history_id} timeout="auto"
-                                                              unmountOnExit>
-                                                        <Table size="small">
-                                                            <TableHead>
-                                                                <TableRow>
-                                                                    <TableCell>Тип</TableCell>
-                                                                    <TableCell>Назва</TableCell>
-                                                                    <TableCell>Постачальник</TableCell>
-                                                                    <TableCell>Ціна за од.</TableCell>
-                                                                    <TableCell>Кількість</TableCell>
-                                                                    <TableCell>Сума</TableCell>
-                                                                </TableRow>
-                                                            </TableHead>
-                                                            <TableBody>
-                                                                {/* Основний товар */}
-                                                                <TableRow>
-                                                                    <TableCell>Товар</TableCell>
-                                                                    <TableCell>{sale.product_name}</TableCell>
-                                                                    <TableCell>{sale.supplier?.name || 'Невідомо'}</TableCell>
-                                                                    <TableCell>{sale.unit_price}</TableCell>
-                                                                    <TableCell>{sale.quantity_sold}</TableCell>
-                                                                    <TableCell>{sale.total_price}</TableCell>
-                                                                </TableRow>
-
-                                                                {/* Пакування (якщо є) */}
-                                                                {sale.packaging_details && sale.packaging_details.length > 0 && (
-                                                                    sale.packaging_details.map(packaging => (
-                                                                        <TableRow key={packaging.package_id}>
-                                                                            <TableCell>Пакування</TableCell>
-                                                                            <TableCell>{packaging.packaging_name}</TableCell>
-                                                                            <TableCell>{packaging.supplier?.name || 'Невідомо'}</TableCell>
-                                                                            <TableCell>{packaging.unit_price}</TableCell>
-                                                                            <TableCell>{packaging.quantity_sold}</TableCell>
-                                                                            <TableCell>{packaging.total_price}</TableCell>
-                                                                        </TableRow>
-                                                                    ))
-                                                                )}
-                                                            </TableBody>
-                                                        </Table>
-                                                    </Collapse>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
+                                        <SaleProductDetails sale={sale}/>)
+                                    }
                                 </React.Fragment>
                             )
                             )
@@ -398,21 +308,8 @@ const SalesHistoryTable: React.FC = () => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-
-            <Modal open={modalOpen} onClose={handleModalClose}>
-                <Box sx={{width: 400, backgroundColor: 'white', padding: 2, margin: 'auto', mt: 10}}>
-                    <h2>Інформація про продаж</h2>
-                    {selectedSale && (
-                        <>
-                            <p><strong>Назва:</strong> {selectedSale.product_name}</p>
-                            <p><strong>Кількість:</strong> {selectedSale.quantity_sold}</p>
-                            <p><strong>Ціна:</strong> {selectedSale.unit_price}</p>
-                            <p><strong>Сума:</strong> {selectedSale.total_price}</p>
-                            <p><strong>Дата:</strong> {selectedSale.sale_date}</p>
-                        </>
-                    )}
-                </Box>
-            </Modal>
+            <SalesHistoryInfoModal handleModalInfoClose={handleModalInfoClose} modalOpen={modalOpen}
+                                   selectedSale={selectedSale}/>
         </div>
     );
 };
