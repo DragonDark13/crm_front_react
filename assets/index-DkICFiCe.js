@@ -48602,6 +48602,30 @@ const AddSupplierModal = ({ open, handleCloseAddSupplierModal, handleAddSupplier
     }
   );
 };
+function parseDecimalInput(input) {
+  const value = input.replace(",", ".");
+  const regex = /^\d*\.?\d{0,2}$/;
+  if (regex.test(value) || value.endsWith(".")) {
+    return Number(value);
+  }
+  return null;
+}
+const AddButton = ({ text = "Додати", ...rest }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { ...rest, variant: "contained", color: "secondary", endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(AddIcon, {}), children: text });
+};
+const DateFieldCustom = ({ ...rest }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    TextField,
+    {
+      ...rest,
+      sx: { marginBottom: 0 },
+      size: "small",
+      type: "date",
+      fullWidth: true,
+      margin: "normal"
+    }
+  );
+};
 const SnackbarMessageContext = reactExports.createContext(void 0);
 const useSnackbarMessage = () => {
   const context = reactExports.useContext(SnackbarMessageContext);
@@ -48637,29 +48661,38 @@ const SnackbarMessageProvider = ({ children }) => {
     )
   ] });
 };
-function parseDecimalInput(input) {
-  const value = input.replace(",", ".");
-  const regex = /^\d*\.?\d{0,2}$/;
-  if (regex.test(value) || value.endsWith(".")) {
-    return Number(value);
-  }
-  return null;
-}
-const AddButton = ({ text = "Додати", ...rest }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { ...rest, variant: "contained", color: "secondary", endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(AddIcon, {}), children: text });
-};
-const DateFieldCustom = ({ ...rest }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    TextField,
-    {
-      ...rest,
-      sx: { marginBottom: 0 },
-      size: "small",
-      type: "date",
-      fullWidth: true,
-      margin: "normal"
-    }
+const useSupplierModal = (modalNames2, editProduct, setEditProduct) => {
+  const [modalState, setModalState] = reactExports.useState(
+    Object.fromEntries(modalNames2.map((modal) => [modal, false]))
   );
+  const { fetchSuppliersFunc } = useSuppliers();
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const handleModalOpen = (modal) => {
+    setModalState((prev2) => ({ ...prev2, [modal]: true }));
+  };
+  const handleModalClose = (modal) => {
+    setModalState((prev2) => ({ ...prev2, [modal]: false }));
+  };
+  const handleAddSupplier = (newSupplier) => {
+    addSupplier(newSupplier).then((response) => {
+      handleModalClose("openAddSupplierOpen");
+      fetchSuppliersFunc();
+      setEditProduct({
+        ...editProduct,
+        supplier_id: response.supplier_id
+      });
+      showSnackbarMessage("Supplier completed successfully!", "success");
+    }).catch((error) => {
+      console.error("There was an error saving the supplier!", error);
+      showSnackbarMessage("There was an error saving the supplier!", "error");
+    });
+  };
+  return {
+    modalState,
+    handleModalOpen,
+    handleModalClose,
+    handleAddSupplier
+  };
 };
 const AddProductModal = ({
   openAdd,
@@ -48678,15 +48711,8 @@ const AddProductModal = ({
     available_quantity: "",
     price_per_item: ""
   });
-  const [modalState, setModalState] = reactExports.useState(
-    Object.fromEntries(modalNames.map((modal) => [modal, false]))
-  );
-  const handleModalOpen = (modal) => {
-    setModalState((prevState) => ({ ...prevState, [modal]: true }));
-  };
-  const { showSnackbarMessage } = useSnackbarMessage();
   const { categories } = useCategories();
-  const { suppliers, fetchSuppliersFunc } = useSuppliers();
+  const { suppliers } = useSuppliers();
   const [diffWithPrice, setDiffWithPrice] = reactExports.useState(0);
   const validateFields = () => {
     const newErrors = {
@@ -48729,25 +48755,12 @@ const AddProductModal = ({
       setDiffWithPrice(newProduct.selling_price_per_item - newProduct.purchase_price_per_item);
     }
   }, [newProduct.selling_price_per_item, newProduct.purchase_price_per_item]);
-  const handleModalClose = (modal) => {
-    setModalState((prevState) => ({ ...prevState, [modal]: false }));
-  };
-  const handleAddSupplier = (newSupplier) => {
-    addSupplier(newSupplier).then((response) => {
-      handleModalClose("openAddSupplierOpen");
-      fetchSuppliersFunc();
-      debugger;
-      console.log(response);
-      setNewProduct({
-        ...newProduct,
-        supplier_id: response.supplier_id
-      });
-      showSnackbarMessage("Supplier completed successfully!", "success");
-    }).catch((error) => {
-      console.error("There was an error saving the supplier!", error);
-      showSnackbarMessage("There was an error saving the supplier!", "error");
-    });
-  };
+  const {
+    modalState,
+    handleModalOpen,
+    handleModalClose,
+    handleAddSupplier
+  } = useSupplierModal(modalNames, newProduct, setNewProduct);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       CustomDialog,
@@ -51396,127 +51409,154 @@ const EditProductModal = ({
       setDiffWithPrice(editProduct.selling_price_per_item - editProduct.purchase_price_per_item);
     }
   }, [editProduct.selling_price_per_item, editProduct.purchase_price_per_item]);
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    CustomDialog,
-    {
-      open: openEdit,
-      handleClose: handleCloseEdit,
-      title: "Редагування товару: " + editProduct.name,
-      maxWidth: "md",
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              ProductNameField,
+  const {
+    modalState,
+    handleModalOpen,
+    handleModalClose,
+    handleAddSupplier
+  } = useSupplierModal(modalNames, editProduct, setEditProduct);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      CustomDialog,
+      {
+        open: openEdit,
+        handleClose: handleCloseEdit,
+        title: "Редагування товару: " + editProduct.name,
+        maxWidth: "md",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                ProductNameField,
+                {
+                  label: false,
+                  value: editProduct.name,
+                  onChange: (e2) => handleFieldChange("name", e2.target.value),
+                  error: errors.name
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, alignItems: "start", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  SupplierSelect,
+                  {
+                    suppliers,
+                    value: editProduct.supplier_id,
+                    onChange: (e2) => handleFieldChange("supplier_id", Number(e2.target.value)),
+                    error: errors.supplier
+                  }
+                ) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  AddButton,
+                  {
+                    sx: { marginTop: "16px" },
+                    onClick: () => handleModalOpen("openAddSupplierOpen")
+                  }
+                ) })
+              ] }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                QuantityField,
+                {
+                  onIncrement: incrementQuantity,
+                  onDecrement: decrementQuantity,
+                  value: editProduct.available_quantity,
+                  onChange: (e2) => {
+                    let value = e2.target.value;
+                    value = value.replace(/[^0-9]/g, "");
+                    if (value.startsWith("0")) {
+                      value = value.replace(/^0+/, "");
+                    }
+                    if (/^\d+$/.test(value)) {
+                      handleFieldChange("available_quantity", Number(value));
+                    }
+                  },
+                  error: errors.available_quantity
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                PriceField,
+                {
+                  value: editProduct.purchase_price_per_item,
+                  onChange: (e2) => {
+                    const parsed = parseDecimalInput(e2.target.value);
+                    if (parsed !== null) {
+                      handleFieldChange("purchase_price_per_item", parsed);
+                    }
+                  },
+                  error: errors.price_per_item
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: editProduct.purchase_total_price }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                PriceField,
+                {
+                  label: "ціна за 1шт (продаж)",
+                  value: editProduct.selling_price_per_item,
+                  onChange: (e2) => {
+                    const parsed = parseDecimalInput(e2.target.value);
+                    if (parsed !== null) {
+                      handleFieldChange("selling_price_per_item", parsed);
+                    }
+                  },
+                  error: errors.price_per_item
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+                "Різниця в цінах за 1шт: ",
+                diffWithPrice.toFixed(2),
+                " грн."
+              ] }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              TextField,
               {
-                value: editProduct.name,
-                onChange: (e2) => handleFieldChange("name", e2.target.value),
-                error: errors.name
+                size: "small",
+                required: true,
+                label: "Дата створення",
+                type: "date",
+                value: editProduct.created_date ? formatDate(editProduct.created_date) : "",
+                onChange: (e2) => handleFieldChange("created_date", formatDateToBack(e2.target.value)),
+                fullWidth: true,
+                margin: "normal"
               }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              SupplierSelect,
+            ) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              CategoriesSelect,
               {
-                suppliers,
-                value: editProduct.supplier_id,
-                onChange: (e2) => handleFieldChange("supplier_id", Number(e2.target.value)),
-                error: errors.supplier
+                categories,
+                handleRemoveCategory,
+                selectedCategories: editProduct.category_ids,
+                handleCategoryChange
               }
-            ) })
+            )
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              QuantityField,
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: handleCloseEdit, children: "Закрити" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
               {
-                onIncrement: incrementQuantity,
-                onDecrement: decrementQuantity,
-                value: editProduct.available_quantity,
-                onChange: (e2) => {
-                  let value = e2.target.value;
-                  value = value.replace(/[^0-9]/g, "");
-                  if (value.startsWith("0")) {
-                    value = value.replace(/^0+/, "");
-                  }
-                  if (/^\d+$/.test(value)) {
-                    handleFieldChange("available_quantity", Number(value));
-                  }
-                },
-                error: errors.available_quantity
+                disabled: !isModified || !isAuthenticated,
+                variant: "contained",
+                color: "primary",
+                onClick: handleSave,
+                children: "Зберігти Зміни"
               }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              PriceField,
-              {
-                value: editProduct.purchase_price_per_item,
-                onChange: (e2) => {
-                  const parsed = parseDecimalInput(e2.target.value);
-                  if (parsed !== null) {
-                    handleFieldChange("purchase_price_per_item", parsed);
-                  }
-                },
-                error: errors.price_per_item
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: editProduct.purchase_total_price }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              PriceField,
-              {
-                label: "ціна за 1шт (продаж)",
-                value: editProduct.selling_price_per_item,
-                onChange: (e2) => {
-                  const parsed = parseDecimalInput(e2.target.value);
-                  if (parsed !== null) {
-                    handleFieldChange("selling_price_per_item", parsed);
-                  }
-                },
-                error: errors.price_per_item
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
-              "Різниця в цінах за 1шт: ",
-              diffWithPrice.toFixed(2),
-              " грн."
-            ] }) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TextField,
-            {
-              size: "small",
-              required: true,
-              label: "Дата створення",
-              type: "date",
-              value: editProduct.created_date ? formatDate(editProduct.created_date) : "",
-              onChange: (e2) => handleFieldChange("created_date", formatDateToBack(e2.target.value)),
-              fullWidth: true,
-              margin: "normal"
-            }
-          ) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            CategoriesSelect,
-            {
-              categories,
-              handleRemoveCategory,
-              selectedCategories: editProduct.category_ids,
-              handleCategoryChange
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: handleCloseEdit, children: "Закрити" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              disabled: !isModified || !isAuthenticated,
-              variant: "contained",
-              color: "primary",
-              onClick: handleSave,
-              children: "Зберігти Зміни"
-            }
-          )
-        ] })
-      ]
-    }
-  );
+            )
+          ] })
+        ]
+      }
+    ),
+    modalState.openAddSupplierOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddSupplierModal,
+      {
+        isAuthenticated,
+        handleAddSupplier,
+        open: modalState.openAddSupplierOpen,
+        handleCloseAddSupplierModal: () => handleModalClose("openAddSupplierOpen")
+      }
+    )
+  ] });
 };
 const StockHistoryTable = ({ productHistory, sortByDate }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
