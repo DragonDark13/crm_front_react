@@ -16,13 +16,11 @@ import {ICategory, INewProduct, INewSupplier, modalNames, ModalNames} from "../.
 import {useCategories} from "../../../Provider/CategoryContext";
 import {useSuppliers} from "../../../Provider/SupplierContext";
 import AddSupplierModal from "../../AddSupplierModal/AddSupplierModal";
-import {addSupplier} from "../../../../api/_supplier";
-import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
-import AddIcon from "@mui/icons-material/Add";
 import {parseDecimalInput} from "../../../../utils/_validation";
 import CancelButton from "../../../Buttons/CancelButton";
 import AddButton from "../../../Buttons/AddButton";
 import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
+import {useSupplierModal} from "../../../../hooks/useSupplierModal";
 //TODO додай постачальників таблиці
 // TODO Повідомлення про успіх
 // TODO Окремі поля для ціни закупівельної і проданої
@@ -59,19 +57,11 @@ const AddProductModal = ({
         price_per_item: ''
     });
 
-    const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
-        Object.fromEntries(modalNames.map(modal => [modal, false])) as Record<ModalNames, boolean>
-    );
 
-    const handleModalOpen = (modal: ModalNames) => {
-        setModalState(prevState => ({...prevState, [modal]: true}));
-    };
-
-    const {showSnackbarMessage} = useSnackbarMessage()
 
 
     const {categories} = useCategories();
-    const {suppliers, fetchSuppliersFunc} = useSuppliers()
+    const {suppliers} = useSuppliers()
 
 
     const [diffWithPrice, setDiffWithPrice] = useState(0)
@@ -129,33 +119,13 @@ const AddProductModal = ({
         }
     }, [newProduct.selling_price_per_item, newProduct.purchase_price_per_item])
 
-    const handleModalClose = (modal: ModalNames) => {
-        setModalState(prevState => ({...prevState, [modal]: false}));
-    };
 
-    const handleAddSupplier = (newSupplier: INewSupplier) => {
-
-        addSupplier(newSupplier)
-            .then((response) => {
-                handleModalClose("openAddSupplierOpen");
-                fetchSuppliersFunc(); // Оновити список постачальників після додавання
-                debugger
-                console.log(response);
-
-                setNewProduct({
-                    ...newProduct,
-                    supplier_id: response.supplier_id
-                })
-
-
-                showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
-
-            })
-            .catch((error) => {
-                console.error('There was an error saving the supplier!', error);
-                showSnackbarMessage('There was an error saving the supplier!', "error");
-            });
-    };
+    const {
+        modalState,
+        handleModalOpen,
+        handleModalClose,
+        handleAddSupplier
+    } = useSupplierModal(modalNames, newProduct , setNewProduct);
 
 
     return (
@@ -193,13 +163,6 @@ const AddProductModal = ({
                                 <Grid item xs={12} md={4}>
                                     <AddButton sx={{marginTop: '16px'}}
                                                onClick={() => handleModalOpen("openAddSupplierOpen")}/>
-                                    {/*<Button*/}
-                                    {/*    color="secondary"*/}
-                                    {/*    size={"large"} variant={"contained"} endIcon={<AddIcon/>}*/}
-                                    {/*    onClick={() => handleModalOpen("openAddSupplierOpen")}*/}
-                                    {/*>*/}
-                                    {/*    Додати*/}
-                                    {/*</Button>*/}
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -288,82 +251,25 @@ const AddProductModal = ({
                     </Grid>
                     <Grid container spacing={2}>
 
-                        {/*<Grid item xs={12} sm={6} md={2}>*/}
-                        {/*    <PriceField*/}
-                        {/*        value={newProduct.purchase_price_per_item}*/}
-                        {/*        onChange={(e) => {*/}
-                        {/*            const parsed = parseDecimalInput(e.target.value);*/}
-                        {/*            if (parsed !== null) {*/}
-
-                        {/*                setNewProduct({*/}
-                        {/*                    ...newProduct,*/}
-                        {/*                    purchase_price_per_item: parsed  // Оновлюємо*/}
-                        {/*                    // значення або*/}
-                        {/*                    // ставимо 0*/}
-                        {/*                });*/}
-                        {/*            }*/}
-
-                        {/*        }}*/}
-
-                        {/*        error={errors.price_per_item}*/}
-                        {/*    />*/}
-
-
-                        {/*</Grid>*/}
                         <Grid item xs={12} sm={6} md={2}>
                             <TotalPriceField value={newProduct.purchase_total_price}/>
                         </Grid>
-                        {/*<Grid item xs={12} sm={6} md={2}>*/}
-                        {/*    <PriceField*/}
-                        {/*        label="ціна за 1шт (продаж)"*/}
-                        {/*        value={newProduct.selling_price_per_item}*/}
-                        {/*        onChange={(e) => {*/}
-                        {/*            const parsed = parseDecimalInput(e.target.value);*/}
-                        {/*            if (parsed !== null) {*/}
-
-                        {/*                setNewProduct({*/}
-                        {/*                    ...newProduct,*/}
-                        {/*                    selling_price_per_item: parsed  // Оновлюємо*/}
-                        {/*                    // значення або*/}
-                        {/*                    // ставимо 0*/}
-                        {/*                });*/}
-                        {/*            }*/}
-
-                        {/*        }}*/}
-
-                        {/*        error={errors.price_per_item}*/}
-                        {/*    />*/}
-
-                        {/*</Grid>*/}
 
                         <Grid item xs={12} sm={6} md={3}>
-                            <DateFieldCustom  value={newProduct.created_date} label="Дата створення"
+                            <DateFieldCustom value={newProduct.created_date} label="Дата створення"
                                              onChange={(e) => setNewProduct({
                                                  ...newProduct,
                                                  created_date: e.target.value
                                              })}/>
-                            {/*<TextField*/}
-                            {/*    label="Дата створення"*/}
-                            {/*    type="date"*/}
-                            {/*    value={newProduct.created_date}*/}
-                            {/*    onChange={(e) => setNewProduct({...newProduct, created_date: e.target.value})}*/}
-                            {/*    fullWidth*/}
-                            {/*    margin="normal"*/}
-                            {/*/>*/}
+
 
                         </Grid>
-
-                        {/*<Grid item xs={12} md={12} marginBottom={3}>*/}
-                        {/*    <Typography>*/}
-                        {/*        Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.*/}
-                        {/*    </Typography>*/}
-                        {/*</Grid>*/}
 
 
                     </Grid>
                     <Grid mt={2} container alignItems={"center"}>
                         <Grid item xs={12} sm={12} md={12}>
-                            <CategoriesSelect  categories={categories} selectedCategories={selectedCategories}
+                            <CategoriesSelect categories={categories} selectedCategories={selectedCategories}
                                               handleCategoryChange={handleCategoryChange}
                                               handleRemoveCategory={handleRemoveCategory}/>
                         </Grid>

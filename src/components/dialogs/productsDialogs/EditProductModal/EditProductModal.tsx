@@ -13,10 +13,13 @@ import QuantityField from "../../../FormComponents/QuantityField";
 import CategoriesSelect from "../../../FormComponents/CategoriesSelect";
 import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../../utils/function";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
-import {IEditProduct,} from "../../../../utils/types";
+import {IEditProduct, INewSupplier, modalNames,} from "../../../../utils/types";
 import {useCategories} from "../../../Provider/CategoryContext";
 import {useSuppliers} from "../../../Provider/SupplierContext";
 import {parseDecimalInput} from "../../../../utils/_validation";
+import AddSupplierModal from "../../AddSupplierModal/AddSupplierModal";
+import {useSupplierModal} from "../../../../hooks/useSupplierModal";
+import AddButton from "../../../Buttons/AddButton";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -237,137 +240,162 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     }, [editProduct.selling_price_per_item, editProduct.purchase_price_per_item])
 
 
+    const {
+        modalState,
+        handleModalOpen,
+        handleModalClose,
+        handleAddSupplier
+    } = useSupplierModal(modalNames, editProduct, setEditProduct);
+
     return (
-        <CustomDialog
-            open={openEdit}
-            handleClose={handleCloseEdit}
-            title={"Редагування товару: " + editProduct.name}
-            maxWidth="md"
-        >
-            <DialogContent>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        <ProductNameField
-                            value={editProduct.name}
-                            onChange={(e) => handleFieldChange('name', e.target.value)}
-                            error={errors.name}
-                        />
+        <React.Fragment>
+            <CustomDialog
+                open={openEdit}
+                handleClose={handleCloseEdit}
+                title={"Редагування товару: " + editProduct.name}
+                maxWidth="md"
+            >
+                <DialogContent>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <ProductNameField
+                                label={false}
+                                value={editProduct.name}
+                                onChange={(e) => handleFieldChange('name', e.target.value)}
+                                error={errors.name}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Grid container spacing={2} alignItems={"start"}>
+                                <Grid item xs={12} md={8}>
+                                    <SupplierSelect
+                                        suppliers={suppliers}
+                                        value={editProduct.supplier_id}
+                                        onChange={(e) => handleFieldChange('supplier_id', Number(e.target.value))}
+                                        error={errors.supplier}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={4}>
+                                    <AddButton sx={{marginTop: '16px'}}
+                                               onClick={() => handleModalOpen("openAddSupplierOpen")}/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <SupplierSelect
-                            suppliers={suppliers}
-                            value={editProduct.supplier_id}
-                            onChange={(e) => handleFieldChange('supplier_id', Number(e.target.value))}
-                            error={errors.supplier}
-                        />
-                    </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <QuantityField
-                            onIncrement={incrementQuantity}
-                            onDecrement={decrementQuantity}
-                            value={editProduct.available_quantity}
-                            onChange={(e) => {
-                                // Видаляємо ведучий 0, якщо такий є
-                                let value = e.target.value;
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <QuantityField
+                                onIncrement={incrementQuantity}
+                                onDecrement={decrementQuantity}
+                                value={editProduct.available_quantity}
+                                onChange={(e) => {
+                                    // Видаляємо ведучий 0, якщо такий є
+                                    let value = e.target.value;
 
-                                value = value.replace(/[^0-9]/g, '');
+                                    value = value.replace(/[^0-9]/g, '');
 
 
-                                if (value.startsWith('0')) {
-                                    value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
-                                }
-                                if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
-                                    handleFieldChange('available_quantity', Number(value));
-                                }
-                            }}
+                                    if (value.startsWith('0')) {
+                                        value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
+                                    }
+                                    if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
+                                        handleFieldChange('available_quantity', Number(value));
+                                    }
+                                }}
 
-                            error={errors.available_quantity}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <PriceField
-                            value={editProduct.purchase_price_per_item}
-                            onChange={(e) => {
-                                const parsed = parseDecimalInput(e.target.value);
-                                if (parsed !== null) {
-                                    handleFieldChange('purchase_price_per_item', parsed);
-
-
-                                }
-
-                            }}
-                            error={errors.price_per_item}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <TotalPriceField value={editProduct.purchase_total_price}/>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={3}>
-                        <PriceField
-                            label="ціна за 1шт (продаж)"
-                            value={editProduct.selling_price_per_item}
-                            onChange={(e) => {
-                                const parsed = parseDecimalInput(e.target.value);
-                                if (parsed !== null) {
-
-                                    handleFieldChange('selling_price_per_item', parsed);
-                                }
-
-                            }}
-
-                            error={errors.price_per_item}
-                        />
-
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <Typography>
-                            Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.
-                        </Typography>
-                    </Grid>
+                                error={errors.available_quantity}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <PriceField
+                                value={editProduct.purchase_price_per_item}
+                                onChange={(e) => {
+                                    const parsed = parseDecimalInput(e.target.value);
+                                    if (parsed !== null) {
+                                        handleFieldChange('purchase_price_per_item', parsed);
 
 
-                </Grid>
-                <Grid container>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            size={"small"}
-                            required
-                            label="Дата створення"
-                            type="date"
-                            value={editProduct.created_date ? formatDate(editProduct.created_date) : ''}
-                            onChange={(e) => handleFieldChange("created_date", formatDateToBack(e.target.value))}
-                            fullWidth
-                            margin="normal"
-                        />
+                                    }
+
+                                }}
+                                error={errors.price_per_item}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <TotalPriceField value={editProduct.purchase_total_price}/>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={3}>
+                            <PriceField
+                                label="ціна за 1шт (продаж)"
+                                value={editProduct.selling_price_per_item}
+                                onChange={(e) => {
+                                    const parsed = parseDecimalInput(e.target.value);
+                                    if (parsed !== null) {
+
+                                        handleFieldChange('selling_price_per_item', parsed);
+                                    }
+
+                                }}
+
+                                error={errors.price_per_item}
+                            />
+
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Typography>
+                                Різниця в цінах за 1шт: {diffWithPrice.toFixed(2)} грн.
+                            </Typography>
+                        </Grid>
+
 
                     </Grid>
-                    {/*<Grid item xs={12} sm={6} md={8}>*/}
-                    {/*   */}
-                    {/*</Grid>*/}
+                    <Grid container>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <TextField
+                                size={"small"}
+                                required
+                                label="Дата створення"
+                                type="date"
+                                value={editProduct.created_date ? formatDate(editProduct.created_date) : ''}
+                                onChange={(e) => handleFieldChange("created_date", formatDateToBack(e.target.value))}
+                                fullWidth
+                                margin="normal"
+                            />
 
-                </Grid>
+                        </Grid>
+                        {/*<Grid item xs={12} sm={6} md={8}>*/}
+                        {/*   */}
+                        {/*</Grid>*/}
 
-                <CategoriesSelect
-                    categories={categories}
-                    handleRemoveCategory={handleRemoveCategory}
-                    selectedCategories={editProduct.category_ids}
-                    handleCategoryChange={handleCategoryChange}
-                />
+                    </Grid>
 
-            </DialogContent>
+                    <CategoriesSelect
+                        categories={categories}
+                        handleRemoveCategory={handleRemoveCategory}
+                        selectedCategories={editProduct.category_ids}
+                        handleCategoryChange={handleCategoryChange}
+                    />
 
-            <DialogActions>
-                <Button variant="outlined" onClick={handleCloseEdit}>
-                    Закрити
-                </Button>
-                <Button disabled={!isModified || !isAuthenticated} variant="contained" color="primary"
-                        onClick={handleSave}>
-                    Зберігти Зміни
-                </Button>
-            </DialogActions>
-        </CustomDialog>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button variant="outlined" onClick={handleCloseEdit}>
+                        Закрити
+                    </Button>
+                    <Button disabled={!isModified || !isAuthenticated} variant="contained" color="primary"
+                            onClick={handleSave}>
+                        Зберігти Зміни
+                    </Button>
+                </DialogActions>
+            </CustomDialog>
+            {modalState.openAddSupplierOpen &&
+            <AddSupplierModal
+                isAuthenticated={isAuthenticated}
+                handleAddSupplier={handleAddSupplier}
+                open={modalState.openAddSupplierOpen}
+                handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
+            />}
+        </React.Fragment>
     );
 };
 
