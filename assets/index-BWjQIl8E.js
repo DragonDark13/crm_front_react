@@ -49100,6 +49100,7 @@ const AddNewCustomerDialog = ({
   newCustomerData,
   isAuthenticated
 }) => {
+  console.log("isAuthenticated", isAuthenticated);
   const [errors, setErrors] = reactExports.useState({});
   const handleInputChange = (e2) => {
     setNewCustomerData({
@@ -55774,7 +55775,8 @@ const EditGiftBoxDialog = ({
   open,
   onClose,
   giftBox,
-  onSave
+  onSave,
+  isAuthenticated
 }) => {
   const { products } = useProducts();
   const { packagingMaterials } = usePackaging();
@@ -55837,112 +55839,121 @@ const EditGiftBoxDialog = ({
     onSave(updatedGiftBox);
     onClose();
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open, onClose, maxWidth: "md", fullWidth: true, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { children: [
-      "Редагування подарункового набору ",
-      giftBox.name
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TextField,
-          {
-            fullWidth: true,
-            label: "Назва набору",
-            value: name,
-            onChange: (e2) => setName(e2.target.value),
-            margin: "normal"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TextField,
-          {
-            fullWidth: true,
-            label: "Опис",
-            value: description,
-            onChange: (e2) => setDescription(e2.target.value),
-            margin: "normal"
-          }
-        ) })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TextField,
-          {
-            fullWidth: true,
-            label: "Ціна набору",
-            type: "number",
-            value: price,
-            onChange: (e2) => setPrice(Number(e2.target.value)),
-            margin: "normal"
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, md: 6, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body1", style: { marginTop: 20 }, children: [
-            "Загальна вартість: ",
-            calculateTotalCost().toFixed(2),
-            " UAH"
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    CustomDialog,
+    {
+      maxWidth: "md",
+      title: `Редагування подарункового набору ${giftBox.name}`,
+      handleClose: onClose,
+      open,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ProductNameField,
+              {
+                label: "Назва набору",
+                value: name,
+                onChange: (e2) => setName(e2.target.value),
+                error: null
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              ProductNameField,
+              {
+                label: "Опис",
+                value: description,
+                onChange: (e2) => setDescription(e2.target.value),
+                error: null
+              }
+            ) })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body1", children: [
-            "Прибуток: ",
-            calculateProfit().toFixed(2),
-            " UAH"
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PriceField,
+              {
+                label: "Ціна набору",
+                value: price,
+                onChange: (e2) => setPrice(Number(e2.target.value))
+              }
+            ) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, md: 6, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body1", style: { marginTop: 20 }, children: [
+                "Загальна вартість: ",
+                calculateTotalCost().toFixed(2),
+                " UAH"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body1", children: [
+                "Прибуток: ",
+                calculateProfit().toFixed(2),
+                " UAH"
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 6, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", style: { marginTop: 20 }, children: "Продукти" }),
+              selectedProducts.map((item) => {
+                var _a2;
+                return /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 1, alignItems: "center", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: (_a2 = products.find((p2) => p2.id === item.product_id)) == null ? void 0 : _a2.name }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    QuantityField,
+                    {
+                      margin: "dense",
+                      value: item.quantity,
+                      onChange: (e2) => handleQuantityChange(item.product_id, Number(e2.target.value), "product"),
+                      onIncrement: () => handleQuantityChange(item.product_id, item.quantity + 1, "product"),
+                      onDecrement: () => handleQuantityChange(item.product_id, item.quantity - 1, "product")
+                    }
+                  ) })
+                ] }, item.product_id);
+              })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 6, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", style: { marginTop: 20 }, children: "Пакування" }),
+              selectedPackaging.map((item) => {
+                var _a2;
+                return /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 1, alignItems: "center", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Grid,
+                    {
+                      item: true,
+                      xs: 6,
+                      children: (_a2 = packagingMaterials.find((m2) => m2.id === item.packaging_id)) == null ? void 0 : _a2.name
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    QuantityField,
+                    {
+                      margin: "dense",
+                      value: item.quantity,
+                      onChange: (e2) => handleQuantityChange(item.packaging_id, Number(e2.target.value), "packaging"),
+                      onIncrement: () => handleQuantityChange(item.packaging_id, item.quantity + 1, "product"),
+                      onDecrement: () => handleQuantityChange(item.packaging_id, item.quantity - 1, "packaging")
+                    }
+                  ) })
+                ] }, item.packaging_id);
+              })
+            ] })
           ] })
-        ] })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 6, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", style: { marginTop: 20 }, children: "Продукти" }),
-          selectedProducts.map((item) => {
-            var _a2;
-            return /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 1, alignItems: "center", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: (_a2 = products.find((p2) => p2.id === item.product_id)) == null ? void 0 : _a2.name }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                QuantityField,
-                {
-                  margin: "dense",
-                  value: item.quantity,
-                  onChange: (e2) => handleQuantityChange(item.product_id, Number(e2.target.value), "product"),
-                  onIncrement: () => handleQuantityChange(item.product_id, item.quantity + 1, "product"),
-                  onDecrement: () => handleQuantityChange(item.product_id, item.quantity - 1, "product")
-                }
-              ) })
-            ] }, item.product_id);
-          })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 6, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", style: { marginTop: 20 }, children: "Пакування" }),
-          selectedPackaging.map((item) => {
-            var _a2;
-            return /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 1, alignItems: "center", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Grid,
-                {
-                  item: true,
-                  xs: 6,
-                  children: (_a2 = packagingMaterials.find((m2) => m2.id === item.packaging_id)) == null ? void 0 : _a2.name
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                QuantityField,
-                {
-                  margin: "dense",
-                  value: item.quantity,
-                  onChange: (e2) => handleQuantityChange(item.packaging_id, Number(e2.target.value), "packaging"),
-                  onIncrement: () => handleQuantityChange(item.packaging_id, item.quantity + 1, "product"),
-                  onDecrement: () => handleQuantityChange(item.packaging_id, item.quantity - 1, "packaging")
-                }
-              ) })
-            ] }, item.packaging_id);
-          })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: onClose }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              disabled: !isAuthenticated,
+              onClick: handleEditGiftBox,
+              variant: "contained",
+              color: "primary",
+              children: "Зберегти"
+            }
+          )
         ] })
-      ] })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: onClose }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleEditGiftBox, variant: "contained", color: "primary", children: "Зберегти" })
-    ] })
-  ] });
+      ]
+    }
+  );
 };
 const GiftSetSaleModal = ({
   open,
@@ -55950,7 +55961,8 @@ const GiftSetSaleModal = ({
   giftSet,
   error,
   handleGiftSell,
-  loading
+  loading,
+  isAuthenticated
 }) => {
   const [saleDate, setSaleDate] = reactExports.useState((/* @__PURE__ */ new Date()).toISOString().split("T")[0]);
   const [sellingPrice, setSellingPrice] = reactExports.useState(giftSet.gift_selling_price || 0);
@@ -55958,6 +55970,7 @@ const GiftSetSaleModal = ({
   reactExports.useState("");
   const { customers, fetchGetAllCustomersFunc, createCustomerFunc } = useCustomers();
   const { showSnackbarMessage } = useSnackbarMessage();
+  console.log("isAuthenticated1 GiftSetSaleModal", isAuthenticated);
   const calculateTotalCost = () => {
     const packagingCost = giftSet.packagings.reduce(
       (total, item) => total + item.price * item.quantity,
@@ -55972,17 +55985,27 @@ const GiftSetSaleModal = ({
   const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = reactExports.useState(false);
   const [newCustomerData, setNewCustomerData] = reactExports.useState({
     contact_info: "",
-    id: 0,
     sales: [],
     name: "",
     email: "",
     phone_number: "",
     address: ""
   });
+  const resetNewCustomerDataModal = () => {
+    setNewCustomerData({
+      contact_info: "",
+      sales: [],
+      name: "",
+      email: "",
+      phone_number: "",
+      address: ""
+    });
+  };
   const handleCreateCustomer = (newCustomerData2) => {
     createCustomerFunc(newCustomerData2).then((response) => {
       console.log("Response:", response);
       setOpenAddNewCustomerDialog(false);
+      resetNewCustomerDataModal();
       showSnackbarMessage("Customer created successfully!", "success");
     }).catch((error2) => {
       console.log("Error Response:", error2.response);
@@ -56055,53 +56078,28 @@ const GiftSetSaleModal = ({
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, alignItems: "center", spacing: 2, children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                TextField,
+                DateFieldCustom,
                 {
                   label: "Sale Date",
-                  type: "date",
                   value: saleDate,
-                  onChange: (e2) => setSaleDate(e2.target.value),
-                  fullWidth: true,
-                  sx: { my: 2 },
-                  InputLabelProps: { shrink: true }
+                  onChange: (e2) => setSaleDate(e2.target.value)
                 }
               ) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                TextField,
+                PriceField,
                 {
+                  sx: { marginBottom: 0 },
                   label: "Selling Price",
-                  type: "number",
                   value: sellingPrice,
-                  onChange: (e2) => setSellingPrice(parseFloat(e2.target.value)),
-                  fullWidth: true,
-                  sx: { my: 2 }
+                  onChange: (e2) => setSellingPrice(parseFloat(e2.target.value))
                 }
               ) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, alignItems: "center", spacing: 2, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { fullWidth: true, margin: "normal", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { id: "supplier-select-label", children: "Покупець" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    Select,
-                    {
-                      label: "Покупець",
-                      value: customer,
-                      onChange: (e2) => setCustomer(e2.target.value),
-                      fullWidth: true,
-                      children: customers.map((customer2) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: customer2.id, children: customer2.name }, customer2.id + customer2.name))
-                    }
-                  )
-                ] }) }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Button,
-                  {
-                    size: "large",
-                    variant: "contained",
-                    endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(AddIcon, {}),
-                    onClick: () => setOpenAddNewCustomerDialog(true),
-                    color: "secondary",
-                    children: "Додати"
-                  }
-                ) })
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerSelect, { customers, value: customer, onChange: (e2) => {
+                  const selectedCustomer = Number(e2.target.value);
+                  setCustomer(selectedCustomer);
+                } }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 4, mt: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { onClick: () => setOpenAddNewCustomerDialog(true) }) })
               ] }) })
             ] })
           ] }),
@@ -56113,7 +56111,7 @@ const GiftSetSaleModal = ({
                 color: "primary",
                 onClick: () => handleGiftSell(giftSet, customer, saleDate, sellingPrice),
                 variant: "contained",
-                disabled: loading,
+                disabled: loading || !isAuthenticated,
                 children: loading ? "Processing..." : "Продати"
               }
             )
@@ -56124,8 +56122,12 @@ const GiftSetSaleModal = ({
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddNewCustomerDialog,
       {
+        isAuthenticated,
         handleAddCustomer: handleCreateCustomer,
-        handleCloseAddNewCustomerDialog: () => setOpenAddNewCustomerDialog(false),
+        handleCloseAddNewCustomerDialog: () => {
+          setOpenAddNewCustomerDialog(false);
+          resetNewCustomerDataModal();
+        },
         openAddNewCustomerDialog,
         setNewCustomerData,
         newCustomerData
@@ -56133,7 +56135,8 @@ const GiftSetSaleModal = ({
     )
   ] });
 };
-const GiftSetList = () => {
+const GiftSetList = ({ isAuthenticated }) => {
+  console.log("isAuthenticated GiftSetList", isAuthenticated);
   const [openDialogEdit, setOpenDialogEdit] = reactExports.useState(false);
   const [sellDialogOpen, setSellDialogOpen] = reactExports.useState(false);
   reactExports.useState("edit");
@@ -56215,11 +56218,8 @@ const GiftSetList = () => {
           " ",
           giftSet.description
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "body1", style: { marginTop: "10px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Зміст:" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { fullWidth: true, size: "small", onClick: () => handleToggleProduct(giftSet.id), children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}),
-          " Продукти"
-        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "body1", style: { marginTop: "10px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Вміст набору:" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}), size: "small", onClick: () => handleToggleProduct(giftSet.id), children: "Продукти" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: expandedProduct === giftSet.id, children: /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { children: giftSet.products.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
           product.name,
           " (x",
@@ -56227,10 +56227,7 @@ const GiftSetList = () => {
           ") -",
           product.price
         ] }, product.product_id)) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { fullWidth: true, size: "small", onClick: () => handleTogglePackaging(giftSet.id), children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}),
-          " Пакування"
-        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { sx: { textAlign: "center" }, endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}), size: "small", onClick: () => handleTogglePackaging(giftSet.id), children: "Пакування" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: expandedPackaging === giftSet.id, children: /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { children: giftSet.packagings.map((packaging) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
           packaging.name,
           " (x",
@@ -56279,6 +56276,7 @@ const GiftSetList = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Button,
           {
+            disabled: !isAuthenticated,
             fullWidth: true,
             size: "small",
             color: "secondary",
@@ -56294,6 +56292,7 @@ const GiftSetList = () => {
     selectedGiftSet && /* @__PURE__ */ jsxRuntimeExports.jsx(
       EditGiftBoxDialog,
       {
+        isAuthenticated,
         open: openDialogEdit,
         onClose: handleDialogClose,
         giftBox: selectedGiftSet,
@@ -56303,6 +56302,7 @@ const GiftSetList = () => {
     selectedGiftSet && /* @__PURE__ */ jsxRuntimeExports.jsx(
       GiftSetSaleModal,
       {
+        isAuthenticated,
         error,
         handleGiftSell,
         loading,
@@ -56376,10 +56376,11 @@ const GiftSetsPage = () => {
     handleModalClose,
     handleAddNewGiftBox
   } = useGiftBoxModal(modalNames, fetchProductsFunc, fetchPackagingOptions);
+  console.log("isAuthenticated3", isAuthenticated);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { marginBlockEnd: 3, variant: "h4", children: "Подарункові бокси" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { onClick: () => handleModalOpen("addNewGiftBox"), text: "Створити подарунковий набір" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(GiftSetList, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(GiftSetList, { isAuthenticated }),
     modalState.addNewGiftBox && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddGiftBoxModal,
       {
