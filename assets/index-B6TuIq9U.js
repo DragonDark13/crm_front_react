@@ -56203,7 +56203,7 @@ const GiftSetList = () => {
     }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 2, children: giftSets.length > 0 ? giftSets.map((giftSet) => /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, mt: 1, spacing: 2, children: giftSets.length > 0 ? giftSets.map((giftSet) => /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "h5", gutterBottom: true, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Назва:" }),
@@ -56313,10 +56313,82 @@ const GiftSetList = () => {
     )
   ] });
 };
+const useGiftBoxModal = (modalNames2, fetchProductsFunc, fetchPackagingOptions) => {
+  const { modalState, open, close } = useModalState(modalNames2);
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const { createNewGiftSet } = useGiftSet();
+  const handleAddNewGiftBox = async (giftBox) => {
+    var _a2, _b2;
+    if (!giftBox.name.trim()) {
+      showSnackbarMessage("The gift set must have a name.", "warning");
+      return;
+    }
+    if (giftBox.selectedProducts.length === 0 && giftBox.selectedPackaging.length === 0) {
+      showSnackbarMessage("The gift set must contain at least one product or packaging.", "warning");
+      return;
+    }
+    const payload = {
+      name: giftBox.name,
+      description: giftBox.description,
+      gift_selling_price: giftBox.price,
+      items: [
+        ...giftBox.selectedProducts.map((item) => ({
+          item_id: item.item_id,
+          item_type: "product",
+          quantity: item.quantity
+        })),
+        ...giftBox.selectedPackaging.map((item) => ({
+          item_id: item.item_id,
+          item_type: "packaging",
+          quantity: item.quantity
+        }))
+      ]
+    };
+    try {
+      await createNewGiftSet(payload);
+      close("addNewGiftBox");
+      fetchProductsFunc();
+      fetchPackagingOptions();
+      showSnackbarMessage("Gift box created successfully!", "success");
+    } catch (error) {
+      const axiosError = error;
+      console.error("Error creating gift box:", axiosError);
+      showSnackbarMessage(
+        "Error creating gift box: " + (((_b2 = (_a2 = axiosError.response) == null ? void 0 : _a2.data) == null ? void 0 : _b2.message) || axiosError.message),
+        "error"
+      );
+    }
+  };
+  return {
+    modalState,
+    handleModalOpen: open,
+    handleModalClose: close,
+    handleAddNewGiftBox
+  };
+};
 const GiftSetsPage = () => {
+  const { fetchProductsFunc } = useProducts();
+  const { fetchPackagingOptions } = usePackaging();
+  const { isAuthenticated } = useAuth();
+  const {
+    modalState,
+    handleModalOpen,
+    handleModalClose,
+    handleAddNewGiftBox
+  } = useGiftBoxModal(modalNames, fetchProductsFunc, fetchPackagingOptions);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { marginBlockEnd: 3, variant: "h4", children: "Подарункові бокси" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(GiftSetList, {})
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { onClick: () => handleModalOpen("addNewGiftBox"), text: "Створити подарунковий набір" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(GiftSetList, {}),
+    modalState.addNewGiftBox && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddGiftBoxModal,
+      {
+        isAuthenticated,
+        handleCloseGiftModal: () => handleModalClose("addNewGiftBox"),
+        openGiftModal: modalState.addNewGiftBox,
+        handleAddNewGiftBox
+      }
+    )
   ] });
 };
 const NotificationPanel = ({ lowQuantityProducts, handleListItemClick }) => {
@@ -56585,7 +56657,9 @@ const fakeDate = {
   getProductHistory: (productId) => {
   },
   getMaterialHistory: (materialId) => {
-  }
+  },
+  getAllGiftSets: [],
+  getAllCustomers: []
 };
 fakeDate.productsFake = [
   {
@@ -57321,60 +57395,64 @@ fakeDate.getMaterialHistory = (materialId) => ({
     }
   ]
 });
+fakeDate.getAllGiftSets = [
+  {
+    "description": "Тестовий набір",
+    "gift_selling_price": 2e3,
+    "id": 2,
+    "name": "Тестовий набір",
+    "packagings": [
+      {
+        "name": "Подарунковий пакет з візерунком",
+        "packaging_id": 3,
+        "price": "9.00",
+        "quantity": 1,
+        "type": "packaging"
+      }
+    ],
+    "products": [
+      {
+        "name": "rtyrtygggggggggggggg",
+        "price": "400.00",
+        "product_id": 13,
+        "quantity": 1,
+        "type": "product"
+      },
+      {
+        "name": "test 2 ryrtyrtyrty",
+        "price": "200.00",
+        "product_id": 12,
+        "quantity": 1,
+        "type": "product"
+      },
+      {
+        "name": "Аптечка туристична",
+        "price": "200.00",
+        "product_id": 9,
+        "quantity": 4,
+        "type": "product"
+      }
+    ],
+    "total_price": 1409
+  }
+];
+fakeDate.getAllCustomers = [
+  {
+    "address": "",
+    "email": "",
+    "id": 1,
+    "name": "test",
+    "phone_number": ""
+  }
+];
 {
-  axiosInstance.interceptors.request.use((request) => {
-    console.log("Mock enabled:", request.url);
-    if (request.url === "/products") {
-      request.adapter = async () => {
-        return {
-          data: fakeDate.productsFake,
-          status: 200,
-          statusText: "OK",
-          headers: {},
-          config: request
-        };
-      };
-    }
-    if (request.url === "/categories") {
-      request.adapter = async () => {
-        return {
-          data: fakeDate.categoriesFake,
-          status: 200,
-          statusText: "OK",
-          headers: {},
-          config: request
-        };
-      };
-    }
-    if (request.url === "/suppliers/list") {
-      request.adapter = async () => {
-        return {
-          data: fakeDate.suppliersListFake,
-          status: 200,
-          statusText: "OK",
-          headers: {},
-          config: request
-        };
-      };
-    }
-    if (request.url === "/get_all_packaging_materials") {
-      request.adapter = async () => {
-        return {
-          data: {
-            "materials": fakeDate.packagingMaterialsFake
-          },
-          status: 200,
-          statusText: "OK",
-          headers: {},
-          config: request
-        };
-      };
-    }
-    if (request.url === "/get_all_purchase_history") {
-      {
+  axiosInstance.interceptors.request.use(
+    (request) => {
+      console.log("Mock enabled:", request.url);
+      if (request.url === "/products") {
         request.adapter = async () => {
           return {
-            data: fakeDate.purchaseHistoryFake,
+            data: fakeDate.productsFake,
             status: 200,
             statusText: "OK",
             headers: {},
@@ -57382,12 +57460,10 @@ fakeDate.getMaterialHistory = (materialId) => ({
           };
         };
       }
-    }
-    if (request.url === "/gel_all_investments") {
-      {
+      if (request.url === "/categories") {
         request.adapter = async () => {
           return {
-            data: fakeDate.investmentsFake,
+            data: fakeDate.categoriesFake,
             status: 200,
             statusText: "OK",
             headers: {},
@@ -57395,35 +57471,111 @@ fakeDate.getMaterialHistory = (materialId) => ({
           };
         };
       }
-    }
-    const match2 = request.url.match(/^\/product\/(\d+)\/history$/);
-    if (match2) {
-      const productId = Number(match2[1]);
-      request.adapter = async () => {
-        return {
-          data: fakeDate.getProductHistory(productId),
-          status: 200,
-          statusText: "OK",
-          headers: {},
-          config: request
+      if (request.url === "/suppliers/list") {
+        request.adapter = async () => {
+          return {
+            data: fakeDate.suppliersListFake,
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            config: request
+          };
         };
-      };
-    }
-    const material_history = request.url.match(/^\/materials\/(\d+)\/history$/);
-    if (material_history) {
-      const materialId = Number(material_history[1]);
-      request.adapter = async () => {
-        return {
-          data: fakeDate.getMaterialHistory(materialId),
-          status: 200,
-          statusText: "OK",
-          headers: {},
-          config: request
+      }
+      if (request.url === "/get_all_packaging_materials") {
+        request.adapter = async () => {
+          return {
+            data: {
+              "materials": fakeDate.packagingMaterialsFake
+            },
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            config: request
+          };
         };
-      };
+      }
+      if (request.url === "/get_all_purchase_history") {
+        {
+          request.adapter = async () => {
+            return {
+              data: fakeDate.purchaseHistoryFake,
+              status: 200,
+              statusText: "OK",
+              headers: {},
+              config: request
+            };
+          };
+        }
+      }
+      if (request.url === "/gel_all_investments") {
+        {
+          request.adapter = async () => {
+            return {
+              data: fakeDate.investmentsFake,
+              status: 200,
+              statusText: "OK",
+              headers: {},
+              config: request
+            };
+          };
+        }
+      }
+      const match2 = request.url.match(/^\/product\/(\d+)\/history$/);
+      if (match2) {
+        const productId = Number(match2[1]);
+        request.adapter = async () => {
+          return {
+            data: fakeDate.getProductHistory(productId),
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            config: request
+          };
+        };
+      }
+      const material_history = request.url.match(/^\/materials\/(\d+)\/history$/);
+      if (material_history) {
+        const materialId = Number(material_history[1]);
+        request.adapter = async () => {
+          return {
+            data: fakeDate.getMaterialHistory(materialId),
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            config: request
+          };
+        };
+      }
+      if (request.url === "/get_all_gift_sets") {
+        {
+          request.adapter = async () => {
+            return {
+              data: fakeDate.getAllGiftSets,
+              status: 200,
+              statusText: "OK",
+              headers: {},
+              config: request
+            };
+          };
+        }
+      }
+      if (request.url === "/get_all_customers") {
+        {
+          request.adapter = async () => {
+            return {
+              data: fakeDate.getAllCustomers,
+              status: 200,
+              statusText: "OK",
+              headers: {},
+              config: request
+            };
+          };
+        }
+      }
+      return request;
     }
-    return request;
-  });
+  );
 }
 client.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SnackbarMessageProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(GiftSetProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(PackagingProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrowserRouter, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) }) }) }) }) }) }) }) }) })
