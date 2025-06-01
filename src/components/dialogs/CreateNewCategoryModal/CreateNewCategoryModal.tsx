@@ -7,12 +7,14 @@ interface ICreateNewCategoryModal {
     openCategoryCreateModal: boolean;
     handleCloseCategoryModal: () => void;
     createNewCategory: (categoryName: string) => void;
+    isAuthenticated:boolean
 }
 
 const CreateNewCategoryModal = ({
                                     openCategoryCreateModal,
                                     handleCloseCategoryModal,
-                                    createNewCategory
+                                    createNewCategory,
+    isAuthenticated
                                 }: ICreateNewCategoryModal) => {
 
     const [categoryName, setCategoryName] = useState<string>('');
@@ -61,7 +63,7 @@ const CreateNewCategoryModal = ({
                     variant="contained"
                     color="primary"
                     onClick={handleAddNewCategory} // Виклик функції збереження
-                    disabled={categoryName.trim().length < 5} // Деактивація кнопки, якщо назва занадто коротка
+                    disabled={categoryName.trim().length < 5 || !isAuthenticated} // Деактивація кнопки, якщо назва занадто коротка
                 >
                     Зберегти категорію
                 </Button>

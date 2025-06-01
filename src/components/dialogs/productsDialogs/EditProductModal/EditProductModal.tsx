@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {
     DialogContent,
     Button,
-    DialogActions, Grid, TextField, Typography,
+    DialogActions, Grid, TextField, Typography, Box,
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 
@@ -20,6 +20,10 @@ import {parseDecimalInput} from "../../../../utils/_validation";
 import AddSupplierModal from "../../AddSupplierModal/AddSupplierModal";
 import {useSupplierModal} from "../../../../hooks/useSupplierModal";
 import AddButton from "../../../Buttons/AddButton";
+import CreateNewCategoryModal from "../../CreateNewCategoryModal/CreateNewCategoryModal";
+import {addNewCategory} from "../../../../api/_categories";
+import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
+import {Add} from "@mui/icons-material";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -240,12 +244,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     }, [editProduct.selling_price_per_item, editProduct.purchase_price_per_item])
 
 
-    const {
-        modalState,
-        handleModalOpen,
-        handleModalClose,
-        handleAddSupplier
-    } = useSupplierModal(modalNames, editProduct, setEditProduct);
+    const supplierModal = useSupplierModal(modalNames, editProduct, setEditProduct);
+
+    const categoryModal = useCreateCategoryModal(modalNames);
 
     return (
         <React.Fragment>
@@ -277,7 +278,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                 </Grid>
                                 <Grid item xs={12} md={4}>
                                     <AddButton sx={{marginTop: '16px'}}
-                                               onClick={() => handleModalOpen("openAddSupplierOpen")}/>
+                                               onClick={() => supplierModal.handleModalOpen("openAddSupplierOpen")}/>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -369,12 +370,22 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
                     </Grid>
 
-                    <CategoriesSelect
-                        categories={categories}
-                        handleRemoveCategory={handleRemoveCategory}
-                        selectedCategories={editProduct.category_ids}
-                        handleCategoryChange={handleCategoryChange}
-                    />
+                    <Grid container spacing={2} mt={1}>
+                        <Grid item xs={12} md={8}>
+                            <CategoriesSelect
+                                categories={categories}
+                                handleRemoveCategory={handleRemoveCategory}
+                                selectedCategories={editProduct.category_ids}
+                                handleCategoryChange={handleCategoryChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <AddButton fullWidth
+                                       onClick={() => categoryModal.handleCategoryModalOpen("openCategoryCreate")}
+                                       text={'Додати категорію'}/>
+                        </Grid>
+                    </Grid>
+
 
                 </DialogContent>
 
@@ -388,13 +399,24 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                     </Button>
                 </DialogActions>
             </CustomDialog>
-            {modalState.openAddSupplierOpen &&
+
+            {supplierModal.modalState.openAddSupplierOpen &&
             <AddSupplierModal
                 isAuthenticated={isAuthenticated}
-                handleAddSupplier={handleAddSupplier}
-                open={modalState.openAddSupplierOpen}
-                handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
+                handleAddSupplier={supplierModal.handleAddSupplier}
+                open={supplierModal.modalState.openAddSupplierOpen}
+                handleCloseAddSupplierModal={() => supplierModal.handleModalClose("openAddSupplierOpen")}
             />}
+
+            {
+                categoryModal.modalState.openCategoryCreate &&
+                <CreateNewCategoryModal
+                    isAuthenticated={isAuthenticated}
+                    createNewCategory={categoryModal.createNewCategory}
+                    openCategoryCreateModal={categoryModal.modalState.openCategoryCreate}
+                    handleCloseCategoryModal={() => categoryModal.handleCategoryModalClose("openCategoryCreate")}
+                />
+            }
         </React.Fragment>
     );
 };

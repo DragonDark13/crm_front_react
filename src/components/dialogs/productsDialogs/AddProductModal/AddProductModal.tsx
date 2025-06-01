@@ -21,6 +21,8 @@ import CancelButton from "../../../Buttons/CancelButton";
 import AddButton from "../../../Buttons/AddButton";
 import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import {useSupplierModal} from "../../../../hooks/useSupplierModal";
+import CreateNewCategoryModal from "../../CreateNewCategoryModal/CreateNewCategoryModal";
+import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
 //TODO додай постачальників таблиці
 // TODO Повідомлення про успіх
 // TODO Окремі поля для ціни закупівельної і проданої
@@ -56,8 +58,6 @@ const AddProductModal = ({
         available_quantity: '',
         price_per_item: ''
     });
-
-
 
 
     const {categories} = useCategories();
@@ -125,7 +125,9 @@ const AddProductModal = ({
         handleModalOpen,
         handleModalClose,
         handleAddSupplier
-    } = useSupplierModal(modalNames, newProduct , setNewProduct);
+    } = useSupplierModal(modalNames, newProduct, setNewProduct);
+
+        const categoryModal = useCreateCategoryModal(modalNames);
 
 
     return (
@@ -267,11 +269,16 @@ const AddProductModal = ({
 
 
                     </Grid>
-                    <Grid mt={2} container alignItems={"center"}>
-                        <Grid item xs={12} sm={12} md={12}>
+                    <Grid mt={2} container spacing={2}>
+                        <Grid item xs={12} sm={12} md={8}>
                             <CategoriesSelect categories={categories} selectedCategories={selectedCategories}
                                               handleCategoryChange={handleCategoryChange}
                                               handleRemoveCategory={handleRemoveCategory}/>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <AddButton fullWidth
+                                       onClick={() => categoryModal.handleCategoryModalOpen("openCategoryCreate")}
+                                       text={'Додати категорію'}/>
                         </Grid>
                     </Grid>
 
@@ -292,6 +299,15 @@ const AddProductModal = ({
                 open={modalState.openAddSupplierOpen}
                 handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
             />}
+            {
+                categoryModal.modalState.openCategoryCreate &&
+                <CreateNewCategoryModal
+                    isAuthenticated={isAuthenticated}
+                    createNewCategory={categoryModal.createNewCategory}
+                    openCategoryCreateModal={categoryModal.modalState.openCategoryCreate}
+                    handleCloseCategoryModal={() => categoryModal.handleCategoryModalClose("openCategoryCreate")}
+                />
+            }
         </React.Fragment>
     );
 };
