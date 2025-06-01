@@ -14,11 +14,15 @@ import {
 import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import {useCustomers} from "../../Provider/CustomerContext";
 import AddIcon from "@mui/icons-material/Add";
-import {ICustomerDetails, IGiftSet} from "../../../utils/types";
+import {ICustomerDetails, IGiftSet, INewGiftCustomerDetails} from "../../../utils/types";
 import AddNewCustomerDialog from "../../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {AxiosError} from "axios";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import CancelButton from "../../Buttons/CancelButton";
+import DateFieldCustom from "../../FormComponents/DateFieldCustom";
+import PriceField from "../../FormComponents/PriceField";
+import CustomerSelect from "../../FormComponents/CustomerSelect";
+import AddButton from "../../Buttons/AddButton";
 
 interface IGiftSetSaleModalProps {
     open: boolean;
@@ -32,6 +36,7 @@ interface IGiftSetSaleModalProps {
     ) => void,
     loading: boolean,
     error: string | null,
+    isAuthenticated: boolean
 }
 
 const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
@@ -40,7 +45,8 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                                                                 giftSet,
                                                                 error,
                                                                 handleGiftSell,
-                                                                loading
+                                                                loading,
+                                                                isAuthenticated
                                                             }) => {
     const [saleDate, setSaleDate] = useState<string>(new Date().toISOString().split('T')[0]); // Встановлення поточної дати за замовчуванням
     const [sellingPrice, setSellingPrice] = useState<number>(giftSet.gift_selling_price || 0);
@@ -49,6 +55,9 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
 
     const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
     const {showSnackbarMessage} = useSnackbarMessage();
+
+    console.log("isAuthenticated1 GiftSetSaleModal", isAuthenticated);
+
 
     const calculateTotalCost = () => {
         const packagingCost = giftSet.packagings.reduce(
@@ -89,18 +98,33 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
     // };
 
     const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false);
-    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
+    const [newCustomerData, setNewCustomerData] = useState<INewGiftCustomerDetails>({
         contact_info: "",
-        id: 0,
         sales: [],
-        name: '', email: '', phone_number: '', address: ''
+        name: '',
+        email: '',
+        phone_number: '',
+        address: ''
     });
 
-    const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
+    const resetNewCustomerDataModal = () => {
+
+        setNewCustomerData({
+            contact_info: "",
+            sales: [],
+            name: '',
+            email: '',
+            phone_number: '',
+            address: ''
+        })
+    }
+
+    const handleCreateCustomer = (newCustomerData: INewGiftCustomerDetails) => {
         createCustomerFunc(newCustomerData)
             .then(response => {
                 console.log('Response:', response);
                 setOpenAddNewCustomerDialog(false);
+                resetNewCustomerDataModal()
                 showSnackbarMessage('Customer created successfully!', 'success');
             })
             .catch((error: AxiosError) => {
@@ -158,53 +182,59 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                     </Typography>
                     <Grid container alignItems={"center"} spacing={2}>
                         <Grid item xs={12} md={3}>
-                            <TextField
-                                label="Sale Date"
-                                type="date"
-                                value={saleDate}
-                                onChange={(e) => setSaleDate(e.target.value)}
-                                fullWidth
-                                sx={{my: 2}}
-                                InputLabelProps={{shrink: true}}
-                            />
+                            <DateFieldCustom label="Sale Date" value={saleDate}
+                                             onChange={(e) => setSaleDate(e.target.value)}/>
+                            {/*<TextField*/}
+                            {/*    label="Sale Date"*/}
+                            {/*    type="date"*/}
+                            {/*    value={saleDate}*/}
+                            {/*    onChange={(e) => setSaleDate(e.target.value)}*/}
+                            {/*    fullWidth*/}
+                            {/*    sx={{my: 2}}*/}
+                            {/*    InputLabelProps={{shrink: true}}*/}
+                            {/*/>*/}
 
                         </Grid>
                         <Grid item xs={12} md={3}>
-                            <TextField
-                                label="Selling Price"
-                                type="number"
-                                value={sellingPrice}
-                                onChange={(e) => setSellingPrice(parseFloat(e.target.value))}
-                                fullWidth
-                                sx={{my: 2}}
-                            />
+                            <PriceField sx={{marginBottom: 0}} label="Selling Price" value={sellingPrice}
+                                        onChange={(e) => setSellingPrice(parseFloat(e.target.value))}/>
+                            {/*<TextField*/}
+                            {/*    label="Selling Price"*/}
+                            {/*    type="number"*/}
+                            {/*    value={sellingPrice}*/}
+                            {/*    onChange={(e) => setSellingPrice(parseFloat(e.target.value))}*/}
+                            {/*    fullWidth*/}
+                            {/*    sx={{my: 2}}*/}
+                            {/*/>*/}
 
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <Grid container alignItems={"center"} spacing={2}>
                                 <Grid item xs={12} sm={8}>
-                                    <FormControl fullWidth margin="normal">
-                                        <InputLabel id="supplier-select-label">Покупець</InputLabel>
-                                        <Select
-                                            label="Покупець"
-                                            value={customer}
-                                            onChange={(e) => setCustomer(e.target.value)}
-                                            fullWidth
-                                        >
-                                            {customers.map((customer) => (
-                                                <MenuItem key={customer.id + customer.name} value={customer.id}>
-                                                    {customer.name}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
+                                    <CustomerSelect customers={customers} value={customer} onChange={(e) => {
+                                        const selectedCustomer = Number(e.target.value);
+                                        setCustomer(selectedCustomer)
+                                    }}/>
+
+                                    {/*<FormControl fullWidth margin="normal">*/}
+                                    {/*    <InputLabel id="supplier-select-label">Покупець</InputLabel>*/}
+                                    {/*    <Select*/}
+                                    {/*        label="Покупець"*/}
+                                    {/*        value={customer}*/}
+                                    {/*        onChange={(e) => setCustomer(e.target.value)}*/}
+                                    {/*        fullWidth*/}
+                                    {/*    >*/}
+                                    {/*        {customers.map((customer) => (*/}
+                                    {/*            <MenuItem key={customer.id + customer.name} value={customer.id}>*/}
+                                    {/*                {customer.name}*/}
+                                    {/*            </MenuItem>*/}
+                                    {/*        ))}*/}
+                                    {/*    </Select>*/}
+                                    {/*</FormControl>*/}
                                 </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <Button size={"large"} variant={"contained"} endIcon={<AddIcon/>}
-                                            onClick={() => setOpenAddNewCustomerDialog(true)}
-                                            color="secondary">
-                                        Додати
-                                    </Button>
+                                <Grid item xs={12} sm={4} mt={2}>
+                                    <AddButton onClick={() => setOpenAddNewCustomerDialog(true)}/>
+
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -221,15 +251,19 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
 
                         onClick={() => handleGiftSell(giftSet, customer, saleDate, sellingPrice)}
                         variant="contained"
-                        disabled={loading}
+                        disabled={loading|| !isAuthenticated}
                     >
                         {loading ? 'Processing...' : 'Продати'}
                     </Button>
                 </DialogActions>
             </CustomDialog>
             <AddNewCustomerDialog
+                isAuthenticated={isAuthenticated}
                 handleAddCustomer={handleCreateCustomer}
-                handleCloseAddNewCustomerDialog={() => setOpenAddNewCustomerDialog(false)}
+                handleCloseAddNewCustomerDialog={() => {
+                    setOpenAddNewCustomerDialog(false)
+                    resetNewCustomerDataModal()
+                }}
                 openAddNewCustomerDialog={openAddNewCustomerDialog}
                 setNewCustomerData={setNewCustomerData}
                 newCustomerData={newCustomerData}

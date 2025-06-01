@@ -10,8 +10,14 @@ import {fetchGiftSets, removeGiftSet, sellGiftSet, updateGiftSet} from "../../..
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import {useGiftSet} from "../../Provider/GiftSetContext";
 
+interface IGiftSetList {
+    isAuthenticated:boolean
+}
 
-const GiftSetList: React.FC = () => {
+const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
+
+            console.log("isAuthenticated GiftSetList",isAuthenticated);
+
     const [openDialogEdit, setOpenDialogEdit] = useState(false);
     const [sellDialogOpen, setSellDialogOpen] = useState(false);
 
@@ -127,11 +133,11 @@ const GiftSetList: React.FC = () => {
                                     </Typography>
 
                                     <Typography variant="body1" style={{marginTop: '10px'}}>
-                                        <strong>Зміст:</strong>
+                                        <strong>Вміст набору:</strong>
                                     </Typography>
 
-                                    <Button fullWidth size="small" onClick={() => handleToggleProduct(giftSet.id)}>
-                                        <ExpandMore/> Продукти
+                                    <Button endIcon={<ExpandMore/>}  size="small" onClick={() => handleToggleProduct(giftSet.id)}>
+                                         Продукти
                                     </Button>
 
                                     <Collapse in={expandedProduct === giftSet.id}>
@@ -143,8 +149,8 @@ const GiftSetList: React.FC = () => {
                                         </ul>
                                     </Collapse>
 
-                                    <Button fullWidth size="small" onClick={() => handleTogglePackaging(giftSet.id)}>
-                                        <ExpandMore/> Пакування
+                                    <Button sx={{textAlign:"center"}} endIcon={<ExpandMore/>}  size="small" onClick={() => handleTogglePackaging(giftSet.id)}>
+                                        Пакування
                                     </Button>
                                     <Collapse in={expandedPackaging === giftSet.id}>
                                         <ul>
@@ -172,7 +178,7 @@ const GiftSetList: React.FC = () => {
                                             onClick={() => handleDialogOpen("sell", giftSet)}>
                                         <ShoppingCart/> Продати
                                     </Button>
-                                    <Button fullWidth size="small" color="secondary"
+                                    <Button disabled={!isAuthenticated} fullWidth size="small" color="secondary"
                                             onClick={() => handleDelete(giftSet.id)}>
                                         <Delete/> Видалити
                                     </Button>
@@ -191,6 +197,7 @@ const GiftSetList: React.FC = () => {
 
             {selectedGiftSet && (
                 <EditGiftBoxDialog
+                     isAuthenticated={isAuthenticated}
                     open={openDialogEdit}
                     onClose={handleDialogClose}
                     giftBox={selectedGiftSet}
@@ -199,6 +206,7 @@ const GiftSetList: React.FC = () => {
             )}
             {selectedGiftSet && (
                 <GiftSetSaleModal
+                    isAuthenticated={isAuthenticated}
                     error={error}
                     handleGiftSell={handleGiftSell}
                     loading={loading}

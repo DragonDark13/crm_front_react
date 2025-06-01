@@ -155,6 +155,14 @@ export interface ICustomerDetails {
     address?: string;
     sales?: ISaleHistory[];
 }
+export interface INewGiftCustomerDetails {
+    name: string;
+    contact_info?: string;
+    email?: string;
+    phone_number?: string;
+    address?: string;
+    sales?: ISaleHistory[];
+}
 
 export interface ISaleHistory {
     id: number;

@@ -22,15 +22,18 @@ const GiftSetsPage = () => {
         handleAddNewGiftBox
     } = useGiftBoxModal(modalNames, fetchProductsFunc, fetchPackagingOptions);
 
+    console.log("isAuthenticated3", isAuthenticated);
+
+
     return (
         <div>
             <Typography marginBlockEnd={3} variant={"h4"}>Подарункові бокси</Typography>
 
             {/*<CreateGiftBox/>*/}
-            <AddButton  onClick={() => handleModalOpen('addNewGiftBox')} text={'Створити подарунковий набір'}/>
+            <AddButton onClick={() => handleModalOpen('addNewGiftBox')} text={'Створити подарунковий набір'}/>
 
 
-            <GiftSetList/>
+            <GiftSetList isAuthenticated={isAuthenticated}/>
 
             {/*TODO add giftbox*/}
             {/*//TODO add giftbox management*/}
