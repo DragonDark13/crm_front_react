@@ -23,7 +23,7 @@ const AddNewCustomerDialog = ({
                                   isAuthenticated
                               }: IAddNewCustomerDialog) => {
 
-
+    console.log("isAuthenticated",isAuthenticated);
     const [errors, setErrors] = useState<{ name?: string, email?: string }>({});
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

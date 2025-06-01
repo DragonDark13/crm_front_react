@@ -1,5 +1,5 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
-import {ICustomerDetails} from "../../utils/types";
+import {ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
 import {AxiosError} from "axios";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
@@ -17,7 +17,7 @@ interface ICustomer {
 interface CustomerContextProps {
     customers: ICustomer[];
     fetchGetAllCustomersFunc: () => void;
-    createCustomerFunc: (newCustomerData: ICustomerDetails) => Promise<void>; // Додаємо функцію для створення
+    createCustomerFunc: (newCustomerData: INewGiftCustomerDetails) => Promise<void>; // Додаємо функцію для створення
     loading: boolean; // Додаємо поле для перевірки завантаження
 }
 

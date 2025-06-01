@@ -19,12 +19,16 @@ import {IMaterial, IProduct} from "../../../utils/types";
 import QuantityField from "../../FormComponents/QuantityField";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import CancelButton from "../../Buttons/CancelButton";
+import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
+import ProductNameField from "../../FormComponents/ProductNameField";
+import PriceField from "../../FormComponents/PriceField";
 
 const EditGiftBoxDialog = ({
                                open,
                                onClose,
                                giftBox,
-                               onSave
+                               onSave,
+                               isAuthenticated
                            }) => {
     const {products} = useProducts();
     const {packagingMaterials} = usePackaging();
@@ -192,25 +196,30 @@ const EditGiftBoxDialog = ({
     };
 
     return (
-        <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle>Редагування подарункового набору {giftBox.name}</DialogTitle>
+        <CustomDialog maxWidth="md" title={`Редагування подарункового набору ${giftBox.name}`} handleClose={onClose}
+                      open={open}>
+
             <DialogContent>
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
-                        <TextField fullWidth label="Назва набору" value={name} onChange={(e) => setName(e.target.value)}
-                                   margin="normal"/>
+                        <ProductNameField label={"Назва набору"} value={name} onChange={(e) => setName(e.target.value)}
+                                          error={null}/>
+                        {/*<TextField fullWidth label="Назва набору" value={name} onChange={(e) => setName(e.target.value)}*/}
+                        {/*           margin="normal"/>*/}
                     </Grid>
                     <Grid item xs={6}>
-                        <TextField fullWidth label="Опис" value={description}
-                                   onChange={(e) => setDescription(e.target.value)}
-                                   margin="normal"/>
+                        <ProductNameField label={"Опис"} value={description}
+                                          onChange={(e) => setDescription(e.target.value)} error={null}/>
+
                     </Grid>
                 </Grid>
 
                 <Grid container spacing={2}>
                     <Grid item xs={12} md={6}>
-                        <TextField fullWidth label="Ціна набору" type="number" value={price}
-                                   onChange={(e) => setPrice(Number(e.target.value))} margin="normal"/>
+                        <PriceField label={"Ціна набору"} value={price}
+                                    onChange={(e) => setPrice(Number(e.target.value))}/>
+                        {/*<TextField fullWidth label="Ціна набору" type="number" value={price}*/}
+                        {/*           onChange={(e) => setPrice(Number(e.target.value))} margin="normal"/>*/}
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Typography variant="body1" style={{marginTop: 20}}>Загальна
@@ -304,9 +313,10 @@ const EditGiftBoxDialog = ({
             </DialogContent>
             <DialogActions>
                 <CancelButton onClick={onClose}/>
-                <Button onClick={handleEditGiftBox} variant={"contained"} color="primary">Зберегти</Button>
+                <Button disabled={!isAuthenticated} onClick={handleEditGiftBox} variant={"contained"}
+                        color="primary">Зберегти</Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 
