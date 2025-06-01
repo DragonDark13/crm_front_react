@@ -8,8 +8,9 @@ const fakeDate = {
     getProductHistory: (productId: number) => {
     },
     getMaterialHistory: (materialId: number) => {
-
-    }
+    },
+    getAllGiftSets: [],
+    getAllCustomers: []
 };
 
 fakeDate.productsFake = [
@@ -755,6 +756,58 @@ fakeDate.getMaterialHistory = (materialId) => ({
         }
     ]
 });
+
+fakeDate.getAllGiftSets = [
+    {
+        "description": "Тестовий набір",
+        "gift_selling_price": 2000,
+        "id": 2,
+        "name": "Тестовий набір",
+        "packagings": [
+            {
+                "name": "Подарунковий пакет з візерунком",
+                "packaging_id": 3,
+                "price": "9.00",
+                "quantity": 1,
+                "type": "packaging"
+            }
+        ],
+        "products": [
+            {
+                "name": "rtyrtygggggggggggggg",
+                "price": "400.00",
+                "product_id": 13,
+                "quantity": 1,
+                "type": "product"
+            },
+            {
+                "name": "test 2 ryrtyrtyrty",
+                "price": "200.00",
+                "product_id": 12,
+                "quantity": 1,
+                "type": "product"
+            },
+            {
+                "name": "Аптечка туристична",
+                "price": "200.00",
+                "product_id": 9,
+                "quantity": 4,
+                "type": "product"
+            }
+        ],
+        "total_price": 1409
+    }
+]
+
+fakeDate.getAllCustomers = [
+    {
+        "address": "",
+        "email": "",
+        "id": 1,
+        "name": "test",
+        "phone_number": ""
+    }
+]
 
 
 export default fakeDate

@@ -122,6 +122,36 @@ if (import.meta.env.VITE_USE_MOCKS === 'true') {
             };
         }
 
-        return request;
-    });
+
+        if (request.url === '/get_all_gift_sets') {
+            {
+                request.adapter = async () => {
+                    return {
+                        data: fakeDate.getAllGiftSets,
+                        status: 200,
+                        statusText: "OK",
+                        headers: {},
+                        config: request,
+                    };
+                };
+            }
+        }
+            if (request.url === '/get_all_customers') {
+                {
+                    request.adapter = async () => {
+                        return {
+                            data: fakeDate.getAllCustomers,
+                            status: 200,
+                            statusText: "OK",
+                            headers: {},
+                            config: request,
+                        };
+                    };
+                }
+
+            }
+
+            return request;
+        }
+    );
 }
