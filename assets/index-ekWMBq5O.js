@@ -48694,6 +48694,95 @@ const useSupplierModal = (modalNames2, editProduct, setEditProduct) => {
     handleAddSupplier
   };
 };
+const CreateNewCategoryModal = ({
+  openCategoryCreateModal,
+  handleCloseCategoryModal,
+  createNewCategory,
+  isAuthenticated
+}) => {
+  const [categoryName, setCategoryName] = reactExports.useState("");
+  const [error, setError] = reactExports.useState("");
+  const handleKeyDown = (e2) => {
+    if (e2.key === "Enter") {
+      e2.preventDefault();
+      handleAddNewCategory();
+    }
+  };
+  const handleAddNewCategory = () => {
+    if (categoryName.trim().length < 5) {
+      setError("Назва категорії повинна містити не менше 5 символів.");
+      return;
+    }
+    createNewCategory(categoryName);
+    setCategoryName("");
+    setError("");
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    CustomDialog,
+    {
+      open: openCategoryCreateModal,
+      handleClose: handleCloseCategoryModal,
+      title: "Додавання нової Категорії",
+      maxWidth: "xs",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TextField,
+          {
+            fullWidth: true,
+            label: "Назва категорії",
+            value: categoryName,
+            onChange: (e2) => setCategoryName(e2.target.value),
+            onKeyDown: handleKeyDown,
+            error: !!error,
+            helperText: error
+          }
+        ) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleCloseCategoryModal }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              onClick: handleAddNewCategory,
+              disabled: categoryName.trim().length < 5 || !isAuthenticated,
+              children: "Зберегти категорію"
+            }
+          )
+        ] })
+      ]
+    }
+  );
+};
+const useModalState = (modalNames2) => {
+  const [modalState, setModalState] = reactExports.useState(
+    Object.fromEntries(modalNames2.map((name) => [name, false]))
+  );
+  const open = (modal) => setModalState((prev2) => ({ ...prev2, [modal]: true }));
+  const close = (modal) => setModalState((prev2) => ({ ...prev2, [modal]: false }));
+  return { modalState, open, close };
+};
+const useCreateCategoryModal = (modalNames2) => {
+  const { modalState, open, close } = useModalState(modalNames2);
+  const { fetchCategoriesFunc } = useCategories();
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const createNewCategory = (categoryName) => {
+    addNewCategory(categoryName).then(() => {
+      fetchCategoriesFunc();
+      close("openCategoryCreate");
+      showSnackbarMessage("Category added successfully!", "success");
+    }).catch((error) => {
+      showSnackbarMessage("Failed to add the Category!", "error");
+      console.error("There was an error adding the category!", error);
+    });
+  };
+  return {
+    modalState,
+    handleCategoryModalClose: close,
+    handleCategoryModalOpen: open,
+    createNewCategory
+  };
+};
 const AddProductModal = ({
   openAdd,
   handleCloseAdd,
@@ -48761,6 +48850,7 @@ const AddProductModal = ({
     handleModalClose,
     handleAddSupplier
   } = useSupplierModal(modalNames, newProduct, setNewProduct);
+  const categoryModal = useCreateCategoryModal(modalNames);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       CustomDialog,
@@ -48888,15 +48978,25 @@ const AddProductModal = ({
                 }
               ) })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { mt: 2, container: true, alignItems: "center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 12, md: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              CategoriesSelect,
-              {
-                categories,
-                selectedCategories,
-                handleCategoryChange,
-                handleRemoveCategory
-              }
-            ) }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { mt: 2, container: true, spacing: 2, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 12, md: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                CategoriesSelect,
+                {
+                  categories,
+                  selectedCategories,
+                  handleCategoryChange,
+                  handleRemoveCategory
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AddButton,
+                {
+                  fullWidth: true,
+                  onClick: () => categoryModal.handleCategoryModalOpen("openCategoryCreate"),
+                  text: "Додати категорію"
+                }
+              ) })
+            ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleCloseAdd }),
@@ -48921,6 +49021,15 @@ const AddProductModal = ({
         handleAddSupplier,
         open: modalState.openAddSupplierOpen,
         handleCloseAddSupplierModal: () => handleModalClose("openAddSupplierOpen")
+      }
+    ),
+    categoryModal.modalState.openCategoryCreate && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      CreateNewCategoryModal,
+      {
+        isAuthenticated,
+        createNewCategory: categoryModal.createNewCategory,
+        openCategoryCreateModal: categoryModal.modalState.openCategoryCreate,
+        handleCloseCategoryModal: () => categoryModal.handleCategoryModalClose("openCategoryCreate")
       }
     )
   ] });
@@ -48982,65 +49091,6 @@ const useProducts = () => {
     throw new Error("useProducts must be used within a ProductProvider");
   }
   return context;
-};
-const CreateNewCategoryModal = ({
-  openCategoryCreateModal,
-  handleCloseCategoryModal,
-  createNewCategory
-}) => {
-  const [categoryName, setCategoryName] = reactExports.useState("");
-  const [error, setError] = reactExports.useState("");
-  const handleKeyDown = (e2) => {
-    if (e2.key === "Enter") {
-      e2.preventDefault();
-      handleAddNewCategory();
-    }
-  };
-  const handleAddNewCategory = () => {
-    if (categoryName.trim().length < 5) {
-      setError("Назва категорії повинна містити не менше 5 символів.");
-      return;
-    }
-    createNewCategory(categoryName);
-    setCategoryName("");
-    setError("");
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    CustomDialog,
-    {
-      open: openCategoryCreateModal,
-      handleClose: handleCloseCategoryModal,
-      title: "Додавання нової Категорії",
-      maxWidth: "xs",
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          TextField,
-          {
-            fullWidth: true,
-            label: "Назва категорії",
-            value: categoryName,
-            onChange: (e2) => setCategoryName(e2.target.value),
-            onKeyDown: handleKeyDown,
-            error: !!error,
-            helperText: error
-          }
-        ) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleCloseCategoryModal }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Button,
-            {
-              variant: "contained",
-              color: "primary",
-              onClick: handleAddNewCategory,
-              disabled: categoryName.trim().length < 5,
-              children: "Зберегти категорію"
-            }
-          )
-        ] })
-      ]
-    }
-  );
 };
 const AddNewCustomerDialog = ({
   handleAddCustomer,
@@ -50268,6 +50318,7 @@ const AddButtonWithMenu = () => {
     modalState.openCategoryCreate && /* @__PURE__ */ jsxRuntimeExports.jsx(
       CreateNewCategoryModal,
       {
+        isAuthenticated,
         createNewCategory,
         openCategoryCreateModal: modalState.openCategoryCreate,
         handleCloseCategoryModal: () => handleModalClose("openCategoryCreate")
@@ -51409,12 +51460,8 @@ const EditProductModal = ({
       setDiffWithPrice(editProduct.selling_price_per_item - editProduct.purchase_price_per_item);
     }
   }, [editProduct.selling_price_per_item, editProduct.purchase_price_per_item]);
-  const {
-    modalState,
-    handleModalOpen,
-    handleModalClose,
-    handleAddSupplier
-  } = useSupplierModal(modalNames, editProduct, setEditProduct);
+  const supplierModal = useSupplierModal(modalNames, editProduct, setEditProduct);
+  const categoryModal = useCreateCategoryModal(modalNames);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       CustomDialog,
@@ -51449,7 +51496,7 @@ const EditProductModal = ({
                   AddButton,
                   {
                     sx: { marginTop: "16px" },
-                    onClick: () => handleModalOpen("openAddSupplierOpen")
+                    onClick: () => supplierModal.handleModalOpen("openAddSupplierOpen")
                   }
                 ) })
               ] }) })
@@ -51521,15 +51568,25 @@ const EditProductModal = ({
                 margin: "normal"
               }
             ) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              CategoriesSelect,
-              {
-                categories,
-                handleRemoveCategory,
-                selectedCategories: editProduct.category_ids,
-                handleCategoryChange
-              }
-            )
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, mt: 1, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                CategoriesSelect,
+                {
+                  categories,
+                  handleRemoveCategory,
+                  selectedCategories: editProduct.category_ids,
+                  handleCategoryChange
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AddButton,
+                {
+                  fullWidth: true,
+                  onClick: () => categoryModal.handleCategoryModalOpen("openCategoryCreate"),
+                  text: "Додати категорію"
+                }
+              ) })
+            ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: handleCloseEdit, children: "Закрити" }),
@@ -51547,13 +51604,22 @@ const EditProductModal = ({
         ]
       }
     ),
-    modalState.openAddSupplierOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+    supplierModal.modalState.openAddSupplierOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddSupplierModal,
       {
         isAuthenticated,
-        handleAddSupplier,
-        open: modalState.openAddSupplierOpen,
-        handleCloseAddSupplierModal: () => handleModalClose("openAddSupplierOpen")
+        handleAddSupplier: supplierModal.handleAddSupplier,
+        open: supplierModal.modalState.openAddSupplierOpen,
+        handleCloseAddSupplierModal: () => supplierModal.handleModalClose("openAddSupplierOpen")
+      }
+    ),
+    categoryModal.modalState.openCategoryCreate && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      CreateNewCategoryModal,
+      {
+        isAuthenticated,
+        createNewCategory: categoryModal.createNewCategory,
+        openCategoryCreateModal: categoryModal.modalState.openCategoryCreate,
+        handleCloseCategoryModal: () => categoryModal.handleCategoryModalClose("openCategoryCreate")
       }
     )
   ] });
