@@ -118,35 +118,6 @@ const AddButtonWithMenu = () => {
     };
 
 
-    // const handleAddProduct = async () => {
-    //     try {
-    //         await addProduct(newProduct);
-    //         await fetchProductsFunc();
-    //         handleModalClose('openAdd');
-    //         showSnackbarMessage('Product added successfully!', 'success'); // Show success message
-    //     } catch (error) {
-    //         console.error('There was an error adding the product!', error);
-    //         showSnackbarMessage('Failed to add the product!', 'error'); // Show error message
-    //     }
-    // };
-
-    // const handleCategoryChange = (categoryId: number[]) => {
-    //     setSelectedCategories(categoryId);
-    //
-    //     setNewProduct((prevProduct) => {
-    //         return {
-    //             ...prevProduct,
-    //             category_ids: categoryId // Оновлення категорій
-    //         };
-    //     });
-    // };
-
-    // const handleRemoveCategory = (idToRemove: number) => {
-    //     if (!newProduct) return;
-    //     const updated = newProduct.category_ids.filter(id => id !== idToRemove);
-    //     handleCategoryChange(updated);
-    // };
-
     const createNewCategory = (categoryName: string) => {
         addNewCategory(categoryName).then(() => {
             fetchCategoriesFunc();
@@ -352,6 +323,7 @@ const AddButtonWithMenu = () => {
             {
                 modalState.openCategoryCreate &&
                 <CreateNewCategoryModal
+                    isAuthenticated={isAuthenticated}
                     createNewCategory={createNewCategory}
                     openCategoryCreateModal={modalState.openCategoryCreate}
                     handleCloseCategoryModal={() => handleModalClose("openCategoryCreate")}
