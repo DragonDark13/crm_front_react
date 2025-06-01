@@ -224,14 +224,6 @@ const AddButtonWithMenu = () => {
             showSnackbarMessage('Error creating gift box: ' + error || 'Unknown error', 'error');
         }
 
-        // createGiftBox(payload).then(() => {
-        //     handleModalClose("addNewGiftBox");
-        //     showSnackbarMessage('Gift box created successfully!', 'success'); // Show success message
-        // }).catch((error: AxiosError) => {
-        //     console.error('Error creating gift box:', error);
-        //     showSnackbarMessage('Error creating gift box: ' + error || 'Unknown error', 'error');
-        // });
-
     };
 
     const {

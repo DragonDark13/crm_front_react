@@ -114,7 +114,7 @@ const GiftSetList: React.FC = () => {
 
     return (
         <div>
-            <Grid container spacing={2}>
+            <Grid container mt={1} spacing={2}>
                 {giftSets.length > 0 ? (giftSets.map((giftSet) => (
                         <Grid item xs={12} sm={6} md={4} key={giftSet.id}>
                             <Card>
