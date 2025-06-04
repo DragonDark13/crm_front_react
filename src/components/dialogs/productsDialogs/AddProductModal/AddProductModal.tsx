@@ -261,11 +261,12 @@ const AddProductModal = ({
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={3}>
-                            <DateFieldCustom value={newProduct.created_date} label="Дата створення"
-                                             onChange={(e) => setNewProduct({
-                                                 ...newProduct,
-                                                 created_date: e.target.value
-                                             })}/>
+                            <DateFieldCustom
+                                value={newProduct.created_date} label="Дата створення"
+                                onChange={(e) => setNewProduct({
+                                    ...newProduct,
+                                    created_date: e.target.value
+                                })}/>
 
 
                         </Grid>

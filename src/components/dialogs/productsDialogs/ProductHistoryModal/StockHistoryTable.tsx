@@ -29,9 +29,9 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
                     {(productHistory.stock && productHistory.stock.length > 0) ?
                     sortByDate(productHistory.stock, 'timestamp').map((record) => (
                         <TableRow key={record.id}>
-                            <TableCell>{new Date(record.timestamp!).toLocaleString()}</TableCell>
-                            <TableCell>{record.change_type}</TableCell>
-                            <TableCell>{record.change_amount}</TableCell>
+                            <TableCell size={"small"}>{new Date(record.timestamp!).toLocaleString()}</TableCell>
+                            <TableCell size={"small"}>{record.change_type}</TableCell>
+                            <TableCell size={"small"}>{record.change_amount}</TableCell>
                         </TableRow>
                     ))
                         : (

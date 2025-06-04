@@ -134,7 +134,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         <CustomDialog
             open={openHistory}
             handleClose={onClose}
-            title={`Історія товару ${productName}`}
+            title={`Історія товару "${productName}"`}
             maxWidth={"xl"}
         >
             <DialogContent>

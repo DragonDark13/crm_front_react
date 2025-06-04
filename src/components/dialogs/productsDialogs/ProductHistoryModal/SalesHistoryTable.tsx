@@ -46,12 +46,12 @@ const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, so
                     {(productHistory.sales && productHistory.sales.length > 0) ?
                         sortByDate(productHistory.sales, 'sale_date').map((record) => (
                             <TableRow key={record.id + record.sale_date}>
-                                <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
-                                <TableCell>{record.customer.name}</TableCell>
-                                <TableCell>{record.selling_price_per_item}</TableCell>
-                                <TableCell>{record.quantity_sold}</TableCell>
-                                <TableCell>{record.selling_total_price}</TableCell>
-                                <TableCell>
+                                <TableCell size={"small"}>{new Date(record.sale_date!).toLocaleString()}</TableCell>
+                                <TableCell size={"small"}>{record.customer.name}</TableCell>
+                                <TableCell size={"small"}>{record.selling_price_per_item}</TableCell>
+                                <TableCell size={"small"}>{record.quantity_sold}</TableCell>
+                                <TableCell size={"small"}>{record.selling_total_price}</TableCell>
+                                <TableCell size={"small"}>
                                     <Button
                                         color="secondary"
                                         onClick={() => onDeleteHistoryRecord('sale', record.id)}
@@ -80,11 +80,11 @@ const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, so
                                     кількість:
                                 </Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography
                                     variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography
                                     variant={"subtitle2"}> {productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
                             </TableCell>

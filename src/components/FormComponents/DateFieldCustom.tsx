@@ -6,6 +6,8 @@ interface IDateFieldCustom extends TextFieldProps {
 }
 
 const DateFieldCustom = ({...rest}: IDateFieldCustom) => {
+     const today = new Date().toISOString().split('T')[0];
+    const minDate = '2023-01-01';
     return (
         <TextField
             {...rest}
@@ -13,6 +15,10 @@ const DateFieldCustom = ({...rest}: IDateFieldCustom) => {
             size={"small"}
             type="date"
             fullWidth
+            inputProps={{
+                max: today,
+                min: minDate,
+            }}
             margin="normal"
         />
     );

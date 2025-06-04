@@ -61,12 +61,12 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                                     key={record.id + index + record.type}
                                     style={{backgroundColor: record.type === 'sale' ? '#d1e7dd' : '#f8d7da'}} // Колір для продажу і закупки
                                 >
-                                    <TableCell>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
-                                    <TableCell>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
-                                    <TableCell>{record.type === 'sale' ? record.customer.name : record.supplier.name}</TableCell>
-                                    <TableCell>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_price_per_item}</TableCell>
-                                    <TableCell>{record.type === 'sale' ? record.quantity_sold : record.quantity_purchase}</TableCell>
-                                    <TableCell>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_total_price}</TableCell>
+                                    <TableCell size={"small"}>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
+                                    <TableCell size={"small"}>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
+                                    <TableCell size={"small"}>{record.type === 'sale' ? record.customer.name : record.supplier.name}</TableCell>
+                                    <TableCell size={"small"}>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_price_per_item}</TableCell>
+                                    <TableCell size={"small"}>{record.type === 'sale' ? record.quantity_sold : record.quantity_purchase}</TableCell>
+                                    <TableCell size={"small"}>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_total_price}</TableCell>
                                 </TableRow>
                             ))
                         )
@@ -80,11 +80,11 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                             <TableCell colSpan={4} align="right">
                                 <strong>Загальна кількість продажів:</strong>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography
                                     variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography
                                     variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
                             </TableCell>
@@ -93,11 +93,11 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                             <TableCell colSpan={4} align="right">
                                 <strong>Загальна кількість закупок:</strong>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography
                                     variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)}</Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography
                                     variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)}</Typography>
                             </TableCell>

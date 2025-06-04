@@ -56,12 +56,12 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                     {(productHistory.purchase && productHistory.purchase.length > 0) ?
                         sortByDate(productHistory.purchase, 'purchase_date').map((record) => (
                             <TableRow key={record.id + record.purchase_date}>
-                                <TableCell>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
-                                <TableCell>{record.supplier.name}</TableCell>
-                                <TableCell>{record.purchase_price_per_item}</TableCell>
-                                <TableCell>{record.quantity_purchase}</TableCell>
-                                <TableCell>{record.purchase_total_price}</TableCell>
-                                <TableCell align={"right"}>
+                                <TableCell size={"small"}>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
+                                <TableCell size={"small"}>{record.supplier.name}</TableCell>
+                                <TableCell size={"small"}>{record.purchase_price_per_item}</TableCell>
+                                <TableCell size={"small"}>{record.quantity_purchase}</TableCell>
+                                <TableCell size={"small"}>{record.purchase_total_price}</TableCell>
+                                <TableCell size={"small"} align={"right"}>
                                     <IconButton disabled={!isAuthenticated} color="error"
                                                 onClick={() => onDeleteHistoryRecord('purchase', record.id)}>
                                         <DeleteIcon fontSize="small"/>
@@ -72,7 +72,7 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                         ))
                         : (
                             <TableRow>
-                                <TableCell colSpan={5}>Немає даних про історію товару.</TableCell>
+                                <TableCell  colSpan={5}>Немає даних про історію товару.</TableCell>
                             </TableRow>
                         )
                     }
@@ -80,13 +80,13 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                 {productHistory.purchase && productHistory.purchase.length > 0 && (
                     <TableFooter>
                         <TableRow>
-                            <TableCell colSpan={3} align="right"><strong>Загальна
+                            <TableCell size={"small"} colSpan={3} align="right"><strong>Загальна
                                 кількість:</strong></TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography
                                     variant={"subtitle2"}> {productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)}</Typography>
                             </TableCell>
-                            <TableCell>
+                            <TableCell size={"small"}>
                                 <Typography variant={"subtitle2"}>  {productHistory.purchase
                                     .reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0)
                                     .toFixed(2)}</Typography>
