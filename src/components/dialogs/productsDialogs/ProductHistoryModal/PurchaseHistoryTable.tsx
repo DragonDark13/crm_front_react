@@ -8,12 +8,13 @@ import {
     TableRow,
     Paper,
     TableFooter,
-    Typography, Button, IconButton
+    Typography, Button, IconButton, Tooltip, Box
 } from "@mui/material";
 import {ISupplierFull} from "../../../../utils/types";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {useAuth} from "../../../context/AuthContext";
+import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
 interface PurchaseHistoryRecord {
     id: number;
@@ -29,27 +30,27 @@ interface PurchaseHistoryTableProps {
     onDeleteHistoryRecord: (historyType: string, historyId: number) => void;
     productHistory: ProductHistory[];
     sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
+    isAuthenticated: boolean
 }
 
 const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                                                                        productHistory,
                                                                        sortByDate,
-                                                                       onDeleteHistoryRecord
+                                                                       onDeleteHistoryRecord,
+                                                                       isAuthenticated
                                                                    }) => {
-    const {isAuthenticated} = useAuth();
 
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Дата</TableCell>
-                        <TableCell>Постачальник</TableCell>
-                        <TableCell>Ціна за одиницю</TableCell>
-                        <TableCell>Кількість закупівлі</TableCell>
-                        <TableCell>Загальна ціна</TableCell>
-                        <TableCell align={"right"}>Дії</TableCell>
-
+                        <RenderHeaderCell>Дата</RenderHeaderCell>
+                        <RenderHeaderCell>Постачальник</RenderHeaderCell>
+                        <RenderHeaderCell>Ціна за одиницю</RenderHeaderCell>
+                        <RenderHeaderCell>Кількість закупівлі</RenderHeaderCell>
+                        <RenderHeaderCell>Загальна ціна</RenderHeaderCell>
+                        <RenderHeaderCell align={"right"}>Дії</RenderHeaderCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -62,17 +63,19 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                                 <TableCell size={"small"}>{record.quantity_purchase}</TableCell>
                                 <TableCell size={"small"}>{record.purchase_total_price}</TableCell>
                                 <TableCell size={"small"} align={"right"}>
-                                    <IconButton disabled={!isAuthenticated} color="error"
-                                                onClick={() => onDeleteHistoryRecord('purchase', record.id)}>
-                                        <DeleteIcon fontSize="small"/>
-                                    </IconButton>
+                                    <Tooltip title="Видалити">
+
+                                        <span>     <IconButton disabled={!isAuthenticated} color="error"
+                                                               onClick={() => onDeleteHistoryRecord('purchase', record.id)}><DeleteIcon
+                                            fontSize="small"/></IconButton></span>
+                                    </Tooltip>
 
                                 </TableCell>
                             </TableRow>
                         ))
                         : (
                             <TableRow>
-                                <TableCell  colSpan={5}>Немає даних про історію товару.</TableCell>
+                                <TableCell colSpan={5}>Немає даних про історію товару.</TableCell>
                             </TableRow>
                         )
                     }
@@ -80,14 +83,16 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                 {productHistory.purchase && productHistory.purchase.length > 0 && (
                     <TableFooter>
                         <TableRow>
-                            <TableCell size={"small"} colSpan={3} align="right"><strong>Загальна
-                                кількість:</strong></TableCell>
-                            <TableCell size={"small"}>
-                                <Typography
-                                    variant={"subtitle2"}> {productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)}</Typography>
+                            <TableCell colSpan={3} align="right">
+                                <Typography variant={"subtitle2"}>Загальна
+                                    кількість:</Typography>
                             </TableCell>
-                            <TableCell size={"small"}>
-                                <Typography variant={"subtitle2"}>  {productHistory.purchase
+                            <TableCell>
+                                <Typography fontWeight={"bold"}
+                                            variant={"subtitle2"}> {productHistory.purchase.reduce((sum, record) => sum + (record.quantity_purchase || 0), 0)}</Typography>
+                            </TableCell>
+                            <TableCell>
+                                <Typography variant={"subtitle2"} fontWeight={"bold"}>  {productHistory.purchase
                                     .reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0)
                                     .toFixed(2)}</Typography>
                             </TableCell>

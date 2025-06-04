@@ -22,6 +22,7 @@ import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
 import {onDeleteHistoryRecord} from "../../../../api/_history";
 import {fetchProductHistory} from "../../../../api/_product";
+import {useAuth} from "../../../context/AuthContext";
 
 export interface ProductHistoryRecord {
     id: number;
@@ -73,6 +74,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
     const [tabIndex, setTabIndex] = useState<number>(0);
     const [selectedView, setSelectedView] = useState<number>(0);
     const [isMobile, setIsMobile] = useState<boolean>(false);
+    const {isAuthenticated} = useAuth();
+
 
     useEffect(() => {
         if (openHistory) {
@@ -162,10 +165,12 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                     {(isMobile ? selectedView : tabIndex) === 0 &&
                     <StockHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 1 &&
-                    <PurchaseHistoryTable onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
+                    <PurchaseHistoryTable isAuthenticated={isAuthenticated}
+                                          onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
                                           productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 2 &&
-                    <SalesHistoryTable onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
+                    <SalesHistoryTable isAuthenticated={isAuthenticated} onDeleteHistoryRecord={onDeleteHistoryRecord}
+                                       sortByDate={sortByDate}
                                        productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 3 &&
                     <CombinedHistoryTable productHistory={productHistory}/>}

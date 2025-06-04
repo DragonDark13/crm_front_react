@@ -1,6 +1,7 @@
 import React from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from "@mui/material";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
 interface StockHistoryRecord {
     id: number;
@@ -20,9 +21,9 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Дата</TableCell>
-                        <TableCell>Тип зміни</TableCell>
-                        <TableCell>Зміни по Кількості</TableCell>
+                        <RenderHeaderCell>Дата</RenderHeaderCell>
+                        <RenderHeaderCell>Тип зміни</RenderHeaderCell>
+                        <RenderHeaderCell>Зміни по Кількості</RenderHeaderCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

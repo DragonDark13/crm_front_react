@@ -11,6 +11,7 @@ import {
     Typography
 } from "@mui/material";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
 interface CombinedHistoryRecord {
     id: number;
@@ -32,12 +33,12 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Дата</TableCell>
-                        <TableCell>Тип</TableCell>
-                        <TableCell>Контрагент</TableCell>
-                        <TableCell>Ціна</TableCell>
-                        <TableCell>Кількість</TableCell>
-                        <TableCell>Загальна ціна</TableCell>
+                        <RenderHeaderCell>Дата</RenderHeaderCell>
+                        <RenderHeaderCell>Тип</RenderHeaderCell>
+                        <RenderHeaderCell>Контрагент</RenderHeaderCell>
+                        <RenderHeaderCell>Ціна</RenderHeaderCell>
+                        <RenderHeaderCell>Кількість</RenderHeaderCell>
+                        <RenderHeaderCell>Загальна ціна</RenderHeaderCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -78,28 +79,28 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                     <TableFooter>
                         <TableRow>
                             <TableCell colSpan={4} align="right">
-                                <strong>Загальна кількість продажів:</strong>
+                                <Typography  variant={"subtitle2"}>Загальна кількість продажів:</Typography>
                             </TableCell>
                             <TableCell size={"small"}>
                                 <Typography
-                                    variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
+                                    variant={"subtitle2"} fontWeight={"bold"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
                             </TableCell>
                             <TableCell size={"small"}>
                                 <Typography
-                                    variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
+                                    variant={"subtitle2"} fontWeight={"bold"}>{productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
                             </TableCell>
                         </TableRow>
                         <TableRow>
                             <TableCell colSpan={4} align="right">
-                                <strong>Загальна кількість закупок:</strong>
+                                <Typography  variant={"subtitle2"}>Загальна кількість закупок:</Typography>
                             </TableCell>
                             <TableCell size={"small"}>
                                 <Typography
-                                    variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)}</Typography>
+                                    variant={"subtitle2"} fontWeight={"bold"}>{productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0)}</Typography>
                             </TableCell>
                             <TableCell size={"small"}>
                                 <Typography
-                                    variant={"subtitle2"}>{productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)}</Typography>
+                                    variant={"subtitle2"} fontWeight={"bold"}>{productHistory.purchase.reduce((sum, record) => sum + parseFloat(String(record.purchase_total_price)) || 0, 0).toFixed(2)}</Typography>
                             </TableCell>
                         </TableRow>
                     </TableFooter>

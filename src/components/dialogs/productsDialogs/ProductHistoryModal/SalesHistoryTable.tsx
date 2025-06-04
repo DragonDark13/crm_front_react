@@ -8,10 +8,12 @@ import {
     TableRow,
     Paper,
     Typography,
-    TableFooter, Button
+    TableFooter, Button, Tooltip, IconButton
 } from "@mui/material";
 import {ICustomer} from "../../../../utils/types";
 import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
 interface SalesHistoryRecord {
     id: number;
@@ -26,20 +28,26 @@ interface SalesHistoryTableProps {
     onDeleteHistoryRecord: (historyType: string, historyId: number) => void;
     productHistory: ProductHistory[];
     sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
+    isAuthenticated: boolean
 }
 
-const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, sortByDate, onDeleteHistoryRecord}) => {
+const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({
+                                                                 productHistory,
+                                                                 sortByDate,
+                                                                 onDeleteHistoryRecord,
+                                                                 isAuthenticated
+                                                             }) => {
     return (
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Дата</TableCell>
-                        <TableCell>Клієнт</TableCell>
-                        <TableCell>Ціна</TableCell>
-                        <TableCell>Кількість проданих одиниць</TableCell>
-                        <TableCell>Загальна ціна</TableCell>
-                        <TableCell>Дії</TableCell>
+                        <RenderHeaderCell>Дата</RenderHeaderCell>
+                        <RenderHeaderCell>Клієнт</RenderHeaderCell>
+                        <RenderHeaderCell>Ціна</RenderHeaderCell>
+                        <RenderHeaderCell>Кількість проданих одиниць</RenderHeaderCell>
+                        <RenderHeaderCell>Загальна ціна</RenderHeaderCell>
+                        <RenderHeaderCell>Дії</RenderHeaderCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -52,12 +60,20 @@ const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, so
                                 <TableCell size={"small"}>{record.quantity_sold}</TableCell>
                                 <TableCell size={"small"}>{record.selling_total_price}</TableCell>
                                 <TableCell size={"small"}>
-                                    <Button
-                                        color="secondary"
-                                        onClick={() => onDeleteHistoryRecord('sale', record.id)}
-                                    >
-                                        Видалити
-                                    </Button>
+                                    <Tooltip title="Видалити">
+                                       <span>
+                                           <IconButton disabled={!isAuthenticated} color="error"
+                                                       onClick={() => onDeleteHistoryRecord('sale', record.id)}>
+                                                                                   <DeleteIcon fontSize="small"/>
+                                                                               </IconButton>
+                                       </span>
+                                    </Tooltip>
+                                    {/*<Button*/}
+                                    {/*    color="secondary"*/}
+                                    {/*    onClick={() => onDeleteHistoryRecord('sale', record.id)}*/}
+                                    {/*>*/}
+                                    {/*    Видалити*/}
+                                    {/*</Button>*/}
                                 </TableCell>
 
                             </TableRow>
@@ -75,18 +91,20 @@ const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, so
                     <TableFooter>
                         <TableRow>
                             <TableCell colSpan={3} align="right">
-                                <Typography>
+                                <Typography variant={"subtitle2"}>
                                     Загальна
                                     кількість:
                                 </Typography>
                             </TableCell>
                             <TableCell size={"small"}>
                                 <Typography
-                                    variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
+                                    variant={"subtitle2"}
+                                    fontWeight={"bold"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
                             </TableCell>
                             <TableCell size={"small"}>
                                 <Typography
-                                    variant={"subtitle2"}> {productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
+                                    variant={"subtitle2"}
+                                    fontWeight={"bold"}> {productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
                             </TableCell>
                         </TableRow>
                     </TableFooter>

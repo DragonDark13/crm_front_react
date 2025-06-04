@@ -222,11 +222,21 @@ const SaleProductModal = ({
             <CustomDialog
                 open={openSale}
                 handleClose={handleCloseSale}
-                title={`Продаж ${nameProduct} x ${saleData.quantity}шт`}
+                title={`Продаж '${nameProduct}' x ${saleData.quantity}шт`}
                 maxWidth="md"
             >
                 <React.Fragment>
                     <DialogContent>
+                        <Grid container >
+                             <Grid item xs={12}>
+                                 <Typography>Назва товару:
+                                     <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
+                                         {nameProduct}
+                                     </Typography>
+
+                                 </Typography>
+                             </Grid>
+                        </Grid>
                         <Grid container alignItems={"end"} spacing={2}>
                             <Grid item xs={12} sm={6} md={4} lg={4}>
                                 <CustomerSelect

@@ -2,10 +2,10 @@ import {
     TextField,
     Button,
     DialogActions,
-    DialogContent, Grid,
+    DialogContent, Grid, Typography,
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
 import QuantityField from "../../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../../utils/function";
@@ -97,6 +97,17 @@ const PurchaseProductModal = ({
             maxWidth="md"
         >
             <DialogContent>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <Typography>Назва товару:
+                            <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
+                                {nameProduct}
+                            </Typography>
+
+                        </Typography>
+                    </Grid>
+                </Grid>
+
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={8}>
                         <SupplierSelect disabled={true}

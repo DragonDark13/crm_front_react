@@ -31,6 +31,7 @@ import SaleProductDetails from "./SaleProductDetails";
 import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import CancelButton from "../../Buttons/CancelButton";
 import SalesHistoryInfoModal from "./SalesHistoryInfoModal";
+import RenderHeaderCell from "../../_elements/RenderHeaderCell";
 
 
 // Інтерфейс для постачальника
@@ -236,22 +237,17 @@ const SalesHistoryTable: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Тип</TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={orderBy === 'product_name'}
-                                    direction={orderBy === 'product_name' ? sortOrder : 'asc'}
-                                    onClick={() => handleRequestSort('product_name')}
-                                >
-                                    Назва
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell><Typography>Покупець</Typography></TableCell>
-                            <TableCell><Typography>Сумма</Typography></TableCell>
-                            <TableCell><Typography>Собівартість</Typography></TableCell>
-                            <TableCell><Typography>Вигода</Typography></TableCell>
-                            <TableCell><Typography>Дата</Typography></TableCell>
-                            <TableCell><Typography>Дії</Typography></TableCell>
+                            <RenderHeaderCell>Тип</RenderHeaderCell>
+                            <RenderHeaderCell sortOrder={'asc'} sortKey={'product_name'} orderBy={'product_name'}
+                                              handleRequestSort={handleRequestSort}>
+                                Назва
+                            </RenderHeaderCell>
+                            <RenderHeaderCell>Покупець</RenderHeaderCell>
+                            <RenderHeaderCell>Сумма</RenderHeaderCell>
+                            <RenderHeaderCell>Собівартість</RenderHeaderCell>
+                            <RenderHeaderCell>Вигода</RenderHeaderCell>
+                            <RenderHeaderCell>Дата</RenderHeaderCell>
+                            <RenderHeaderCell>Дії</RenderHeaderCell>
 
                         </TableRow>
                     </TableHead>
