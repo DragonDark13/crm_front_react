@@ -42,10 +42,58 @@ export interface ProductHistoryRecord {
     customer?: ICustomer;
 }
 
+ interface IPurchaseHistorySupplier {
+    id: number;
+    name: string;
+    contact_info: string | null;
+}
+
+export interface IProductPurchaseHistoryRecord {
+    id: number;
+    product_id: number;
+    purchase_date: string; // або Date, якщо парсити вручну
+    purchase_price_per_item: number;
+    purchase_total_price: number;
+    quantity_purchase: number;
+    supplier_id: number;
+    supplier: IPurchaseHistorySupplier;
+}
+
+ interface IProductHistoryRecordCustomer {
+    id: number;
+    name: string;
+    email: string;
+    address: string;
+    phone_number: string;
+}
+
+
+ export interface IProductSaleHistoryRecord {
+    id: number;
+    product_id: number;
+    quantity_sold: number;
+    selling_price_per_item: number;
+    selling_total_price: number;
+    packaging_material_id: number | null;
+    packaging_quantity: number;
+    total_packaging_cost: number;
+    profit: number;
+    sale_date: string; // ISO string, або можеш використати `Date` якщо парсиш
+    customer_id: number;
+    customer: IProductHistoryRecordCustomer;
+}
+
+export interface IStockHistoryRecord {
+    id: number;
+    product_id: number,
+    timestamp: string;
+    change_type: string;
+    change_amount: number;
+}
 export interface ProductHistory {
-    stock: ProductHistoryRecord[];
-    purchase: ProductHistoryRecord[];
-    sales: ProductHistoryRecord[];
+    stock: IStockHistoryRecord[];
+    purchase: IProductPurchaseHistoryRecord[];
+    sales: IProductSaleHistoryRecord[];
 }
 
 interface IProductHistoryModal {
@@ -106,16 +154,16 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
     }, []);
 
 
-    const handleDeleteHistoryRecord = (historyType: string, historyId: number) => {
-        onDeleteHistoryRecord(productId, historyType, historyId)
-            .then(() => {
-                // Оновити історію після видалення
-                fetchProductHistory(productId);
-            })
-            .catch((error) => {
-                console.error('Error deleting history record:', error);
-            });
-    };
+    // const handleDeleteHistoryRecord = (historyType: string, historyId: number) => {
+    //     onDeleteHistoryRecord(productId, historyType, historyId)
+    //         .then(() => {
+    //             // Оновити історію після видалення
+    //             fetchProductHistory(productId);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error deleting history record:', error);
+    //         });
+    // };
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);

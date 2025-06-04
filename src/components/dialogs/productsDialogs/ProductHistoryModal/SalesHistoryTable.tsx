@@ -11,23 +11,15 @@ import {
     TableFooter, Button, Tooltip, IconButton
 } from "@mui/material";
 import {ICustomer} from "../../../../utils/types";
-import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {IProductSaleHistoryRecord, ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
-interface SalesHistoryRecord {
-    id: number;
-    sale_date: string;
-    quantity_sold: number;
-    selling_price_per_item: number;
-    selling_total_price: number;
-    customer: ICustomer;
-}
 
 interface SalesHistoryTableProps {
-    onDeleteHistoryRecord: (historyType: string, historyId: number) => void;
-    productHistory: ProductHistory[];
-    sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
+    onDeleteHistoryRecord: (productId: number, historyType: string, historyId: number) => void;
+    productHistory: ProductHistory;
+    sortByDate: (arr: IProductSaleHistoryRecord[], field: string) => IProductSaleHistoryRecord[];
     isAuthenticated: boolean
 }
 
@@ -63,7 +55,7 @@ const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({
                                     <Tooltip title="Видалити">
                                        <span>
                                            <IconButton disabled={!isAuthenticated} color="error"
-                                                       onClick={() => onDeleteHistoryRecord('sale', record.id)}>
+                                                       onClick={() => onDeleteHistoryRecord(record.product_id,'sale', record.id)}>
                                                                                    <DeleteIcon fontSize="small"/>
                                                                                </IconButton>
                                        </span>

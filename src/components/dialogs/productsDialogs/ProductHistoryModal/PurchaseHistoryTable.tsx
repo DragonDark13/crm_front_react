@@ -11,7 +11,7 @@ import {
     Typography, Button, IconButton, Tooltip, Box
 } from "@mui/material";
 import {ISupplierFull} from "../../../../utils/types";
-import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {IProductPurchaseHistoryRecord, ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {useAuth} from "../../../context/AuthContext";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
@@ -27,9 +27,9 @@ interface PurchaseHistoryRecord {
 
 
 interface PurchaseHistoryTableProps {
-    onDeleteHistoryRecord: (historyType: string, historyId: number) => void;
-    productHistory: ProductHistory[];
-    sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
+    onDeleteHistoryRecord: (productId: number, historyType: string, historyId: number) => void;
+    productHistory: ProductHistory;
+    sortByDate: (arr: IProductPurchaseHistoryRecord[], field: string) => IProductPurchaseHistoryRecord[];
     isAuthenticated: boolean
 }
 
@@ -66,7 +66,7 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> = ({
                                     <Tooltip title="Видалити">
 
                                         <span>     <IconButton disabled={!isAuthenticated} color="error"
-                                                               onClick={() => onDeleteHistoryRecord('purchase', record.id)}><DeleteIcon
+                                                               onClick={() => onDeleteHistoryRecord(record.product_id,'purchase', record.id)}><DeleteIcon
                                             fontSize="small"/></IconButton></span>
                                     </Tooltip>
 
