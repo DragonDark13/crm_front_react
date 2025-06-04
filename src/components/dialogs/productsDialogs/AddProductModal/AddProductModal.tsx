@@ -23,9 +23,8 @@ import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import {useSupplierModal} from "../../../../hooks/useSupplierModal";
 import CreateNewCategoryModal from "../../CreateNewCategoryModal/CreateNewCategoryModal";
 import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
-//TODO додай постачальників таблиці
-// TODO Повідомлення про успіх
-// TODO Окремі поля для ціни закупівельної і проданої
+
+// TODO додавання нової категорі
 
 
 interface IAddProductModal {
@@ -127,8 +126,12 @@ const AddProductModal = ({
         handleAddSupplier
     } = useSupplierModal(modalNames, newProduct, setNewProduct);
 
-        const categoryModal = useCreateCategoryModal(modalNames);
-
+    const categoryModal = useCreateCategoryModal(modalNames);
+    const handleCreateCategory = (name: string) => {
+        categoryModal.createNewCategory(name, (newCategory) => {
+            handleCategoryChange([...selectedCategories, newCategory.id]);
+        });
+    };
 
     return (
         <React.Fragment>
@@ -303,7 +306,7 @@ const AddProductModal = ({
                 categoryModal.modalState.openCategoryCreate &&
                 <CreateNewCategoryModal
                     isAuthenticated={isAuthenticated}
-                    createNewCategory={categoryModal.createNewCategory}
+                    createNewCategory={handleCreateCategory}
                     openCategoryCreateModal={categoryModal.modalState.openCategoryCreate}
                     handleCloseCategoryModal={() => categoryModal.handleCategoryModalClose("openCategoryCreate")}
                 />
