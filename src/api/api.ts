@@ -50,6 +50,7 @@ export const API_ENDPOINTS = {
     REMOVE_GIFT_SET: (id: number) => `/remove_gift_set/${id}`,
     UPDATE_GIFT_SET: (id: number) => `/update_gift_set/${id}`,
     SELL_GIFT_SET: (id: number) => `/sell_gift_set/${id}`,
+    DELETE_HISTORY: (productId: number, historyType: string, historyId: number)=>`/delete-history/${productId}/${historyType}/${historyId}`
 
 };
 
