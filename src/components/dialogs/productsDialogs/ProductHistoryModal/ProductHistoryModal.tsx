@@ -23,6 +23,7 @@ import CombinedHistoryTable from "./CombinedHistoryTable";
 import {onDeleteHistoryRecord} from "../../../../api/_history";
 import {fetchProductHistory} from "../../../../api/_product";
 import {useAuth} from "../../../context/AuthContext";
+import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
 
 export interface ProductHistoryRecord {
     id: number;
@@ -42,7 +43,7 @@ export interface ProductHistoryRecord {
     customer?: ICustomer;
 }
 
- interface IPurchaseHistorySupplier {
+interface IPurchaseHistorySupplier {
     id: number;
     name: string;
     contact_info: string | null;
@@ -59,7 +60,7 @@ export interface IProductPurchaseHistoryRecord {
     supplier: IPurchaseHistorySupplier;
 }
 
- interface IProductHistoryRecordCustomer {
+interface IProductHistoryRecordCustomer {
     id: number;
     name: string;
     email: string;
@@ -68,7 +69,7 @@ export interface IProductPurchaseHistoryRecord {
 }
 
 
- export interface IProductSaleHistoryRecord {
+export interface IProductSaleHistoryRecord {
     id: number;
     product_id: number;
     quantity_sold: number;
@@ -90,6 +91,7 @@ export interface IStockHistoryRecord {
     change_type: string;
     change_amount: number;
 }
+
 export interface ProductHistory {
     stock: IStockHistoryRecord[];
     purchase: IProductPurchaseHistoryRecord[];
@@ -123,6 +125,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
     const [selectedView, setSelectedView] = useState<number>(0);
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const {isAuthenticated} = useAuth();
+    const {showSnackbarMessage} = useSnackbarMessage();
 
 
     useEffect(() => {
@@ -141,6 +144,27 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
 
         }
     }, [openHistory, productId]);
+
+    const refreshProductHistory = async () => {
+        try {
+            showSnackbarMessage("Запис успішно видалений", "success");
+
+            fetchProductHistory(productId)
+                .then(response => {
+                    setProductHistory({
+                        stock: response.data.stock_history,
+                        purchase: response.data.purchase_history,
+                        sales: response.data.sale_history,
+                    });
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the product history!', error);
+                });
+
+        } catch (error) {
+            console.error('Помилка при оновленні історії товару:', error);
+        }
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -213,9 +237,11 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                     {(isMobile ? selectedView : tabIndex) === 0 &&
                     <StockHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 1 &&
-                    <PurchaseHistoryTable isAuthenticated={isAuthenticated}
-                                          onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
-                                          productHistory={productHistory}/>}
+                    <PurchaseHistoryTable
+                        refreshHistory={refreshProductHistory}
+                        isAuthenticated={isAuthenticated}
+                        onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
+                        productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 2 &&
                     <SalesHistoryTable isAuthenticated={isAuthenticated} onDeleteHistoryRecord={onDeleteHistoryRecord}
                                        sortByDate={sortByDate}
