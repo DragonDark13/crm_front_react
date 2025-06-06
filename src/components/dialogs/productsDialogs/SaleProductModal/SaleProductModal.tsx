@@ -33,7 +33,8 @@ import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import PackagingSelector from "./PackagingSelector";
 import {useTheme} from "@mui/material/styles";
 import CancelButton from "../../../Buttons/CancelButton";
-
+//TODO check create customer
+//TODO choise added customer create interface
 
 const SaleProductModal = ({
                               openSale,
