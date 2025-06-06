@@ -12,6 +12,7 @@ import {roundToDecimalPlaces} from "../../../../utils/function";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
 import {IPurchaseData, ISupplierFull} from "../../../../utils/types";
 import {useSuppliers} from "../../../Provider/SupplierContext";
+import PriceField from "../../../FormComponents/PriceField";
 
 interface IPurchaseProductModal {
     openPurchase: boolean;
@@ -66,6 +67,7 @@ const PurchaseProductModal = ({
 
     // Автоматичний розрахунок total_price
     useEffect(() => {
+        validateFields()
         const totalPrice = purchaseDetails.quantity * purchaseDetails.purchase_price_per_item;
         setPurchaseDetails({...purchaseDetails, purchase_total_price: roundToDecimalPlaces(totalPrice, 2)});
     }, [purchaseDetails.quantity, purchaseDetails.purchase_price_per_item]);
@@ -88,6 +90,7 @@ const PurchaseProductModal = ({
         }
     };
 
+    console.log('purchaseDetails.purchase_price_per_item',purchaseDetails.purchase_price_per_item);
 
     return (
         <CustomDialog
@@ -164,21 +167,25 @@ const PurchaseProductModal = ({
 
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            size={"small"}
-                            label="Ціна за 1шт"
-                            type="number"
-                            value={purchaseDetails.purchase_price_per_item}
-                            onChange={(e) => setPurchaseDetails({
+                        <PriceField label={'Ціна за 1шт'} value={purchaseDetails.purchase_price_per_item} onChange={(e) => setPurchaseDetails({
                                 ...purchaseDetails,
                                 purchase_price_per_item: Number(e.target.value)
-                            })}
-                            fullWidth
-                            margin="normal"
-                            error={!!errors.price_per_item}
-                            helperText={errors.price_per_item}
-                            inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000
-                        />
+                            })}/>
+                        {/*<TextField*/}
+                        {/*    size={"small"}*/}
+                        {/*    label="Ціна за 1шт"*/}
+                        {/*    type="number"*/}
+                        {/*    value={purchaseDetails.purchase_price_per_item}*/}
+                        {/*    onChange={(e) => setPurchaseDetails({*/}
+                        {/*        ...purchaseDetails,*/}
+                        {/*        purchase_price_per_item: Number(e.target.value)*/}
+                        {/*    })}*/}
+                        {/*    fullWidth*/}
+                        {/*    margin="normal"*/}
+                        {/*    error={!!errors.price_per_item}*/}
+                        {/*    helperText={errors.price_per_item}*/}
+                        {/*    inputProps={{min: 0, max: 100000}}  // Обмеження значення від 0 до 100000*/}
+                        {/*/>*/}
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                         <TotalPriceField value={purchaseDetails.purchase_total_price}/>

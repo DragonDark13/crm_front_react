@@ -24,6 +24,7 @@ import {onDeleteHistoryRecord} from "../../../../api/_history";
 import {fetchProductHistory} from "../../../../api/_product";
 import {useAuth} from "../../../context/AuthContext";
 import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
+//TODO Add refresh data
 
 export interface ProductHistoryRecord {
     id: number;
@@ -243,9 +244,11 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                         onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
                         productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 2 &&
-                    <SalesHistoryTable isAuthenticated={isAuthenticated} onDeleteHistoryRecord={onDeleteHistoryRecord}
-                                       sortByDate={sortByDate}
-                                       productHistory={productHistory}/>}
+                    <SalesHistoryTable
+                        refreshHistory={refreshProductHistory}
+                        isAuthenticated={isAuthenticated} onDeleteHistoryRecord={onDeleteHistoryRecord}
+                        sortByDate={sortByDate}
+                        productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 3 &&
                     <CombinedHistoryTable productHistory={productHistory}/>}
                 </div>
