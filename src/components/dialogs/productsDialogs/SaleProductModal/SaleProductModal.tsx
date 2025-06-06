@@ -68,6 +68,17 @@ const SaleProductModal = ({
         sales: [],
         name: '', email: '', phone_number: '', address: ''
     });
+
+    const resetNewCustomerData = () => {
+        setNewCustomerData({
+            contact_info: "",
+            id: 0,
+            sales: [],
+            name: '', email: '', phone_number: '', address: ''
+        })
+    }
+
+
     const togglePackaging = () => {
         setShowPackaging(!showPackaging); // Перемикаємо видимість полів пакування
     };
@@ -227,19 +238,21 @@ const SaleProductModal = ({
             >
                 <React.Fragment>
                     <DialogContent>
-                        <Grid container >
-                             <Grid item xs={12}>
-                                 <Typography>Назва товару:
-                                     <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
-                                         {nameProduct}
-                                     </Typography>
-
-                                 </Typography>
-                             </Grid>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <Typography>Назва товару:
+                                    <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
+                                        {nameProduct}
+                                    </Typography>
+                                    {quantityOnStock < 1 &&
+                                    <Typography color={"error"}> Товару немає в наявнсті на складі</Typography>}
+                                </Typography>
+                            </Grid>
                         </Grid>
                         <Grid container alignItems={"end"} spacing={2}>
                             <Grid item xs={12} sm={6} md={4} lg={4}>
                                 <CustomerSelect
+                                    disabled={quantityOnStock < 1}
                                     customers={customers}
                                     value={saleData.customer}
                                     onChange={(e) => {
@@ -250,18 +263,22 @@ const SaleProductModal = ({
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
-                                <AddButton onClick={() => setOpenAddNewCustomerDialog(true)}/>
+                                <AddButton disabled={quantityOnStock < 1}
+                                           onClick={() => setOpenAddNewCustomerDialog(true)}/>
                             </Grid>
                             <Grid item xs={12} sm={4} md={3}>
-                                <DateFieldCustom label="Дата продажу"
-                                                 value={saleData.sale_date}
-                                                 onChange={(e) => handleChangeSaleDate(e.target.value)}
-                                                 error={!!errors.sale_date}
-                                                 helperText={errors.sale_date}
+                                <DateFieldCustom
+                                    disabled={quantityOnStock < 1}
+                                    label="Дата продажу"
+                                    value={saleData.sale_date}
+                                    onChange={(e) => handleChangeSaleDate(e.target.value)}
+                                    error={!!errors.sale_date}
+                                    helperText={errors.sale_date}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
                                 <TextField
+                                    disabled={quantityOnStock < 1}
                                     sx={{marginBottom: 0}}
                                     size={"small"}
                                     label="Ціна за 1шт (Продаж)"
@@ -280,12 +297,13 @@ const SaleProductModal = ({
                             </Grid>
 
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
+                        {quantityOnStock > 0 && <Grid item xs={12} sm={6} md={4}>
                             <Typography> Максимальна кількість {quantityOnStock}шт</Typography>
-                        </Grid>
+                        </Grid>}
                         <Grid container spacing={2} alignItems={"center"}>
                             <Grid item xs={12} sm={6} md={3}>
                                 <QuantityField
+                                    disabled={quantityOnStock < 1}
                                     onIncrement={incrementQuantity}
                                     onDecrement={decrementQuantity}
                                     value={saleData.quantity}
@@ -301,8 +319,10 @@ const SaleProductModal = ({
 
                                 {/* Кнопка для додавання пакування */}
                                 {!showPackaging && <Grid item xs={12}>
-                                    <Button variant={"contained"} endIcon={<AddIcon/>} onClick={togglePackaging}
-                                            color="secondary">
+                                    <Button
+                                        disabled={quantityOnStock < 1}
+                                        variant={"contained"} endIcon={<AddIcon/>} onClick={togglePackaging}
+                                        color="secondary">
                                         {showPackaging ? 'Приховати пакування' : 'Додати пакування'}
                                     </Button>
                                 </Grid>}
@@ -391,11 +411,13 @@ const SaleProductModal = ({
                         {/*<Button variant="contained" onClick={handleCloseSale} color="error">*/}
                         {/*    Відміна*/}
                         {/*</Button>*/}
-                        <CancelButton onClick={handleCloseSale} />
+                        <CancelButton onClick={handleCloseSale}/>
                         <Button
                             variant="contained"
                             onClick={handleSaleSubmit}
-                            disabled={isSubmitDisabled() || !isAuthenticated} // Додаємо перевірку для активності кнопки
+                            disabled={isSubmitDisabled() || !isAuthenticated || quantityOnStock < 1} // Додаємо
+                            // перевірку для активності
+                            // кнопки
                         >
                             Підтвердити продаж
                         </Button>
@@ -405,7 +427,10 @@ const SaleProductModal = ({
             <AddNewCustomerDialog
                 isAuthenticated={isAuthenticated}
                 handleAddCustomer={handleCreateCustomer}
-                handleCloseAddNewCustomerDialog={() => setOpenAddNewCustomerDialog(false)}
+                handleCloseAddNewCustomerDialog={() => {
+                    setOpenAddNewCustomerDialog(false)
+                    resetNewCustomerData();
+                }}
                 openAddNewCustomerDialog={openAddNewCustomerDialog}
                 setNewCustomerData={setNewCustomerData}
                 newCustomerData={newCustomerData}
