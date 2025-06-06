@@ -232,7 +232,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
 
                                                     <CircleBadge color={'primary.main'}
                                                                  title="Кількість проданого товару">
-                                                        {product.available_quantity}
+                                                        {product.sold_quantity}
                                                     </CircleBadge>
 
                                                 </Box>
