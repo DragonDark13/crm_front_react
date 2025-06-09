@@ -169,11 +169,15 @@ export interface INewGiftCustomerDetails {
 
 export interface ISaleHistory {
     id: number;
-    product: string;
+    product: IProduct;
+    packaging_material?:IMaterial
     quantity_sold: number;
     selling_price_per_item: number;
     selling_total_price: number;
     sale_date: string;
+    packaging_material_id?:number
+    packaging_quantity?:number
+    total_packaging_cost?:number
 }
 
 export interface IMaterialSupplier {
