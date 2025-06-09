@@ -121,7 +121,7 @@ export interface IConfirmDeleteModal {
     openConfirmDeleteModal: boolean;
     handleCloseDeleteModal: () => void;
     selectedDeleteModalProductId: number;
-    handleDelete: () => void;
+    handleDelete: (productId: number) => void;
 }
 
 export interface IStateFilters {

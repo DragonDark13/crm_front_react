@@ -2,6 +2,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} fr
 import {ICustomerDetails} from "../../../../utils/types";
 import {useState} from "react";
 import CustomDialog from "../../CustomDialog/CustomDialog";
+import CancelButton from "../../../Buttons/CancelButton";
 
 interface IEditCustomerDialog {
     handleEditCustomer: (customerData: ICustomerDetails) => void;
@@ -90,10 +91,10 @@ const EditCustomerDialog: React.FC<IEditCustomerDialog> = ({
                 />
             </DialogContent>
             <DialogActions>
-                <Button variant={"contained"} onClick={handleCloseEditCustomerDialog} color="error">
+                <CancelButton v onClick={handleCloseEditCustomerDialog} >
                     Скасувати
-                </Button>
-                <Button variant={"contained"} onClick={handleSave} color="success">
+                </CancelButton>
+                <Button variant={"contained"} onClick={handleSave} >
                     Зберегти
                 </Button>
             </DialogActions>

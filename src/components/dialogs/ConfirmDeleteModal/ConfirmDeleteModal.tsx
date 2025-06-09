@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {IConfirmDeleteModal} from "../../../utils/types";
+import CancelButton from "../../Buttons/CancelButton";
 
 const ConfirmDeleteModal = ({
                                 openConfirmDeleteModal, handleCloseDeleteModal, selectedDeleteModalProductId,
@@ -16,12 +17,12 @@ const ConfirmDeleteModal = ({
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseDeleteModal} color="primary">
+                <CancelButton onClick={handleCloseDeleteModal} >
                     Cancel
-                </Button>
+                </CancelButton>
                 <Button onClick={() => {
                     selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId!)
-                }} color="secondary">
+                }}  variant={"contained"}>
                     Delete
                 </Button>
             </DialogActions>
