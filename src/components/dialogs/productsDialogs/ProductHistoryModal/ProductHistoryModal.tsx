@@ -24,6 +24,8 @@ import {onDeleteHistoryRecord} from "../../../../api/_history";
 import {fetchProductHistory} from "../../../../api/_product";
 import {useAuth} from "../../../context/AuthContext";
 import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
+import {useProducts} from "../../../Provider/ProductContext";
+
 //TODO Add refresh data
 
 export interface ProductHistoryRecord {
@@ -127,6 +129,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const {isAuthenticated} = useAuth();
     const {showSnackbarMessage} = useSnackbarMessage();
+    const {fetchProductsFunc} = useProducts();
 
 
     useEffect(() => {
@@ -150,17 +153,17 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         try {
             showSnackbarMessage("Запис успішно видалений", "success");
 
-            fetchProductHistory(productId)
-                .then(response => {
-                    setProductHistory({
-                        stock: response.data.stock_history,
-                        purchase: response.data.purchase_history,
-                        sales: response.data.sale_history,
-                    });
-                })
-                .catch(error => {
-                    console.error('There was an error fetching the product history!', error);
-                });
+            const response = await fetchProductHistory(productId);
+
+
+            setProductHistory({
+                stock: response.data.stock_history,
+                purchase: response.data.purchase_history,
+                sales: response.data.sale_history,
+            });
+
+            fetchProductsFunc();
+
 
         } catch (error) {
             console.error('Помилка при оновленні історії товару:', error);

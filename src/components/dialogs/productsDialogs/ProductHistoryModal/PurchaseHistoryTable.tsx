@@ -10,7 +10,7 @@ import {
     TableFooter,
     Typography, Button, IconButton, Tooltip, Box, Dialog, DialogTitle, DialogContent, DialogActions
 } from "@mui/material";
-import {ISupplierFull} from "../../../../utils/types";
+import {IonDeleteHistoryRecord, ISupplierFull} from "../../../../utils/types";
 import {IProductPurchaseHistoryRecord, ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {useAuth} from "../../../context/AuthContext";
@@ -31,7 +31,7 @@ interface PurchaseHistoryRecord {
 
 
 interface PurchaseHistoryTableProps {
-    onDeleteHistoryRecord: (productId: number, historyType: string, historyId: number) => void;
+    onDeleteHistoryRecord: (params: IonDeleteHistoryRecord) => void;
     productHistory: ProductHistory;
     sortByDate: (arr: IProductPurchaseHistoryRecord[], field: string) => IProductPurchaseHistoryRecord[];
     isAuthenticated: boolean
@@ -146,7 +146,11 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> =
                     onConfirm={() => {
                         if (recordToDelete) {
                             try {
-                                onDeleteHistoryRecord(recordToDelete.product_id, 'purchase', recordToDelete.id);
+                                onDeleteHistoryRecord({
+                                    productId: recordToDelete.product_id,
+                                    historyType: 'purchase',
+                                    historyId: recordToDelete.id
+                                });
                                 refreshHistory();
                             } catch (error) {
                                 console.error("Помилка при видаленні:", error);

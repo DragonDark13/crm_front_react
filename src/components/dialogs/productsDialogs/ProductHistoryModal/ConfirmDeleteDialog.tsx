@@ -24,14 +24,18 @@ const ConfirmDeleteDialog: React.FC<ConfirmDeleteDialogProps> = ({
         <CustomDialog title={'Підтвердження видалення'} open={open} handleClose={handleClose}>
             <DialogContent>
                 <Typography>
-                    Ви дійсно хочете видалити запис <strong>{isPurchase ? 'закупівлі' : 'продажу'}</strong> товару від
+                    Ви дійсно хочете видалити запис <strong>{isPurchase ? 'закупівлі' : 'продажу'}</strong> товару
+                     {' '}
                     {isPurchase && record?.supplier?.name ? (
-                        <> постачальника <strong>{record.supplier.name}</strong></>
+                        <>від постачальника <strong>{record.supplier.name}</strong></>
                     ) : null}
+                    {!isPurchase && record?.customer?.name ?(
+                         <>покупцем <strong>{record?.customer?.name}</strong></>
+                    )  : null}
                     {' '}на
-                    дату <strong>{new Date(record?.date || record?.purchase_date || '').toLocaleDateString()}</strong>,
+                    дату <strong>{new Date(record?.sale_date || record?.purchase_date || '').toLocaleDateString()}</strong>,
                     кількість: <strong>{record?.quantity_purchase || record?.quantity_sold} шт</strong>,
-                    сума: <strong>{record?.purchase_total_price || record?.total_sale_price} грн</strong>?
+                    сума: <strong>{record?.purchase_total_price || record?.selling_total_price} грн</strong>?
                 </Typography>
             </DialogContent>
             <DialogActions>

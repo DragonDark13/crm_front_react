@@ -337,9 +337,6 @@ const SaleProductModal = ({
                                         removePackage={removePackage}
                                     />)}
                             </Grid>
-                            {/*<Grid item xs={12} sm={6} md={3}>*/}
-                            {/*    <TotalPriceField label={"Загальна сума (Продаж)"} value={saleData.selling_total_price}/>*/}
-                            {/*</Grid>*/}
 
 
                         </Grid>
