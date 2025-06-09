@@ -327,3 +327,9 @@ export interface INewInvestment {
     cost: number;
     date: string;
 }
+
+export interface IonDeleteHistoryRecord {
+    productId: number,
+    historyType: 'stock' | 'sale' | 'purchase',
+    historyId: number
+}

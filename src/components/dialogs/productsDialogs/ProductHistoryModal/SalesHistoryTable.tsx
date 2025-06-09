@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     Table,
     TableBody,
@@ -8,92 +8,158 @@ import {
     TableRow,
     Paper,
     Typography,
-    TableFooter, Button
+    TableFooter, Button, Tooltip, IconButton
 } from "@mui/material";
-import {ICustomer} from "../../../../utils/types";
-import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {ICustomer, IonDeleteHistoryRecord} from "../../../../utils/types";
+import {IProductSaleHistoryRecord, ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
+import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 
-interface SalesHistoryRecord {
-    id: number;
-    sale_date: string;
-    quantity_sold: number;
-    selling_price_per_item: number;
-    selling_total_price: number;
-    customer: ICustomer;
-}
 
 interface SalesHistoryTableProps {
-    onDeleteHistoryRecord: (historyType: string, historyId: number) => void;
-    productHistory: ProductHistory[];
-    sortByDate: (arr: ProductHistoryRecord[], field: string) => ProductHistoryRecord[];
+    onDeleteHistoryRecord: (params: IonDeleteHistoryRecord) => void;
+    productHistory: ProductHistory;
+    sortByDate: (arr: IProductSaleHistoryRecord[], field: string) => IProductSaleHistoryRecord[];
+    isAuthenticated: boolean
+    refreshHistory: () => void;
+
 }
 
-const SalesHistoryTable: React.FC<SalesHistoryTableProps> = ({productHistory, sortByDate, onDeleteHistoryRecord}) => {
-    return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Дата</TableCell>
-                        <TableCell>Клієнт</TableCell>
-                        <TableCell>Ціна</TableCell>
-                        <TableCell>Кількість проданих одиниць</TableCell>
-                        <TableCell>Загальна ціна</TableCell>
-                        <TableCell>Дії</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {(productHistory.sales && productHistory.sales.length > 0) ?
-                        sortByDate(productHistory.sales, 'sale_date').map((record) => (
-                            <TableRow key={record.id + record.sale_date}>
-                                <TableCell>{new Date(record.sale_date!).toLocaleString()}</TableCell>
-                                <TableCell>{record.customer.name}</TableCell>
-                                <TableCell>{record.selling_price_per_item}</TableCell>
-                                <TableCell>{record.quantity_sold}</TableCell>
-                                <TableCell>{record.selling_total_price}</TableCell>
-                                <TableCell>
-                                    <Button
-                                        color="secondary"
-                                        onClick={() => onDeleteHistoryRecord('sale', record.id)}
-                                    >
-                                        Видалити
-                                    </Button>
-                                </TableCell>
+const SalesHistoryTable: React.FC<SalesHistoryTableProps> =
+    ({
+         productHistory,
+         sortByDate,
+         onDeleteHistoryRecord,
+         isAuthenticated,
+         refreshHistory
+     }) => {
+        const {showSnackbarMessage} = useSnackbarMessage()
 
-                            </TableRow>
-                        ))
-                        : (
+        const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+        const [recordToDelete, setRecordToDelete] = useState<null | IProductSaleHistoryRecord>(null);
+
+        const handleDeleteClick = (record: IProductSaleHistoryRecord) => {
+            setRecordToDelete(record);
+            if (recordToDelete !== null) {
+
+                setOpenConfirmDialog(true);
+
+
+            }
+
+        };
+
+        const totalPurchased = productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0);
+        const totalSold = productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0);
+
+        const currentStock = totalPurchased - totalSold;
+
+        console.log('currentStock:', currentStock);
+
+        return (
+            <React.Fragment>
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
                             <TableRow>
-                                <TableCell colSpan={5}>
-                                    <Typography>Немає Історії продажів.</Typography>
-                                </TableCell>
+                                <RenderHeaderCell>Дата</RenderHeaderCell>
+                                <RenderHeaderCell>Клієнт</RenderHeaderCell>
+                                <RenderHeaderCell>Ціна</RenderHeaderCell>
+                                <RenderHeaderCell>Кількість проданих одиниць</RenderHeaderCell>
+                                <RenderHeaderCell>Загальна ціна</RenderHeaderCell>
+                                <RenderHeaderCell>Дії</RenderHeaderCell>
                             </TableRow>
-                        )
-                    }
-                </TableBody>
-                {productHistory.sales && productHistory.sales.length > 0 && (
-                    <TableFooter>
-                        <TableRow>
-                            <TableCell colSpan={3} align="right">
-                                <Typography>
-                                    Загальна
-                                    кількість:
-                                </Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography
-                                    variant={"subtitle2"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
-                            </TableCell>
-                            <TableCell>
-                                <Typography
-                                    variant={"subtitle2"}> {productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableFooter>
-                )}
-            </Table>
-        </TableContainer>
-    );
-};
+                        </TableHead>
+                        <TableBody>
+                            {(productHistory.sales && productHistory.sales.length > 0) ?
+                                sortByDate(productHistory.sales, 'sale_date').map((record) => (
+                                    <TableRow key={record.id + record.sale_date}>
+                                        <TableCell
+                                            size={"small"}>{new Date(record.sale_date!).toLocaleString()}</TableCell>
+                                        <TableCell size={"small"}>{record.customer.name}</TableCell>
+                                        <TableCell size={"small"}>{record.selling_price_per_item}</TableCell>
+                                        <TableCell size={"small"}>{record.quantity_sold}</TableCell>
+                                        <TableCell size={"small"}>{record.selling_total_price}</TableCell>
+                                        <TableCell size={"small"}>
+                                            <Tooltip title="Видалити">
+                                       <span>
+                                           <IconButton disabled={!isAuthenticated}
+                                                       color="error"
+                                                       onClick={() => handleDeleteClick(record)}>
+                                                                                   <DeleteIcon fontSize="small"/>
+                                                                               </IconButton>
+                                       </span>
+                                            </Tooltip>
+                                            {/*<Button*/}
+                                            {/*    color="secondary"*/}
+                                            {/*    onClick={() => onDeleteHistoryRecord('sale', record.id)}*/}
+                                            {/*>*/}
+                                            {/*    Видалити*/}
+                                            {/*</Button>*/}
+                                        </TableCell>
+
+                                    </TableRow>
+                                ))
+                                : (
+                                    <TableRow>
+                                        <TableCell colSpan={5}>
+                                            <Typography>Немає Історії продажів.</Typography>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            }
+                        </TableBody>
+                        {productHistory.sales && productHistory.sales.length > 0 && (
+                            <TableFooter>
+                                <TableRow>
+                                    <TableCell colSpan={3} align="right">
+                                        <Typography variant={"subtitle2"}>
+                                            Загальна
+                                            кількість:
+                                        </Typography>
+                                    </TableCell>
+                                    <TableCell size={"small"}>
+                                        <Typography
+                                            variant={"subtitle2"}
+                                            fontWeight={"bold"}>{productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0)}</Typography>
+                                    </TableCell>
+                                    <TableCell size={"small"}>
+                                        <Typography
+                                            variant={"subtitle2"}
+                                            fontWeight={"bold"}> {productHistory.sales.reduce((sum, record) => sum + record.selling_total_price, 0).toFixed(2)}</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            </TableFooter>
+                        )}
+                    </Table>
+                </TableContainer>
+                <ConfirmDeleteDialog
+                    open={openConfirmDialog}
+                    handleClose={() => setOpenConfirmDialog(false)}
+                    record={recordToDelete}
+                    type={'sale'} // 'purchase' або 'sale'
+                    onConfirm={async () => {
+                        if (recordToDelete) {
+                            try {
+                                await onDeleteHistoryRecord({
+                                    productId: recordToDelete.product_id,
+                                    historyType: 'sale',
+                                    historyId: recordToDelete.id
+                                });
+
+                                await refreshHistory(); // чекаємо оновлення після видалення
+                            } catch (error) {
+                                console.error("Помилка при видаленні:", error);
+                            }
+                        }
+                        setOpenConfirmDialog(false);
+                    }}
+                />
+            </React.Fragment>
+
+        );
+    };
 
 export default SalesHistoryTable;

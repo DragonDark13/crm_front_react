@@ -15,7 +15,7 @@ import {
     TableRow,
     Paper,
     Collapse,
-    IconButton, Typography, Tooltip, Grid, Box
+    IconButton, Typography, Tooltip, Grid, Box, TablePagination
 } from '@mui/material';
 import {ExpandMore as ExpandMoreIcon, Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
 import {INewSupplier, ISupplierFull} from "../../utils/types";
@@ -34,6 +34,7 @@ import {useAuth} from "../context/AuthContext";
 import CustomDialog from "../dialogs/CustomDialog/CustomDialog";
 import EditSupplierModal from "../dialogs/EditSupplierModal/EditSupplierModal";
 import {useTheme} from "@mui/material/styles";
+import AddButton from "../Buttons/AddButton";
 
 interface ICurrentSupplier {
     name: string;
@@ -144,17 +145,46 @@ const SupplierPage: React.FC = () => {
         }
     };
 
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    const paginatedSuppliers = suppliers.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+    );
+
     return (
         <div>
             <Typography marginBlockEnd={1} variant={"h4"}>Постачальники</Typography>
             <Grid container spacing={2} justifyContent={"space-between"} marginBottom={4}>
                 <Grid item> <Typography>Перегляд і керування постачальниками</Typography></Grid>
-                <Grid item> <Button variant="contained" color="primary" onClick={() => setOpenAddModal(true)}>
-                    Додати постачальника
-                </Button></Grid>
+                <Grid item>
+                    <AddButton text={' Додати постачальника'} onClick={() => setOpenAddModal(true)}/>
+
+                </Grid>
 
             </Grid>
 
+            <TablePagination
+                component="div"
+                count={suppliers.length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage="Рядків на сторінці:"
+                rowsPerPageOptions={[5, 10, 25, 50]}
+            />
 
             {/* Таблиця постачальників */}
             <TableContainer component={Paper}>
@@ -170,7 +200,7 @@ const SupplierPage: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {suppliers.map((supplier) => (
+                        {paginatedSuppliers.map((supplier) => (
                             <React.Fragment key={supplier.id}>
                                 <TableRow
                                     sx={{background: openHistory === supplier.id ? theme.palette.grey[500] : "inherit",}}>
@@ -288,6 +318,17 @@ const SupplierPage: React.FC = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePagination
+                component="div"
+                count={suppliers.length}
+                page={page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                labelRowsPerPage="Рядків на сторінці:"
+                rowsPerPageOptions={[5, 10, 25, 50]}
+            />
+
 
             {/* Модальне вікно для додавання постачальника */}
             <AddSupplierModal

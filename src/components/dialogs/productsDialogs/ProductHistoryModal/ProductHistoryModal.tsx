@@ -22,6 +22,11 @@ import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
 import {onDeleteHistoryRecord} from "../../../../api/_history";
 import {fetchProductHistory} from "../../../../api/_product";
+import {useAuth} from "../../../context/AuthContext";
+import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
+import {useProducts} from "../../../Provider/ProductContext";
+
+//TODO Add refresh data
 
 export interface ProductHistoryRecord {
     id: number;
@@ -41,10 +46,59 @@ export interface ProductHistoryRecord {
     customer?: ICustomer;
 }
 
+interface IPurchaseHistorySupplier {
+    id: number;
+    name: string;
+    contact_info: string | null;
+}
+
+export interface IProductPurchaseHistoryRecord {
+    id: number;
+    product_id: number;
+    purchase_date: string; // або Date, якщо парсити вручну
+    purchase_price_per_item: number;
+    purchase_total_price: number;
+    quantity_purchase: number;
+    supplier_id: number;
+    supplier: IPurchaseHistorySupplier;
+}
+
+interface IProductHistoryRecordCustomer {
+    id: number;
+    name: string;
+    email: string;
+    address: string;
+    phone_number: string;
+}
+
+
+export interface IProductSaleHistoryRecord {
+    id: number;
+    product_id: number;
+    quantity_sold: number;
+    selling_price_per_item: number;
+    selling_total_price: number;
+    packaging_material_id: number | null;
+    packaging_quantity: number;
+    total_packaging_cost: number;
+    profit: number;
+    sale_date: string; // ISO string, або можеш використати `Date` якщо парсиш
+    customer_id: number;
+    customer: IProductHistoryRecordCustomer;
+}
+
+export interface IStockHistoryRecord {
+    id: number;
+    product_id: number,
+    timestamp: string;
+    change_type: string;
+    change_amount: number;
+}
+
 export interface ProductHistory {
-    stock: ProductHistoryRecord[];
-    purchase: ProductHistoryRecord[];
-    sales: ProductHistoryRecord[];
+    stock: IStockHistoryRecord[];
+    purchase: IProductPurchaseHistoryRecord[];
+    sales: IProductSaleHistoryRecord[];
 }
 
 interface IProductHistoryModal {
@@ -73,6 +127,10 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
     const [tabIndex, setTabIndex] = useState<number>(0);
     const [selectedView, setSelectedView] = useState<number>(0);
     const [isMobile, setIsMobile] = useState<boolean>(false);
+    const {isAuthenticated} = useAuth();
+    const {showSnackbarMessage} = useSnackbarMessage();
+    const {fetchProductsFunc} = useProducts();
+
 
     useEffect(() => {
         if (openHistory) {
@@ -91,6 +149,27 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         }
     }, [openHistory, productId]);
 
+    const refreshProductHistory = async () => {
+        try {
+            showSnackbarMessage("Запис успішно видалений", "success");
+
+            const response = await fetchProductHistory(productId);
+
+
+            setProductHistory({
+                stock: response.data.stock_history,
+                purchase: response.data.purchase_history,
+                sales: response.data.sale_history,
+            });
+
+            fetchProductsFunc();
+
+
+        } catch (error) {
+            console.error('Помилка при оновленні історії товару:', error);
+        }
+    };
+
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -103,16 +182,16 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
     }, []);
 
 
-    const handleDeleteHistoryRecord = (historyType: string, historyId: number) => {
-        onDeleteHistoryRecord(productId, historyType, historyId)
-            .then(() => {
-                // Оновити історію після видалення
-                fetchProductHistory(productId);
-            })
-            .catch((error) => {
-                console.error('Error deleting history record:', error);
-            });
-    };
+    // const handleDeleteHistoryRecord = (historyType: string, historyId: number) => {
+    //     onDeleteHistoryRecord(productId, historyType, historyId)
+    //         .then(() => {
+    //             // Оновити історію після видалення
+    //             fetchProductHistory(productId);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error deleting history record:', error);
+    //         });
+    // };
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);
@@ -134,7 +213,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         <CustomDialog
             open={openHistory}
             handleClose={onClose}
-            title={`Історія товару ${productName}`}
+            title={`Історія товару "${productName}"`}
             maxWidth={"xl"}
         >
             <DialogContent>
@@ -162,11 +241,17 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                     {(isMobile ? selectedView : tabIndex) === 0 &&
                     <StockHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 1 &&
-                    <PurchaseHistoryTable onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
-                                          productHistory={productHistory}/>}
+                    <PurchaseHistoryTable
+                        refreshHistory={refreshProductHistory}
+                        isAuthenticated={isAuthenticated}
+                        onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
+                        productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 2 &&
-                    <SalesHistoryTable onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
-                                       productHistory={productHistory}/>}
+                    <SalesHistoryTable
+                        refreshHistory={refreshProductHistory}
+                        isAuthenticated={isAuthenticated} onDeleteHistoryRecord={onDeleteHistoryRecord}
+                        sortByDate={sortByDate}
+                        productHistory={productHistory}/>}
                     {(isMobile ? selectedView : tabIndex) === 3 &&
                     <CombinedHistoryTable productHistory={productHistory}/>}
                 </div>

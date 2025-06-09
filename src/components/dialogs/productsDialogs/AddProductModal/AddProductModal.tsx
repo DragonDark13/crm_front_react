@@ -23,9 +23,8 @@ import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import {useSupplierModal} from "../../../../hooks/useSupplierModal";
 import CreateNewCategoryModal from "../../CreateNewCategoryModal/CreateNewCategoryModal";
 import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
-//TODO додай постачальників таблиці
-// TODO Повідомлення про успіх
-// TODO Окремі поля для ціни закупівельної і проданої
+
+// TODO додавання нової категорі
 
 
 interface IAddProductModal {
@@ -127,8 +126,12 @@ const AddProductModal = ({
         handleAddSupplier
     } = useSupplierModal(modalNames, newProduct, setNewProduct);
 
-        const categoryModal = useCreateCategoryModal(modalNames);
-
+    const categoryModal = useCreateCategoryModal(modalNames);
+    const handleCreateCategory = (name: string) => {
+        categoryModal.createNewCategory(name, (newCategory) => {
+            handleCategoryChange([...selectedCategories, newCategory.id]);
+        });
+    };
 
     return (
         <React.Fragment>
@@ -191,8 +194,8 @@ const AddProductModal = ({
 
                                 }}
 
-                                helperText={errors.price_per_item ? errors.price_per_item : ''}
-                                error={errors.price_per_item}
+                                helperText={errors.price_per_item || ''}
+                                error={Boolean(errors.price_per_item)}
                             />
 
                         </Grid>
@@ -221,8 +224,8 @@ const AddProductModal = ({
                                     }
 
                                 }}
-
-                                error={errors.price_per_item}
+                                helperText={errors.price_per_item || ''}
+                                error={Boolean(errors.price_per_item)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
@@ -258,11 +261,12 @@ const AddProductModal = ({
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={3}>
-                            <DateFieldCustom value={newProduct.created_date} label="Дата створення"
-                                             onChange={(e) => setNewProduct({
-                                                 ...newProduct,
-                                                 created_date: e.target.value
-                                             })}/>
+                            <DateFieldCustom
+                                value={newProduct.created_date} label="Дата створення"
+                                onChange={(e) => setNewProduct({
+                                    ...newProduct,
+                                    created_date: e.target.value
+                                })}/>
 
 
                         </Grid>
@@ -303,7 +307,7 @@ const AddProductModal = ({
                 categoryModal.modalState.openCategoryCreate &&
                 <CreateNewCategoryModal
                     isAuthenticated={isAuthenticated}
-                    createNewCategory={categoryModal.createNewCategory}
+                    createNewCategory={handleCreateCategory}
                     openCategoryCreateModal={categoryModal.modalState.openCategoryCreate}
                     handleCloseCategoryModal={() => categoryModal.handleCategoryModalClose("openCategoryCreate")}
                 />

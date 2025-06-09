@@ -1,4 +1,4 @@
-import {ChangeEvent, FC} from "react";
+import {ChangeEvent, FC, useState} from "react";
 import {TextField, TextFieldProps} from "@mui/material";
 
 
@@ -14,20 +14,21 @@ const PriceField: ({value, onChange, label, ...rest}: IPriceField) => JSX.Elemen
                                                                                          onChange,
                                                                                          label = '"Ціна за 1шт (Закупівельна)"',
                                                                                          ...rest
-                                                                                     }: IPriceField) => (
+                                                                                     }: IPriceField) => {
 
-    <TextField
 
-        size={"small"}
-        label={label}
-        type="number"
-        value={value}
-        onChange={onChange}
-        fullWidth
-        margin="normal"
-        inputProps={{inputMode: 'decimal', pattern: '[0-9]*[.,]?[0-9]{0,2}', step: 0.01}}
-         {...rest}
-    />
-);
+    return (<TextField
+            size={"small"}
+            label={label}
+            type="number"
+            value={value}
+            onChange={onChange}
+            fullWidth
+            margin="normal"
+            inputProps={{inputMode: 'decimal', pattern: '[0-9]*[.,]?[0-9]{0,2}', step: 0.01}}
+            {...rest}
+        />
+    )
+};
 
 export default PriceField;

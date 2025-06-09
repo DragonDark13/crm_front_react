@@ -256,6 +256,7 @@ function App() {
                                 ref={(el, index) => {
                                     tableRowRefs.current[index] = el;
                                 }}
+                                setSearchTerm={setSearchTerm}
                                 searchTerm={searchTerm}
                                 products={products}
                                 isAuthenticated={isAuthenticated}
@@ -291,6 +292,7 @@ function App() {
                                     tableRowRefs.current[index] = el;
                                 }}
                                 searchTerm={searchTerm}
+                                setSearchTerm={setSearchTerm}
                                 products={products}
                                 isAuthenticated={isAuthenticated}
                                 showSnackbarMessage={showSnackbarMessage}
