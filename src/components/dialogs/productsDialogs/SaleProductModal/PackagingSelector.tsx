@@ -12,6 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import QuantityField from "../../../FormComponents/QuantityField";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
 import {useTheme} from "@mui/material/styles";
+//TODO add possible adding multipole packaging
 
 const PackagingSelector = ({
                                saleData,

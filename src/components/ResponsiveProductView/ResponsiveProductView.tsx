@@ -20,6 +20,7 @@ interface IResponsiveProductViewProps {
     handleSort: (property: keyof IProduct) => void;
     sortProducts: (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => IProduct[];
     getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
+    handleOpenProductInfoModal: (product: IProduct) => void;
     handleOpenEdit: (product: IProduct) => void;
     handleDelete: (productId: number) => void;
     handleOpenHistoryModal: (productId: number) => void;
@@ -54,9 +55,10 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                                                                                      itemsPerPage,
                                                                                      setItemsPerPage,
                                                                                      filteredAndSearchedProducts,
-                                                                                     selectedLowProductId
+                                                                                     selectedLowProductId,
+                                                                                     handleOpenProductInfoModal
 
-                                                                                 }, ref) => {
+                                                                                 }: IResponsiveProductViewProps, ref) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const {isAuthenticated} = useAuth();
@@ -74,7 +76,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
     return (
         <React.Fragment>
             <Grid container alignItems={"center"} justifyContent={"flex-end"}>
-                <Grid item xs={12} md={6} sx={{marginTop:1}}>
+                <Grid item xs={12} md={6} sx={{marginTop: 1}}>
                     <AddButton onClick={() => setOpenAddProductModal(true)}
                                text={'Hовий товар'} title={'Придбати' +
                     ' новий товар'}/>
@@ -160,6 +162,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                     handleOpenSale={handleOpenSale}
                     handleOpenHistoryModal={handleOpenHistoryModal}
                     isAuthenticated={isAuthenticated}
+                    handleOpenProductInfoModal={handleOpenProductInfoModal}
                 />
             )}
             <TablePagination

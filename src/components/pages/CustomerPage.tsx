@@ -22,6 +22,9 @@ import {
 } from "../../api/_customer";
 //TODO перенести у запити у відповідні контексти
 import {Visibility, Edit, Delete} from "@mui/icons-material";
+import AddButton from "../Buttons/AddButton";
+import RenderHeaderCell from "../_elements/RenderHeaderCell";
+import ConfirmDeleteCustomerDialog from "../dialogs/ConfirmDeleteCustomerDialog/ConfirmDeleteCustomerDialog";
 
 const CustomerPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
@@ -39,8 +42,8 @@ const CustomerPage: React.FC = () => {
     const [selectedCustomerDetails, setSelectedCustomerDetails] = useState<ICustomerDetails | null>(null);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
-
-
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+    const [customerIdToDelete, setCustomerIdToDelete] = useState<number | null>(null);
 
 
     // Функція для відкриття деталей клієнта
@@ -129,29 +132,58 @@ const CustomerPage: React.FC = () => {
 
     };
 
+
+    const handleConfirmDeleteCustomer = (customerId: number) => {
+        setCustomerIdToDelete(customerId);
+        setOpenConfirmDialog(true);
+    };
+
+    const handleCancelDelete = () => {
+        setOpenConfirmDialog(false);
+        setCustomerIdToDelete(null);
+    };
+
+    const handleDeleteConfirmed = () => {
+        if (customerIdToDelete !== null) {
+            deleteCustomerData(customerIdToDelete)
+                .then(() => {
+                    fetchGetAllCustomersFunc();
+                    showSnackbarMessage('Клієнта успішно видалено!', 'success');
+                })
+                .catch((error: AxiosError) => {
+                    showSnackbarMessage('Помилка видалення: ' + error.response?.data?.error || '', 'error');
+                    console.error('Error deleting customer:', error);
+                })
+                .finally(() => {
+                    setOpenConfirmDialog(false);
+                    setCustomerIdToDelete(null);
+                });
+        }
+    };
+
+
     return (
         <div>
-            <Button  variant="contained" color="primary" onClick={handleOpenModal}>
-                Додати нового Кліента
-            </Button>
+            <AddButton text={'Додати нового Кліента'} onClick={handleOpenModal}/>
+
 
             {/* Таблиця з переліком усіх покупців */}
             <TableContainer component={Paper} style={{marginTop: '20px'}}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell><Typography variant="subtitle2">Ім'я</Typography></TableCell>
-                            <TableCell><Typography variant="subtitle2">Єлектронна пошта</Typography></TableCell>
-                            <TableCell><Typography variant="subtitle2">Телефонний номер</Typography></TableCell>
-                            <TableCell><Typography variant="subtitle2">Address</Typography></TableCell>
-                            <TableCell><Typography variant="subtitle2" align={"right"}>Дії</Typography></TableCell>
+                            <RenderHeaderCell>Ім'я</RenderHeaderCell>
+                            <RenderHeaderCell>Єлектронна пошта</RenderHeaderCell>
+                            <RenderHeaderCell>Телефонний номер</RenderHeaderCell>
+                            <RenderHeaderCell>Address</RenderHeaderCell>
+                            <RenderHeaderCell>Дії</RenderHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {customers.length > 0 ? customers.map((customer) => (
                                 <React.Fragment key={customer.id + customer.name}>
                                     <TableRow
-                                              >
+                                    >
                                         <TableCell size={"small"}><Typography
                                             variant="subtitle2">{customer.name}</Typography></TableCell>
                                         <TableCell size={"small"}><Typography
@@ -174,7 +206,7 @@ const CustomerPage: React.FC = () => {
                                             </Tooltip>
                                             <Tooltip title="Видалити">
                                                 <IconButton color="secondary"
-                                                            onClick={() => handleDeleteCustomer(customer.id)}>
+                                                            onClick={() => handleConfirmDeleteCustomer(customer.id)}>
                                                     <Delete/>
                                                 </IconButton>
                                             </Tooltip>
@@ -215,6 +247,13 @@ const CustomerPage: React.FC = () => {
                 openEditCustomerDialog={openEditCustomerDialog}
                 customerToEdit={customerToEdit}
                 setCustomerToEdit={setCustomerToEdit}
+            />
+
+            <ConfirmDeleteCustomerDialog
+                open={openConfirmDialog}
+                onCancel={handleCancelDelete}
+                onConfirm={handleDeleteConfirmed}
+                description="Ця дія незворотна. Ви впевнені, що хочете видалити клієнта?"
             />
         </div>
     );

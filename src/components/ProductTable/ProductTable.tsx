@@ -20,6 +20,7 @@ interface IProductTableProps {
     sortProducts: (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => IProduct[];
     getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
     handleOpenEdit: (product: IProduct) => void;
+    handleOpenProductInfoModal: (product: IProduct) => void;
     handleDelete: (productId: number) => void;
     handleOpenHistoryModal: (productId: number) => void;
     handlePurchase: (product: IProduct) => void;
@@ -54,7 +55,8 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                                    itemsPerPage,
                                                                    currentPage,
                                                                    selectedLowProductId,
-                                                                   isAuthenticated
+                                                                   isAuthenticated,
+                                                                   handleOpenProductInfoModal
                                                                }, ref) => {
 
 // Підрахунок загальної кількості та суми для закупівлі та продажу
@@ -277,6 +279,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                 handleOpenHistoryModal={handleOpenHistoryModal}
                                                 handleDelete={handleDelete}
                                                 isAuthenticated={isAuthenticated}
+                                                handleOpenProductInfoModal={handleOpenProductInfoModal}
                                             /> </TableCell>
                                     </TableRow>
                                 );

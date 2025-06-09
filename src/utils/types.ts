@@ -91,6 +91,7 @@ export type ModalNames =
     | 'createCustomerDialog'
     | 'addNewPackage'
     | 'addNewGiftBox'
+    | 'productInfoModal'
     ;
 
 export const modalNames: ModalNames[] = [
@@ -107,7 +108,8 @@ export const modalNames: ModalNames[] = [
     'snackbarNotifyOpen',
     'createCustomerDialog',
     'addNewPackage',
-    'addNewGiftBox'
+    'addNewGiftBox',
+    'productInfoModal'
 ];
 
 export interface INotificationPanel {
@@ -119,7 +121,7 @@ export interface IConfirmDeleteModal {
     openConfirmDeleteModal: boolean;
     handleCloseDeleteModal: () => void;
     selectedDeleteModalProductId: number;
-    handleDelete: () => void;
+    handleDelete: (productId: number) => void;
 }
 
 export interface IStateFilters {
@@ -155,6 +157,7 @@ export interface ICustomerDetails {
     address?: string;
     sales?: ISaleHistory[];
 }
+
 export interface INewGiftCustomerDetails {
     name: string;
     contact_info?: string;
@@ -166,11 +169,15 @@ export interface INewGiftCustomerDetails {
 
 export interface ISaleHistory {
     id: number;
-    product: string;
+    product: IProduct;
+    packaging_material?:IMaterial
     quantity_sold: number;
     selling_price_per_item: number;
     selling_total_price: number;
     sale_date: string;
+    packaging_material_id?:number
+    packaging_quantity?:number
+    total_packaging_cost?:number
 }
 
 export interface IMaterialSupplier {

@@ -9,6 +9,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SellIcon from "@mui/icons-material/Sell";
 import HistoryIcon from "@mui/icons-material/History";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InfoIcon from '@mui/icons-material/Info';
 
 const EditProductMenu = ({
                              anchorEl,
@@ -20,6 +21,7 @@ const EditProductMenu = ({
                              handleOpenSale,
                              handleOpenHistoryModal,
                              handleDelete,
+                             handleOpenProductInfoModal,
                              isAuthenticated
                          }) => {
     return (
@@ -32,6 +34,14 @@ const EditProductMenu = ({
             open={open}
             onClose={handleClose}
         >
+
+            <MenuItem onClick={() => {
+                handleOpenProductInfoModal(selectedProduct);
+                handleClose();
+            }}>
+                <InfoIcon color="primary" fontSize="small" sx={{mr: 1}}/>
+                Детально
+            </MenuItem>
             <MenuItem onClick={() => {
                 handleOpenEdit(selectedProduct);
                 handleClose();
