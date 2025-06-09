@@ -45691,7 +45691,8 @@ const modalNames = [
   "snackbarNotifyOpen",
   "createCustomerDialog",
   "addNewPackage",
-  "addNewGiftBox"
+  "addNewGiftBox",
+  "productInfoModal"
 ];
 const Transition = React.forwardRef(function Transition2(props, ref) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { direction: "up", ref, ...props });
@@ -50856,6 +50857,7 @@ const EditProductMenu = ({
   handleOpenSale,
   handleOpenHistoryModal,
   handleDelete,
+  handleOpenProductInfoModal,
   isAuthenticated
 }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -50869,6 +50871,13 @@ const EditProductMenu = ({
       open,
       onClose: handleClose,
       children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(MenuItem, { onClick: () => {
+          handleOpenProductInfoModal(selectedProduct);
+          handleClose();
+        }, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { color: "primary", fontSize: "small", sx: { mr: 1 } }),
+          "Детально"
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(MenuItem, { onClick: () => {
           handleOpenEdit(selectedProduct);
           handleClose();
@@ -50957,7 +50966,8 @@ const ProductTable = reactExports.forwardRef(({
   itemsPerPage,
   currentPage,
   selectedLowProductId,
-  isAuthenticated
+  isAuthenticated,
+  handleOpenProductInfoModal
 }, ref) => {
   const totalQuantityPurchaseAllTime = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_quantity, 0);
   const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.available_quantity, 0);
@@ -51117,7 +51127,8 @@ const ProductTable = reactExports.forwardRef(({
                   handleOpenSale,
                   handleOpenHistoryModal,
                   handleDelete,
-                  isAuthenticated
+                  isAuthenticated,
+                  handleOpenProductInfoModal
                 }
               ),
               " "
@@ -51194,7 +51205,8 @@ const ResponsiveProductView = reactExports.forwardRef(({
   itemsPerPage,
   setItemsPerPage,
   filteredAndSearchedProducts,
-  selectedLowProductId
+  selectedLowProductId,
+  handleOpenProductInfoModal
 }, ref) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -51297,7 +51309,8 @@ const ResponsiveProductView = reactExports.forwardRef(({
         handlePurchase,
         handleOpenSale,
         handleOpenHistoryModal,
-        isAuthenticated
+        isAuthenticated,
+        handleOpenProductInfoModal
       }
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -53266,10 +53279,10 @@ const ConfirmDeleteModal = ({
     /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Confirm Delete" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Are you sure you want to delete this product?" }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCloseDeleteModal, color: "primary", children: "Cancel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleCloseDeleteModal, children: "Cancel" }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => {
         selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId);
-      }, color: "secondary", children: "Delete" })
+      }, variant: "contained", children: "Delete" })
     ] })
   ] });
 };
@@ -53297,6 +53310,64 @@ const DeleteAllProductsDialog = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleDelete, color: "error", autoFocus: true, children: "Видалити" })
       ] })
     ] })
+  ] });
+};
+const ProductInfoModal = ({ open, onClose, product }) => {
+  var _a2;
+  const { categories } = useCategories();
+  const matchedCategories = categories.filter(
+    (category) => product.category_ids.includes(category.id)
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(CustomDialog, { maxWidth: "sm", title: " Детальна інформація про товар", handleClose: onClose, open, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { dividers: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", children: product.name }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", children: "Кількість: " }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Загальна: ",
+        product.total_quantity
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "На складі: ",
+        product.available_quantity
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Продано од.: ",
+        product.sold_quantity
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Дата створення: ",
+        new Date(product.created_date).toLocaleDateString()
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Ціна закупки за одиницю: ",
+        product.purchase_price_per_item,
+        " грн"
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Загальна ціна закупки: ",
+        product.purchase_total_price,
+        " грн"
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Ціна продажу за одиницю: ",
+        product.selling_price_per_item,
+        " грн"
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Очікуваний дохід за од: ",
+        product.selling_total_price - product.purchase_price_per_item,
+        " грн"
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Постачальник: ",
+        ((_a2 = product.supplier) == null ? void 0 : _a2.name) || "—"
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+        "Категорії: ",
+        matchedCategories.map((c2) => c2.name).join(", ") || "—"
+      ] }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActions, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: onClose, children: "Закрити" }) })
   ] });
 };
 const ProductsCatalog = reactExports.forwardRef(({
@@ -53347,6 +53418,7 @@ const ProductsCatalog = reactExports.forwardRef(({
     selling_quantity: 0
   });
   const [editProduct, setEditProduct] = reactExports.useState(null);
+  const [infoProduct, setInfoProduct] = reactExports.useState(null);
   const [productId, setProductId] = reactExports.useState(null);
   const [purchaseDetails, setPurchaseDetails] = reactExports.useState({
     quantity: 1,
@@ -53550,6 +53622,11 @@ const ProductsCatalog = reactExports.forwardRef(({
     setSelectedCategories(product.category_ids);
     handleModalOpen("openEdit");
   };
+  const handleOpenProductInfoModal = (product) => {
+    setInfoProduct(null);
+    setInfoProduct(product);
+    handleModalOpen("productInfoModal");
+  };
   const mapProductToEditProduct = (product) => ({
     id: product.id,
     name: product.name,
@@ -53722,6 +53799,7 @@ const ProductsCatalog = reactExports.forwardRef(({
           sortProducts,
           getComparator,
           handleOpenEdit,
+          handleOpenProductInfoModal,
           handleDelete: handleDeleteModalOpen,
           handlePurchase: (product) => {
             console.log("Purchase product:", product);
@@ -53747,6 +53825,14 @@ const ProductsCatalog = reactExports.forwardRef(({
         handleCategoryChange,
         handleCloseAdd: () => handleModalClose("openAdd"),
         selectedCategories
+      }
+    ),
+    modalState.productInfoModal && infoProduct && !loadingState.isLoading && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ProductInfoModal,
+      {
+        product: infoProduct,
+        open: modalState.productInfoModal,
+        onClose: () => handleModalClose("productInfoModal")
       }
     ),
     modalState.openEdit && editProduct && !loadingState.isLoading && /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -53802,6 +53888,7 @@ const ProductsCatalog = reactExports.forwardRef(({
     modalState.openCategoryCreate && /* @__PURE__ */ jsxRuntimeExports.jsx(
       CreateNewCategoryModal,
       {
+        isAuthenticated,
         createNewCategory,
         openCategoryCreateModal: modalState.openCategoryCreate,
         handleCloseCategoryModal: () => handleModalClose("openCategoryCreate")
@@ -53819,6 +53906,7 @@ const ProductsCatalog = reactExports.forwardRef(({
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddSupplierModal,
       {
+        isAuthenticated,
         handleAddSupplier,
         open: modalState.openAddSupplierOpen,
         handleCloseAddSupplierModal: () => handleModalClose("openAddSupplierOpen")
@@ -53867,12 +53955,12 @@ const CustomerDetailsDialog = ({ open, customer, handleClose }) => {
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Електронна пошта:" }),
             " ",
-            customer.email
+            customer.email || "Немає даних"
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Телефон:" }),
             " ",
-            customer.phone_number
+            customer.phone_number || "Немає даних"
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body1", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Адреса:" }),
@@ -53881,17 +53969,55 @@ const CustomerDetailsDialog = ({ open, customer, handleClose }) => {
           ] }),
           customer.sales && customer.sales.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", sx: { mt: 2 }, children: "Історія покупок" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { children: customer.sales.map((sale) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
-              sale.product,
-              " - ",
-              sale.quantity_sold,
-              " шт. за ",
-              sale.selling_price_per_item,
-              " ₴"
-            ] }, sale.id)) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { children: customer.sales.map((sale) => {
+              var _a2, _b2, _c;
+              return /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { style: { marginBottom: 12 }, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Товар:" }),
+                  " ",
+                  ((_a2 = sale.product) == null ? void 0 : _a2.name) || "—",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Кількість:" }),
+                  " ",
+                  sale.quantity_sold,
+                  " шт.",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Ціна за одиницю:" }),
+                  " ",
+                  sale.selling_price_per_item,
+                  " ₴",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Дата продажу:" }),
+                  " ",
+                  sale.sale_date,
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Постачальник:" }),
+                  " ",
+                  ((_c = (_b2 = sale.product) == null ? void 0 : _b2.supplier) == null ? void 0 : _c.name) || "—"
+                ] }),
+                sale.packaging_material ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "body2", sx: { mt: 1 }, children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Пакування:" }),
+                  " ",
+                  sale.packaging_material.name,
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Кількість пакування:" }),
+                  " ",
+                  sale.packaging_quantity,
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Загальна собівартість пакування:" }),
+                  " ",
+                  sale.total_packaging_cost,
+                  " ₴",
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Постачальник пакування" }),
+                  " ",
+                  sale.packaging_material.supplier.name
+                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "body2", sx: { mt: 1 }, color: "text.secondary", children: "Пакування не використовувалось" })
+              ] }, sale.id);
+            }) })
           ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "body1", sx: { mt: 2 }, children: "Клієнт не виконав покупок." })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActions, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleClose, color: "primary", children: "Закрити" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActions, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleClose, children: "Закрити" }) })
       ]
     }
   );
@@ -53982,12 +54108,28 @@ const EditCustomerDialog = ({
           )
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: handleCloseEditCustomerDialog, color: "error", children: "Скасувати" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: handleSave, color: "success", children: "Зберегти" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { v: true, onClick: handleCloseEditCustomerDialog, children: "Скасувати" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: handleSave, children: "Зберегти" })
         ] })
       ]
     }
   );
+};
+const ConfirmDeleteCustomerDialog = ({
+  open,
+  title = "Підтвердження видалення",
+  description = "Ви впевнені, що хочете видалити цього покупця?",
+  onConfirm,
+  onCancel
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open, onClose: onCancel, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: title }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: description }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: onCancel, children: "Скасувати" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: onConfirm, variant: "contained", children: "Видалити" })
+    ] })
+  ] });
 };
 const CustomerPage = () => {
   const { showSnackbarMessage } = useSnackbarMessage();
@@ -54003,6 +54145,8 @@ const CustomerPage = () => {
   const { isAuthenticated } = useAuth();
   const [selectedCustomerDetails, setSelectedCustomerDetails] = reactExports.useState(null);
   const [openDetailsDialog, setOpenDetailsDialog] = reactExports.useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = reactExports.useState(false);
+  const [customerIdToDelete, setCustomerIdToDelete] = reactExports.useState(null);
   const handleViewDetails = (customerId) => {
     fetchCustomerDetails(customerId).then((response) => {
       if (response && response) {
@@ -54048,24 +54192,38 @@ const CustomerPage = () => {
     setCustomerToEdit(customer);
     setOpenEditCustomerDialog(true);
   };
-  const handleDeleteCustomer = (customerId) => {
-    deleteCustomerData(customerId).then(() => {
-      fetchGetAllCustomersFunc();
-      showSnackbarMessage("Customer deleted successfully!", "success");
-    }).catch((error) => {
-      showSnackbarMessage("Error deleting customer: " + error.response.data.error, "error");
-      console.error("Error deleting customer:", error);
-    });
+  const handleConfirmDeleteCustomer = (customerId) => {
+    setCustomerIdToDelete(customerId);
+    setOpenConfirmDialog(true);
+  };
+  const handleCancelDelete = () => {
+    setOpenConfirmDialog(false);
+    setCustomerIdToDelete(null);
+  };
+  const handleDeleteConfirmed = () => {
+    if (customerIdToDelete !== null) {
+      deleteCustomerData(customerIdToDelete).then(() => {
+        fetchGetAllCustomersFunc();
+        showSnackbarMessage("Клієнта успішно видалено!", "success");
+      }).catch((error) => {
+        var _a2, _b2;
+        showSnackbarMessage("Помилка видалення: " + ((_b2 = (_a2 = error.response) == null ? void 0 : _a2.data) == null ? void 0 : _b2.error) || "", "error");
+        console.error("Error deleting customer:", error);
+      }).finally(() => {
+        setOpenConfirmDialog(false);
+        setCustomerIdToDelete(null);
+      });
+    }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", onClick: handleOpenModal, children: "Додати нового Кліента" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { text: "Додати нового Кліента", onClick: handleOpenModal }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, style: { marginTop: "20px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", children: "Ім'я" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", children: "Єлектронна пошта" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", children: "Телефонний номер" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", children: "Address" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", align: "right", children: "Дії" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Ім'я" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Єлектронна пошта" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Телефонний номер" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Address" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Дії" })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: customers.length > 0 ? customers.map((customer) => /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
         TableRow,
@@ -54106,7 +54264,7 @@ const CustomerPage = () => {
                 IconButton,
                 {
                   color: "secondary",
-                  onClick: () => handleDeleteCustomer(customer.id),
+                  onClick: () => handleConfirmDeleteCustomer(customer.id),
                   children: /* @__PURE__ */ jsxRuntimeExports.jsx(Delete, {})
                 }
               ) })
@@ -54142,6 +54300,15 @@ const CustomerPage = () => {
         openEditCustomerDialog,
         customerToEdit,
         setCustomerToEdit
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ConfirmDeleteCustomerDialog,
+      {
+        open: openConfirmDialog,
+        onCancel: handleCancelDelete,
+        onConfirm: handleDeleteConfirmed,
+        description: "Ця дія незворотна. Ви впевнені, що хочете видалити клієнта?"
       }
     )
   ] });
