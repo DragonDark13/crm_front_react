@@ -46,6 +46,7 @@ import {logoutUser} from "../../api/_user";
 import {addNewCategory, fetchGetAllCategories} from "../../api/_categories";
 import {exportToExcel} from "../../api/api";
 import DeleteAllProductsDialog from "../dialogs/productsDialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
+import ProductInfoModal from "../dialogs/productsDialogs/ProductInfoModal";
 
 export interface IProductsCatalogProps {
     products: IProduct[];
@@ -71,7 +72,7 @@ export interface IProductsCatalogProps {
     setFilteredAndSearchedProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
     getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
     getFieldValue: (product: IProduct, field: keyof IProduct) => any;
-    searchTerm:string
+    searchTerm: string
 }
 
 const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
@@ -102,7 +103,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
 
                                                                      }: IProductsCatalogProps, ref) => {
 
-    const {fetchProductsFunc,loadingState} = useProducts();
+    const {fetchProductsFunc, loadingState} = useProducts();
     // const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
@@ -140,6 +141,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         selling_quantity: 0
     });
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
+    const [infoProduct, setInfoProduct] = useState<IProduct | null>(null);
 
     // Modal States
     // const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
@@ -393,6 +395,11 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         setEditProduct(mapProductToEditProduct(product));
         setSelectedCategories(product.category_ids);
         handleModalOpen('openEdit');
+    };
+    const handleOpenProductInfoModal = (product: IProduct) => {
+        setInfoProduct(null);
+        setInfoProduct(product);
+        handleModalOpen('productInfoModal');
     };
 
 
@@ -671,6 +678,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
                         sortProducts={sortProducts}
                         getComparator={getComparator}
                         handleOpenEdit={handleOpenEdit}
+                        handleOpenProductInfoModal={handleOpenProductInfoModal}
                         handleDelete={handleDeleteModalOpen}
                         handlePurchase={(product) => {
                             console.log('Purchase product:', product);
@@ -701,6 +709,13 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
                     handleCategoryChange={handleCategoryChange}
                     handleCloseAdd={() => handleModalClose("openAdd")}
                     selectedCategories={selectedCategories}/>
+            }
+
+            {(modalState.productInfoModal && infoProduct && !loadingState.isLoading) &&
+            <ProductInfoModal
+                product={infoProduct}
+                open={modalState.productInfoModal}
+                onClose={() => handleModalClose("productInfoModal")}/>
             }
 
             {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
@@ -752,6 +767,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
             {
                 modalState.openCategoryCreate &&
                 <CreateNewCategoryModal
+                    isAuthenticated={isAuthenticated}
                     createNewCategory={createNewCategory}
                     openCategoryCreateModal={modalState.openCategoryCreate}
                     handleCloseCategoryModal={() => handleModalClose("openCategoryCreate")}
@@ -764,6 +780,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
                                 handleDelete={handleDelete}/>
 
             <AddSupplierModal
+                isAuthenticated={isAuthenticated}
                 handleAddSupplier={handleAddSupplier}
                 open={modalState.openAddSupplierOpen}
                 handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}

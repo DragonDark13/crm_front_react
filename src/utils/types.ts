@@ -91,6 +91,7 @@ export type ModalNames =
     | 'createCustomerDialog'
     | 'addNewPackage'
     | 'addNewGiftBox'
+    | 'productInfoModal'
     ;
 
 export const modalNames: ModalNames[] = [
@@ -107,7 +108,8 @@ export const modalNames: ModalNames[] = [
     'snackbarNotifyOpen',
     'createCustomerDialog',
     'addNewPackage',
-    'addNewGiftBox'
+    'addNewGiftBox',
+    'productInfoModal'
 ];
 
 export interface INotificationPanel {
@@ -155,6 +157,7 @@ export interface ICustomerDetails {
     address?: string;
     sales?: ISaleHistory[];
 }
+
 export interface INewGiftCustomerDetails {
     name: string;
     contact_info?: string;
