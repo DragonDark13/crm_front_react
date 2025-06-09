@@ -194,8 +194,8 @@ const AddProductModal = ({
 
                                 }}
 
-                                helperText={errors.price_per_item ? errors.price_per_item : ''}
-                                error={errors.price_per_item}
+                                helperText={errors.price_per_item || ''}
+                                error={Boolean(errors.price_per_item)}
                             />
 
                         </Grid>
@@ -224,8 +224,8 @@ const AddProductModal = ({
                                     }
 
                                 }}
-
-                                error={errors.price_per_item}
+                                helperText={errors.price_per_item || ''}
+                                error={Boolean(errors.price_per_item)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
