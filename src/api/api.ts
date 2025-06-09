@@ -1,4 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from 'axios';
+import {IonDeleteHistoryRecord} from "../utils/types";
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
     return window.location.hostname === 'localhost'
@@ -50,7 +51,9 @@ export const API_ENDPOINTS = {
     REMOVE_GIFT_SET: (id: number) => `/remove_gift_set/${id}`,
     UPDATE_GIFT_SET: (id: number) => `/update_gift_set/${id}`,
     SELL_GIFT_SET: (id: number) => `/sell_gift_set/${id}`,
-    DELETE_HISTORY: (productId: number, historyType: string, historyId: number)=>`/delete-history/${productId}/${historyType}/${historyId}`
+    DELETE_HISTORY: ({
+                         productId, historyType, historyId
+                     }: IonDeleteHistoryRecord) => `/delete-history/${productId}/${historyType}/${historyId}`
 
 };
 
