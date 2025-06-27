@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import {useCustomers} from "../../Provider/CustomerContext";
-import AddIcon from "@mui/icons-material/Add";
 import {ICustomerDetails, IGiftSet, INewGiftCustomerDetails} from "../../../utils/types";
 import AddNewCustomerDialog from "../../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {AxiosError} from "axios";

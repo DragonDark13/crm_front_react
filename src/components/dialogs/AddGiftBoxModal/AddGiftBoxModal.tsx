@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {useProducts} from "../../Provider/ProductContext";
 import {
@@ -33,18 +33,28 @@ interface ICreateGiftBox {
 }
 
 
-const AddGiftBoxModal = ({handleCloseGiftModal, openGiftModal, handleAddNewGiftBox,isAuthenticated}: ICreateGiftBox) => {
+const AddGiftBoxModal = ({
+                             handleCloseGiftModal,
+                             openGiftModal,
+                             handleAddNewGiftBox,
+                             isAuthenticated
+                         }: ICreateGiftBox) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
     const [items, setItems] = useState([]); // Для всіх товарів
-    const {products} = useProducts();
-    const {packagingMaterials} = usePackaging();
+    const {products, fetchProductsFunc} = useProducts();
+    const {packagingMaterials, fetchPackagingOptions} = usePackaging();
     const [selectedProducts, setSelectedProducts] = useState<{ product: IProduct, quantity: number }[]>([]);
     const [selectedPackaging, setSelectedPackaging] = useState<{ material: IMaterial, quantity: number }[]>([]);
     const [showSelectProduct, setShowSelectProduct] = useState(false);
     const [showSelectPackaging, setShowSelectPackaging] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage()
+
+    useEffect(() => {
+        fetchProductsFunc()
+        fetchPackagingOptions();
+    }, []);
 
 
     const handleProductSelect = (event: any, value: any) => {
