@@ -20,6 +20,7 @@ import DeleteButton from "../Buttons/DeleteButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddInvestmentDialog from "../dialogs/AddInvestmentDialog/AddInvestmentDialog";
 import {INewInvestment, Investment} from "../../utils/types";
+import RenderHeaderCell from "../_elements/RenderHeaderCell";
 
 
 const InvestmentsPage: React.FC = () => {
@@ -51,8 +52,8 @@ const InvestmentsPage: React.FC = () => {
     };
 
     const handleDeleteInvestment = async (id: number) => {
-        await axiosInstance.delete(`/investments/${id}`);
-        await fetchInvestments();
+        await axiosInstance.delete(`/delete_investments/${id}`);
+        // await fetchInvestments();
     };
 
     useEffect(() => {
@@ -112,11 +113,11 @@ const InvestmentsPage: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell><Typography>Назва</Typography></TableCell>
-                            <TableCell><Typography>Вартість</Typography></TableCell>
-                            <TableCell><Typography>Постачальник</Typography></TableCell>
-                            <TableCell><Typography>Дата</Typography></TableCell>
-                            <TableCell><Typography>Дії</Typography></TableCell>
+                            <RenderHeaderCell>Назва</RenderHeaderCell>
+                            <RenderHeaderCell>Вартість</RenderHeaderCell>
+                            <RenderHeaderCell>Постачальник</RenderHeaderCell>
+                            <RenderHeaderCell>Дата</RenderHeaderCell>
+                            <RenderHeaderCell>Дії</RenderHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

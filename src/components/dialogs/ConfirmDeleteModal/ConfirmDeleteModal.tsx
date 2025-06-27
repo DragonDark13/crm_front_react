@@ -3,30 +3,31 @@ import PropTypes from 'prop-types';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import {IConfirmDeleteModal} from "../../../utils/types";
 import CancelButton from "../../Buttons/CancelButton";
+import CustomDialog from "../CustomDialog/CustomDialog";
 
 const ConfirmDeleteModal = ({
                                 openConfirmDeleteModal, handleCloseDeleteModal, selectedDeleteModalProductId,
                                 handleDelete
                             }: IConfirmDeleteModal) => {
     return (
-        <Dialog open={openConfirmDeleteModal} onClose={handleCloseDeleteModal}>
-            <DialogTitle>Confirm Delete</DialogTitle>
+        <CustomDialog maxWidth={"xs"} title={'Підтвердити видалення'} handleClose={handleCloseDeleteModal}
+                      open={openConfirmDeleteModal}>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure you want to delete this product?
+                    Ти впевнений що хочешь видалити цей товар?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <CancelButton onClick={handleCloseDeleteModal} >
-                    Cancel
+                <CancelButton text={'Відмінити'} onClick={handleCloseDeleteModal}>
+
                 </CancelButton>
                 <Button onClick={() => {
                     selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId!)
-                }}  variant={"contained"}>
-                    Delete
+                }} variant={"contained"}>
+                    Підтвердити
                 </Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 

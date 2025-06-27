@@ -6,6 +6,7 @@ import GiftSetSaleModal from "./GiftSetSaleModal";
 import {IGiftSet, IPackagingForGiftSet, IProductForGiftSet} from "../../../utils/types";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import {useGiftSet} from "../../Provider/GiftSetContext";
+import ConfirmDeleteGiftDialog from "./ConfirmDeleteGiftDialog";
 
 interface IGiftSetList {
     isAuthenticated: boolean
@@ -31,6 +32,21 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
 
     const [expandedProduct, setExpandedProduct] = useState(null);
     const [expandedPackaging, setExpandedPackaging] = useState(null);
+
+    const [openConfirmGiftDialog, setOpenConfirmGiftDialog] = useState(false);
+    const [selectedGiftSetId, setSelectedGiftSetId] = useState<number | null>(null);
+
+    const handleOpenDeleteConfirm = (giftSetId: number) => {
+        setSelectedGiftSetId(giftSetId);
+        setOpenConfirmGiftDialog(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (selectedGiftSetId !== null) {
+            deleteGiftSet(selectedGiftSetId);
+        }
+        setOpenConfirmGiftDialog(false);
+    };
 
     const handleToggleProduct = (id) => {
         setExpandedProduct(expandedProduct === id ? null : id);
@@ -180,7 +196,8 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
                                         <ShoppingCart/> Продати
                                     </Button>
                                     <Button disabled={!isAuthenticated} fullWidth size="small" color="secondary"
-                                            onClick={() => handleDelete(giftSet.id)}>
+                                            onClick={() => handleOpenDeleteConfirm(giftSet.id)}
+                                    >
                                         <Delete/> Видалити
                                     </Button>
                                 </CardActions>
@@ -216,6 +233,13 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
                     onClose={handleDialogClose}
                 />
             )}
+
+            <ConfirmDeleteGiftDialog
+                open={openConfirmGiftDialog}
+                onClose={() => setOpenConfirmGiftDialog(false)}
+                onConfirm={handleConfirmDelete}
+                itemName="цей подарунковий набір"
+            />
         </div>
     );
 };
