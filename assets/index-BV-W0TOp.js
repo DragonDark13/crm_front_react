@@ -45692,7 +45692,8 @@ const modalNames = [
   "createCustomerDialog",
   "addNewPackage",
   "addNewGiftBox",
-  "productInfoModal"
+  "productInfoModal",
+  "addNewOtherInvestmentModal"
 ];
 const Transition = React.forwardRef(function Transition2(props, ref) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Slide, { direction: "up", ref, ...props });
@@ -48385,7 +48386,12 @@ const API_ENDPOINTS = {
     productId,
     historyType,
     historyId
-  }) => `/delete-history/${productId}/${historyType}/${historyId}`
+  }) => `/delete-history/${productId}/${historyType}/${historyId}`,
+  // Додані шляхи для інвестицій
+  GET_ALL_INVESTMENTS: "/gel_all_investments",
+  CREATE_NEW_INVESTMENT: "/create_new_investments",
+  DELETE_INVESTMENT: (id2) => `/delete_investments/${id2}`,
+  DELETE_ALL_INVESTMENTS: "/delete_all_investments"
 };
 const handleError = (error) => {
   var _a2, _b2;
@@ -49805,18 +49811,27 @@ const SummarySection = ({ calculateTotalCost, calculateProfit }) => /* @__PURE__
     " грн"
   ] })
 ] });
-const AddGiftBoxModal = ({ handleCloseGiftModal, openGiftModal, handleAddNewGiftBox, isAuthenticated }) => {
+const AddGiftBoxModal = ({
+  handleCloseGiftModal,
+  openGiftModal,
+  handleAddNewGiftBox,
+  isAuthenticated
+}) => {
   const [name, setName] = reactExports.useState("");
   const [description, setDescription] = reactExports.useState("");
   const [price, setPrice] = reactExports.useState(0);
   reactExports.useState([]);
-  const { products } = useProducts();
-  const { packagingMaterials } = usePackaging();
+  const { products, fetchProductsFunc } = useProducts();
+  const { packagingMaterials, fetchPackagingOptions } = usePackaging();
   const [selectedProducts, setSelectedProducts] = reactExports.useState([]);
   const [selectedPackaging, setSelectedPackaging] = reactExports.useState([]);
   const [showSelectProduct, setShowSelectProduct] = reactExports.useState(false);
   const [showSelectPackaging, setShowSelectPackaging] = reactExports.useState(false);
   const { showSnackbarMessage } = useSnackbarMessage();
+  reactExports.useEffect(() => {
+    fetchProductsFunc();
+    fetchPackagingOptions();
+  }, []);
   const handleProductSelect = (event, value) => {
     if (value) {
       setSelectedProducts((prev2) => {
@@ -50124,12 +50139,177 @@ const useNewProduct = () => {
     resetNewProduct
   };
 };
+const AddInvestmentDialog = ({
+  open,
+  onClose,
+  onAdd,
+  newInvestment,
+  setNewInvestment,
+  isAuthenticated
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    CustomDialog,
+    {
+      maxWidth: "sm",
+      open,
+      handleClose: onClose,
+      title: "Додати інвестицію",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ProductNameField, { label: "Назва", value: newInvestment.type_name, onChange: (e2) => setNewInvestment({ ...newInvestment, type_name: e2.target.value }), error: null }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            ProductNameField,
+            {
+              label: "Постачальник",
+              value: newInvestment.supplier,
+              onChange: (e2) => setNewInvestment({ ...newInvestment, supplier: e2.target.value }),
+              error: null
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            PriceField,
+            {
+              label: "Вартість",
+              value: newInvestment.cost,
+              onChange: (e2) => {
+                const parsed = parseDecimalInput(e2.target.value);
+                if (parsed !== null) {
+                  setNewInvestment({ ...newInvestment, cost: parsed });
+                }
+              }
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            DateFieldCustom,
+            {
+              InputLabelProps: { shrink: true },
+              label: "Дата Закупки",
+              value: newInvestment.date,
+              onChange: (e2) => setNewInvestment({ ...newInvestment, date: e2.target.value })
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: onClose }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { disabled: !isAuthenticated, variant: "contained", onClick: onAdd, children: "Додати" })
+        ] })
+      ]
+    }
+  );
+};
+const getAllInvestments = async () => {
+  const response = await axiosInstance.get(API_ENDPOINTS.GET_ALL_INVESTMENTS);
+  return response.data;
+};
+const createInvestment = async (newInvestment) => {
+  await axiosInstance.post(API_ENDPOINTS.CREATE_NEW_INVESTMENT, newInvestment);
+};
+const deleteInvestmentById = async (id2) => {
+  await axiosInstance.delete(API_ENDPOINTS.DELETE_INVESTMENT(id2));
+};
+const deleteAllInvestments = async () => {
+  const response = await axiosInstance.delete(API_ENDPOINTS.DELETE_ALL_INVESTMENTS);
+  return response.data;
+};
+const InvestmentsContext = reactExports.createContext(void 0);
+const InvestmentsProvider = ({ children }) => {
+  const [investments, setInvestments] = reactExports.useState([]);
+  const [newInvestment, setNewInvestment] = reactExports.useState({
+    type_name: "",
+    cost: 0,
+    date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+    supplier: ""
+  });
+  const [addInvestDialogOpen, setAddInvestDialogOpen] = reactExports.useState(false);
+  const { showSnackbarMessage } = useSnackbarMessage();
+  const fetchInvestments = async () => {
+    try {
+      const data = await getAllInvestments();
+      setInvestments(data);
+    } catch (error) {
+      showSnackbarMessage("Помилка завантаження інвестицій", "error");
+    }
+  };
+  const resetNewInvestmentDialog = () => {
+    setNewInvestment({
+      type_name: "",
+      cost: 0,
+      date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
+      supplier: ""
+    });
+  };
+  const handleAddInvestment = async () => {
+    try {
+      await createInvestment(newInvestment);
+      await fetchInvestments();
+      setAddInvestDialogOpen(false);
+      resetNewInvestmentDialog();
+      showSnackbarMessage("Інвестицію додано", "success");
+    } catch (error) {
+      showSnackbarMessage("Помилка додавання інвестиції", "error");
+    }
+  };
+  const handleDeleteInvestment = async (id2) => {
+    try {
+      await deleteInvestmentById(id2);
+      await fetchInvestments();
+      showSnackbarMessage("Інвестицію видалено", "success");
+    } catch (error) {
+      showSnackbarMessage("Помилка видалення інвестиції", "error");
+    }
+  };
+  const handleAddInvestmentClose = () => {
+    resetNewInvestmentDialog();
+    setAddInvestDialogOpen(false);
+  };
+  const handleDeleteAllOtherInvestment = async (handleClose) => {
+    try {
+      const res = await deleteAllInvestments();
+      await fetchInvestments();
+      showSnackbarMessage("Всі записи успішно видалені", "success");
+      handleClose();
+    } catch (error) {
+      console.error("Помилка під час видалення:", error);
+      showSnackbarMessage("Сталася помилка під час видалення.", "error");
+    }
+  };
+  reactExports.useEffect(() => {
+    fetchInvestments();
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(InvestmentsContext.Provider, { value: {
+    investments,
+    newInvestment,
+    setNewInvestment,
+    addInvestDialogOpen,
+    setAddInvestDialogOpen,
+    fetchInvestments,
+    handleAddInvestment,
+    handleDeleteInvestment,
+    handleDeleteAllOtherInvestment,
+    handleAddInvestmentClose
+  }, children });
+};
+const useInvestments = () => {
+  const context = reactExports.useContext(InvestmentsContext);
+  if (!context) {
+    throw new Error("useInvestments must be used within an InvestmentsProvider");
+  }
+  return context;
+};
 const AddButtonWithMenu = () => {
   const [anchorEl, setAnchorEl] = reactExports.useState(null);
   const { showSnackbarMessage } = useSnackbarMessage();
   const { createCustomerFunc } = useCustomers();
   const { createNewGiftSet } = useGiftSet();
   const { fetchPackagingOptions } = usePackaging();
+  const {
+    newInvestment,
+    setNewInvestment,
+    addInvestDialogOpen,
+    setAddInvestDialogOpen,
+    handleAddInvestment,
+    handleAddInvestmentClose
+  } = useInvestments();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -50321,6 +50501,16 @@ const AddButtonWithMenu = () => {
               onClick: () => handleModalOpen("addNewGiftBox"),
               children: "Подарунковий набір"
             }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              fullWidth: true,
+              onClick: () => setAddInvestDialogOpen(true),
+              children: "Інше вкладення"
+            }
           ) })
         ] }) })
       }
@@ -50383,6 +50573,19 @@ const AddButtonWithMenu = () => {
         handleCloseGiftModal: () => handleModalClose("addNewGiftBox"),
         openGiftModal: modalState.addNewGiftBox,
         handleAddNewGiftBox
+      }
+    ),
+    addInvestDialogOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AddInvestmentDialog,
+      {
+        isAuthenticated,
+        newInvestment,
+        onAdd: handleAddInvestment,
+        onClose: () => {
+          handleAddInvestmentClose();
+        },
+        open: addInvestDialogOpen,
+        setNewInvestment
       }
     )
   ] });
@@ -53275,16 +53478,24 @@ const ConfirmDeleteModal = ({
   selectedDeleteModalProductId,
   handleDelete
 }) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: openConfirmDeleteModal, onClose: handleCloseDeleteModal, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Confirm Delete" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Are you sure you want to delete this product?" }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleCloseDeleteModal, children: "Cancel" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => {
-        selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId);
-      }, variant: "contained", children: "Delete" })
-    ] })
-  ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    CustomDialog,
+    {
+      maxWidth: "xs",
+      title: "Підтвердити видалення",
+      handleClose: handleCloseDeleteModal,
+      open: openConfirmDeleteModal,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Ти впевнений що хочешь видалити цей товар?" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { text: "Відмінити", onClick: handleCloseDeleteModal }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => {
+            selectedDeleteModalProductId && handleDelete(selectedDeleteModalProductId);
+          }, variant: "contained", children: "Підтвердити" })
+        ] })
+      ]
+    }
+  );
 };
 const DeleteAllProductsDialog = () => {
   const [open, setOpen] = reactExports.useState(false);
@@ -55453,17 +55664,7 @@ const DeleteAllInvestmentsDialog = () => {
   const [open, setOpen] = reactExports.useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleDelete = async () => {
-    var _a2, _b2;
-    try {
-      const response = await axiosInstance.delete("/delete_all_investments");
-      alert(response.data.message);
-      handleClose();
-    } catch (error) {
-      console.error("Помилка під час видалення:", error);
-      alert(((_b2 = (_a2 = error.response) == null ? void 0 : _a2.data) == null ? void 0 : _b2.error) || "Сталася помилка під час видалення.");
-    }
-  };
+  const { handleDeleteAllOtherInvestment } = useInvestments();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "error", onClick: handleClickOpen, children: "Видалити всі інвестиції" }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open, onClose: handleClose, children: [
@@ -55471,107 +55672,60 @@ const DeleteAllInvestmentsDialog = () => {
       /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentText, { children: "Ви впевнені, що хочете видалити **усі інвестиції**? Цю дію неможливо скасувати!" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleClose, color: "primary", children: "Скасувати" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleDelete, color: "error", autoFocus: true, children: "Видалити" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => handleDeleteAllOtherInvestment(handleClose), color: "error", autoFocus: true, children: "Видалити" })
       ] })
     ] })
   ] });
 };
-const AddInvestmentDialog = ({
-  open,
-  onClose,
-  onAdd,
-  newInvestment,
-  setNewInvestment,
-  isAuthenticated
-}) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-    CustomDialog,
-    {
-      maxWidth: "sm",
-      open,
-      handleClose: onClose,
-      title: "Додати інвестицію",
-      children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(ProductNameField, { label: "Назва", value: newInvestment.type_name, onChange: (e2) => setNewInvestment({ ...newInvestment, type_name: e2.target.value }), error: null }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            ProductNameField,
-            {
-              label: "Постачальник",
-              value: newInvestment.supplier,
-              onChange: (e2) => setNewInvestment({ ...newInvestment, supplier: e2.target.value }),
-              error: null
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            PriceField,
-            {
-              label: "Вартість",
-              value: newInvestment.cost,
-              onChange: (e2) => {
-                const parsed = parseDecimalInput(e2.target.value);
-                if (parsed !== null) {
-                  setNewInvestment({ ...newInvestment, cost: parsed });
-                }
-              }
-            }
-          ),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            DateFieldCustom,
-            {
-              InputLabelProps: { shrink: true },
-              label: "Дата Закупки",
-              value: newInvestment.date,
-              onChange: (e2) => setNewInvestment({ ...newInvestment, date: e2.target.value })
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: onClose }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { disabled: !isAuthenticated, variant: "contained", onClick: onAdd, children: "Додати" })
-        ] })
-      ]
-    }
-  );
+const ConfirmDeleteGiftDialog = ({ open, onClose, onConfirm, itemName }) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(CustomDialog, { maxWidth: "xs", title: "Підтвердження видалення", handleClose: onClose, open, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+      "Ви впевнені, що хочете видалити ",
+      itemName || "цей запис",
+      "?"
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { text: "Скасувати", onClick: onClose }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: onConfirm, color: "error", variant: "contained", children: "Видалити" })
+    ] })
+  ] });
 };
 const InvestmentsPage = () => {
-  const [investments, setInvestments] = reactExports.useState([]);
-  const [newInvestment, setNewInvestment] = reactExports.useState({
-    type_name: "",
-    cost: 0,
-    date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
-    supplier: ""
-  });
-  const [addInvestDialogOpen, setAdInvestDialogOpen] = reactExports.useState(false);
-  const fetchInvestments = async () => {
-    const response = await axiosInstance.get("/gel_all_investments");
-    setInvestments(response.data);
-  };
-  const resetNewInvestmentDialog = () => {
-    setNewInvestment({ type_name: "", cost: 0, date: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), supplier: "" });
-  };
-  const handleAddInvestment = async () => {
-    await axiosInstance.post("/create_new_investments", newInvestment);
-    await fetchInvestments();
-    setAdInvestDialogOpen(false);
-    resetNewInvestmentDialog();
-  };
-  const handleDeleteInvestment = async (id2) => {
-    await axiosInstance.delete(`/investments/${id2}`);
-    await fetchInvestments();
-  };
-  reactExports.useEffect(() => {
-    fetchInvestments();
-  }, []);
+  const {
+    investments,
+    newInvestment,
+    setNewInvestment,
+    addInvestDialogOpen,
+    setAddInvestDialogOpen,
+    handleAddInvestment,
+    handleDeleteInvestment,
+    handleAddInvestmentClose,
+    fetchInvestments
+  } = useInvestments();
+  const { showSnackbarMessage } = useSnackbarMessage();
   const { isAuthenticated } = useAuth();
-  const handleAddInvestmentClose = () => {
-    resetNewInvestmentDialog();
-    setAdInvestDialogOpen(false);
+  const [openConfirmInvestmentDialog, setOpenConfirmInvestmentDialog] = reactExports.useState(false);
+  const [selectedInvestmentSetId, setSelectedInvestmentSetId] = reactExports.useState(null);
+  const handleOpenDeleteInvestmentConfirm = (InvestmentId) => {
+    setSelectedInvestmentSetId(InvestmentId);
+    setOpenConfirmInvestmentDialog(true);
+  };
+  const handleConfirmInvestmentDelete = () => {
+    if (selectedInvestmentSetId !== null) {
+      handleDeleteInvestment(selectedInvestmentSetId).then(() => {
+        fetchInvestments();
+        showSnackbarMessage("Запис успішно видалено", "success");
+      }).catch((error) => {
+        console.error("Error deleting gift set:", error);
+        showSnackbarMessage("Помилка видалення запису", "error");
+      });
+    }
+    setOpenConfirmInvestmentDialog(false);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Інші вкладення" }),
     isAuthenticated && /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteAllInvestmentsDialog, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", onClick: () => setAdInvestDialogOpen(true), children: "Додати інвестицію" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { onClick: () => setAddInvestDialogOpen(true), text: "Додати інвестицію" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       AddInvestmentDialog,
       {
@@ -55585,11 +55739,11 @@ const InvestmentsPage = () => {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, style: { marginTop: "20px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Назва" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Вартість" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Постачальник" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Дата" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Дії" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Назва" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Вартість" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Постачальник" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Дата" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Дії" })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: investments.map((inv) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: inv.type_name }),
@@ -55601,12 +55755,21 @@ const InvestmentsPage = () => {
           {
             disabled: !isAuthenticated,
             color: "error",
-            onClick: () => handleDeleteInvestment(inv.id),
+            onClick: () => handleOpenDeleteInvestmentConfirm(inv.id),
             children: /* @__PURE__ */ jsxRuntimeExports.jsx(Delete, { fontSize: "small" })
           }
         ) }) }) })
       ] }, inv.id)) })
-    ] }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ConfirmDeleteGiftDialog,
+      {
+        open: openConfirmInvestmentDialog,
+        onClose: () => setOpenConfirmInvestmentDialog(false),
+        onConfirm: handleConfirmInvestmentDelete,
+        itemName: "це вкладення"
+      }
+    )
   ] });
 };
 const EditSupplierModal = ({ open, handleClose, handleEditSupplier, supplier, isAuthenticated }) => {
@@ -55961,14 +56124,14 @@ const SupplierPage = () => {
 };
 const SaleGiftSetDetails = ({ sale }) => {
   var _a2, _b2;
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 7, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: true, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: true, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Назва" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за од." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Сума" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Тип" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Назва" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Постачальник" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Ціна за од." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Кількість" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Сума" })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(TableBody, { children: [
       (_a2 = sale.products) == null ? void 0 : _a2.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
@@ -55992,14 +56155,14 @@ const SaleGiftSetDetails = ({ sale }) => {
 };
 const SaleProductDetails = ({ sale }) => {
   var _a2, _b2;
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 7, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: true, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: true, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Тип" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Назва" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Постачальник" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за од." }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Сума" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Тип" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Назва" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Постачальник" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Ціна за од." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Кількість" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Сума" })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(TableBody, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
@@ -56603,6 +56766,18 @@ const GiftSetList = ({ isAuthenticated }) => {
   const { giftSets, fetchGiftSetsData, deleteGiftSet, updateExistingGiftSet, sellGiftSetData } = useGiftSet();
   const [expandedProduct, setExpandedProduct] = reactExports.useState(null);
   const [expandedPackaging, setExpandedPackaging] = reactExports.useState(null);
+  const [openConfirmGiftDialog, setOpenConfirmGiftDialog] = reactExports.useState(false);
+  const [selectedGiftSetId, setSelectedGiftSetId] = reactExports.useState(null);
+  const handleOpenDeleteConfirm = (giftSetId) => {
+    setSelectedGiftSetId(giftSetId);
+    setOpenConfirmGiftDialog(true);
+  };
+  const handleConfirmDelete = () => {
+    if (selectedGiftSetId !== null) {
+      deleteGiftSet(selectedGiftSetId);
+    }
+    setOpenConfirmGiftDialog(false);
+  };
   const handleToggleProduct = (id2) => {
     setExpandedProduct(expandedProduct === id2 ? null : id2);
   };
@@ -56627,11 +56802,6 @@ const GiftSetList = ({ isAuthenticated }) => {
     setSellDialogOpen(false);
     setSelectedGiftSet(null);
     setInputValue("");
-  };
-  const handleDelete = (giftSetId) => {
-    if (window.confirm("Are you sure you want to delete this gift set?")) {
-      deleteGiftSet(giftSetId);
-    }
   };
   const handleSaveEdit = (updatedGiftBox) => {
     updateExistingGiftSet(updatedGiftBox);
@@ -56672,7 +56842,15 @@ const GiftSetList = ({ isAuthenticated }) => {
           giftSet.description
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "body1", style: { marginTop: "10px" }, children: /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Вміст набору:" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}), size: "small", onClick: () => handleToggleProduct(giftSet.id), children: "Продукти" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}),
+            size: "small",
+            onClick: () => handleToggleProduct(giftSet.id),
+            children: "Продукти"
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: expandedProduct === giftSet.id, children: /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { children: giftSet.products.map((product) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
           product.name,
           " (x",
@@ -56680,7 +56858,16 @@ const GiftSetList = ({ isAuthenticated }) => {
           ") -",
           product.price
         ] }, product.product_id)) }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { sx: { textAlign: "center" }, endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}), size: "small", onClick: () => handleTogglePackaging(giftSet.id), children: "Пакування" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            sx: { textAlign: "center" },
+            endIcon: /* @__PURE__ */ jsxRuntimeExports.jsx(ExpandMore, {}),
+            size: "small",
+            onClick: () => handleTogglePackaging(giftSet.id),
+            children: "Пакування"
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: expandedPackaging === giftSet.id, children: /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { children: giftSet.packagings.map((packaging) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
           packaging.name,
           " (x",
@@ -56733,7 +56920,7 @@ const GiftSetList = ({ isAuthenticated }) => {
             fullWidth: true,
             size: "small",
             color: "secondary",
-            onClick: () => handleDelete(giftSet.id),
+            onClick: () => handleOpenDeleteConfirm(giftSet.id),
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Delete, {}),
               " Видалити"
@@ -56762,6 +56949,15 @@ const GiftSetList = ({ isAuthenticated }) => {
         open: sellDialogOpen,
         giftSet: selectedGiftSet,
         onClose: handleDialogClose
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ConfirmDeleteGiftDialog,
+      {
+        open: openConfirmGiftDialog,
+        onClose: () => setOpenConfirmGiftDialog(false),
+        onConfirm: handleConfirmDelete,
+        itemName: "цей подарунковий набір"
       }
     )
   ] });
@@ -58034,5 +58230,5 @@ fakeDate.getAllCustomers = [
   );
 }
 client.createRoot(document.getElementById("root")).render(
-  /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SnackbarMessageProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(GiftSetProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(PackagingProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrowserRouter, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) }) }) }) }) }) }) }) }) })
+  /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuthProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SnackbarMessageProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(GiftSetProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProductProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CategoryProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(PackagingProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(InvestmentsProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(BrowserRouter, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) }) }) }) }) }) }) }) }) }) })
 );
