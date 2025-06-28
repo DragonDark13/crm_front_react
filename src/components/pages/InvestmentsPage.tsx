@@ -21,6 +21,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddInvestmentDialog from "../dialogs/AddInvestmentDialog/AddInvestmentDialog";
 import {INewInvestment, Investment} from "../../utils/types";
 import RenderHeaderCell from "../_elements/RenderHeaderCell";
+import ConfirmDeleteGiftDialog from "./GiftSetsPage/ConfirmDeleteGiftDialog";
+import AddButton from "../Buttons/AddButton";
+import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 
 
 const InvestmentsPage: React.FC = () => {
@@ -31,6 +34,8 @@ const InvestmentsPage: React.FC = () => {
         date: new Date().toISOString().slice(0, 10),
         supplier: ""
     });
+    const {showSnackbarMessage} = useSnackbarMessage()
+
 
     const [addInvestDialogOpen, setAdInvestDialogOpen] = useState(false);
 
@@ -67,6 +72,27 @@ const InvestmentsPage: React.FC = () => {
         setAdInvestDialogOpen(false)
     }
 
+    const [openConfirmInvestmentDialog, setOpenConfirmInvestmentDialog] = useState(false);
+    const [selectedInvestmentSetId, setSelectedInvestmentSetId] = useState<number | null>(null);
+
+    const handleOpenDeleteInvestmentConfirm = (InvestmentId: number) => {
+        setSelectedInvestmentSetId(InvestmentId);
+        setOpenConfirmInvestmentDialog(true);
+    };
+
+    const handleConfirmInvestmentDelete = () => {
+        if (selectedInvestmentSetId !== null) {
+            handleDeleteInvestment(selectedInvestmentSetId).then(() => {
+                fetchInvestments();
+                showSnackbarMessage('Запис успішно видалено', 'success');
+            }).catch((error) => {
+                console.error("Error deleting gift set:", error);
+                showSnackbarMessage('Помилка видалення запису', 'error');
+            });
+        }
+        setOpenConfirmInvestmentDialog(false);
+    };
+
 
     return (
         <div>
@@ -76,9 +102,8 @@ const InvestmentsPage: React.FC = () => {
                     <DeleteAllInvestmentsDialog/>
                 </Grid>
             </Grid>}
-            <Button variant="contained" onClick={() => setAdInvestDialogOpen(true)}>
-                Додати інвестицію
-            </Button>
+
+            <AddButton onClick={() => setAdInvestDialogOpen(true)} text={'Додати інвестицію'}/>
 
             <AddInvestmentDialog
                 isAuthenticated={isAuthenticated}
@@ -131,7 +156,7 @@ const InvestmentsPage: React.FC = () => {
                                     <Tooltip title="Видалити">
                                             <span>
                                             <IconButton disabled={!isAuthenticated} color="error"
-                                                        onClick={() => handleDeleteInvestment(inv.id)}>
+                                                        onClick={() => handleOpenDeleteInvestmentConfirm(inv.id)}>
                                                 <DeleteIcon fontSize="small"/>
                                             </IconButton>
                                             </span>
@@ -144,6 +169,13 @@ const InvestmentsPage: React.FC = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <ConfirmDeleteGiftDialog
+                open={openConfirmInvestmentDialog}
+                onClose={() => setOpenConfirmInvestmentDialog(false)}
+                onConfirm={handleConfirmInvestmentDelete}
+                itemName="це вкладення"
+            />
         </div>
     );
 };
