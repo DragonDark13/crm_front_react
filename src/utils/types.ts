@@ -340,3 +340,18 @@ export interface IonDeleteHistoryRecord {
     historyType: 'stock' | 'sale' | 'purchase',
     historyId: number
 }
+
+export interface Investment {
+    id: number;
+    type_name: string;
+    cost: number;
+    date: string;
+    supplier: string;
+}
+
+export interface INewInvestment {
+    type_name: string;
+    cost: number;
+    date: string;
+    supplier: string;
+}

@@ -53,7 +53,12 @@ export const API_ENDPOINTS = {
     SELL_GIFT_SET: (id: number) => `/sell_gift_set/${id}`,
     DELETE_HISTORY: ({
                          productId, historyType, historyId
-                     }: IonDeleteHistoryRecord) => `/delete-history/${productId}/${historyType}/${historyId}`
+                     }: IonDeleteHistoryRecord) => `/delete-history/${productId}/${historyType}/${historyId}`,
+    // Додані шляхи для інвестицій
+    GET_ALL_INVESTMENTS: '/gel_all_investments',
+    CREATE_NEW_INVESTMENT: '/create_new_investments',
+    DELETE_INVESTMENT: (id: number) => `/delete_investments/${id}`,
+    DELETE_ALL_INVESTMENTS: '/delete_all_investments',
 
 };
 

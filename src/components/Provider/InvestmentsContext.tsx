@@ -1,22 +1,15 @@
 import React, {createContext, useContext, useState, useEffect, ReactNode} from "react";
 import {axiosInstance} from "../../api/api";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
+import {INewInvestment, Investment} from "../../utils/types";
+import {
+    getAllInvestments,
+    createInvestment,
+    deleteInvestmentById,
+    deleteAllInvestments,
+} from '../../api/_investmentsApi.ts';
 
 // Типи
-export interface Investment {
-    id: number;
-    type_name: string;
-    cost: number;
-    date: string;
-    supplier: string;
-}
-
-export interface INewInvestment {
-    type_name: string;
-    cost: number;
-    date: string;
-    supplier: string;
-}
 
 interface InvestmentsContextType {
     investments: Investment[];
@@ -45,8 +38,8 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
 
     const fetchInvestments = async () => {
         try {
-            const response = await axiosInstance.get("/gel_all_investments");
-            setInvestments(response.data);
+            const data = await getAllInvestments();
+            setInvestments(data);
         } catch (error) {
             showSnackbarMessage("Помилка завантаження інвестицій", "error");
         }
@@ -63,7 +56,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
 
     const handleAddInvestment = async () => {
         try {
-            await axiosInstance.post("/create_new_investments", newInvestment);
+            await createInvestment(newInvestment);
             await fetchInvestments();
             setAddInvestDialogOpen(false);
             resetNewInvestmentDialog();
@@ -75,7 +68,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
 
     const handleDeleteInvestment = async (id: number) => {
         try {
-            await axiosInstance.delete(`/delete_investments/${id}`);
+            await deleteInvestmentById(id);
             // Після видалення можна оновити список:
             await fetchInvestments();
             showSnackbarMessage("Інвестицію видалено", "success");
@@ -91,7 +84,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
 
     const handleDeleteAllOtherInvestment = async (handleClose) => {
         try {
-            const response = await axiosInstance.delete('/delete_all_investments'); // Запит до API
+           const res = await deleteAllInvestments();
             await fetchInvestments();
             showSnackbarMessage('Всі записи успішно видалені', 'success');
             handleClose();
