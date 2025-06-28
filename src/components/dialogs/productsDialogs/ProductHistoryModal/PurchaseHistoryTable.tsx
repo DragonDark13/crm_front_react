@@ -73,7 +73,7 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> =
 
         const currentStock = totalPurchased - totalSold;
 
-        console.log('currentStock:', currentStock);
+        console.log('productHistory.purchase:', productHistory.purchase);
 
         return (
             <React.Fragment>
@@ -95,7 +95,13 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> =
                                     <TableRow key={record.id + record.purchase_date}>
                                         <TableCell
                                             size={"small"}>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
-                                        <TableCell size={"small"}>{record.supplier.name}</TableCell>
+                                        <TableCell  size={"small"}>
+                                        <Typography color={  !record.supplier.is_active ? 'textDisabled' :'inherit'}>
+                                           {!record.supplier.is_active && "не активний"}  {record.supplier.name}
+                                        </Typography>
+
+
+                                        </TableCell>
                                         <TableCell size={"small"}>{record.purchase_price_per_item}</TableCell>
                                         <TableCell size={"small"}>{record.quantity_purchase}</TableCell>
                                         <TableCell size={"small"}>{record.purchase_total_price}</TableCell>

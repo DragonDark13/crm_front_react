@@ -90,7 +90,9 @@ const PurchaseProductModal = ({
         }
     };
 
-    console.log('purchaseDetails.purchase_price_per_item',purchaseDetails.purchase_price_per_item);
+    console.log('purchaseDetails.purchase_price_per_item', purchaseDetails.purchase_price_per_item);
+
+    const currentSupplier = suppliers.find(s => s.id === purchaseDetails.supplier_id);
 
     return (
         <CustomDialog
@@ -102,6 +104,9 @@ const PurchaseProductModal = ({
             <DialogContent>
                 <Grid container>
                     <Grid item xs={12}>
+                        {!currentSupplier.is_active &&
+                        <Typography color={"error"}>Ви не можете придбати цей товар- постачальник не
+                            активний</Typography>}
                         <Typography>Назва товару:
                             <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
                                 {nameProduct}
@@ -167,10 +172,11 @@ const PurchaseProductModal = ({
 
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <PriceField label={'Ціна за 1шт'} value={purchaseDetails.purchase_price_per_item} onChange={(e) => setPurchaseDetails({
-                                ...purchaseDetails,
-                                purchase_price_per_item: Number(e.target.value)
-                            })}/>
+                        <PriceField label={'Ціна за 1шт'} value={purchaseDetails.purchase_price_per_item}
+                                    onChange={(e) => setPurchaseDetails({
+                                        ...purchaseDetails,
+                                        purchase_price_per_item: Number(e.target.value)
+                                    })}/>
                         {/*<TextField*/}
                         {/*    size={"small"}*/}
                         {/*    label="Ціна за 1шт"*/}
@@ -197,7 +203,8 @@ const PurchaseProductModal = ({
             <DialogActions>
                 <Button variant={"outlined"} onClick={handleClosePurchase}>Закрити</Button>
 
-                <Button variant="contained" color="primary" disabled={!isAuthenticated} onClick={handleSubmit}>
+                <Button variant="contained" color="primary" disabled={!isAuthenticated || !currentSupplier.is_active}
+                        onClick={handleSubmit}>
                     Підтвердити
                 </Button>
             </DialogActions>

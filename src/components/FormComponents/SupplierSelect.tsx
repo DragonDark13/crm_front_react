@@ -1,9 +1,9 @@
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography} from "@mui/material";
 import React, {FC} from "react";
-import {ICategory} from "../../utils/types";
+import {ICategory, ISupplierFull} from "../../utils/types";
 
 interface ISupplierSelectProps {
-    suppliers: ICategory[]; // Можна уточнити тип постачальників
+    suppliers: ISupplierFull[]; // Можна уточнити тип постачальників
     value: number | string;
     onChange: (e: SelectChangeEvent<string | number>) => void;
     error?: string;
@@ -27,8 +27,10 @@ const SupplierSelect: FC<ISupplierSelectProps> = ({
             label="Постачальник"
         >
             {suppliers.map((supplier) => (
-                <MenuItem title={supplier.name} key={supplier.id} value={supplier.id}>
-                    <Typography> {supplier.name}</Typography>
+                <MenuItem disabled={!supplier.is_active} title={supplier.name} key={supplier.id} value={supplier.id}>
+                    <Typography color={!supplier.is_active && (supplier.id ===value) ? 'textDisabled' : 'inherit'}> {!supplier.is_active ? "не" +
+                        " активний" +
+                        " " : null} {supplier.name}</Typography>
                 </MenuItem>
             ))}
         </Select>

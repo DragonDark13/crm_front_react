@@ -46,14 +46,20 @@ interface ICurrentSupplier {
     id: number | null
 }
 
-interface PurchaseHistory {
-    date: string;
+interface ISupplierPurchaseHistoryRecord {
     product: string;
-    amount: number;
+    purchase_date: string;               // ISO string або Date — залежно від використання
+    purchase_price_per_item: string;    // або number, якщо ти далі опрацьовуєш числа
+    purchase_total_price: string;       // те саме
+    quantity_purchase: number;
 }
 
+import BlockIcon from '@mui/icons-material/Block';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
+
 const SupplierPage: React.FC = () => {
-    const {suppliers, fetchSuppliersFunc,handleToggleSupplierActive} = useSuppliers()
+    const {suppliers, fetchSuppliersFunc, handleToggleSupplierActive} = useSuppliers()
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState<boolean>(false);
     const [currentSupplier, setCurrentSupplier] = useState<ICurrentSupplier>({
@@ -65,7 +71,7 @@ const SupplierPage: React.FC = () => {
         id: null
     });
     const [openHistory, setOpenHistory] = useState<number | null>(null);
-    const [purchaseHistory, setPurchaseHistory] = useState<PurchaseHistory[]>([]);
+    const [purchaseHistory, setPurchaseHistory] = useState<ISupplierPurchaseHistoryRecord[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
     const [products, setProducts] = useState([]);
     const {isAuthenticated} = useAuth();
@@ -164,6 +170,15 @@ const SupplierPage: React.FC = () => {
         page * rowsPerPage + rowsPerPage
     );
 
+    const textColorDis = (is_active) => {
+
+        if (!is_active) {
+            return theme.palette.text.disabled;
+        } else {
+            return "inherit"
+        }
+    }
+
     return (
         <div>
             <Typography marginBlockEnd={1} variant={"h4"}>Постачальники</Typography>
@@ -204,22 +219,33 @@ const SupplierPage: React.FC = () => {
                         {paginatedSuppliers.map((supplier) => (
                             <React.Fragment key={supplier.id}>
                                 <TableRow
-                                    sx={{background: openHistory === supplier.id ? theme.palette.grey[500] : "inherit",}}>
+                                    sx={{background: !supplier.is_active ? theme.palette.grey[300] : (openHistory === supplier.id ? theme.palette.grey[500] : "inherit"),}}>
                                     <TableCell size={"small"}>
                                         <Typography
                                             className={clsx("supplier_name")}
                                             title={supplier.name}
                                             sx={{
                                                 textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap'
+                                                whiteSpace: 'nowrap',
+                                                color: textColorDis(supplier.is_active)
                                             }}>{supplier.name}
                                         </Typography>
                                     </TableCell>
-                                    <TableCell size={"small"}>{supplier.contact_info || 'Не вказано'}</TableCell>
-                                    <TableCell size={"small"}>{supplier.email || 'Не вказано'}</TableCell>
-                                    <TableCell size={"small"}>{supplier.phone_number || 'Не вказано'}</TableCell>
-                                    <TableCell size={"small"}>{supplier.address || 'Не вказано'}</TableCell>
-                                    <TableCell size={"small"}>
+                                    <TableCell size={"small"} sx={{
+                                        color: textColorDis(supplier.is_active)
+                                    }}>{supplier.contact_info || 'Не вказано'}</TableCell>
+                                    <TableCell size={"small"} sx={{
+                                        color: textColorDis(supplier.is_active)
+                                    }}>{supplier.email || 'Не вказано'}</TableCell>
+                                    <TableCell size={"small"} sx={{
+                                        color: textColorDis(supplier.is_active)
+                                    }}>{supplier.phone_number || 'Не вказано'}</TableCell>
+                                    <TableCell size={"small"} sx={{
+                                        color: textColorDis(supplier.is_active)
+                                    }}>{supplier.address || 'Не вказано'}</TableCell>
+                                    <TableCell size={"small"} sx={{
+                                        color: textColorDis(supplier.is_active)
+                                    }}>
                                         <Grid container>
                                             <Grid item>
                                                 <Tooltip title="Редагувати">
@@ -246,11 +272,13 @@ const SupplierPage: React.FC = () => {
                                                 >
                                                     <IconButton
                                                         color={supplier.is_active ? 'warning' : 'success'}
-                                                        onClick={() => handleToggleSupplierActive(supplier.id, !supplier.is_active)}
+                                                        onClick={() => handleToggleSupplierActive(supplier.id, supplier)}
                                                     >
-          <span style={{fontSize: '16px'}}>
-            {supplier.is_active ? '⛔' : '✅'}
-          </span>
+                                                        {supplier.is_active ? (
+                                                            <BlockIcon fontSize="small"/>
+                                                        ) : (
+                                                            <CheckCircleIcon fontSize="small"/>
+                                                        )}
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>

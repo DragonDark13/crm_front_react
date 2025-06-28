@@ -18,6 +18,7 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({open, onClose, produ
         product.category_ids.includes(category.id)
     );
 
+    console.log("product",product);
     return (
         <CustomDialog maxWidth="sm" title={' Детальна інформація про товар'} handleClose={onClose} open={open}>
 
@@ -56,7 +57,8 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({open, onClose, produ
                     </Grid>
                     <Grid item xs={12}>
                         <Typography>
-                            Постачальник: {product.supplier?.name || '—'}
+                            Постачальник:
+                            <Typography color={product.supplier?.is_active===false ? 'textDisabled':'inherit'} component={"span"}> {!product.supplier?.is_active ? 'не активний ': null} {product.supplier?.name || '—'}  </Typography>
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>

@@ -28,7 +28,7 @@ axiosInstance.interceptors.response.use(
 export const API_ENDPOINTS = {
     LOGIN: '/login',
     LOGOUT: '/logout',
-    PRODUCTS: '/products',
+    PRODUCTS: '/get_all_products',
     CATEGORIES: '/categories',
     ADD_NEW_CATEGORIES: '/add_new_category',
     ADD_SUPPLIERS: '/create_supplier',

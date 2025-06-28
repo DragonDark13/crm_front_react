@@ -13,7 +13,8 @@ import {useSnackbarMessage} from "./SnackbarMessageContext";
 interface SupplierContextProps {
     suppliers: ISupplierFull[];
     fetchSuppliersFunc: () => void;
-    handleToggleSupplierActive: () => void;
+    handleToggleSupplierActive: (supplierId: number,
+                                 currentData: ISupplierFull) => void;
 }
 
 // Створення контексту

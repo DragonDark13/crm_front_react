@@ -60,7 +60,7 @@ export interface IProductPurchaseHistoryRecord {
     purchase_total_price: number;
     quantity_purchase: number;
     supplier_id: number;
-    supplier: IPurchaseHistorySupplier;
+    supplier: ISupplierFull;
 }
 
 interface IProductHistoryRecordCustomer {

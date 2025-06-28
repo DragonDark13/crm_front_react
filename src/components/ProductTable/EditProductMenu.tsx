@@ -24,6 +24,8 @@ const EditProductMenu = ({
                              handleOpenProductInfoModal,
                              isAuthenticated
                          }) => {
+
+    console.log('selectedProduct',selectedProduct);
     return (
         <Menu
             PaperProps={{elevation: 1}}
