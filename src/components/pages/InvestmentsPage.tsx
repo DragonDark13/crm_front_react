@@ -109,7 +109,7 @@ const InvestmentsPage: React.FC = () => {
 
     return (
         <div>
-            <h2>Інші вкладення</h2>
+            <Typography marginBlockEnd={1} variant={"h4"}>Інші вкладення</Typography>
             {isAuthenticated && <Grid container>
                 <Grid item>
                     <DeleteAllInvestmentsDialog/>
