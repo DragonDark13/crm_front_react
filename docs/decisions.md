@@ -26,3 +26,6 @@
   Для роботи з QuantityField.tsx
 ### 2025-05-23: Створив хук для додавання нового товару
 -хук для додавання нового товару src/hooks/useNewProduct.ts
+### 2025-05-23: Модальне вікно для підтвердження видалення
+-ConfirmDeleteGiftDialog 
+src/components/pages/GiftSetsPage/ConfirmDeleteGiftDialog.tsx

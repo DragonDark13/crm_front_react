@@ -11,6 +11,7 @@ import {AuthProvider} from "./components/context/AuthContext";
 import {PackagingProvider} from "./components/Provider/PackagingContext";
 import {GiftSetProvider} from "./components/Provider/GiftSetContext";
 import {BrowserRouter} from "react-router-dom";
+import {InvestmentsProvider} from "./components/Provider/InvestmentsContext";
 import './api/mockAxios.ts';
 
 
@@ -25,9 +26,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                             <CategoryProvider>
                                 <CustomerProvider>
                                     <PackagingProvider>
-                                        <BrowserRouter>
-                                            <App/>
-                                        </BrowserRouter>
+                                        <InvestmentsProvider>
+                                            <BrowserRouter>
+                                                <App/>
+                                            </BrowserRouter>
+                                        </InvestmentsProvider>
                                     </PackagingProvider>
                                 </CustomerProvider>
                             </CategoryProvider>

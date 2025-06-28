@@ -30,6 +30,8 @@ import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
 import {useGiftSet} from "../Provider/GiftSetContext";
 import {usePackaging} from "../Provider/PackagingContext";
 import {useNewProduct} from "../../hooks/useNewProduct";
+import AddInvestmentDialog from "../dialogs/AddInvestmentDialog/AddInvestmentDialog";
+import {useInvestments} from "../Provider/InvestmentsContext";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -39,6 +41,14 @@ const AddButtonWithMenu = () => {
     const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
     const {createNewGiftSet} = useGiftSet();
     const {fetchPackagingOptions} = usePackaging();
+    const {
+        newInvestment,
+        setNewInvestment,
+        addInvestDialogOpen,
+        setAddInvestDialogOpen,
+        handleAddInvestment,
+        handleAddInvestmentClose,
+    } = useInvestments();
 
 
     const handleClick = (event) => {
@@ -296,6 +306,12 @@ const AddButtonWithMenu = () => {
                                 Подарунковий набір
                             </Button>
                         </Grid>
+                        <Grid item xs={12}>
+                            <Button variant={"contained"} color="primary" fullWidth
+                                    onClick={() => setAddInvestDialogOpen(true)}>
+                                Інше вкладення
+                            </Button>
+                        </Grid>
 
                     </Grid>
                 </Box>
@@ -347,6 +363,18 @@ const AddButtonWithMenu = () => {
                 openGiftModal={modalState.addNewGiftBox}
                 handleAddNewGiftBox={handleAddNewGiftBox}
             />}
+
+            {
+                addInvestDialogOpen &&
+                <AddInvestmentDialog
+                    isAuthenticated={isAuthenticated}
+                    newInvestment={newInvestment}
+                    onAdd={handleAddInvestment}
+                    onClose={() => {
+                        handleAddInvestmentClose()
+                    }} open={addInvestDialogOpen}
+                    setNewInvestment={setNewInvestment}/>
+            }
 
 
         </Box>

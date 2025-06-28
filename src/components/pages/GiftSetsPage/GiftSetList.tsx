@@ -1,22 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import axios from 'axios';
 import {Card, CardContent, Typography, Button, Grid, CardActions, Collapse} from '@mui/material';
 import {Edit, Delete, ShoppingCart, ExpandMore} from '@mui/icons-material';
-import {axiosInstance} from "../../../api/api";
 import EditGiftBoxDialog from "./EditGiftBoxDialog";
 import GiftSetSaleModal from "./GiftSetSaleModal";
 import {IGiftSet, IPackagingForGiftSet, IProductForGiftSet} from "../../../utils/types";
-import {fetchGiftSets, removeGiftSet, sellGiftSet, updateGiftSet} from "../../../api/_giftBox";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import {useGiftSet} from "../../Provider/GiftSetContext";
+import ConfirmDeleteGiftDialog from "./ConfirmDeleteGiftDialog";
 
 interface IGiftSetList {
-    isAuthenticated:boolean
+    isAuthenticated: boolean
 }
 
-const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
+const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
 
-            console.log("isAuthenticated GiftSetList",isAuthenticated);
+    console.log("isAuthenticated GiftSetList", isAuthenticated);
 
     const [openDialogEdit, setOpenDialogEdit] = useState(false);
     const [sellDialogOpen, setSellDialogOpen] = useState(false);
@@ -34,6 +32,21 @@ const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
 
     const [expandedProduct, setExpandedProduct] = useState(null);
     const [expandedPackaging, setExpandedPackaging] = useState(null);
+
+    const [openConfirmGiftDialog, setOpenConfirmGiftDialog] = useState(false);
+    const [selectedGiftSetId, setSelectedGiftSetId] = useState<number | null>(null);
+
+    const handleOpenDeleteConfirm = (giftSetId: number) => {
+        setSelectedGiftSetId(giftSetId);
+        setOpenConfirmGiftDialog(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (selectedGiftSetId !== null) {
+            deleteGiftSet(selectedGiftSetId);
+        }
+        setOpenConfirmGiftDialog(false);
+    };
 
     const handleToggleProduct = (id) => {
         setExpandedProduct(expandedProduct === id ? null : id);
@@ -109,6 +122,8 @@ const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
 
         try {
             await sellGiftSetData(requestData);
+
+
             handleDialogClose();
         } catch (err: any) {
             setError(err.message);
@@ -136,8 +151,9 @@ const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
                                         <strong>Вміст набору:</strong>
                                     </Typography>
 
-                                    <Button endIcon={<ExpandMore/>}  size="small" onClick={() => handleToggleProduct(giftSet.id)}>
-                                         Продукти
+                                    <Button endIcon={<ExpandMore/>} size="small"
+                                            onClick={() => handleToggleProduct(giftSet.id)}>
+                                        Продукти
                                     </Button>
 
                                     <Collapse in={expandedProduct === giftSet.id}>
@@ -149,7 +165,8 @@ const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
                                         </ul>
                                     </Collapse>
 
-                                    <Button sx={{textAlign:"center"}} endIcon={<ExpandMore/>}  size="small" onClick={() => handleTogglePackaging(giftSet.id)}>
+                                    <Button sx={{textAlign: "center"}} endIcon={<ExpandMore/>} size="small"
+                                            onClick={() => handleTogglePackaging(giftSet.id)}>
                                         Пакування
                                     </Button>
                                     <Collapse in={expandedPackaging === giftSet.id}>
@@ -179,7 +196,8 @@ const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
                                         <ShoppingCart/> Продати
                                     </Button>
                                     <Button disabled={!isAuthenticated} fullWidth size="small" color="secondary"
-                                            onClick={() => handleDelete(giftSet.id)}>
+                                            onClick={() => handleOpenDeleteConfirm(giftSet.id)}
+                                    >
                                         <Delete/> Видалити
                                     </Button>
                                 </CardActions>
@@ -197,7 +215,7 @@ const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
 
             {selectedGiftSet && (
                 <EditGiftBoxDialog
-                     isAuthenticated={isAuthenticated}
+                    isAuthenticated={isAuthenticated}
                     open={openDialogEdit}
                     onClose={handleDialogClose}
                     giftBox={selectedGiftSet}
@@ -215,6 +233,13 @@ const GiftSetList:React.FC<IGiftSetList> = ({isAuthenticated}) => {
                     onClose={handleDialogClose}
                 />
             )}
+
+            <ConfirmDeleteGiftDialog
+                open={openConfirmGiftDialog}
+                onClose={() => setOpenConfirmGiftDialog(false)}
+                onConfirm={handleConfirmDelete}
+                itemName="цей подарунковий набір"
+            />
         </div>
     );
 };

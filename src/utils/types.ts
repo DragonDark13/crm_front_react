@@ -92,6 +92,7 @@ export type ModalNames =
     | 'addNewPackage'
     | 'addNewGiftBox'
     | 'productInfoModal'
+    | 'addNewOtherInvestmentModal'
     ;
 
 export const modalNames: ModalNames[] = [
@@ -109,7 +110,8 @@ export const modalNames: ModalNames[] = [
     'createCustomerDialog',
     'addNewPackage',
     'addNewGiftBox',
-    'productInfoModal'
+    'productInfoModal',
+    'addNewOtherInvestmentModal'
 ];
 
 export interface INotificationPanel {
@@ -339,4 +341,19 @@ export interface IonDeleteHistoryRecord {
     productId: number,
     historyType: 'stock' | 'sale' | 'purchase',
     historyId: number
+}
+
+export interface Investment {
+    id: number;
+    type_name: string;
+    cost: number;
+    date: string;
+    supplier: string;
+}
+
+export interface INewInvestment {
+    type_name: string;
+    cost: number;
+    date: string;
+    supplier: string;
 }

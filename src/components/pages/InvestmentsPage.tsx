@@ -20,51 +20,91 @@ import DeleteButton from "../Buttons/DeleteButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddInvestmentDialog from "../dialogs/AddInvestmentDialog/AddInvestmentDialog";
 import {INewInvestment, Investment} from "../../utils/types";
+import RenderHeaderCell from "../_elements/RenderHeaderCell";
+import ConfirmDeleteGiftDialog from "./GiftSetsPage/ConfirmDeleteGiftDialog";
+import AddButton from "../Buttons/AddButton";
+import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import {useInvestments} from "../Provider/InvestmentsContext";
 
 
 const InvestmentsPage: React.FC = () => {
-    const [investments, setInvestments] = useState<Investment[]>([]);
-    const [newInvestment, setNewInvestment] = useState<INewInvestment>({
-        type_name: "",
-        cost: 0,
-        date: new Date().toISOString().slice(0, 10),
-        supplier: ""
-    });
+    const {
+        investments,
+        newInvestment,
+        setNewInvestment,
+        addInvestDialogOpen,
+        setAddInvestDialogOpen,
+        handleAddInvestment,
+        handleDeleteInvestment,
+        handleAddInvestmentClose,
+        fetchInvestments
+    } = useInvestments();
 
-    const [addInvestDialogOpen, setAdInvestDialogOpen] = useState(false);
 
-    const fetchInvestments = async () => {
-        const response = await axiosInstance.get("/gel_all_investments");
-        setInvestments(response.data);
-    };
+    // const [newInvestment, setNewInvestment] = useState<INewInvestment>({
+    //     type_name: "",
+    //     cost: 0,
+    //     date: new Date().toISOString().slice(0, 10),
+    //     supplier: ""
+    // });
+    const {showSnackbarMessage} = useSnackbarMessage()
 
-    const resetNewInvestmentDialog = () => {
-        setNewInvestment({type_name: "", cost: 0, date: new Date().toISOString().slice(0, 10), supplier: ""});
 
-    }
+    // const [addInvestDialogOpen, setAdInvestDialogOpen] = useState(false);
 
-    const handleAddInvestment = async () => {
-        await axiosInstance.post("/create_new_investments", newInvestment);
-        await fetchInvestments();
-        setAdInvestDialogOpen(false)
-        resetNewInvestmentDialog();
-    };
+    // const fetchInvestments = async () => {
+    //     const response = await axiosInstance.get("/gel_all_investments");
+    //     setInvestments(response.data);
+    // };
 
-    const handleDeleteInvestment = async (id: number) => {
-        await axiosInstance.delete(`/investments/${id}`);
-        await fetchInvestments();
-    };
+    // const resetNewInvestmentDialog = () => {
+    //     setNewInvestment({type_name: "", cost: 0, date: new Date().toISOString().slice(0, 10), supplier: ""});
+    //
+    // }
 
-    useEffect(() => {
-        fetchInvestments();
-    }, []);
+    // const handleAddInvestment = async () => {
+    //     await axiosInstance.post("/create_new_investments", newInvestment);
+    //     await fetchInvestments();
+    //     setAdInvestDialogOpen(false)
+    //     resetNewInvestmentDialog();
+    // };
+    //
+    // const handleDeleteInvestment = async (id: number) => {
+    //     await axiosInstance.delete(`/delete_investments/${id}`);
+    //     // await fetchInvestments();
+    // };
+
+    // useEffect(() => {
+    //     fetchInvestments();
+    // }, []);
 
     const {isAuthenticated} = useAuth()
 
-    const handleAddInvestmentClose = () => {
-        resetNewInvestmentDialog();
-        setAdInvestDialogOpen(false)
-    }
+    // const handleAddInvestmentClose = () => {
+    //     resetNewInvestmentDialog();
+    //     setAdInvestDialogOpen(false)
+    // }
+
+    const [openConfirmInvestmentDialog, setOpenConfirmInvestmentDialog] = useState(false);
+    const [selectedInvestmentSetId, setSelectedInvestmentSetId] = useState<number | null>(null);
+
+    const handleOpenDeleteInvestmentConfirm = (InvestmentId: number) => {
+        setSelectedInvestmentSetId(InvestmentId);
+        setOpenConfirmInvestmentDialog(true);
+    };
+
+    const handleConfirmInvestmentDelete = () => {
+        if (selectedInvestmentSetId !== null) {
+            handleDeleteInvestment(selectedInvestmentSetId).then(() => {
+                fetchInvestments();
+                showSnackbarMessage('Запис успішно видалено', 'success');
+            }).catch((error) => {
+                console.error("Error deleting gift set:", error);
+                showSnackbarMessage('Помилка видалення запису', 'error');
+            });
+        }
+        setOpenConfirmInvestmentDialog(false);
+    };
 
 
     return (
@@ -75,9 +115,8 @@ const InvestmentsPage: React.FC = () => {
                     <DeleteAllInvestmentsDialog/>
                 </Grid>
             </Grid>}
-            <Button variant="contained" onClick={() => setAdInvestDialogOpen(true)}>
-                Додати інвестицію
-            </Button>
+
+            <AddButton onClick={() => setAddInvestDialogOpen(true)} text={'Додати інвестицію'}/>
 
             <AddInvestmentDialog
                 isAuthenticated={isAuthenticated}
@@ -112,11 +151,11 @@ const InvestmentsPage: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell><Typography>Назва</Typography></TableCell>
-                            <TableCell><Typography>Вартість</Typography></TableCell>
-                            <TableCell><Typography>Постачальник</Typography></TableCell>
-                            <TableCell><Typography>Дата</Typography></TableCell>
-                            <TableCell><Typography>Дії</Typography></TableCell>
+                            <RenderHeaderCell>Назва</RenderHeaderCell>
+                            <RenderHeaderCell>Вартість</RenderHeaderCell>
+                            <RenderHeaderCell>Постачальник</RenderHeaderCell>
+                            <RenderHeaderCell>Дата</RenderHeaderCell>
+                            <RenderHeaderCell>Дії</RenderHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -130,7 +169,7 @@ const InvestmentsPage: React.FC = () => {
                                     <Tooltip title="Видалити">
                                             <span>
                                             <IconButton disabled={!isAuthenticated} color="error"
-                                                        onClick={() => handleDeleteInvestment(inv.id)}>
+                                                        onClick={() => handleOpenDeleteInvestmentConfirm(inv.id)}>
                                                 <DeleteIcon fontSize="small"/>
                                             </IconButton>
                                             </span>
@@ -143,6 +182,13 @@ const InvestmentsPage: React.FC = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <ConfirmDeleteGiftDialog
+                open={openConfirmInvestmentDialog}
+                onClose={() => setOpenConfirmInvestmentDialog(false)}
+                onConfirm={handleConfirmInvestmentDelete}
+                itemName="це вкладення"
+            />
         </div>
     );
 };

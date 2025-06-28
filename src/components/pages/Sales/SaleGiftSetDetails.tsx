@@ -1,20 +1,21 @@
 import React from "react";
 import {TableRow, TableCell, Collapse, Table, TableHead, TableBody, Tooltip} from "@mui/material";
 import {ShoppingBag, Luggage} from "@mui/icons-material";
+import RenderHeaderCell from "../../_elements/RenderHeaderCell";
 
 const SaleGiftSetDetails = ({sale}) => (
     <TableRow>
-        <TableCell colSpan={7}>
+        <TableCell colSpan={8}>
             <Collapse in={true} timeout="auto" unmountOnExit>
                 <Table size="small">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Тип</TableCell>
-                            <TableCell>Назва</TableCell>
-                            <TableCell>Постачальник</TableCell>
-                            <TableCell>Ціна за од.</TableCell>
-                            <TableCell>Кількість</TableCell>
-                            <TableCell>Сума</TableCell>
+                            <RenderHeaderCell>Тип</RenderHeaderCell>
+                            <RenderHeaderCell>Назва</RenderHeaderCell>
+                            <RenderHeaderCell>Постачальник</RenderHeaderCell>
+                            <RenderHeaderCell>Ціна за од.</RenderHeaderCell>
+                            <RenderHeaderCell>Кількість</RenderHeaderCell>
+                            <RenderHeaderCell>Сума</RenderHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
