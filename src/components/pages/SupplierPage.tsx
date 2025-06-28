@@ -35,6 +35,7 @@ import CustomDialog from "../dialogs/CustomDialog/CustomDialog";
 import EditSupplierModal from "../dialogs/EditSupplierModal/EditSupplierModal";
 import {useTheme} from "@mui/material/styles";
 import AddButton from "../Buttons/AddButton";
+import RenderHeaderCell from "../_elements/RenderHeaderCell";
 
 interface ICurrentSupplier {
     name: string;
@@ -52,7 +53,7 @@ interface PurchaseHistory {
 }
 
 const SupplierPage: React.FC = () => {
-    const {suppliers, fetchSuppliersFunc} = useSuppliers()
+    const {suppliers, fetchSuppliersFunc,handleToggleSupplierActive} = useSuppliers()
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState<boolean>(false);
     const [currentSupplier, setCurrentSupplier] = useState<ICurrentSupplier>({
@@ -191,12 +192,12 @@ const SupplierPage: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell><Typography>Назва постачальника</Typography></TableCell>
-                            <TableCell><Typography>Контактна інформація</Typography></TableCell>
-                            <TableCell><Typography>Email</Typography></TableCell>
-                            <TableCell><Typography>Телефон</Typography></TableCell>
-                            <TableCell><Typography>Адреса</Typography></TableCell>
-                            <TableCell><Typography>Дії</Typography></TableCell>
+                            <RenderHeaderCell>Назва постачальника</RenderHeaderCell>
+                            <RenderHeaderCell>Контактна інформація</RenderHeaderCell>
+                            <RenderHeaderCell>Email</RenderHeaderCell>
+                            <RenderHeaderCell>Телефон</RenderHeaderCell>
+                            <RenderHeaderCell>Адреса</RenderHeaderCell>
+                            <RenderHeaderCell>Дії</RenderHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -235,6 +236,21 @@ const SupplierPage: React.FC = () => {
                                                     <IconButton color="info"
                                                                 onClick={() => toggleHistory(supplier.id)}>
                                                         <HistoryIcon fontSize="small"/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Grid>
+
+                                            <Grid item>
+                                                <Tooltip
+                                                    title={supplier.is_active ? 'Відключити постачальника' : 'Увімкнути постачальника'}
+                                                >
+                                                    <IconButton
+                                                        color={supplier.is_active ? 'warning' : 'success'}
+                                                        onClick={() => handleToggleSupplierActive(supplier.id, !supplier.is_active)}
+                                                    >
+          <span style={{fontSize: '16px'}}>
+            {supplier.is_active ? '⛔' : '✅'}
+          </span>
                                                     </IconButton>
                                                 </Tooltip>
                                             </Grid>
