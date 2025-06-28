@@ -24,53 +24,66 @@ import RenderHeaderCell from "../_elements/RenderHeaderCell";
 import ConfirmDeleteGiftDialog from "./GiftSetsPage/ConfirmDeleteGiftDialog";
 import AddButton from "../Buttons/AddButton";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import {useInvestments} from "../Provider/InvestmentsContext";
 
 
 const InvestmentsPage: React.FC = () => {
-    const [investments, setInvestments] = useState<Investment[]>([]);
-    const [newInvestment, setNewInvestment] = useState<INewInvestment>({
-        type_name: "",
-        cost: 0,
-        date: new Date().toISOString().slice(0, 10),
-        supplier: ""
-    });
+    const {
+        investments,
+        newInvestment,
+        setNewInvestment,
+        addInvestDialogOpen,
+        setAddInvestDialogOpen,
+        handleAddInvestment,
+        handleDeleteInvestment,
+        handleAddInvestmentClose,
+        fetchInvestments
+    } = useInvestments();
+
+
+    // const [newInvestment, setNewInvestment] = useState<INewInvestment>({
+    //     type_name: "",
+    //     cost: 0,
+    //     date: new Date().toISOString().slice(0, 10),
+    //     supplier: ""
+    // });
     const {showSnackbarMessage} = useSnackbarMessage()
 
 
-    const [addInvestDialogOpen, setAdInvestDialogOpen] = useState(false);
+    // const [addInvestDialogOpen, setAdInvestDialogOpen] = useState(false);
 
-    const fetchInvestments = async () => {
-        const response = await axiosInstance.get("/gel_all_investments");
-        setInvestments(response.data);
-    };
+    // const fetchInvestments = async () => {
+    //     const response = await axiosInstance.get("/gel_all_investments");
+    //     setInvestments(response.data);
+    // };
 
-    const resetNewInvestmentDialog = () => {
-        setNewInvestment({type_name: "", cost: 0, date: new Date().toISOString().slice(0, 10), supplier: ""});
+    // const resetNewInvestmentDialog = () => {
+    //     setNewInvestment({type_name: "", cost: 0, date: new Date().toISOString().slice(0, 10), supplier: ""});
+    //
+    // }
 
-    }
+    // const handleAddInvestment = async () => {
+    //     await axiosInstance.post("/create_new_investments", newInvestment);
+    //     await fetchInvestments();
+    //     setAdInvestDialogOpen(false)
+    //     resetNewInvestmentDialog();
+    // };
+    //
+    // const handleDeleteInvestment = async (id: number) => {
+    //     await axiosInstance.delete(`/delete_investments/${id}`);
+    //     // await fetchInvestments();
+    // };
 
-    const handleAddInvestment = async () => {
-        await axiosInstance.post("/create_new_investments", newInvestment);
-        await fetchInvestments();
-        setAdInvestDialogOpen(false)
-        resetNewInvestmentDialog();
-    };
-
-    const handleDeleteInvestment = async (id: number) => {
-        await axiosInstance.delete(`/delete_investments/${id}`);
-        // await fetchInvestments();
-    };
-
-    useEffect(() => {
-        fetchInvestments();
-    }, []);
+    // useEffect(() => {
+    //     fetchInvestments();
+    // }, []);
 
     const {isAuthenticated} = useAuth()
 
-    const handleAddInvestmentClose = () => {
-        resetNewInvestmentDialog();
-        setAdInvestDialogOpen(false)
-    }
+    // const handleAddInvestmentClose = () => {
+    //     resetNewInvestmentDialog();
+    //     setAdInvestDialogOpen(false)
+    // }
 
     const [openConfirmInvestmentDialog, setOpenConfirmInvestmentDialog] = useState(false);
     const [selectedInvestmentSetId, setSelectedInvestmentSetId] = useState<number | null>(null);
@@ -103,7 +116,7 @@ const InvestmentsPage: React.FC = () => {
                 </Grid>
             </Grid>}
 
-            <AddButton onClick={() => setAdInvestDialogOpen(true)} text={'Додати інвестицію'}/>
+            <AddButton onClick={() => setAddInvestDialogOpen(true)} text={'Додати інвестицію'}/>
 
             <AddInvestmentDialog
                 isAuthenticated={isAuthenticated}

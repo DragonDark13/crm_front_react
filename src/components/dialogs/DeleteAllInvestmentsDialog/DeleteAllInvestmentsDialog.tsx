@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import axios from 'axios';
 import {axiosInstance} from "../../../api/api";
+import {useInvestments} from "../../Provider/InvestmentsContext";
 
 const DeleteAllInvestmentsDialog: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -9,16 +10,8 @@ const DeleteAllInvestmentsDialog: React.FC = () => {
     const handleClickOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const handleDelete = async () => {
-        try {
-            const response = await axiosInstance.delete('/delete_all_investments'); // Запит до API
-            alert(response.data.message);
-            handleClose();
-        } catch (error: any) {
-            console.error('Помилка під час видалення:', error);
-            alert(error.response?.data?.error || 'Сталася помилка під час видалення.');
-        }
-    };
+    const {handleDeleteAllOtherInvestment} = useInvestments();
+
 
     return (
         <div>
@@ -37,7 +30,7 @@ const DeleteAllInvestmentsDialog: React.FC = () => {
                     <Button onClick={handleClose} color="primary">
                         Скасувати
                     </Button>
-                    <Button onClick={handleDelete} color="error" autoFocus>
+                    <Button onClick={()=>handleDeleteAllOtherInvestment(handleClose)} color="error" autoFocus>
                         Видалити
                     </Button>
                 </DialogActions>
