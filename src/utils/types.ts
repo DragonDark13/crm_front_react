@@ -92,6 +92,7 @@ export type ModalNames =
     | 'addNewPackage'
     | 'addNewGiftBox'
     | 'productInfoModal'
+    | 'addNewOtherInvestmentModal'
     ;
 
 export const modalNames: ModalNames[] = [
@@ -109,7 +110,8 @@ export const modalNames: ModalNames[] = [
     'createCustomerDialog',
     'addNewPackage',
     'addNewGiftBox',
-    'productInfoModal'
+    'productInfoModal',
+    'addNewOtherInvestmentModal'
 ];
 
 export interface INotificationPanel {
