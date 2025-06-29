@@ -57,8 +57,13 @@ interface ISupplierPurchaseHistoryRecord {
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PurchasesTableTypeProductCell from "../PurchasesPage/PurchasesTableTypeProductCell";
-import {fetchGetPackagingSupplierPurchaseHistory, updatePackagingSupplier} from "../../../api/_packagingMaterials";
+import {
+    deletePackagingSupplier,
+    fetchGetPackagingSupplierPurchaseHistory,
+    updatePackagingSupplier
+} from "../../../api/_packagingMaterials";
 import SupplierPurchaseHistoryTable from "./SupplierPurchaseHistoryTable";
+import {canDeleteSupplier} from "./canDeleteSupplier";
 
 
 const SupplierPage: React.FC = () => {
@@ -79,11 +84,12 @@ const SupplierPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage();
     const [products, setProducts] = useState([]);
     const {isAuthenticated} = useAuth();
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [confirmDeleteSupplierId, setConfirmDeleteSupplierId] = useState<number | null>(null);
+    const [confirmDeleteSupplierType, setConfirmDeleteSupplierType] = useState<ISupplierType | null>(null);
+
 
     const theme = useTheme();
-
-
-    console.log('purchaseHistory: ', purchaseHistory);
 
 
     // Отримуємо історію закупівель для конкретного постачальника
@@ -151,7 +157,7 @@ const SupplierPage: React.FC = () => {
     };
 
     // Видалення постачальника
-    const handleDeleteSupplier = async (id: number) => {
+    const handleDeleteSupplier455 = async (id: number, type: ISupplierType = 'product') => {
         try {
             await deleteSupplier(id);
             fetchSuppliersFunc(); // Оновити список постачальників після додавання
@@ -159,6 +165,19 @@ const SupplierPage: React.FC = () => {
         } catch (error) {
             console.error('Failed to delete supplier:', error);
         }
+    };
+
+    const handleDeleteSupplier = async (supplierId: number, type: ISupplierType) => {
+        const {canDelete, reason} = await canDeleteSupplier(supplierId, type);
+
+        if (!canDelete) {
+            showSnackbarMessage(reason || 'Цього постачальника не можна видалити.', 'warning');
+            return;
+        }
+
+        setConfirmDeleteSupplierId(supplierId);
+        setConfirmDeleteSupplierType(type);
+        setConfirmDialogOpen(true);
     };
 
     // Відображення історії закупівель
@@ -331,7 +350,7 @@ const SupplierPage: React.FC = () => {
                                                 <Tooltip title="Видалити постачальника">
 
                                                     <IconButton disabled={!isAuthenticated} color="error"
-                                                                onClick={() => handleDeleteSupplier(supplier.id)}>
+                                                                onClick={() => handleDeleteSupplier(supplier.id, supplier.type)}>
                                                         <DeleteIcon fontSize="small"/>
                                                     </IconButton>
 
@@ -392,6 +411,43 @@ const SupplierPage: React.FC = () => {
                 handleEditSupplier={handleEditSupplier}
                 supplier={currentSupplier}
             />}
+
+            <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
+                <DialogTitle>Підтвердження видалення</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        Ви дійсно хочете видалити постачальника?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmDialogOpen(false)}>Скасувати</Button>
+                    <Button
+                        color="error"
+                        onClick={async () => {
+                            if (confirmDeleteSupplierId !== null && confirmDeleteSupplierType) {
+                                try {
+                                    if (confirmDeleteSupplierType === "product") {
+                                        await deleteSupplier(confirmDeleteSupplierId);
+                                    } else if (confirmDeleteSupplierType === "packaging") {
+                                        await deletePackagingSupplier(confirmDeleteSupplierId)
+                                    }
+                                    showSnackbarMessage('Постачальника успішно видалено', 'success');
+                                    fetchSuppliersFunc();
+                                } catch (e) {
+                                    showSnackbarMessage('Помилка при видаленні постачальника', 'error');
+                                } finally {
+                                    setConfirmDialogOpen(false);
+                                    setConfirmDeleteSupplierId(null);
+                                    setConfirmDeleteSupplierType(null);
+                                }
+                            }
+                        }}
+                    >
+                        Видалити
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
 
         </div>
     );

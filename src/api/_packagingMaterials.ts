@@ -18,6 +18,13 @@ export const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId: number
     return fetchResource<{ supplier: ISupplierFull, purchase_history: any[]; materials: IMaterial[] }>(API_ENDPOINTS.CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY(pack_supplierId));
 };
 
+export const deletePackagingSupplier = (supplierPackagingId: number): Promise<void> => {
+    return axiosInstance
+        .delete(API_ENDPOINTS.DELETE_PACKAGING_SUPPLIER(supplierPackagingId))
+        .then(() => console.log(`Supplier with ID ${supplierPackagingId} deleted successfully.`))
+        .catch(handleError);
+};
+
 
 export const addNewPackagingMaterial = (addNewPackaging: IPurchasePackagingMaterial): Promise<void> => {
     return postResource<void>(API_ENDPOINTS.ADD_NEW_PACKAGING_MATERIAL, {
