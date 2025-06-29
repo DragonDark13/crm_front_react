@@ -18,24 +18,24 @@ import {
     IconButton, Typography, Tooltip, Grid, Box, TablePagination
 } from '@mui/material';
 import {ExpandMore as ExpandMoreIcon, Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
-import {INewSupplier, ISupplierFull} from "../../utils/types";
-import {useSuppliers} from "../Provider/SupplierContext";
+import {INewSupplier, ISupplierFull, ISupplierType} from "../../../utils/types";
+import {useSuppliers} from "../../Provider/SupplierContext";
 import clsx from "clsx";
 import HistoryIcon from "@mui/icons-material/History";
-import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
-import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
+import AddSupplierModal from "../../dialogs/AddSupplierModal/AddSupplierModal";
+import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import {
     addSupplier, deleteSupplier,
     fetchGetSupplierProducts,
     fetchGetSupplierPurchaseHistory,
     updateSupplier
-} from "../../api/_supplier";
-import {useAuth} from "../context/AuthContext";
-import CustomDialog from "../dialogs/CustomDialog/CustomDialog";
-import EditSupplierModal from "../dialogs/EditSupplierModal/EditSupplierModal";
+} from "../../../api/_supplier";
+import {useAuth} from "../../context/AuthContext";
+import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
+import EditSupplierModal from "../../dialogs/EditSupplierModal/EditSupplierModal";
 import {useTheme} from "@mui/material/styles";
-import AddButton from "../Buttons/AddButton";
-import RenderHeaderCell from "../_elements/RenderHeaderCell";
+import AddButton from "../../Buttons/AddButton";
+import RenderHeaderCell from "../../_elements/RenderHeaderCell";
 
 interface ICurrentSupplier {
     name: string;
@@ -56,6 +56,9 @@ interface ISupplierPurchaseHistoryRecord {
 
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import PurchasesTableTypeProductCell from "../PurchasesPage/PurchasesTableTypeProductCell";
+import {fetchGetPackagingSupplierPurchaseHistory} from "../../../api/_packagingMaterials";
+import SupplierPurchaseHistoryTable from "./SupplierPurchaseHistoryTable";
 
 
 const SupplierPage: React.FC = () => {
@@ -71,6 +74,7 @@ const SupplierPage: React.FC = () => {
         id: null
     });
     const [openHistory, setOpenHistory] = useState<number | null>(null);
+    const [currentType, setCurrentType] = useState<ISupplierType>('product');
     const [purchaseHistory, setPurchaseHistory] = useState<ISupplierPurchaseHistoryRecord[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
     const [products, setProducts] = useState([]);
@@ -83,13 +87,21 @@ const SupplierPage: React.FC = () => {
 
 
     // Отримуємо історію закупівель для конкретного постачальника
-    const fetchPurchaseHistory = async (supplierId: number) => {
-        // Отримуємо історію закупівель постачальника
-        fetchGetSupplierPurchaseHistory(supplierId)
-            .then(data => {
+    const fetchPurchaseHistory = async (supplierId: number, type: ISupplierType) => {
+        setCurrentType(type)
+        if (type === 'product') {
+            // Отримуємо історію закупівель постачальника
+            fetchGetSupplierPurchaseHistory(supplierId)
+                .then(data => {
+                    setPurchaseHistory(data.purchase_history);
+                    setProducts(data.products);
+                });
+        } else if (type === 'packaging') {
+            fetchGetPackagingSupplierPurchaseHistory(supplierId).then(data => {
                 setPurchaseHistory(data.purchase_history);
-                setProducts(data.products);
+                setProducts(data.materials);
             });
+        }
 
 
     };
@@ -143,11 +155,11 @@ const SupplierPage: React.FC = () => {
     };
 
     // Відображення історії закупівель
-    const toggleHistory = (id: number) => {
+    const toggleHistory = (id: number, type: 'product' | 'packaging') => {
         if (openHistory === id) {
             setOpenHistory(null);
         } else {
-            fetchPurchaseHistory(id);
+            fetchPurchaseHistory(id, type);
             setOpenHistory(id);
         }
     };
@@ -207,6 +219,7 @@ const SupplierPage: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
+                            <RenderHeaderCell>Тип</RenderHeaderCell>
                             <RenderHeaderCell>Назва постачальника</RenderHeaderCell>
                             <RenderHeaderCell>Контактна інформація</RenderHeaderCell>
                             <RenderHeaderCell>Email</RenderHeaderCell>
@@ -221,6 +234,9 @@ const SupplierPage: React.FC = () => {
                                 <TableRow
                                     sx={{background: !supplier.is_active ? theme.palette.grey[300] : (openHistory === supplier.id ? theme.palette.grey[500] : "inherit"),}}>
                                     <TableCell size={"small"}>
+                                        <PurchasesTableTypeProductCell type={supplier.type}/>
+                                    </TableCell>
+                                    <TableCell size={"small"}>
                                         <Typography
                                             className={clsx("supplier_name")}
                                             title={supplier.name}
@@ -233,7 +249,17 @@ const SupplierPage: React.FC = () => {
                                     </TableCell>
                                     <TableCell size={"small"} sx={{
                                         color: textColorDis(supplier.is_active)
-                                    }}>{supplier.contact_info || 'Не вказано'}</TableCell>
+                                    }}> <Typography
+                                        className={clsx("contact_info")}
+                                        title={supplier.contact_info}
+                                        sx={{
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                            color: textColorDis(supplier.is_active)
+                                        }}>
+                                        {supplier.contact_info || 'Не вказано'}
+                                    </Typography>
+                                    </TableCell>
                                     <TableCell size={"small"} sx={{
                                         color: textColorDis(supplier.is_active)
                                     }}>{supplier.email || 'Не вказано'}</TableCell>
@@ -242,7 +268,18 @@ const SupplierPage: React.FC = () => {
                                     }}>{supplier.phone_number || 'Не вказано'}</TableCell>
                                     <TableCell size={"small"} sx={{
                                         color: textColorDis(supplier.is_active)
-                                    }}>{supplier.address || 'Не вказано'}</TableCell>
+                                    }}>
+                                        <Typography
+                                            className={clsx("contact_info")}
+                                            title={supplier.name}
+                                            sx={{
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                color: textColorDis(supplier.is_active)
+                                            }}>
+                                            {supplier.address || 'Не вказано'}
+                                        </Typography>
+                                    </TableCell>
                                     <TableCell size={"small"} sx={{
                                         color: textColorDis(supplier.is_active)
                                     }}>
@@ -260,7 +297,7 @@ const SupplierPage: React.FC = () => {
                                             <Grid item>
                                                 <Tooltip title="Історія постачальника">
                                                     <IconButton color="info"
-                                                                onClick={() => toggleHistory(supplier.id)}>
+                                                                onClick={() => toggleHistory(supplier.id, supplier.type)}>
                                                         <HistoryIcon fontSize="small"/>
                                                     </IconButton>
                                                 </Tooltip>
@@ -303,55 +340,14 @@ const SupplierPage: React.FC = () => {
                                 {openHistory === supplier.id &&
                                 (
                                     <TableRow sx={{background: theme.palette.grey[500],}}>
-                                        <TableCell colSpan={6}>
+                                        <TableCell colSpan={8}>
                                             <Collapse in={openHistory === supplier.id} timeout="auto" unmountOnExit>
-                                                <TableContainer>
-                                                    <Table size="small" sx={{marginTop: 2}}>
-                                                        <TableHead>
-                                                            <TableRow>
-                                                                <TableCell colSpan={7} size={"small"}>
-                                                                    <Typography variant={"h6"}>
-                                                                        Історія операцій постачальника
-                                                                        <span> {suppliers.find((supplier) => supplier.id === openHistory).name}</span>
-                                                                    </Typography>
-
-                                                                </TableCell>
-                                                            </TableRow>
-                                                            <TableRow>
-                                                                <TableCell size={"small"}>Дата закупівлі</TableCell>
-                                                                <TableCell size={"small"}>Товар</TableCell>
-                                                                <TableCell size={"small"}>Кількість</TableCell>
-                                                                <TableCell size={"small"}>Ціна за одиницю</TableCell>
-                                                                <TableCell size={"small"}>Загальна вартість</TableCell>
-                                                            </TableRow>
-                                                        </TableHead>
-                                                        <TableBody>
-                                                            {purchaseHistory.length > 0 ? (
-                                                                purchaseHistory.map((purchase, index) => (
-                                                                    <TableRow key={index}>
-                                                                        <TableCell size={"small"}>
-                                                                            {new Date(purchase.purchase_date).toLocaleDateString("uk-UA")}
-                                                                        </TableCell>
-                                                                        <TableCell
-                                                                            size={"small"}>{purchase.product}</TableCell>
-                                                                        <TableCell
-                                                                            size={"small"}>{purchase.quantity_purchase}</TableCell>
-                                                                        <TableCell
-                                                                            size={"small"}>{purchase.purchase_price_per_item}</TableCell>
-                                                                        <TableCell
-                                                                            size={"small"}>{purchase.purchase_total_price}</TableCell>
-                                                                    </TableRow>
-                                                                ))
-                                                            ) : (
-                                                                <TableRow>
-                                                                    <TableCell colSpan={5} align="center">
-                                                                        Даних немає
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                            )}
-                                                        </TableBody>
-                                                    </Table>
-                                                </TableContainer>
+                                                <SupplierPurchaseHistoryTable
+                                                    type={currentType}
+                                                    supplierId={openHistory}
+                                                    suppliers={suppliers}
+                                                    purchaseHistory={purchaseHistory}
+                                                />
                                             </Collapse>
                                         </TableCell>
                                     </TableRow>)

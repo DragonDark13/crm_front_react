@@ -149,6 +149,11 @@ export interface ISupplierFull {
     phone_number: string;   // Номер телефону, може бути відсутнім
     address: string;        // Адреса, може бути відсутня
     is_active: boolean;
+    type:ISupplierType
+}
+
+export interface ISupplierForSuppPage extends ISupplierFull {
+    type: 'product' | 'packaging'
 }
 
 export interface ICustomerDetails {
@@ -358,3 +363,6 @@ export interface INewInvestment {
     date: string;
     supplier: string;
 }
+
+export type ISupplierType = 'product' | 'packaging';
+

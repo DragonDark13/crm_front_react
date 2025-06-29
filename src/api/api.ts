@@ -45,6 +45,7 @@ export const API_ENDPOINTS = {
     PRODUCT: (id: number) => `/product/${id}`,
     GET_ALL_PACKAGING_MATERIALS: '/get_all_packaging_materials',  // New endpoint for packaging materials
     CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`,
+    CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY: (id: number) => `/packaging-supplier/${id}/purchase-history`,
     ADD_NEW_PACKAGING_MATERIAL: '/packaging_materials/purchase',
     CREATE_GIFT_SET: '/create_gift_set',
     GET_ALL_GIFT_SETS: '/get_all_gift_sets',

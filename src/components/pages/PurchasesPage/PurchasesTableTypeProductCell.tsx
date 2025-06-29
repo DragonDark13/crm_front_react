@@ -3,26 +3,31 @@ import {TableCell, Tooltip, Typography} from "@mui/material";
 import {AttachMoney, Luggage, ShoppingBag} from "@mui/icons-material";
 
 interface IPurchasesTableTypeProductCell {
-    type:string
+    type: string
 }
 
-const PurchasesTableTypeProductCell = ({type}:IPurchasesTableTypeProductCell) => {
+const PurchasesTableTypeProductCell = ({type}: IPurchasesTableTypeProductCell) => {
+
+    type = type.toLowerCase()
+
+    console.log('type',type);
     return (
         <Tooltip title={
-            type === "Product" ? "Товар" :
-                type === "Packaging" ? "Пакування" : "Інше"
+            type === "product" ? "Товар" :
+                type === "packaging" ? "Пакування" :
+                    "Інше"
         }>
             <Typography variant="subtitle2" component="span">
-                {type === "Product" && <Tooltip title="Товар">
+                {type === "product" && <Tooltip title="Товар">
                     <ShoppingBag fontSize="small"/>
                 </Tooltip>
                 }
-                {type === "Packaging" &&
+                {type === "packaging" &&
                 <Tooltip title="Пакування">
                     <Luggage fontSize="small"/>
                 </Tooltip>
                 }
-                {type === "Other Investment" &&
+                {type === "other investment" &&
                 <Tooltip title="Інші вкладення">
                     <AttachMoney fontSize="small"/>
                 </Tooltip>
