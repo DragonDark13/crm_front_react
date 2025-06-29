@@ -1,6 +1,6 @@
 // Операції з пакувальними матеріалами
 import {IMaterial, IProduct, IPurchasePackagingMaterial, ISupplierFull, PackagingMaterialHistory} from "../utils/types";
-import {API_ENDPOINTS, fetchResource, postResource} from "./api";
+import {API_ENDPOINTS, axiosInstance, fetchResource, handleError, postResource} from "./api";
 
 export const fetchListPackagingMaterials = (): Promise<{ materials: IMaterial[] }> => {
     return fetchResource<{ materials: IMaterial[] }>(API_ENDPOINTS.GET_ALL_PACKAGING_MATERIALS);
@@ -8,6 +8,10 @@ export const fetchListPackagingMaterials = (): Promise<{ materials: IMaterial[] 
 
 export const getCurrentPackagingHistory = (materialId: number): Promise<PackagingMaterialHistory> => {
     return fetchResource<PackagingMaterialHistory>(API_ENDPOINTS.CURRENT_PACKAGING_HISTORY(materialId));
+};
+
+export const updatePackagingSupplier = (packagingSupplierId: number, editPackagingSupplier: ISupplierFull): Promise<void> => {
+    return axiosInstance.put(API_ENDPOINTS.EDIT_PACKAGING_SUPPLIER(packagingSupplierId), editPackagingSupplier).catch(handleError);
 };
 
 export const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId: number): Promise<{ supplier: ISupplierFull, purchase_history: any[]; materials: IMaterial[] }> => {

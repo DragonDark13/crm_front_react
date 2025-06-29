@@ -33,6 +33,7 @@ export const API_ENDPOINTS = {
     ADD_NEW_CATEGORIES: '/add_new_category',
     ADD_SUPPLIERS: '/create_supplier',
     EDIT_SUPPLIERS: (id: number) => `/supplier_edit/${id}`,
+    EDIT_PACKAGING_SUPPLIER: (id: number) => `/packaging_supplier_edit/${id}`,
     GET_ALL_SUPPLIERS: '/suppliers/list',
     CUSTOMERS: '/get_all_customers',
     CREATED_CUSTOMER: '/customer_create',

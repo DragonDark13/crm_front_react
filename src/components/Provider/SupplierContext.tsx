@@ -1,7 +1,8 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
-import {ISupplierFull} from "../../utils/types";
+import {ISupplierFull, ISupplierType} from "../../utils/types";
 import {fetchGetAllSuppliers, updateSupplier} from "../../api/_supplier";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
+import {updatePackagingSupplier} from "../../api/_packagingMaterials";
 
 // Типізація постачальників
 // interface ISupplier {
@@ -14,7 +15,7 @@ interface SupplierContextProps {
     suppliers: ISupplierFull[];
     fetchSuppliersFunc: () => void;
     handleToggleSupplierActive: (supplierId: number,
-                                 currentData: ISupplierFull) => void;
+                                 currentData: ISupplierFull, type: ISupplierType) => void;
 }
 
 // Створення контексту
@@ -40,7 +41,8 @@ export const SupplierProvider: React.FC = ({children}) => {
 
     const handleToggleSupplierActive = async (
         supplierId: number,
-        currentData: ISupplierFull
+        currentData: ISupplierFull,
+        type: ISupplierType
     ) => {
         try {
             const updatedData = {
@@ -48,7 +50,13 @@ export const SupplierProvider: React.FC = ({children}) => {
                 is_active: !currentData.is_active, // інвертуємо активність
             };
 
-            await updateSupplier(supplierId, updatedData);
+
+            if (type === 'product') {
+                await updateSupplier(supplierId, updatedData)
+
+            } else if (type === "packaging") {
+                await updatePackagingSupplier(supplierId, updatedData)
+            }
             showSnackbarMessage(
                 updatedData.is_active ? 'Постачальника активовано' : 'Постачальника вимкнено',
                 'success'

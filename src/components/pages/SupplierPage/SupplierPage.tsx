@@ -57,7 +57,7 @@ interface ISupplierPurchaseHistoryRecord {
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PurchasesTableTypeProductCell from "../PurchasesPage/PurchasesTableTypeProductCell";
-import {fetchGetPackagingSupplierPurchaseHistory} from "../../../api/_packagingMaterials";
+import {fetchGetPackagingSupplierPurchaseHistory, updatePackagingSupplier} from "../../../api/_packagingMaterials";
 import SupplierPurchaseHistoryTable from "./SupplierPurchaseHistoryTable";
 
 
@@ -129,12 +129,19 @@ const SupplierPage: React.FC = () => {
     }
 
     // Редагування постачальника
-    const handleEditSupplier = async (supplier: ISupplierFull) => {
+    const handleEditSupplier = async (supplier: ISupplierFull, type: ISupplierType = 'product') => {
         if (!currentSupplier) return;
 
         try {
             if (currentSupplier.id !== null)
-                await updateSupplier(currentSupplier.id, supplier)
+
+                if (type === 'product') {
+                    await updateSupplier(currentSupplier.id, supplier)
+
+                } else if (type === "packaging") {
+                    await updatePackagingSupplier(currentSupplier.id, supplier)
+                }
+
             fetchSuppliersFunc(); // Оновити список постачальників після додавання
             showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
             setOpenEditModal(false);
@@ -309,7 +316,7 @@ const SupplierPage: React.FC = () => {
                                                 >
                                                     <IconButton
                                                         color={supplier.is_active ? 'warning' : 'success'}
-                                                        onClick={() => handleToggleSupplierActive(supplier.id, supplier)}
+                                                        onClick={() => handleToggleSupplierActive(supplier.id, supplier, supplier.type)}
                                                     >
                                                         {supplier.is_active ? (
                                                             <BlockIcon fontSize="small"/>
