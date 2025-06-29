@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogTitle,
     Button,
-    TextField, Box, MenuItem, Grid,
+    TextField, Box, MenuItem, Grid, Typography,
 } from '@mui/material';
 import {axiosInstance} from "../../../../api/api";
 import CustomDialog from "../../CustomDialog/CustomDialog";
@@ -141,6 +141,13 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                 title={"Закупити " + materialName}
             >
                 <DialogContent>
+                    {supplierId && !suppliers.find(s => s.id === supplierId)?.is_active && (
+                        <Grid item xs={12}>
+                            <Typography color="error" variant="body2">
+                                Увага: цей постачальник є неактивним. Закупівлю буде заблоковано.
+                            </Typography>
+                        </Grid>
+                    )}
                     <Grid container spacing={2} alignItems="center">
                         {/* Вибір постачальника */}
                         <Grid item xs={12} sm={8} md={9}>
@@ -174,7 +181,7 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                 </DialogContent>
                 <DialogActions>
                     <CancelButton onClick={onClose}/>
-                    <Button disabled={!isAuthenticated} onClick={handlePurchase} color="primary" variant="contained">
+                    <Button disabled={!isAuthenticated || supplierId && !suppliers.find(s => s.id === supplierId)?.is_active} onClick={handlePurchase} color="primary" variant="contained">
                         Закупити
                     </Button>
                 </DialogActions>

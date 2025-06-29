@@ -13,9 +13,16 @@ import {
     TableSortLabel,
     Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog, Box, TablePagination
 } from '@mui/material';
-import {IMaterial, MaterialHistoryItem, PackagingMaterialHistory} from "../../../utils/types";
+import {
+    IMaterial,
+    IMaterialSupplier,
+    ISupplierFull,
+    MaterialHistoryItem,
+    PackagingMaterialHistory
+} from "../../../utils/types";
 import PurchaseMaterialDialog from "../../dialogs/packagingModal/AddNewPackagingModal/PurchaseMaterialDialog";
-import MarkPackagingAsUsedDialog from "../../dialogs/packagingModal/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
+import MarkPackagingAsUsedDialog
+    from "../../dialogs/packagingModal/MarkPackagingAsUsedDialog/MarkPackagingAsUsedDialog";
 import {usePackaging} from "../../Provider/PackagingContext";
 import {fetchListPackagingMaterials, getCurrentPackagingHistory} from "../../../api/_packagingMaterials";
 import DeleteAllMaterialsDialog from "../../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
@@ -36,16 +43,17 @@ const PackagingMaterialList: React.FC = () => {
         const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(null);
         const [dialogOpen, setDialogOpen] = useState<boolean>(false);
         const [selectedSupplierId, setSelectedSupplierId] = useState<number | null>(null);
+        const [selectedSupplierData, setSelectedSupplierData] = useState<IMaterialSupplier | null>(null);
         const [defaultPricePerUnit, setDefaultPricePerUnit] = useState<number>(0);
         const [selectedMaterial, setSelectedMaterial] = useState<IMaterial | null>(null);
         const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
         const [historyDialogOpen, setHistoryDialogOpen] = useState<boolean>(false);
         const [materialHistory, setMaterialHistory] = useState<MaterialHistoryItem[]>([]);
 
-        const mapMaterialHistory = (history: PackagingMaterialHistory): MaterialHistoryItem[] => {
+        const mapMaterialHistory = (history: PackagingMaterialHistory, supplier: IMaterialSupplier): MaterialHistoryItem[] => {
             const purchaseMapped = history.purchase_history.map(purchase => ({
                 date: purchase.purchase_date,
-                description: `Закупівля у постачальника (ID: ${purchase.supplier_id}), ціна за одиницю: ${purchase.purchase_price_per_unit}`,
+                description: `Закупівля у постачальника ${supplier.name} (ID: ${purchase.supplier_id}), ціна за одиницю: ${purchase.purchase_price_per_unit}`,
                 quantity: purchase.quantity_purchased,
             }));
 
@@ -67,11 +75,11 @@ const PackagingMaterialList: React.FC = () => {
             );
         };
 
-        const fetchMaterialHistory = (materialId: number) => {
+        const fetchMaterialHistory = (materialId: number, supplierData: IMaterialSupplier) => {
 
             getCurrentPackagingHistory(materialId)
                 .then(data => {
-                    const mappedData = mapMaterialHistory(data);
+                    const mappedData = mapMaterialHistory(data, supplierData);
                     setMaterialHistory(mappedData);
                 })
                 .catch((error) => console.error('Error fetching packaging materials:', error));
@@ -79,7 +87,9 @@ const PackagingMaterialList: React.FC = () => {
 
         const handleOpenHistoryDialog = (material: IMaterial) => {
             setSelectedMaterial(material);
-            fetchMaterialHistory(material.id); // Fetch history when opening the dialog
+            if (material.supplier) setSelectedSupplierData(material.supplier)
+
+            fetchMaterialHistory(material.id, material.supplier); // Fetch history when opening the dialog
             setHistoryDialogOpen(true);
         };
 
@@ -318,6 +328,7 @@ const PackagingMaterialList: React.FC = () => {
                                     <TableCell size={"small"}><Typography variant={"subtitle2"}>{material.name}</Typography></TableCell>
                                     <TableCell size={"small"}>
                                         <Typography
+                                            color={!material.supplier.is_active ? 'textDisabled' : 'inherit'}
                                             variant={"subtitle2"}
                                             sx={{
                                                 textOverflow: 'ellipsis',
@@ -439,6 +450,7 @@ const PackagingMaterialList: React.FC = () => {
                     <MaterialHistoryDialog
                         open={historyDialogOpen}
                         handleClose={handleCloseHistoryDialog}
+                        selectedSupplierData={selectedSupplierData}
                         selectedMaterial={selectedMaterial}
                         materialHistory={materialHistory}
                     />
