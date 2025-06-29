@@ -31,7 +31,9 @@ import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import Inventory2Icon from '@mui/icons-material/Inventory2'; // Товар
 import AllInboxIcon from '@mui/icons-material/AllInbox';     // Пакування
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import {AttachMoney, Luggage, ShoppingBag} from "@mui/icons-material";   // Інше
+import {AttachMoney, Luggage, ShoppingBag} from "@mui/icons-material";
+import PurchaseHistoryFilter from "./PurchaseHistoryFilter";
+import PurchasesTableTypeProductCell from "./PurchasesTableTypeProductCell";   // Інше
 
 interface IPurchasesTable {
     categories: [number];
@@ -215,6 +217,21 @@ const PurchasesTable: React.FC = () => {
         priceRangeFilterSlider[0] !== priceBounds[0] ||
         priceRangeFilterSlider[1] !== priceBounds[1];
 
+
+    console.log('Array.from(new Set(purchaseHistory))', Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))));
+
+    const columns = [
+        {key: 'type', label: 'Тип', sortable: false},
+        {key: 'name', label: 'Назва продукту'},
+        {key: 'supplier_name', label: 'Назва постачальника'},
+        {key: 'quantity', label: 'Кількість'},
+        {key: 'price_per_item', label: 'Ціна за одиницю'},
+        {key: 'total_price', label: 'Загальна ціна'},
+        {key: 'date', label: 'Дата'}
+    ];
+
+    console.log('paginatedData',paginatedData);
+
     return (
         <div>
             <Typography marginBlockEnd={3} variant={"h4"}>Історія Закупівель</Typography>
@@ -228,122 +245,24 @@ const PurchasesTable: React.FC = () => {
                 {filtersOpen ? 'Сховати фільтри' : 'Показати фільтри'}
             </Button>
             <Collapse in={filtersOpen}>
-                <Grid container spacing={1}>
-                    <Grid item xs={12} sm={6} md={5}>
-                        <TextField
-                            placeholder={'Назва'}
-                            size={"small"}
-                            margin="dense"
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            label="Пошук"
-                            variant="outlined"
-                            fullWidth
-                            value={filter}
-                            onChange={handleFilterChange}
-                        />
-                    </Grid>
+                <PurchaseHistoryFilter
+                    categories={categories}
+                    categoryFilter={categoryFilter}
+                    dateRangeFilter={dateRangeFilter}
+                    filter={filter}
+                    handleCategoryFilterChange={handleCategoryFilterChange}
+                    handleDateRangeFilterChange={handleDateRangeFilterChange}
+                    handleFilterChange={handleFilterChange}
+                    handleSupplierFilterChange={handleSupplierFilterChange}
+                    handleTypeFilterChange={handleTypeFilterChange}
+                    priceBounds={priceBounds}
+                    priceRangeFilterSlider={priceRangeFilterSlider}
+                    purchaseHistory={purchaseHistory}
+                    setPriceRangeFilterSlider={setPriceRangeFilterSlider}
+                    supplierFilter={supplierFilter}
+                    typeFilter={typeFilter}
 
-                    <Grid item xs={12} sm={6} md={2} lg={2}>
-                        <TextField
-                            size={"small"}
-                            margin="dense"
-                            label="Дата початку"
-                            type="date"
-                            fullWidth
-                            value={dateRangeFilter.start}
-                            onChange={(e) => handleDateRangeFilterChange('start', e.target.value)}
-                            InputLabelProps={{shrink: true}}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={2}>
-                        <TextField
-                            size={"small"}
-                            margin="dense"
-                            label="Дата закінчення"
-                            type="date"
-                            fullWidth
-                            value={dateRangeFilter.end}
-                            onChange={(e) => handleDateRangeFilterChange('end', e.target.value)}
-                            inputProps={{
-                                min: dateRangeFilter.start || undefined  // заборонити дати до початкової
-                            }}
-                            InputLabelProps={{shrink: true, min: dateRangeFilter.start,}}
-                        />
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={3}>
-                        <FormControl size={"small"} fullWidth margin={"dense"}>
-                            <InputLabel size={"small"}>Категорія</InputLabel>
-                            <Select size={"small"} label={'Категорія'} value={categoryFilter}
-                                    onChange={handleCategoryFilterChange}>
-                                <MenuItem title={"Всі категорії"} value="">Всі категорії</MenuItem>
-                                {categories.map((category: ICategory) => (
-                                    <MenuItem title={category.name} key={category.id} value={category.id}>
-                                        {category.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={3}>
-                        <FormControl size={"small"} fullWidth margin={"dense"}>
-                            <InputLabel size={"small"}>Постачальник</InputLabel>
-                            <Select size={"small"} label={'Постачальник'} value={supplierFilter}
-                                    onChange={handleSupplierFilterChange}>
-                                <MenuItem value="">Всі постачальники</MenuItem>
-                                {Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
-                                    (supplier, index) => (
-                                        <MenuItem key={supplier + `${index}`} value={supplier}>
-                                            {supplier}
-                                        </MenuItem>
-                                    )
-                                )}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={2}>
-                        <FormControl size={"small"} fullWidth margin={"dense"}>
-                            <InputLabel size={"small"}>Тип</InputLabel>
-                            <Select size={"small"} label={'Тип'} value={typeFilter} onChange={handleTypeFilterChange}>
-                                <MenuItem value="">Всі типи</MenuItem>
-                                <MenuItem value="Other Investment">Інші інвестиції</MenuItem>
-                                <MenuItem value="Packaging">Упаковка</MenuItem>
-                                <MenuItem value="Product">Продукт</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} md={5}>
-                        <Grid container alignItems={"center"}>
-                            <Grid item xs={12} md={4}><Typography variant={"caption"} gutterBottom>Діапазон ціни (за
-                                од.):</Typography></Grid>
-                            <Grid item xs={12} md={8}>
-                                <Box px={"10px"}>
-                                    {Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && (<Slider
-                                        value={priceRangeFilterSlider} // <- має бути масив: [min, max]
-                                        onChange={(_, newValue) => {
-                                            setPriceRangeFilterSlider(newValue as number[]);
-                                        }}
-                                        valueLabelDisplay="auto"
-
-                                        min={priceBounds[0]}
-                                        max={priceBounds[1]}
-                                        marks={[
-                                            {value: priceBounds[0], label: `${priceBounds[0]}₴`},
-                                            {value: priceBounds[1], label: `${priceBounds[1]}₴`}
-                                        ]}
-                                    />)} </Box></Grid>
-                        </Grid>
-
-
-                    </Grid>
-
-                </Grid>
+                />
             </Collapse>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
@@ -371,92 +290,28 @@ const PurchasesTable: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>
-                                <Typography> Тип</Typography>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortConfig.key === 'name'}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSort('name')}
-                                >
-                                    Назва продукту
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortConfig.key === 'supplier_name'}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSort('supplier_name')}
-                                >
-                                    Назва постачальника
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortConfig.key === 'quantity'}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSort('quantity')}
-                                >
-                                    Кількість
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortConfig.key === 'price_per_item'}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSort('price_per_item')}
-                                >
-                                    Ціна за одиницю
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortConfig.key === 'total_price'}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSort('total_price')}
-                                >
-                                    Загальна ціна
-                                </TableSortLabel>
-                            </TableCell>
-                            <TableCell>
-                                <TableSortLabel
-                                    active={sortConfig.key === 'date'}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSort('date')}
-                                >
-                                    Дата
-                                </TableSortLabel>
-                            </TableCell>
+                            {columns.map((column) => (
+                                <TableCell key={column.key}>
+                                    {column?.sortable === false ? (
+                                        <Typography>{column.label}</Typography>
+                                    ) : (
+                                        <TableSortLabel
+                                            active={sortConfig.key === column.key}
+                                            direction={sortConfig.direction}
+                                            onClick={() => handleSort(column.key)}
+                                        >
+                                            {column.label}
+                                        </TableSortLabel>
+                                    )}
+                                </TableCell>
+                            ))}
                         </TableRow>
-
                     </TableHead>
                     <TableBody>
                         {paginatedData.map((row, index) => (
                             <TableRow key={index + row.name} style={getRowStyle(row.type)}>
                                 <TableCell>
-                                    <Tooltip title={
-                                        row.type === "Product" ? "Товар" :
-                                            row.type === "Packaging" ? "Пакування" : "Інше"
-                                    }>
-                                        <Typography variant="subtitle2" component="span">
-                                            {row.type === "Product" && <Tooltip title="Товар">
-                                                <ShoppingBag fontSize="small"/>
-                                            </Tooltip>
-                                            }
-                                            {row.type === "Packaging" &&
-                                            <Tooltip title="Пакування">
-                                                <Luggage fontSize="small"/>
-                                            </Tooltip>
-                                            }
-                                            {row.type === "Other Investment" &&
-                                            <Tooltip title="Інші вкладення">
-                                                <AttachMoney fontSize="small"/>
-                                            </Tooltip>
-                                            }
-                                        </Typography>
-
-                                    </Tooltip>
+                                    <PurchasesTableTypeProductCell type={row.type}/>
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="subtitle2">{row.name}</Typography>

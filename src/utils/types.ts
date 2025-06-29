@@ -148,6 +148,12 @@ export interface ISupplierFull {
     email: string;          // Email, може бути відсутнім
     phone_number: string;   // Номер телефону, може бути відсутнім
     address: string;        // Адреса, може бути відсутня
+    is_active: boolean;
+    type:ISupplierType
+}
+
+export interface ISupplierForSuppPage extends ISupplierFull {
+    type: 'product' | 'packaging'
 }
 
 export interface ICustomerDetails {
@@ -172,14 +178,14 @@ export interface INewGiftCustomerDetails {
 export interface ISaleHistory {
     id: number;
     product: IProduct;
-    packaging_material?:IMaterial
+    packaging_material?: IMaterial
     quantity_sold: number;
     selling_price_per_item: number;
     selling_total_price: number;
     sale_date: string;
-    packaging_material_id?:number
-    packaging_quantity?:number
-    total_packaging_cost?:number
+    packaging_material_id?: number
+    packaging_quantity?: number
+    total_packaging_cost?: number
 }
 
 export interface IMaterialSupplier {
@@ -357,3 +363,6 @@ export interface INewInvestment {
     date: string;
     supplier: string;
 }
+
+export type ISupplierType = 'product' | 'packaging';
+

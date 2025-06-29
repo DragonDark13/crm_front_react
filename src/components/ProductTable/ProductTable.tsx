@@ -211,6 +211,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                 variant={"subtitle2"}
                                                 className={clsx("supplier_name")}
                                                 title={product.supplier?.name || 'N/A'}
+                                                color={product.supplier?.is_active || 'textDisabled'}
                                                 sx={{
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap'

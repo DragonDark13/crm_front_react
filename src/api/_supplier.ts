@@ -29,3 +29,4 @@ export const deleteSupplier = (supplierId: number): Promise<void> => {
         .then(() => console.log(`Supplier with ID ${supplierId} deleted successfully.`))
         .catch(handleError);
 };
+

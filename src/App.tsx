@@ -33,7 +33,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Login from "./components/Login/Login";
 import PackagingMaterialList from "./components/pages/PackagingMaterial/PackagingMaterialList";
 import InvestmentsPage from "./components/pages/InvestmentsPage";
-import SupplierPage from "./components/pages/SupplierPage";
+import SupplierPage from "./components/pages/SupplierPage/SupplierPage";
 import Sales from "./components/pages/Sales/Sales";
 import GiftSetsPage from "./components/pages/GiftSetsPage/GiftSetsPage";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";

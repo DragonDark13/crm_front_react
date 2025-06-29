@@ -6,6 +6,7 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material';
+import {IMaterialSupplier} from "../../../../utils/types";
 
 interface MaterialHistoryItem {
     date: string;
@@ -15,10 +16,12 @@ interface MaterialHistoryItem {
 
 interface IMaterialHistoryTable {
     materialHistory: MaterialHistoryItem[];
+        selectedSupplierData: IMaterialSupplier
+
 }
 
 
-const MaterialHistoryTable = ({materialHistory}: IMaterialHistoryTable) => {
+const MaterialHistoryTable = ({materialHistory,selectedSupplierData}: IMaterialHistoryTable) => {
     return (
         <Table>
             <TableHead>
