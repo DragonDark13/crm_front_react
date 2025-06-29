@@ -11368,7 +11368,7 @@ const useThemePropsDefault = (inProps) => useThemeProps({
   name: "MuiContainer",
   defaultTheme: defaultTheme$2
 });
-const useUtilityClasses$16 = (ownerState, componentName) => {
+const useUtilityClasses$17 = (ownerState, componentName) => {
   const getContainerUtilityClass = (slot) => {
     return generateUtilityClass(componentName, slot);
   };
@@ -11458,7 +11458,7 @@ function createContainer(options = {}) {
       fixed,
       maxWidth: maxWidth2
     };
-    const classes = useUtilityClasses$16(ownerState, componentName);
+    const classes = useUtilityClasses$17(ownerState, componentName);
     return (
       // @ts-ignore theme is injected by the styled util
       /* @__PURE__ */ jsxRuntimeExports.jsx(ContainerRoot, {
@@ -12591,7 +12591,7 @@ function getSvgIconUtilityClass(slot) {
   return generateUtilityClass("MuiSvgIcon", slot);
 }
 generateUtilityClasses("MuiSvgIcon", ["root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge"]);
-const useUtilityClasses$15 = (ownerState) => {
+const useUtilityClasses$16 = (ownerState) => {
   const {
     color: color2,
     fontSize,
@@ -12736,7 +12736,7 @@ const SvgIcon = /* @__PURE__ */ reactExports.forwardRef(function SvgIcon2(inProp
   if (!inheritViewBox) {
     more.viewBox = viewBox;
   }
-  const classes = useUtilityClasses$15(ownerState);
+  const classes = useUtilityClasses$16(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SvgIconRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -13287,7 +13287,7 @@ function getCollapseUtilityClass(slot) {
   return generateUtilityClass("MuiCollapse", slot);
 }
 generateUtilityClasses("MuiCollapse", ["root", "horizontal", "vertical", "entered", "hidden", "wrapper", "wrapperInner"]);
-const useUtilityClasses$14 = (ownerState) => {
+const useUtilityClasses$15 = (ownerState) => {
   const {
     orientation,
     classes
@@ -13415,7 +13415,7 @@ const Collapse = /* @__PURE__ */ reactExports.forwardRef(function Collapse2(inPr
     orientation,
     collapsedSize: collapsedSizeProp
   };
-  const classes = useUtilityClasses$14(ownerState);
+  const classes = useUtilityClasses$15(ownerState);
   const theme = useTheme();
   const timer = useTimeout();
   const wrapperRef = reactExports.useRef(null);
@@ -13576,7 +13576,7 @@ function getPaperUtilityClass(slot) {
   return generateUtilityClass("MuiPaper", slot);
 }
 generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
-const useUtilityClasses$13 = (ownerState) => {
+const useUtilityClasses$14 = (ownerState) => {
   const {
     square,
     elevation,
@@ -13649,7 +13649,7 @@ const Paper = /* @__PURE__ */ reactExports.forwardRef(function Paper2(inProps, r
     square,
     variant
   };
-  const classes = useUtilityClasses$13(ownerState);
+  const classes = useUtilityClasses$14(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(PaperRoot, {
     as: component,
     ownerState,
@@ -14110,7 +14110,7 @@ function getButtonBaseUtilityClass(slot) {
   return generateUtilityClass("MuiButtonBase", slot);
 }
 const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", ["root", "disabled", "focusVisible"]);
-const useUtilityClasses$12 = (ownerState) => {
+const useUtilityClasses$13 = (ownerState) => {
   const {
     disabled,
     focusVisible,
@@ -14327,7 +14327,7 @@ const ButtonBase = /* @__PURE__ */ reactExports.forwardRef(function ButtonBase2(
     tabIndex,
     focusVisible
   };
-  const classes = useUtilityClasses$12(ownerState);
+  const classes = useUtilityClasses$13(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(ButtonBaseRoot, {
     as: ComponentProp,
     className: clsx(classes.root, className),
@@ -14425,7 +14425,7 @@ const rotateAnimation = typeof circularRotateKeyframe !== "string" ? css`
 const dashAnimation = typeof circularDashKeyframe !== "string" ? css`
         animation: ${circularDashKeyframe} 1.4s ease-in-out infinite;
       ` : null;
-const useUtilityClasses$11 = (ownerState) => {
+const useUtilityClasses$12 = (ownerState) => {
   const {
     classes,
     variant,
@@ -14548,7 +14548,7 @@ const CircularProgress = /* @__PURE__ */ reactExports.forwardRef(function Circul
     value,
     variant
   };
-  const classes = useUtilityClasses$11(ownerState);
+  const classes = useUtilityClasses$12(ownerState);
   const circleStyle = {};
   const rootStyle = {};
   const rootProps = {};
@@ -14593,7 +14593,7 @@ function getIconButtonUtilityClass(slot) {
   return generateUtilityClass("MuiIconButton", slot);
 }
 const iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge", "loading", "loadingIndicator", "loadingWrapper"]);
-const useUtilityClasses$10 = (ownerState) => {
+const useUtilityClasses$11 = (ownerState) => {
   const {
     classes,
     disabled,
@@ -14779,7 +14779,7 @@ const IconButton = /* @__PURE__ */ reactExports.forwardRef(function IconButton2(
     loadingIndicator,
     size
   };
-  const classes = useUtilityClasses$10(ownerState);
+  const classes = useUtilityClasses$11(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(IconButtonRoot, {
     id: loading ? loadingId : idProp,
     className: clsx(classes.root, className),
@@ -14818,7 +14818,7 @@ const InfoOutlinedIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("pa
 const ClearIcon$1 = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 }), "Close");
-const useUtilityClasses$$ = (ownerState) => {
+const useUtilityClasses$10 = (ownerState) => {
   const {
     variant,
     color: color2,
@@ -14973,7 +14973,7 @@ const Alert = /* @__PURE__ */ reactExports.forwardRef(function Alert2(inProps, r
     variant,
     colorSeverity: color2 || severity
   };
-  const classes = useUtilityClasses$$(ownerState);
+  const classes = useUtilityClasses$10(ownerState);
   const externalForwardedProps = {
     slots: {
       closeButton: components.CloseButton,
@@ -15072,7 +15072,7 @@ const v6Colors = {
   textDisabled: true
 };
 const extendSxProp = internal_createExtendSxProp();
-const useUtilityClasses$_ = (ownerState) => {
+const useUtilityClasses$$ = (ownerState) => {
   const {
     align,
     gutterBottom,
@@ -15215,7 +15215,7 @@ const Typography = /* @__PURE__ */ reactExports.forwardRef(function Typography2(
     variantMapping
   };
   const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
-  const classes = useUtilityClasses$_(ownerState);
+  const classes = useUtilityClasses$$(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(TypographyRoot, {
     as: Component,
     ref,
@@ -17505,7 +17505,7 @@ function resolveAnchorEl$1(anchorEl) {
 function isHTMLElement(element) {
   return element.nodeType !== void 0;
 }
-const useUtilityClasses$Z = (ownerState) => {
+const useUtilityClasses$_ = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -17606,7 +17606,7 @@ const PopperTooltip = /* @__PURE__ */ reactExports.forwardRef(function PopperToo
   if (TransitionProps !== null) {
     childProps.TransitionProps = TransitionProps;
   }
-  const classes = useUtilityClasses$Z(props);
+  const classes = useUtilityClasses$_(props);
   const Root = slots.root ?? "div";
   const rootProps = useSlotProps({
     elementType: Root,
@@ -17754,7 +17754,7 @@ function getListSubheaderUtilityClass(slot) {
   return generateUtilityClass("MuiListSubheader", slot);
 }
 generateUtilityClasses("MuiListSubheader", ["root", "colorPrimary", "colorInherit", "gutters", "inset", "sticky"]);
-const useUtilityClasses$Y = (ownerState) => {
+const useUtilityClasses$Z = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -17849,7 +17849,7 @@ const ListSubheader = /* @__PURE__ */ reactExports.forwardRef(function ListSubhe
     disableSticky,
     inset
   };
-  const classes = useUtilityClasses$Y(ownerState);
+  const classes = useUtilityClasses$Z(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListSubheaderRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -17868,7 +17868,7 @@ function getChipUtilityClass(slot) {
   return generateUtilityClass("MuiChip", slot);
 }
 const chipClasses = generateUtilityClasses("MuiChip", ["root", "sizeSmall", "sizeMedium", "colorDefault", "colorError", "colorInfo", "colorPrimary", "colorSecondary", "colorSuccess", "colorWarning", "disabled", "clickable", "clickableColorPrimary", "clickableColorSecondary", "deletable", "deletableColorPrimary", "deletableColorSecondary", "outlined", "filled", "outlinedPrimary", "outlinedSecondary", "filledPrimary", "filledSecondary", "avatar", "avatarSmall", "avatarMedium", "avatarColorPrimary", "avatarColorSecondary", "icon", "iconSmall", "iconMedium", "iconColorPrimary", "iconColorSecondary", "label", "labelSmall", "labelMedium", "deleteIcon", "deleteIconSmall", "deleteIconMedium", "deleteIconColorPrimary", "deleteIconColorSecondary", "deleteIconOutlinedColorPrimary", "deleteIconOutlinedColorSecondary", "deleteIconFilledColorPrimary", "deleteIconFilledColorSecondary", "focusVisible"]);
-const useUtilityClasses$X = (ownerState) => {
+const useUtilityClasses$Y = (ownerState) => {
   const {
     classes,
     disabled,
@@ -18259,7 +18259,7 @@ const Chip = /* @__PURE__ */ reactExports.forwardRef(function Chip2(inProps, ref
     clickable,
     variant
   };
-  const classes = useUtilityClasses$X(ownerState);
+  const classes = useUtilityClasses$Y(ownerState);
   const moreProps = component === ButtonBase ? {
     component: ComponentProp || "div",
     focusVisibleClassName: classes.focusVisible,
@@ -18516,7 +18516,7 @@ const inputOverridesResolver = (props, styles2) => {
   } = props;
   return [styles2.input, ownerState.size === "small" && styles2.inputSizeSmall, ownerState.multiline && styles2.inputMultiline, ownerState.type === "search" && styles2.inputTypeSearch, ownerState.startAdornment && styles2.inputAdornedStart, ownerState.endAdornment && styles2.inputAdornedEnd, ownerState.hiddenLabel && styles2.inputHiddenLabel];
 };
-const useUtilityClasses$W = (ownerState) => {
+const useUtilityClasses$X = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -18902,7 +18902,7 @@ const InputBase = /* @__PURE__ */ reactExports.forwardRef(function InputBase2(in
     startAdornment,
     type
   };
-  const classes = useUtilityClasses$W(ownerState);
+  const classes = useUtilityClasses$X(ownerState);
   const Root = slots.root || components.Root || InputBaseRoot;
   const rootProps = slotProps.root || componentsProps.root || {};
   const Input3 = slots.input || components.Input || InputBaseInput;
@@ -18995,7 +18995,7 @@ function getAutocompleteUtilityClass(slot) {
 }
 const autocompleteClasses = generateUtilityClasses("MuiAutocomplete", ["root", "expanded", "fullWidth", "focused", "focusVisible", "tag", "tagSizeSmall", "tagSizeMedium", "hasPopupIcon", "hasClearIcon", "inputRoot", "input", "inputFocused", "endAdornment", "clearIndicator", "popupIndicator", "popupIndicatorOpen", "popper", "popperDisablePortal", "paper", "listbox", "loading", "noOptions", "option", "groupLabel", "groupUl"]);
 var _ClearIcon, _ArrowDropDownIcon;
-const useUtilityClasses$V = (ownerState) => {
+const useUtilityClasses$W = (ownerState) => {
   const {
     classes,
     disablePortal,
@@ -19491,7 +19491,7 @@ const Autocomplete = /* @__PURE__ */ reactExports.forwardRef(function Autocomple
     popupOpen,
     size
   };
-  const classes = useUtilityClasses$V(ownerState);
+  const classes = useUtilityClasses$W(ownerState);
   const externalForwardedProps = {
     slots: {
       paper: PaperComponentProp,
@@ -19816,7 +19816,7 @@ function getBackdropUtilityClass(slot) {
   return generateUtilityClass("MuiBackdrop", slot);
 }
 generateUtilityClasses("MuiBackdrop", ["root", "invisible"]);
-const useUtilityClasses$U = (ownerState) => {
+const useUtilityClasses$V = (ownerState) => {
   const {
     classes,
     invisible
@@ -19879,7 +19879,7 @@ const Backdrop = /* @__PURE__ */ reactExports.forwardRef(function Backdrop2(inPr
     component,
     invisible
   };
-  const classes = useUtilityClasses$U(ownerState);
+  const classes = useUtilityClasses$V(ownerState);
   const backwardCompatibleSlots = {
     transition: TransitionComponentProp,
     root: components.Root,
@@ -19978,7 +19978,7 @@ const badgeClasses = generateUtilityClasses("MuiBadge", [
 ]);
 const RADIUS_STANDARD = 10;
 const RADIUS_DOT = 4;
-const useUtilityClasses$T = (ownerState) => {
+const useUtilityClasses$U = (ownerState) => {
   const {
     color: color2,
     anchorOrigin,
@@ -20241,7 +20241,7 @@ const Badge = /* @__PURE__ */ reactExports.forwardRef(function Badge2(inProps, r
     overlap,
     variant
   };
-  const classes = useUtilityClasses$T(ownerState);
+  const classes = useUtilityClasses$U(ownerState);
   const RootSlot = (slots == null ? void 0 : slots.root) ?? components.Root ?? BadgeRoot;
   const BadgeSlot = (slots == null ? void 0 : slots.badge) ?? components.Badge ?? BadgeBadge;
   const rootSlotProps = (slotProps == null ? void 0 : slotProps.root) ?? componentsProps.root;
@@ -20285,7 +20285,7 @@ function getButtonUtilityClass(slot) {
 const buttonClasses = generateUtilityClasses("MuiButton", ["root", "text", "textInherit", "textPrimary", "textSecondary", "textSuccess", "textError", "textInfo", "textWarning", "outlined", "outlinedInherit", "outlinedPrimary", "outlinedSecondary", "outlinedSuccess", "outlinedError", "outlinedInfo", "outlinedWarning", "contained", "containedInherit", "containedPrimary", "containedSecondary", "containedSuccess", "containedError", "containedInfo", "containedWarning", "disableElevation", "focusVisible", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorSuccess", "colorError", "colorInfo", "colorWarning", "textSizeSmall", "textSizeMedium", "textSizeLarge", "outlinedSizeSmall", "outlinedSizeMedium", "outlinedSizeLarge", "containedSizeSmall", "containedSizeMedium", "containedSizeLarge", "sizeMedium", "sizeSmall", "sizeLarge", "fullWidth", "startIcon", "endIcon", "icon", "iconSizeSmall", "iconSizeMedium", "iconSizeLarge", "loading", "loadingWrapper", "loadingIconPlaceholder", "loadingIndicator", "loadingPositionCenter", "loadingPositionStart", "loadingPositionEnd"]);
 const ButtonGroupContext = /* @__PURE__ */ reactExports.createContext({});
 const ButtonGroupButtonContext = /* @__PURE__ */ reactExports.createContext(void 0);
-const useUtilityClasses$S = (ownerState) => {
+const useUtilityClasses$T = (ownerState) => {
   const {
     color: color2,
     disableElevation,
@@ -20787,7 +20787,7 @@ const Button = /* @__PURE__ */ reactExports.forwardRef(function Button2(inProps,
     type,
     variant
   };
-  const classes = useUtilityClasses$S(ownerState);
+  const classes = useUtilityClasses$T(ownerState);
   const startIcon = (startIconProp || loading && loadingPosition === "start") && /* @__PURE__ */ jsxRuntimeExports.jsx(ButtonStartIcon, {
     className: classes.startIcon,
     ownerState,
@@ -20838,7 +20838,7 @@ function getCardUtilityClass(slot) {
   return generateUtilityClass("MuiCard", slot);
 }
 generateUtilityClasses("MuiCard", ["root"]);
-const useUtilityClasses$R = (ownerState) => {
+const useUtilityClasses$S = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -20868,7 +20868,7 @@ const Card = /* @__PURE__ */ reactExports.forwardRef(function Card2(inProps, ref
     ...props,
     raised
   };
-  const classes = useUtilityClasses$R(ownerState);
+  const classes = useUtilityClasses$S(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CardRoot, {
     className: clsx(classes.root, className),
     elevation: raised ? 8 : void 0,
@@ -20881,7 +20881,7 @@ function getCardActionsUtilityClass(slot) {
   return generateUtilityClass("MuiCardActions", slot);
 }
 generateUtilityClasses("MuiCardActions", ["root", "spacing"]);
-const useUtilityClasses$Q = (ownerState) => {
+const useUtilityClasses$R = (ownerState) => {
   const {
     classes,
     disableSpacing
@@ -20929,7 +20929,7 @@ const CardActions = /* @__PURE__ */ reactExports.forwardRef(function CardActions
     ...props,
     disableSpacing
   };
-  const classes = useUtilityClasses$Q(ownerState);
+  const classes = useUtilityClasses$R(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CardActionsRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -20941,7 +20941,7 @@ function getCardContentUtilityClass(slot) {
   return generateUtilityClass("MuiCardContent", slot);
 }
 generateUtilityClasses("MuiCardContent", ["root"]);
-const useUtilityClasses$P = (ownerState) => {
+const useUtilityClasses$Q = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -20974,7 +20974,7 @@ const CardContent = /* @__PURE__ */ reactExports.forwardRef(function CardContent
     ...props,
     component
   };
-  const classes = useUtilityClasses$P(ownerState);
+  const classes = useUtilityClasses$Q(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(CardContentRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -20987,7 +20987,7 @@ function getSwitchBaseUtilityClass(slot) {
   return generateUtilityClass("PrivateSwitchBase", slot);
 }
 generateUtilityClasses("PrivateSwitchBase", ["root", "checked", "disabled", "input", "edgeStart", "edgeEnd"]);
-const useUtilityClasses$O = (ownerState) => {
+const useUtilityClasses$P = (ownerState) => {
   const {
     classes,
     checked,
@@ -21124,7 +21124,7 @@ const SwitchBase = /* @__PURE__ */ reactExports.forwardRef(function SwitchBase2(
     disableFocusRipple,
     edge
   };
-  const classes = useUtilityClasses$O(ownerState);
+  const classes = useUtilityClasses$P(ownerState);
   const externalForwardedProps = {
     slots,
     slotProps: {
@@ -21213,7 +21213,7 @@ function getCheckboxUtilityClass(slot) {
   return generateUtilityClass("MuiCheckbox", slot);
 }
 const checkboxClasses = generateUtilityClasses("MuiCheckbox", ["root", "checked", "disabled", "indeterminate", "colorPrimary", "colorSecondary", "sizeSmall", "sizeMedium"]);
-const useUtilityClasses$N = (ownerState) => {
+const useUtilityClasses$O = (ownerState) => {
   const {
     classes,
     indeterminate,
@@ -21322,7 +21322,7 @@ const Checkbox = /* @__PURE__ */ reactExports.forwardRef(function Checkbox2(inPr
     indeterminate,
     size
   };
-  const classes = useUtilityClasses$N(ownerState);
+  const classes = useUtilityClasses$O(ownerState);
   const externalInputProps = slotProps.input ?? inputProps;
   const [RootSlot, rootSlotProps] = useSlot("root", {
     ref,
@@ -22158,7 +22158,7 @@ function getModalUtilityClass(slot) {
   return generateUtilityClass("MuiModal", slot);
 }
 generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
-const useUtilityClasses$M = (ownerState) => {
+const useUtilityClasses$N = (ownerState) => {
   const {
     open,
     exited,
@@ -22269,7 +22269,7 @@ const Modal = /* @__PURE__ */ reactExports.forwardRef(function Modal2(inProps, r
     ...propsWithDefaults,
     exited
   };
-  const classes = useUtilityClasses$M(ownerState);
+  const classes = useUtilityClasses$N(ownerState);
   const childProps = {};
   if (children.props.tabIndex === void 0) {
     childProps.tabIndex = "-1";
@@ -22362,7 +22362,7 @@ const DialogBackdrop = styled(Backdrop, {
   // Improve scrollable dialog support.
   zIndex: -1
 });
-const useUtilityClasses$L = (ownerState) => {
+const useUtilityClasses$M = (ownerState) => {
   const {
     classes,
     scroll,
@@ -22567,7 +22567,7 @@ const Dialog = /* @__PURE__ */ reactExports.forwardRef(function Dialog2(inProps,
     maxWidth: maxWidth2,
     scroll
   };
-  const classes = useUtilityClasses$L(ownerState);
+  const classes = useUtilityClasses$M(ownerState);
   const backdropClick = reactExports.useRef();
   const handleMouseDown = (event) => {
     backdropClick.current = event.target === event.currentTarget;
@@ -22689,7 +22689,7 @@ function getDialogActionsUtilityClass(slot) {
   return generateUtilityClass("MuiDialogActions", slot);
 }
 generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
-const useUtilityClasses$K = (ownerState) => {
+const useUtilityClasses$L = (ownerState) => {
   const {
     classes,
     disableSpacing
@@ -22739,7 +22739,7 @@ const DialogActions = /* @__PURE__ */ reactExports.forwardRef(function DialogAct
     ...props,
     disableSpacing
   };
-  const classes = useUtilityClasses$K(ownerState);
+  const classes = useUtilityClasses$L(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActionsRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -22755,7 +22755,7 @@ function getDialogTitleUtilityClass(slot) {
   return generateUtilityClass("MuiDialogTitle", slot);
 }
 const dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]);
-const useUtilityClasses$J = (ownerState) => {
+const useUtilityClasses$K = (ownerState) => {
   const {
     classes,
     dividers
@@ -22816,7 +22816,7 @@ const DialogContent = /* @__PURE__ */ reactExports.forwardRef(function DialogCon
     ...props,
     dividers
   };
-  const classes = useUtilityClasses$J(ownerState);
+  const classes = useUtilityClasses$K(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -22828,7 +22828,7 @@ function getDialogContentTextUtilityClass(slot) {
   return generateUtilityClass("MuiDialogContentText", slot);
 }
 generateUtilityClasses("MuiDialogContentText", ["root"]);
-const useUtilityClasses$I = (ownerState) => {
+const useUtilityClasses$J = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -22858,7 +22858,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     className,
     ...ownerState
   } = props;
-  const classes = useUtilityClasses$I(ownerState);
+  const classes = useUtilityClasses$J(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentTextRoot, {
     component: "p",
     variant: "body1",
@@ -22870,7 +22870,7 @@ const DialogContentText = /* @__PURE__ */ reactExports.forwardRef(function Dialo
     classes
   });
 });
-const useUtilityClasses$H = (ownerState) => {
+const useUtilityClasses$I = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -22898,7 +22898,7 @@ const DialogTitle = /* @__PURE__ */ reactExports.forwardRef(function DialogTitle
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$H(ownerState);
+  const classes = useUtilityClasses$I(ownerState);
   const {
     titleId = idProp
   } = reactExports.useContext(DialogContext);
@@ -22916,7 +22916,7 @@ function getDividerUtilityClass(slot) {
   return generateUtilityClass("MuiDivider", slot);
 }
 const dividerClasses = generateUtilityClasses("MuiDivider", ["root", "absolute", "fullWidth", "inset", "middle", "flexItem", "light", "vertical", "withChildren", "withChildrenVertical", "textAlignRight", "textAlignLeft", "wrapper", "wrapperVertical"]);
-const useUtilityClasses$G = (ownerState) => {
+const useUtilityClasses$H = (ownerState) => {
   const {
     absolute,
     children,
@@ -23130,7 +23130,7 @@ const Divider = /* @__PURE__ */ reactExports.forwardRef(function Divider2(inProp
     textAlign,
     variant
   };
-  const classes = useUtilityClasses$G(ownerState);
+  const classes = useUtilityClasses$H(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(DividerRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -23363,7 +23363,7 @@ const overridesResolver$4 = (props, styles2) => {
   } = props;
   return [styles2.root, (ownerState.variant === "permanent" || ownerState.variant === "persistent") && styles2.docked, styles2.modal];
 };
-const useUtilityClasses$F = (ownerState) => {
+const useUtilityClasses$G = (ownerState) => {
   const {
     classes,
     anchor,
@@ -23553,7 +23553,7 @@ const Drawer = /* @__PURE__ */ reactExports.forwardRef(function Drawer2(inProps,
     variant,
     ...other
   };
-  const classes = useUtilityClasses$F(ownerState);
+  const classes = useUtilityClasses$G(ownerState);
   const externalForwardedProps = {
     slots: {
       transition: TransitionComponent,
@@ -23650,7 +23650,7 @@ const Drawer = /* @__PURE__ */ reactExports.forwardRef(function Drawer2(inProps,
     children: slidingDrawer
   });
 });
-const useUtilityClasses$E = (ownerState) => {
+const useUtilityClasses$F = (ownerState) => {
   const {
     classes,
     disableUnderline,
@@ -23932,7 +23932,7 @@ const FilledInput = /* @__PURE__ */ reactExports.forwardRef(function FilledInput
     multiline,
     type
   };
-  const classes = useUtilityClasses$E(props);
+  const classes = useUtilityClasses$F(props);
   const filledInputComponentsProps = {
     root: {
       ownerState
@@ -23964,7 +23964,7 @@ function getFormControlUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControl", slot);
 }
 generateUtilityClasses("MuiFormControl", ["root", "marginNone", "marginNormal", "marginDense", "fullWidth", "disabled"]);
-const useUtilityClasses$D = (ownerState) => {
+const useUtilityClasses$E = (ownerState) => {
   const {
     classes,
     margin: margin2,
@@ -24054,7 +24054,7 @@ const FormControl = /* @__PURE__ */ reactExports.forwardRef(function FormControl
     size,
     variant
   };
-  const classes = useUtilityClasses$D(ownerState);
+  const classes = useUtilityClasses$E(ownerState);
   const [adornedStart, setAdornedStart] = reactExports.useState(() => {
     let initialAdornedStart = false;
     if (children) {
@@ -24138,7 +24138,7 @@ function getFormControlLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormControlLabel", slot);
 }
 const formControlLabelClasses = generateUtilityClasses("MuiFormControlLabel", ["root", "labelPlacementStart", "labelPlacementTop", "labelPlacementBottom", "disabled", "label", "error", "required", "asterisk"]);
-const useUtilityClasses$C = (ownerState) => {
+const useUtilityClasses$D = (ownerState) => {
   const {
     classes,
     disabled,
@@ -24274,7 +24274,7 @@ const FormControlLabel = /* @__PURE__ */ reactExports.forwardRef(function FormCo
     required,
     error: fcs.error
   };
-  const classes = useUtilityClasses$C(ownerState);
+  const classes = useUtilityClasses$D(ownerState);
   const externalForwardedProps = {
     slots,
     slotProps: {
@@ -24315,7 +24315,7 @@ function getFormGroupUtilityClass(slot) {
   return generateUtilityClass("MuiFormGroup", slot);
 }
 generateUtilityClasses("MuiFormGroup", ["root", "row", "error"]);
-const useUtilityClasses$B = (ownerState) => {
+const useUtilityClasses$C = (ownerState) => {
   const {
     classes,
     row,
@@ -24369,7 +24369,7 @@ const FormGroup = /* @__PURE__ */ reactExports.forwardRef(function FormGroup2(in
     row,
     error: fcs.error
   };
-  const classes = useUtilityClasses$B(ownerState);
+  const classes = useUtilityClasses$C(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormGroupRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -24382,7 +24382,7 @@ function getFormHelperTextUtilityClasses(slot) {
 }
 const formHelperTextClasses = generateUtilityClasses("MuiFormHelperText", ["root", "error", "disabled", "sizeSmall", "sizeMedium", "contained", "focused", "filled", "required"]);
 var _span$3;
-const useUtilityClasses$A = (ownerState) => {
+const useUtilityClasses$B = (ownerState) => {
   const {
     classes,
     contained,
@@ -24477,7 +24477,7 @@ const FormHelperText = /* @__PURE__ */ reactExports.forwardRef(function FormHelp
     required: fcs.required
   };
   delete ownerState.ownerState;
-  const classes = useUtilityClasses$A(ownerState);
+  const classes = useUtilityClasses$B(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormHelperTextRoot, {
     as: component,
     className: clsx(classes.root, className),
@@ -24498,7 +24498,7 @@ function getFormLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiFormLabel", slot);
 }
 const formLabelClasses = generateUtilityClasses("MuiFormLabel", ["root", "colorSecondary", "focused", "disabled", "error", "filled", "required", "asterisk"]);
-const useUtilityClasses$z = (ownerState) => {
+const useUtilityClasses$A = (ownerState) => {
   const {
     classes,
     color: color2,
@@ -24596,7 +24596,7 @@ const FormLabel = /* @__PURE__ */ reactExports.forwardRef(function FormLabel2(in
     focused: fcs.focused,
     required: fcs.required
   };
-  const classes = useUtilityClasses$z(ownerState);
+  const classes = useUtilityClasses$A(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(FormLabelRoot, {
     as: component,
     ownerState,
@@ -24924,7 +24924,7 @@ function resolveSpacingClasses(spacing, breakpoints) {
   });
   return classes;
 }
-const useUtilityClasses$y = (ownerState) => {
+const useUtilityClasses$z = (ownerState) => {
   const {
     classes,
     container,
@@ -25002,7 +25002,7 @@ const Grid = /* @__PURE__ */ reactExports.forwardRef(function Grid2(inProps, ref
     ...breakpointsValues,
     breakpoints: breakpoints.keys
   };
-  const classes = useUtilityClasses$y(ownerState);
+  const classes = useUtilityClasses$z(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(GridContext.Provider, {
     value: columns,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(GridRoot, {
@@ -25177,7 +25177,7 @@ if (Grow) {
 const useMediaQuery = unstable_createUseMediaQuery({
   themeId: THEME_ID
 });
-const useUtilityClasses$x = (ownerState) => {
+const useUtilityClasses$y = (ownerState) => {
   const {
     classes,
     disableUnderline
@@ -25310,7 +25310,7 @@ const Input = /* @__PURE__ */ reactExports.forwardRef(function Input2(inProps, r
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$x(props);
+  const classes = useUtilityClasses$y(props);
   const ownerState = {
     disableUnderline
   };
@@ -25349,7 +25349,7 @@ const overridesResolver$3 = (props, styles2) => {
   } = props;
   return [styles2.root, styles2[`position${capitalize(ownerState.position)}`], ownerState.disablePointerEvents === true && styles2.disablePointerEvents, styles2[ownerState.variant]];
 };
-const useUtilityClasses$w = (ownerState) => {
+const useUtilityClasses$x = (ownerState) => {
   const {
     classes,
     disablePointerEvents,
@@ -25436,7 +25436,7 @@ const InputAdornment = /* @__PURE__ */ reactExports.forwardRef(function InputAdo
     position: position2,
     variant
   };
-  const classes = useUtilityClasses$w(ownerState);
+  const classes = useUtilityClasses$x(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(FormControlContext.Provider, {
     value: null,
     children: /* @__PURE__ */ jsxRuntimeExports.jsx(InputAdornmentRoot, {
@@ -25465,7 +25465,7 @@ function getInputLabelUtilityClasses(slot) {
   return generateUtilityClass("MuiInputLabel", slot);
 }
 generateUtilityClasses("MuiInputLabel", ["root", "focused", "disabled", "error", "required", "asterisk", "formControl", "sizeSmall", "shrink", "animated", "standard", "filled", "outlined"]);
-const useUtilityClasses$v = (ownerState) => {
+const useUtilityClasses$w = (ownerState) => {
   const {
     classes,
     formControl,
@@ -25654,7 +25654,7 @@ const InputLabel = /* @__PURE__ */ reactExports.forwardRef(function InputLabel2(
     required: fcs.required,
     focused: fcs.focused
   };
-  const classes = useUtilityClasses$v(ownerState);
+  const classes = useUtilityClasses$w(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabelRoot, {
     "data-shrink": shrink,
     ref,
@@ -25669,7 +25669,7 @@ function getListUtilityClass(slot) {
   return generateUtilityClass("MuiList", slot);
 }
 generateUtilityClasses("MuiList", ["root", "padding", "dense", "subheader"]);
-const useUtilityClasses$u = (ownerState) => {
+const useUtilityClasses$v = (ownerState) => {
   const {
     classes,
     disablePadding,
@@ -25735,7 +25735,7 @@ const List$1 = /* @__PURE__ */ reactExports.forwardRef(function List2(inProps, r
     dense,
     disablePadding
   };
-  const classes = useUtilityClasses$u(ownerState);
+  const classes = useUtilityClasses$v(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
     value: context,
     children: /* @__PURE__ */ jsxRuntimeExports.jsxs(ListRoot, {
@@ -25762,7 +25762,7 @@ const overridesResolver$2 = (props, styles2) => {
   } = props;
   return [styles2.root, ownerState.dense && styles2.dense, ownerState.alignItems === "flex-start" && styles2.alignItemsFlexStart, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters];
 };
-const useUtilityClasses$t = (ownerState) => {
+const useUtilityClasses$u = (ownerState) => {
   const {
     alignItems,
     classes,
@@ -25903,7 +25903,7 @@ const ListItemButton = /* @__PURE__ */ reactExports.forwardRef(function ListItem
     divider,
     selected
   };
-  const classes = useUtilityClasses$t(ownerState);
+  const classes = useUtilityClasses$u(ownerState);
   const handleRef = useForkRef(listItemRef, ref);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListContext.Provider, {
     value: childContext,
@@ -25924,7 +25924,7 @@ function getListItemSecondaryActionClassesUtilityClass(slot) {
   return generateUtilityClass("MuiListItemSecondaryAction", slot);
 }
 generateUtilityClasses("MuiListItemSecondaryAction", ["root", "disableGutters"]);
-const useUtilityClasses$s = (ownerState) => {
+const useUtilityClasses$t = (ownerState) => {
   const {
     disableGutters,
     classes
@@ -25971,7 +25971,7 @@ const ListItemSecondaryAction = /* @__PURE__ */ reactExports.forwardRef(function
     ...props,
     disableGutters: context.disableGutters
   };
-  const classes = useUtilityClasses$s(ownerState);
+  const classes = useUtilityClasses$t(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemSecondaryActionRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -25986,7 +25986,7 @@ const overridesResolver$1 = (props, styles2) => {
   } = props;
   return [styles2.root, ownerState.dense && styles2.dense, ownerState.alignItems === "flex-start" && styles2.alignItemsFlexStart, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters, !ownerState.disablePadding && styles2.padding, ownerState.hasSecondaryAction && styles2.secondaryAction];
 };
-const useUtilityClasses$r = (ownerState) => {
+const useUtilityClasses$s = (ownerState) => {
   const {
     alignItems,
     classes,
@@ -26153,7 +26153,7 @@ const ListItem = /* @__PURE__ */ reactExports.forwardRef(function ListItem2(inPr
     divider,
     hasSecondaryAction
   };
-  const classes = useUtilityClasses$r(ownerState);
+  const classes = useUtilityClasses$s(ownerState);
   const handleRef = useForkRef(listItemRef, ref);
   const Root = slots.root || components.Root || ListItemRoot;
   const rootProps = slotProps.root || componentsProps.root || {};
@@ -26217,7 +26217,7 @@ function getListItemIconUtilityClass(slot) {
   return generateUtilityClass("MuiListItemIcon", slot);
 }
 const listItemIconClasses = generateUtilityClasses("MuiListItemIcon", ["root", "alignItemsFlexStart"]);
-const useUtilityClasses$q = (ownerState) => {
+const useUtilityClasses$r = (ownerState) => {
   const {
     alignItems,
     classes
@@ -26266,7 +26266,7 @@ const ListItemIcon = /* @__PURE__ */ reactExports.forwardRef(function ListItemIc
     ...props,
     alignItems: context.alignItems
   };
-  const classes = useUtilityClasses$q(ownerState);
+  const classes = useUtilityClasses$r(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ListItemIconRoot, {
     className: clsx(classes.root, className),
     ownerState,
@@ -26278,7 +26278,7 @@ function getListItemTextUtilityClass(slot) {
   return generateUtilityClass("MuiListItemText", slot);
 }
 const listItemTextClasses = generateUtilityClasses("MuiListItemText", ["root", "multiline", "dense", "inset", "primary", "secondary"]);
-const useUtilityClasses$p = (ownerState) => {
+const useUtilityClasses$q = (ownerState) => {
   const {
     classes,
     inset,
@@ -26365,7 +26365,7 @@ const ListItemText = /* @__PURE__ */ reactExports.forwardRef(function ListItemTe
     secondary: !!secondary,
     dense
   };
-  const classes = useUtilityClasses$p(ownerState);
+  const classes = useUtilityClasses$q(ownerState);
   const externalForwardedProps = {
     slots,
     slotProps: {
@@ -26635,7 +26635,7 @@ function getTransformOriginValue(transformOrigin) {
 function resolveAnchorEl(anchorEl) {
   return typeof anchorEl === "function" ? anchorEl() : anchorEl;
 }
-const useUtilityClasses$o = (ownerState) => {
+const useUtilityClasses$p = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -26715,7 +26715,7 @@ const Popover = /* @__PURE__ */ reactExports.forwardRef(function Popover2(inProp
     transitionDuration: transitionDurationProp,
     TransitionProps
   };
-  const classes = useUtilityClasses$o(ownerState);
+  const classes = useUtilityClasses$p(ownerState);
   const getAnchorOffset = reactExports.useCallback(() => {
     if (anchorReference === "anchorPosition") {
       return anchorPosition;
@@ -26939,7 +26939,7 @@ const LTR_ORIGIN = {
   vertical: "top",
   horizontal: "left"
 };
-const useUtilityClasses$n = (ownerState) => {
+const useUtilityClasses$o = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -27013,7 +27013,7 @@ const Menu = /* @__PURE__ */ reactExports.forwardRef(function Menu2(inProps, ref
     TransitionProps,
     variant
   };
-  const classes = useUtilityClasses$n(ownerState);
+  const classes = useUtilityClasses$o(ownerState);
   const autoFocusItem = autoFocus && !disableAutoFocusItem && open;
   const menuListActionsRef = reactExports.useRef(null);
   const handleEntering = (element, isAppearing) => {
@@ -27140,7 +27140,7 @@ const overridesResolver = (props, styles2) => {
   } = props;
   return [styles2.root, ownerState.dense && styles2.dense, ownerState.divider && styles2.divider, !ownerState.disableGutters && styles2.gutters];
 };
-const useUtilityClasses$m = (ownerState) => {
+const useUtilityClasses$n = (ownerState) => {
   const {
     disabled,
     dense,
@@ -27298,7 +27298,7 @@ const MenuItem = /* @__PURE__ */ reactExports.forwardRef(function MenuItem2(inPr
     divider,
     disableGutters
   };
-  const classes = useUtilityClasses$m(props);
+  const classes = useUtilityClasses$n(props);
   const handleRef = useForkRef(menuItemRef, ref);
   let tabIndex;
   if (!props.disabled) {
@@ -27323,7 +27323,7 @@ function getNativeSelectUtilityClasses(slot) {
   return generateUtilityClass("MuiNativeSelect", slot);
 }
 const nativeSelectClasses = generateUtilityClasses("MuiNativeSelect", ["root", "select", "multiple", "filled", "outlined", "standard", "disabled", "icon", "iconOpen", "iconFilled", "iconOutlined", "iconStandard", "nativeInput", "error"]);
-const useUtilityClasses$l = (ownerState) => {
+const useUtilityClasses$m = (ownerState) => {
   const {
     classes,
     variant,
@@ -27478,7 +27478,7 @@ const NativeSelectInput = /* @__PURE__ */ reactExports.forwardRef(function Nativ
     variant,
     error
   };
-  const classes = useUtilityClasses$l(ownerState);
+  const classes = useUtilityClasses$m(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(reactExports.Fragment, {
     children: [/* @__PURE__ */ jsxRuntimeExports.jsx(NativeSelectSelect, {
       ownerState,
@@ -27611,7 +27611,7 @@ function NotchedOutline(props) {
     })
   });
 }
-const useUtilityClasses$k = (ownerState) => {
+const useUtilityClasses$l = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -27790,7 +27790,7 @@ const OutlinedInput = /* @__PURE__ */ reactExports.forwardRef(function OutlinedI
     type = "text",
     ...other
   } = props;
-  const classes = useUtilityClasses$k(props);
+  const classes = useUtilityClasses$l(props);
   const muiFormControl = useFormControl();
   const fcs = formControlState({
     props,
@@ -27917,7 +27917,7 @@ function areEqualValues(a, b2) {
 function isEmpty(display) {
   return display == null || typeof display === "string" && !display.trim();
 }
-const useUtilityClasses$j = (ownerState) => {
+const useUtilityClasses$k = (ownerState) => {
   const {
     classes,
     variant,
@@ -28220,7 +28220,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     open,
     error
   };
-  const classes = useUtilityClasses$j(ownerState);
+  const classes = useUtilityClasses$k(ownerState);
   const paperProps = {
     ...MenuProps.PaperProps,
     ...(_a2 = MenuProps.slotProps) == null ? void 0 : _a2.paper
@@ -28311,7 +28311,7 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
     })]
   });
 });
-const useUtilityClasses$i = (ownerState) => {
+const useUtilityClasses$j = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -28375,7 +28375,7 @@ const Select = /* @__PURE__ */ reactExports.forwardRef(function Select2(inProps,
     variant,
     classes: classesProp
   };
-  const classes = useUtilityClasses$i(ownerState);
+  const classes = useUtilityClasses$j(ownerState);
   const {
     root,
     ...restOfClasses
@@ -29617,7 +29617,7 @@ const SliderMarkLabel = styled("span", {
     }
   }]
 })));
-const useUtilityClasses$h = (ownerState) => {
+const useUtilityClasses$i = (ownerState) => {
   const {
     disabled,
     dragging,
@@ -29730,7 +29730,7 @@ const Slider = /* @__PURE__ */ reactExports.forwardRef(function Slider2(inputPro
   ownerState.marked = marks.length > 0 && marks.some((mark) => mark.label);
   ownerState.dragging = dragging;
   ownerState.focusedThumbIndex = focusedThumbIndex;
-  const classes = useUtilityClasses$h(ownerState);
+  const classes = useUtilityClasses$i(ownerState);
   const RootSlot = (slots == null ? void 0 : slots.root) ?? components.Root ?? SliderRoot;
   const RailSlot = (slots == null ? void 0 : slots.rail) ?? components.Rail ?? SliderRail;
   const TrackSlot = (slots == null ? void 0 : slots.track) ?? components.Track ?? SliderTrack;
@@ -30011,7 +30011,7 @@ function getSnackbarContentUtilityClass(slot) {
   return generateUtilityClass("MuiSnackbarContent", slot);
 }
 generateUtilityClasses("MuiSnackbarContent", ["root", "message", "action"]);
-const useUtilityClasses$g = (ownerState) => {
+const useUtilityClasses$h = (ownerState) => {
   const {
     classes
   } = ownerState;
@@ -30078,7 +30078,7 @@ const SnackbarContent = /* @__PURE__ */ reactExports.forwardRef(function Snackba
     ...other
   } = props;
   const ownerState = props;
-  const classes = useUtilityClasses$g(ownerState);
+  const classes = useUtilityClasses$h(ownerState);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SnackbarContentRoot, {
     role,
     square: true,
@@ -30102,7 +30102,7 @@ function getSnackbarUtilityClass(slot) {
   return generateUtilityClass("MuiSnackbar", slot);
 }
 generateUtilityClasses("MuiSnackbar", ["root", "anchorOriginTopCenter", "anchorOriginBottomCenter", "anchorOriginTopRight", "anchorOriginBottomRight", "anchorOriginTopLeft", "anchorOriginBottomLeft"]);
-const useUtilityClasses$f = (ownerState) => {
+const useUtilityClasses$g = (ownerState) => {
   const {
     classes,
     anchorOrigin
@@ -30241,7 +30241,7 @@ const Snackbar = /* @__PURE__ */ reactExports.forwardRef(function Snackbar2(inPr
     TransitionComponent: TransitionComponentProp,
     transitionDuration
   };
-  const classes = useUtilityClasses$f(ownerState);
+  const classes = useUtilityClasses$g(ownerState);
   const {
     getRootProps,
     onClickAway
@@ -30352,7 +30352,7 @@ const tooltipClasses = generateUtilityClasses("MuiTooltip", ["popper", "popperIn
 function round$1(value) {
   return Math.round(value * 1e5) / 1e5;
 }
-const useUtilityClasses$e = (ownerState) => {
+const useUtilityClasses$f = (ownerState) => {
   const {
     classes,
     disableInteractive,
@@ -30893,7 +30893,7 @@ const Tooltip$1 = /* @__PURE__ */ reactExports.forwardRef(function Tooltip2(inPr
       modifiers: tooltipModifiers
     };
   }, [arrowRef, PopperProps.popperOptions, resolvedPopperProps == null ? void 0 : resolvedPopperProps.popperOptions]);
-  const classes = useUtilityClasses$e(ownerState);
+  const classes = useUtilityClasses$f(ownerState);
   const resolvedTransitionProps = typeof slotProps.transition === "function" ? slotProps.transition(ownerState) : slotProps.transition;
   const externalForwardedProps = {
     slots: {
@@ -30975,6 +30975,240 @@ const Tooltip$1 = /* @__PURE__ */ reactExports.forwardRef(function Tooltip2(inPr
           }) : null]
         })
       })
+    })]
+  });
+});
+function getSwitchUtilityClass(slot) {
+  return generateUtilityClass("MuiSwitch", slot);
+}
+const switchClasses = generateUtilityClasses("MuiSwitch", ["root", "edgeStart", "edgeEnd", "switchBase", "colorPrimary", "colorSecondary", "sizeSmall", "sizeMedium", "checked", "disabled", "input", "thumb", "track"]);
+const useUtilityClasses$e = (ownerState) => {
+  const {
+    classes,
+    edge,
+    size,
+    color: color2,
+    checked,
+    disabled
+  } = ownerState;
+  const slots = {
+    root: ["root", edge && `edge${capitalize(edge)}`, `size${capitalize(size)}`],
+    switchBase: ["switchBase", `color${capitalize(color2)}`, checked && "checked", disabled && "disabled"],
+    thumb: ["thumb"],
+    track: ["track"],
+    input: ["input"]
+  };
+  const composedClasses = composeClasses(slots, getSwitchUtilityClass, classes);
+  return {
+    ...classes,
+    // forward the disabled and checked classes to the SwitchBase
+    ...composedClasses
+  };
+};
+const SwitchRoot = styled("span", {
+  name: "MuiSwitch",
+  slot: "Root",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.root, ownerState.edge && styles2[`edge${capitalize(ownerState.edge)}`], styles2[`size${capitalize(ownerState.size)}`]];
+  }
+})({
+  display: "inline-flex",
+  width: 34 + 12 * 2,
+  height: 14 + 12 * 2,
+  overflow: "hidden",
+  padding: 12,
+  boxSizing: "border-box",
+  position: "relative",
+  flexShrink: 0,
+  zIndex: 0,
+  // Reset the stacking context.
+  verticalAlign: "middle",
+  // For correct alignment with the text.
+  "@media print": {
+    colorAdjust: "exact"
+  },
+  variants: [{
+    props: {
+      edge: "start"
+    },
+    style: {
+      marginLeft: -8
+    }
+  }, {
+    props: {
+      edge: "end"
+    },
+    style: {
+      marginRight: -8
+    }
+  }, {
+    props: {
+      size: "small"
+    },
+    style: {
+      width: 40,
+      height: 24,
+      padding: 7,
+      [`& .${switchClasses.thumb}`]: {
+        width: 16,
+        height: 16
+      },
+      [`& .${switchClasses.switchBase}`]: {
+        padding: 4,
+        [`&.${switchClasses.checked}`]: {
+          transform: "translateX(16px)"
+        }
+      }
+    }
+  }]
+});
+const SwitchSwitchBase = styled(SwitchBase, {
+  name: "MuiSwitch",
+  slot: "SwitchBase",
+  overridesResolver: (props, styles2) => {
+    const {
+      ownerState
+    } = props;
+    return [styles2.switchBase, {
+      [`& .${switchClasses.input}`]: styles2.input
+    }, ownerState.color !== "default" && styles2[`color${capitalize(ownerState.color)}`]];
+  }
+})(memoTheme(({
+  theme
+}) => ({
+  position: "absolute",
+  top: 0,
+  left: 0,
+  zIndex: 1,
+  // Render above the focus ripple.
+  color: theme.vars ? theme.vars.palette.Switch.defaultColor : `${theme.palette.mode === "light" ? theme.palette.common.white : theme.palette.grey[300]}`,
+  transition: theme.transitions.create(["left", "transform"], {
+    duration: theme.transitions.duration.shortest
+  }),
+  [`&.${switchClasses.checked}`]: {
+    transform: "translateX(20px)"
+  },
+  [`&.${switchClasses.disabled}`]: {
+    color: theme.vars ? theme.vars.palette.Switch.defaultDisabledColor : `${theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[600]}`
+  },
+  [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
+    opacity: 0.5
+  },
+  [`&.${switchClasses.disabled} + .${switchClasses.track}`]: {
+    opacity: theme.vars ? theme.vars.opacity.switchTrackDisabled : `${theme.palette.mode === "light" ? 0.12 : 0.2}`
+  },
+  [`& .${switchClasses.input}`]: {
+    left: "-100%",
+    width: "300%"
+  }
+})), memoTheme(({
+  theme
+}) => ({
+  "&:hover": {
+    backgroundColor: theme.vars ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})` : alpha$1(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    // Reset on touch devices, it doesn't add specificity
+    "@media (hover: none)": {
+      backgroundColor: "transparent"
+    }
+  },
+  variants: [...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["light"])).map(([color2]) => ({
+    props: {
+      color: color2
+    },
+    style: {
+      [`&.${switchClasses.checked}`]: {
+        color: (theme.vars || theme).palette[color2].main,
+        "&:hover": {
+          backgroundColor: theme.vars ? `rgba(${theme.vars.palette[color2].mainChannel} / ${theme.vars.palette.action.hoverOpacity})` : alpha$1(theme.palette[color2].main, theme.palette.action.hoverOpacity),
+          "@media (hover: none)": {
+            backgroundColor: "transparent"
+          }
+        },
+        [`&.${switchClasses.disabled}`]: {
+          color: theme.vars ? theme.vars.palette.Switch[`${color2}DisabledColor`] : `${theme.palette.mode === "light" ? lighten(theme.palette[color2].main, 0.62) : darken(theme.palette[color2].main, 0.55)}`
+        }
+      },
+      [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
+        backgroundColor: (theme.vars || theme).palette[color2].main
+      }
+    }
+  }))]
+})));
+const SwitchTrack = styled("span", {
+  name: "MuiSwitch",
+  slot: "Track",
+  overridesResolver: (props, styles2) => styles2.track
+})(memoTheme(({
+  theme
+}) => ({
+  height: "100%",
+  width: "100%",
+  borderRadius: 14 / 2,
+  zIndex: -1,
+  transition: theme.transitions.create(["opacity", "background-color"], {
+    duration: theme.transitions.duration.shortest
+  }),
+  backgroundColor: theme.vars ? theme.vars.palette.common.onBackground : `${theme.palette.mode === "light" ? theme.palette.common.black : theme.palette.common.white}`,
+  opacity: theme.vars ? theme.vars.opacity.switchTrack : `${theme.palette.mode === "light" ? 0.38 : 0.3}`
+})));
+const SwitchThumb = styled("span", {
+  name: "MuiSwitch",
+  slot: "Thumb",
+  overridesResolver: (props, styles2) => styles2.thumb
+})(memoTheme(({
+  theme
+}) => ({
+  boxShadow: (theme.vars || theme).shadows[1],
+  backgroundColor: "currentColor",
+  width: 20,
+  height: 20,
+  borderRadius: "50%"
+})));
+const Switch = /* @__PURE__ */ reactExports.forwardRef(function Switch2(inProps, ref) {
+  const props = useDefaultProps({
+    props: inProps,
+    name: "MuiSwitch"
+  });
+  const {
+    className,
+    color: color2 = "primary",
+    edge = false,
+    size = "medium",
+    sx,
+    ...other
+  } = props;
+  const ownerState = {
+    ...props,
+    color: color2,
+    edge,
+    size
+  };
+  const classes = useUtilityClasses$e(ownerState);
+  const icon = /* @__PURE__ */ jsxRuntimeExports.jsx(SwitchThumb, {
+    className: classes.thumb,
+    ownerState
+  });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(SwitchRoot, {
+    className: clsx(classes.root, className),
+    sx,
+    ownerState,
+    children: [/* @__PURE__ */ jsxRuntimeExports.jsx(SwitchSwitchBase, {
+      type: "checkbox",
+      icon,
+      checkedIcon: icon,
+      ref,
+      ownerState,
+      ...other,
+      classes: {
+        ...classes,
+        root: classes.switchBase
+      }
+    }), /* @__PURE__ */ jsxRuntimeExports.jsx(SwitchTrack, {
+      className: classes.track,
+      ownerState
     })]
   });
 });
@@ -44212,12 +44446,18 @@ const AttachMoney = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", 
 const BarChart = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z"
 }), "BarChart");
+const BlockIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2M4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12m8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8"
+}), "Block");
 const Business = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M12 7V3H2v18h20V7zM6 19H4v-2h2zm0-4H4v-2h2zm0-4H4V9h2zm0-4H4V5h2zm4 12H8v-2h2zm0-4H8v-2h2zm0-4H8V9h2zm0-4H8V5h2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8zm-2-8h-2v2h2zm0 4h-2v2h2z"
 }), "Business");
 const CardGiftcard = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2m-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1M9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1m11 15H4v-2h16zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20z"
 }), "CardGiftcard");
+const CheckCircleIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
+  d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8z"
+}), "CheckCircle");
 const ClearIcon = createSvgIcon(/* @__PURE__ */ jsxRuntimeExports.jsx("path", {
   d: "M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
 }), "Clear");
@@ -45951,7 +46191,9 @@ const SupplierSelect = ({
       value,
       onChange: (e2) => onChange(e2),
       label: "Постачальник",
-      children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { title: supplier.name, value: supplier.id, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+      children: suppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { disabled: !supplier.is_active, title: supplier.name, value: supplier.id, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { color: !supplier.is_active && supplier.id === value ? "textDisabled" : "inherit", children: [
+        " ",
+        !supplier.is_active ? "не активний " : null,
         " ",
         supplier.name
       ] }) }, supplier.id))
@@ -48358,17 +48600,19 @@ axiosInstance.interceptors.response.use(
 const API_ENDPOINTS = {
   LOGIN: "/login",
   LOGOUT: "/logout",
-  PRODUCTS: "/products",
+  PRODUCTS: "/get_all_products",
   CATEGORIES: "/categories",
   ADD_NEW_CATEGORIES: "/add_new_category",
   ADD_SUPPLIERS: "/create_supplier",
   EDIT_SUPPLIERS: (id2) => `/supplier_edit/${id2}`,
+  EDIT_PACKAGING_SUPPLIER: (id2) => `/packaging_supplier_edit/${id2}`,
   GET_ALL_SUPPLIERS: "/suppliers/list",
   CUSTOMERS: "/get_all_customers",
   CREATED_CUSTOMER: "/customer_create",
   SUPPLIER_PURCHASE_HISTORY: (id2) => `/supplier/${id2}/purchase-history`,
   SUPPLIER_PRODUCTS: (id2) => `/supplier/${id2}/products`,
   DELETE_SUPPLIER: (id2) => `/delete_supplier/${id2}`,
+  DELETE_PACKAGING_SUPPLIER: (id2) => `/delete_packaging_supplier/${id2}`,
   CUSTOMER_DETAILS: (id2) => `/customers_details/${id2}`,
   PRODUCT_PURCHASE: (id2) => `/product/${id2}/purchase`,
   PRODUCT_SALE: (id2) => `/product/${id2}/sale`,
@@ -48376,6 +48620,7 @@ const API_ENDPOINTS = {
   GET_ALL_PACKAGING_MATERIALS: "/get_all_packaging_materials",
   // New endpoint for packaging materials
   CURRENT_PACKAGING_HISTORY: (materialId) => `/materials/${materialId}/history`,
+  CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY: (id2) => `/packaging-supplier/${id2}/purchase-history`,
   ADD_NEW_PACKAGING_MATERIAL: "/packaging_materials/purchase",
   CREATE_GIFT_SET: "/create_gift_set",
   GET_ALL_GIFT_SETS: "/get_all_gift_sets",
@@ -48481,9 +48726,69 @@ const fetchGetSupplierPurchaseHistory = (supplierId) => {
 const deleteSupplier = (supplierId) => {
   return axiosInstance.delete(API_ENDPOINTS.DELETE_SUPPLIER(supplierId)).then(() => console.log(`Supplier with ID ${supplierId} deleted successfully.`)).catch(handleError);
 };
+const SnackbarMessageContext = reactExports.createContext(void 0);
+const useSnackbarMessage = () => {
+  const context = reactExports.useContext(SnackbarMessageContext);
+  if (!context) {
+    throw new Error("useSnackbar must be used within a SnackbarProvider");
+  }
+  return context;
+};
+const SnackbarMessageProvider = ({ children }) => {
+  const [openSnackbarMessage, setOpenSnackbarMessage] = reactExports.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = reactExports.useState("");
+  const [severity, setSeverity] = reactExports.useState("info");
+  const showSnackbarMessage = (message, severity2) => {
+    setSnackbarMessage(message);
+    setSeverity(severity2);
+    setOpenSnackbarMessage(true);
+  };
+  const handleClose = () => {
+    setOpenSnackbarMessage(false);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(SnackbarMessageContext.Provider, { value: { showSnackbarMessage }, children: [
+    children,
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Snackbar,
+      {
+        sx: { marginTop: 10 },
+        anchorOrigin: { vertical: "top", horizontal: "right" },
+        open: openSnackbarMessage,
+        autoHideDuration: 1300,
+        onClose: handleClose,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { variant: "filled", onClose: handleClose, severity, children: snackbarMessage })
+      }
+    )
+  ] });
+};
+const fetchListPackagingMaterials = () => {
+  return fetchResource(API_ENDPOINTS.GET_ALL_PACKAGING_MATERIALS);
+};
+const getCurrentPackagingHistory = (materialId) => {
+  return fetchResource(API_ENDPOINTS.CURRENT_PACKAGING_HISTORY(materialId));
+};
+const updatePackagingSupplier = (packagingSupplierId, editPackagingSupplier) => {
+  return axiosInstance.put(API_ENDPOINTS.EDIT_PACKAGING_SUPPLIER(packagingSupplierId), editPackagingSupplier).catch(handleError);
+};
+const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId) => {
+  return fetchResource(API_ENDPOINTS.CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY(pack_supplierId));
+};
+const deletePackagingSupplier = (supplierPackagingId) => {
+  return axiosInstance.delete(API_ENDPOINTS.DELETE_PACKAGING_SUPPLIER(supplierPackagingId)).then(() => console.log(`Supplier with ID ${supplierPackagingId} deleted successfully.`)).catch(handleError);
+};
+const addNewPackagingMaterial = (addNewPackaging) => {
+  return postResource(API_ENDPOINTS.ADD_NEW_PACKAGING_MATERIAL, {
+    name: addNewPackaging.name,
+    supplier_id: addNewPackaging.supplier_id,
+    quantity_purchased: addNewPackaging.quantity_purchased,
+    purchase_price_per_unit: addNewPackaging.purchase_price_per_unit,
+    total_purchase_cost: addNewPackaging.total_purchase_cost
+  });
+};
 const SupplierContext = reactExports.createContext(void 0);
 const SupplierProvider = ({ children }) => {
   const [suppliers, setSuppliers] = reactExports.useState([]);
+  const { showSnackbarMessage } = useSnackbarMessage();
   const fetchSuppliersFunc = async () => {
     try {
       const data = await fetchGetAllSuppliers();
@@ -48496,10 +48801,31 @@ const SupplierProvider = ({ children }) => {
       console.error("Error fetching suppliers", error);
     }
   };
+  const handleToggleSupplierActive = async (supplierId, currentData, type) => {
+    try {
+      const updatedData = {
+        ...currentData,
+        is_active: !currentData.is_active
+        // інвертуємо активність
+      };
+      if (type === "product") {
+        await updateSupplier(supplierId, updatedData);
+      } else if (type === "packaging") {
+        await updatePackagingSupplier(supplierId, updatedData);
+      }
+      showSnackbarMessage(
+        updatedData.is_active ? "Постачальника активовано" : "Постачальника вимкнено",
+        "success"
+      );
+      await fetchSuppliersFunc();
+    } catch (err) {
+      showSnackbarMessage("Помилка зміни статусу постачальника", "error");
+    }
+  };
   reactExports.useEffect(() => {
     fetchSuppliersFunc();
   }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierContext.Provider, { value: { suppliers, fetchSuppliersFunc }, children });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(SupplierContext.Provider, { value: { suppliers, fetchSuppliersFunc, handleToggleSupplierActive }, children });
 };
 const useSuppliers = () => {
   const context = reactExports.useContext(SupplierContext);
@@ -48645,41 +48971,6 @@ const DateFieldCustom = ({ ...rest }) => {
       margin: "normal"
     }
   );
-};
-const SnackbarMessageContext = reactExports.createContext(void 0);
-const useSnackbarMessage = () => {
-  const context = reactExports.useContext(SnackbarMessageContext);
-  if (!context) {
-    throw new Error("useSnackbar must be used within a SnackbarProvider");
-  }
-  return context;
-};
-const SnackbarMessageProvider = ({ children }) => {
-  const [openSnackbarMessage, setOpenSnackbarMessage] = reactExports.useState(false);
-  const [snackbarMessage, setSnackbarMessage] = reactExports.useState("");
-  const [severity, setSeverity] = reactExports.useState("info");
-  const showSnackbarMessage = (message, severity2) => {
-    setSnackbarMessage(message);
-    setSeverity(severity2);
-    setOpenSnackbarMessage(true);
-  };
-  const handleClose = () => {
-    setOpenSnackbarMessage(false);
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(SnackbarMessageContext.Provider, { value: { showSnackbarMessage }, children: [
-    children,
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Snackbar,
-      {
-        sx: { marginTop: 10 },
-        anchorOrigin: { vertical: "top", horizontal: "right" },
-        open: openSnackbarMessage,
-        autoHideDuration: 1300,
-        onClose: handleClose,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { variant: "filled", onClose: handleClose, severity, children: snackbarMessage })
-      }
-    )
-  ] });
 };
 const useSupplierModal = (modalNames2, editProduct, setEditProduct) => {
   const [modalState, setModalState] = reactExports.useState(
@@ -49523,21 +49814,6 @@ const AddNewPackagingModal = ({
       }
     )
   ] });
-};
-const fetchListPackagingMaterials = () => {
-  return fetchResource(API_ENDPOINTS.GET_ALL_PACKAGING_MATERIALS);
-};
-const getCurrentPackagingHistory = (materialId) => {
-  return fetchResource(API_ENDPOINTS.CURRENT_PACKAGING_HISTORY(materialId));
-};
-const addNewPackagingMaterial = (addNewPackaging) => {
-  return postResource(API_ENDPOINTS.ADD_NEW_PACKAGING_MATERIAL, {
-    name: addNewPackaging.name,
-    supplier_id: addNewPackaging.supplier_id,
-    quantity_purchased: addNewPackaging.quantity_purchased,
-    purchase_price_per_unit: addNewPackaging.purchase_price_per_unit,
-    total_purchase_cost: addNewPackaging.total_purchase_cost
-  });
 };
 const PackagingContext = reactExports.createContext(void 0);
 const usePackaging = () => {
@@ -50705,6 +50981,7 @@ const SupplierFilter = ({
       title: supplier.name,
       componentsProps: {
         typography: {
+          color: supplier.is_active || "textDisabled",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap"
         }
@@ -51063,6 +51340,7 @@ const EditProductMenu = ({
   handleOpenProductInfoModal,
   isAuthenticated
 }) => {
+  console.log("selectedProduct", selectedProduct);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     Menu,
     {
@@ -51253,7 +51531,7 @@ const ProductTable = reactExports.forwardRef(({
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", align: "right", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Дія" }) })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredAndSearchedProducts.length >= 0 && sortProducts(filteredAndSearchedProducts, getComparator(order2, orderBy)).slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage).map((product, index) => {
-      var _a2, _b2;
+      var _a2, _b2, _c;
       const lowQuantity = product.total_quantity < 5;
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
         TableRow,
@@ -51275,11 +51553,12 @@ const ProductTable = reactExports.forwardRef(({
                 variant: "subtitle2",
                 className: clsx("supplier_name"),
                 title: ((_a2 = product.supplier) == null ? void 0 : _a2.name) || "N/A",
+                color: ((_b2 = product.supplier) == null ? void 0 : _b2.is_active) || "textDisabled",
                 sx: {
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap"
                 },
-                children: ((_b2 = product.supplier) == null ? void 0 : _b2.name) || "N/A"
+                children: ((_c = product.supplier) == null ? void 0 : _c.name) || "N/A"
               }
             ) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { display: "flex", alignItems: "center", gap: 2, children: [
@@ -51966,8 +52245,7 @@ const PurchaseHistoryTable = ({
   };
   const totalPurchased = productHistory.purchase.reduce((sum, record) => sum + record.quantity_purchase, 0);
   const totalSold = productHistory.sales.reduce((sum, record) => sum + record.quantity_sold, 0);
-  const currentStock = totalPurchased - totalSold;
-  console.log("currentStock:", currentStock);
+  console.log("productHistory.purchase:", productHistory.purchase);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
@@ -51986,7 +52264,11 @@ const PurchaseHistoryTable = ({
             children: new Date(record.purchase_date).toLocaleString()
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: record.supplier.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { color: !record.supplier.is_active ? "textDisabled" : "inherit", children: [
+          !record.supplier.is_active && "не активний",
+          "  ",
+          record.supplier.name
+        ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: record.purchase_price_per_item }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: record.quantity_purchase }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: record.purchase_total_price }),
@@ -52407,6 +52689,7 @@ const PurchaseProductModal = ({
     }
   };
   console.log("purchaseDetails.purchase_price_per_item", purchaseDetails.purchase_price_per_item);
+  const currentSupplier = suppliers.find((s) => s.id === purchaseDetails.supplier_id);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
     {
@@ -52416,10 +52699,13 @@ const PurchaseProductModal = ({
       maxWidth: "md",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
-            "Назва товару:",
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { fontWeight: "bold", variant: "subtitle1", component: "span", children: nameProduct })
-          ] }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, children: [
+            !currentSupplier.is_active && /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "error", children: "Ви не можете придбати цей товар- постачальник не активний" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
+              "Назва товару:",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { fontWeight: "bold", variant: "subtitle1", component: "span", children: nameProduct })
+            ] })
+          ] }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
               SupplierSelect,
@@ -52468,16 +52754,32 @@ const PurchaseProductModal = ({
                 error: errors.quantity
               }
             ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(PriceField, { label: "Ціна за 1шт", value: purchaseDetails.purchase_price_per_item, onChange: (e2) => setPurchaseDetails({
-              ...purchaseDetails,
-              purchase_price_per_item: Number(e2.target.value)
-            }) }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              PriceField,
+              {
+                label: "Ціна за 1шт",
+                value: purchaseDetails.purchase_price_per_item,
+                onChange: (e2) => setPurchaseDetails({
+                  ...purchaseDetails,
+                  purchase_price_per_item: Number(e2.target.value)
+                })
+              }
+            ) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: purchaseDetails.purchase_total_price }) })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outlined", onClick: handleClosePurchase, children: "Закрити" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "contained", color: "primary", disabled: !isAuthenticated, onClick: handleSubmit, children: "Підтвердити" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              variant: "contained",
+              color: "primary",
+              disabled: !isAuthenticated || !currentSupplier.is_active,
+              onClick: handleSubmit,
+              children: "Підтвердити"
+            }
+          )
         ] })
       ]
     }
@@ -53524,11 +53826,12 @@ const DeleteAllProductsDialog = () => {
   ] });
 };
 const ProductInfoModal = ({ open, onClose, product }) => {
-  var _a2;
+  var _a2, _b2, _c;
   const { categories } = useCategories();
   const matchedCategories = categories.filter(
     (category) => product.category_ids.includes(category.id)
   );
+  console.log("product", product);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(CustomDialog, { maxWidth: "sm", title: " Детальна інформація про товар", handleClose: onClose, open, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { dividers: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "h6", children: product.name }) }),
@@ -53570,8 +53873,14 @@ const ProductInfoModal = ({ open, onClose, product }) => {
         " грн"
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
-        "Постачальник: ",
-        ((_a2 = product.supplier) == null ? void 0 : _a2.name) || "—"
+        "Постачальник:",
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { color: ((_a2 = product.supplier) == null ? void 0 : _a2.is_active) === false ? "textDisabled" : "inherit", component: "span", children: [
+          " ",
+          !((_b2 = product.supplier) == null ? void 0 : _b2.is_active) ? "не активний " : null,
+          " ",
+          ((_c = product.supplier) == null ? void 0 : _c.name) || "—",
+          "  "
+        ] })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { children: [
         "Категорії: ",
@@ -54531,6 +54840,117 @@ const ClientsManagement = () => {
     /* @__PURE__ */ jsxRuntimeExports.jsx(CustomerPage, {})
   ] });
 };
+const PurchaseHistoryFilter = ({
+  filter: filter2,
+  handleFilterChange,
+  dateRangeFilter,
+  handleDateRangeFilterChange,
+  categoryFilter,
+  handleCategoryFilterChange,
+  categories,
+  supplierFilter,
+  handleSupplierFilterChange,
+  purchaseHistory,
+  typeFilter,
+  handleTypeFilterChange,
+  priceBounds,
+  priceRangeFilterSlider,
+  setPriceRangeFilterSlider
+}) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 1, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 5, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TextField,
+      {
+        placeholder: "Назва",
+        size: "small",
+        margin: "dense",
+        label: "Пошук",
+        variant: "outlined",
+        fullWidth: true,
+        value: filter2,
+        onChange: handleFilterChange
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TextField,
+      {
+        size: "small",
+        margin: "dense",
+        label: "Дата початку",
+        type: "date",
+        fullWidth: true,
+        value: dateRangeFilter.start,
+        onChange: (e2) => handleDateRangeFilterChange("start", e2.target.value),
+        InputLabelProps: { shrink: true }
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TextField,
+      {
+        size: "small",
+        margin: "dense",
+        label: "Дата закінчення",
+        type: "date",
+        fullWidth: true,
+        value: dateRangeFilter.end,
+        onChange: (e2) => handleDateRangeFilterChange("end", e2.target.value),
+        inputProps: { min: dateRangeFilter.start || void 0 },
+        InputLabelProps: { shrink: true }
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { size: "small", fullWidth: true, margin: "dense", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { children: "Категорія" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { label: "Категорія", value: categoryFilter, onChange: handleCategoryFilterChange, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "", children: "Всі категорії" }),
+        categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: category.id, children: category.name }, category.id))
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { size: "small", fullWidth: true, margin: "dense", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { children: "Постачальник" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { label: "Постачальник", value: supplierFilter, onChange: handleSupplierFilterChange, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "", children: "Всі постачальники" }),
+        Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
+          (supplier, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: supplier, children: supplier }, supplier + index)
+        )
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { size: "small", fullWidth: true, margin: "dense", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { children: "Тип" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { label: "Тип", value: typeFilter, onChange: handleTypeFilterChange, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "", children: "Всі типи" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "Other Investment", children: "Інші інвестиції" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "Packaging", children: "Упаковка" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "Product", children: "Продукт" })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { item: true, xs: 12, sm: 12, md: 5, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "caption", children: "Діапазон ціни (за од.):" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { px: 2, children: Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Slider,
+        {
+          value: priceRangeFilterSlider,
+          onChange: (_, newValue) => setPriceRangeFilterSlider(newValue),
+          valueLabelDisplay: "auto",
+          min: priceBounds[0],
+          max: priceBounds[1],
+          marks: [
+            { value: priceBounds[0], label: `${priceBounds[0]}₴` },
+            { value: priceBounds[1], label: `${priceBounds[1]}₴` }
+          ]
+        }
+      ) })
+    ] })
+  ] });
+};
+const PurchasesTableTypeProductCell = ({ type }) => {
+  type = type.toLowerCase();
+  console.log("type", type);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: type === "product" ? "Товар" : type === "packaging" ? "Пакування" : "Інше", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle2", component: "span", children: [
+    type === "product" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Товар", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingBag, { fontSize: "small" }) }),
+    type === "packaging" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Пакування", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Luggage, { fontSize: "small" }) }),
+    type === "other investment" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Інші вкладення", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AttachMoney, { fontSize: "small" }) })
+  ] }) });
+};
 const PurchasesTable = () => {
   const [purchaseHistory, setPurchaseHistory] = reactExports.useState([]);
   const [sortConfig, setSortConfig] = reactExports.useState({ key: "", direction: "asc" });
@@ -54639,6 +55059,17 @@ const PurchasesTable = () => {
     }
   };
   const isAnyFilterActive = filter2 !== "" || dateRangeFilter.start !== "" || dateRangeFilter.end !== "" || categoryFilter !== "" || supplierFilter !== "" || typeFilter !== "" || priceRangeFilterSlider[0] !== priceBounds[0] || priceRangeFilterSlider[1] !== priceBounds[1];
+  console.log("Array.from(new Set(purchaseHistory))", Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))));
+  const columns = [
+    { key: "type", label: "Тип", sortable: false },
+    { key: "name", label: "Назва продукту" },
+    { key: "supplier_name", label: "Назва постачальника" },
+    { key: "quantity", label: "Кількість" },
+    { key: "price_per_item", label: "Ціна за одиницю" },
+    { key: "total_price", label: "Загальна ціна" },
+    { key: "date", label: "Дата" }
+  ];
+  console.log("paginatedData", paginatedData);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { marginBlockEnd: 3, variant: "h4", children: "Історія Закупівель" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -54651,119 +55082,26 @@ const PurchasesTable = () => {
         children: filtersOpen ? "Сховати фільтри" : "Показати фільтри"
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: filtersOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 1, children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 5, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TextField,
-        {
-          placeholder: "Назва",
-          size: "small",
-          margin: "dense",
-          InputLabelProps: {
-            shrink: true
-          },
-          label: "Пошук",
-          variant: "outlined",
-          fullWidth: true,
-          value: filter2,
-          onChange: handleFilterChange
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 2, lg: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TextField,
-        {
-          size: "small",
-          margin: "dense",
-          label: "Дата початку",
-          type: "date",
-          fullWidth: true,
-          value: dateRangeFilter.start,
-          onChange: (e2) => handleDateRangeFilterChange("start", e2.target.value),
-          InputLabelProps: { shrink: true }
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        TextField,
-        {
-          size: "small",
-          margin: "dense",
-          label: "Дата закінчення",
-          type: "date",
-          fullWidth: true,
-          value: dateRangeFilter.end,
-          onChange: (e2) => handleDateRangeFilterChange("end", e2.target.value),
-          inputProps: {
-            min: dateRangeFilter.start || void 0
-            // заборонити дати до початкової
-          },
-          InputLabelProps: { shrink: true, min: dateRangeFilter.start }
-        }
-      ) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { size: "small", fullWidth: true, margin: "dense", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { size: "small", children: "Категорія" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Select,
-          {
-            size: "small",
-            label: "Категорія",
-            value: categoryFilter,
-            onChange: handleCategoryFilterChange,
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { title: "Всі категорії", value: "", children: "Всі категорії" }),
-              categories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { title: category.name, value: category.id, children: category.name }, category.id))
-            ]
-          }
-        )
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { size: "small", fullWidth: true, margin: "dense", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { size: "small", children: "Постачальник" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(
-          Select,
-          {
-            size: "small",
-            label: "Постачальник",
-            value: supplierFilter,
-            onChange: handleSupplierFilterChange,
-            children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "", children: "Всі постачальники" }),
-              Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
-                (supplier, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: supplier, children: supplier }, supplier + `${index}`)
-              )
-            ]
-          }
-        )
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(FormControl, { size: "small", fullWidth: true, margin: "dense", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(InputLabel, { size: "small", children: "Тип" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { size: "small", label: "Тип", value: typeFilter, onChange: handleTypeFilterChange, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "", children: "Всі типи" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "Other Investment", children: "Інші інвестиції" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "Packaging", children: "Упаковка" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(MenuItem, { value: "Product", children: "Продукт" })
-        ] })
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 5, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, alignItems: "center", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "caption", gutterBottom: true, children: "Діапазон ціни (за од.):" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, md: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, { px: "10px", children: [
-          Number.isFinite(priceBounds[0]) && Number.isFinite(priceBounds[1]) && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            Slider,
-            {
-              value: priceRangeFilterSlider,
-              onChange: (_, newValue) => {
-                setPriceRangeFilterSlider(newValue);
-              },
-              valueLabelDisplay: "auto",
-              min: priceBounds[0],
-              max: priceBounds[1],
-              marks: [
-                { value: priceBounds[0], label: `${priceBounds[0]}₴` },
-                { value: priceBounds[1], label: `${priceBounds[1]}₴` }
-              ]
-            }
-          ),
-          " "
-        ] }) })
-      ] }) })
-    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: filtersOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      PurchaseHistoryFilter,
+      {
+        categories,
+        categoryFilter,
+        dateRangeFilter,
+        filter: filter2,
+        handleCategoryFilterChange,
+        handleDateRangeFilterChange,
+        handleFilterChange,
+        handleSupplierFilterChange,
+        handleTypeFilterChange,
+        priceBounds,
+        priceRangeFilterSlider,
+        purchaseHistory,
+        setPriceRangeFilterSlider,
+        supplierFilter,
+        typeFilter
+      }
+    ) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, spacing: 1, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Box, { marginBottom: 2, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
       Button,
       {
@@ -54793,69 +55131,17 @@ const PurchasesTable = () => {
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: " Тип" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TableSortLabel,
-            {
-              active: sortConfig.key === "name",
-              direction: sortConfig.direction,
-              onClick: () => handleSort("name"),
-              children: "Назва продукту"
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TableSortLabel,
-            {
-              active: sortConfig.key === "supplier_name",
-              direction: sortConfig.direction,
-              onClick: () => handleSort("supplier_name"),
-              children: "Назва постачальника"
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TableSortLabel,
-            {
-              active: sortConfig.key === "quantity",
-              direction: sortConfig.direction,
-              onClick: () => handleSort("quantity"),
-              children: "Кількість"
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TableSortLabel,
-            {
-              active: sortConfig.key === "price_per_item",
-              direction: sortConfig.direction,
-              onClick: () => handleSort("price_per_item"),
-              children: "Ціна за одиницю"
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TableSortLabel,
-            {
-              active: sortConfig.key === "total_price",
-              direction: sortConfig.direction,
-              onClick: () => handleSort("total_price"),
-              children: "Загальна ціна"
-            }
-          ) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-            TableSortLabel,
-            {
-              active: sortConfig.key === "date",
-              direction: sortConfig.direction,
-              onClick: () => handleSort("date"),
-              children: "Дата"
-            }
-          ) })
-        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: columns.map((column2) => /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: (column2 == null ? void 0 : column2.sortable) === false ? /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: column2.label }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TableSortLabel,
+          {
+            active: sortConfig.key === column2.key,
+            direction: sortConfig.direction,
+            onClick: () => handleSort(column2.key),
+            children: column2.label
+          }
+        ) }, column2.key)) }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: paginatedData.map((row, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { style: getRowStyle(row.type), children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: row.type === "Product" ? "Товар" : row.type === "Packaging" ? "Пакування" : "Інше", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "subtitle2", component: "span", children: [
-            row.type === "Product" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Товар", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShoppingBag, { fontSize: "small" }) }),
-            row.type === "Packaging" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Пакування", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Luggage, { fontSize: "small" }) }),
-            row.type === "Other Investment" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Інші вкладення", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AttachMoney, { fontSize: "small" }) })
-          ] }) }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(PurchasesTableTypeProductCell, { type: row.type }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { variant: "subtitle2", children: row.name }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
             Typography,
@@ -55038,6 +55324,7 @@ const PurchaseMaterialDialog = ({
   materialName,
   isAuthenticated = false
 }) => {
+  var _a2, _b2;
   const [supplierId, setSupplierId] = reactExports.useState(defaultSupplierId || null);
   const [quantity, setQuantity] = reactExports.useState(1);
   const [pricePerUnit, setPricePerUnit] = reactExports.useState(defaultPricePerUnit || 0);
@@ -55128,32 +55415,35 @@ const PurchaseMaterialDialog = ({
         handleClose: onClose,
         title: "Закупити " + materialName,
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, alignItems: "center", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, md: 9, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              SupplierSelect,
-              {
-                suppliers,
-                value: supplierId || "",
-                onChange: (e2) => setSupplierId(Number(e2.target.value))
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 4, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { sx: { marginTop: 1 }, onClick: handleOpenAddSupplier }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-              QuantityField,
-              {
-                min: MIN_QUANTITY,
-                value: quantity,
-                onChange: handleQuantityChange,
-                onIncrement: handleIncrement,
-                onDecrement: handleDecrement
-              }
-            ) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(PriceField, { value: pricePerUnit, onChange: handlePriceChange, error: null }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: totalPurchaseCost.toFixed(2) }) })
-          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
+            supplierId && !((_a2 = suppliers.find((s) => s.id === supplierId)) == null ? void 0 : _a2.is_active) && /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { color: "error", variant: "body2", children: "Увага: цей постачальник є неактивним. Закупівлю буде заблоковано." }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, alignItems: "center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 8, md: 9, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                SupplierSelect,
+                {
+                  suppliers,
+                  value: supplierId || "",
+                  onChange: (e2) => setSupplierId(Number(e2.target.value))
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 4, md: 3, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { sx: { marginTop: 1 }, onClick: handleOpenAddSupplier }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                QuantityField,
+                {
+                  min: MIN_QUANTITY,
+                  value: quantity,
+                  onChange: handleQuantityChange,
+                  onIncrement: handleIncrement,
+                  onDecrement: handleDecrement
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 6, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(PriceField, { value: pricePerUnit, onChange: handlePriceChange, error: null }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, xs: 12, sm: 12, md: 4, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TotalPriceField, { value: totalPurchaseCost.toFixed(2) }) })
+            ] })
+          ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: onClose }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { disabled: !isAuthenticated, onClick: handlePurchase, color: "primary", variant: "contained", children: "Закупити" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { disabled: !isAuthenticated || supplierId && !((_b2 = suppliers.find((s) => s.id === supplierId)) == null ? void 0 : _b2.is_active), onClick: handlePurchase, color: "primary", variant: "contained", children: "Закупити" })
           ] })
         ]
       }
@@ -55275,7 +55565,7 @@ const DeleteAllMaterialsDialog = () => {
     ] })
   ] });
 };
-const MaterialHistoryTable = ({ materialHistory }) => {
+const MaterialHistoryTable = ({ materialHistory, selectedSupplierData }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата" }),
@@ -55293,7 +55583,8 @@ const MaterialHistoryDialog = ({
   open,
   handleClose,
   selectedMaterial,
-  materialHistory
+  materialHistory,
+  selectedSupplierData
 }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     CustomDialog,
@@ -55303,7 +55594,7 @@ const MaterialHistoryDialog = ({
       handleClose,
       title: `Історія ${(selectedMaterial == null ? void 0 : selectedMaterial.name) || ""}`,
       children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(MaterialHistoryTable, { materialHistory }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(MaterialHistoryTable, { selectedSupplierData, materialHistory }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(DialogActions, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleClose }) })
       ]
     }
@@ -55318,15 +55609,16 @@ const PackagingMaterialList = () => {
   const [selectedMaterialId, setSelectedMaterialId] = reactExports.useState(null);
   const [dialogOpen, setDialogOpen] = reactExports.useState(false);
   const [selectedSupplierId, setSelectedSupplierId] = reactExports.useState(null);
+  const [selectedSupplierData, setSelectedSupplierData] = reactExports.useState(null);
   const [defaultPricePerUnit, setDefaultPricePerUnit] = reactExports.useState(0);
   const [selectedMaterial, setSelectedMaterial] = reactExports.useState(null);
   const [openDialogUpdate, setOpenDialogUpdate] = reactExports.useState(false);
   const [historyDialogOpen, setHistoryDialogOpen] = reactExports.useState(false);
   const [materialHistory, setMaterialHistory] = reactExports.useState([]);
-  const mapMaterialHistory = (history) => {
+  const mapMaterialHistory = (history, supplier) => {
     const purchaseMapped = history.purchase_history.map((purchase) => ({
       date: purchase.purchase_date,
-      description: `Закупівля у постачальника (ID: ${purchase.supplier_id}), ціна за одиницю: ${purchase.purchase_price_per_unit}`,
+      description: `Закупівля у постачальника ${supplier.name} (ID: ${purchase.supplier_id}), ціна за одиницю: ${purchase.purchase_price_per_unit}`,
       quantity: purchase.quantity_purchased
     }));
     const salesMapped = history.sales_history.map((sale) => ({
@@ -55344,15 +55636,16 @@ const PackagingMaterialList = () => {
       (a, b2) => new Date(a.date).getTime() - new Date(b2.date).getTime()
     );
   };
-  const fetchMaterialHistory = (materialId) => {
+  const fetchMaterialHistory = (materialId, supplierData) => {
     getCurrentPackagingHistory(materialId).then((data) => {
-      const mappedData = mapMaterialHistory(data);
+      const mappedData = mapMaterialHistory(data, supplierData);
       setMaterialHistory(mappedData);
     }).catch((error) => console.error("Error fetching packaging materials:", error));
   };
   const handleOpenHistoryDialog = (material) => {
     setSelectedMaterial(material);
-    fetchMaterialHistory(material.id);
+    if (material.supplier) setSelectedSupplierData(material.supplier);
+    fetchMaterialHistory(material.id, material.supplier);
     setHistoryDialogOpen(true);
   };
   const handleCloseHistoryDialog = () => {
@@ -55526,6 +55819,7 @@ const PackagingMaterialList = () => {
         /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
           Typography,
           {
+            color: !material.supplier.is_active ? "textDisabled" : "inherit",
             variant: "subtitle2",
             sx: {
               textOverflow: "ellipsis",
@@ -55654,6 +55948,7 @@ const PackagingMaterialList = () => {
       {
         open: historyDialogOpen,
         handleClose: handleCloseHistoryDialog,
+        selectedSupplierData,
         selectedMaterial,
         materialHistory
       }
@@ -55772,20 +56067,45 @@ const InvestmentsPage = () => {
     )
   ] });
 };
-const EditSupplierModal = ({ open, handleClose, handleEditSupplier, supplier, isAuthenticated }) => {
-  const [name, setName] = reactExports.useState((supplier == null ? void 0 : supplier.name) || "");
-  const [contactInfo, setContactInfo] = reactExports.useState((supplier == null ? void 0 : supplier.contact_info) || "");
-  const [email, setEmail] = reactExports.useState((supplier == null ? void 0 : supplier.email) || "");
-  const [phoneNumber, setPhoneNumber] = reactExports.useState((supplier == null ? void 0 : supplier.phone_number) || "");
-  const [address, setAddress] = reactExports.useState((supplier == null ? void 0 : supplier.address) || "");
+const EditSupplierModal = ({
+  open,
+  handleClose,
+  handleEditSupplier,
+  supplier,
+  isAuthenticated
+}) => {
+  const [name, setName] = reactExports.useState("");
+  const [contactInfo, setContactInfo] = reactExports.useState("");
+  const [email, setEmail] = reactExports.useState("");
+  const [phoneNumber, setPhoneNumber] = reactExports.useState("");
+  const [address, setAddress] = reactExports.useState("");
+  const [isActive, setIsActive] = reactExports.useState(true);
   const [error, setError] = reactExports.useState(null);
+  const [initialSupplierState, setInitialSupplierState] = reactExports.useState({
+    name: "",
+    contact_info: "",
+    email: "",
+    phone_number: "",
+    address: "",
+    is_active: true
+  });
   reactExports.useEffect(() => {
     if (supplier) {
-      setName(supplier.name);
-      setContactInfo(supplier.contact_info);
-      setEmail(supplier.email);
-      setPhoneNumber(supplier.phone_number);
-      setAddress(supplier.address);
+      const initialState = {
+        name: supplier.name || "",
+        contact_info: supplier.contact_info || "",
+        email: supplier.email || "",
+        phone_number: supplier.phone_number || "",
+        address: supplier.address || "",
+        is_active: supplier.is_active ?? true
+      };
+      setInitialSupplierState(initialState);
+      setName(initialState.name);
+      setContactInfo(initialState.contact_info);
+      setEmail(initialState.email);
+      setPhoneNumber(initialState.phone_number);
+      setAddress(initialState.address);
+      setIsActive(initialState.is_active);
       setError(null);
     }
   }, [supplier]);
@@ -55804,17 +56124,19 @@ const EditSupplierModal = ({ open, handleClose, handleEditSupplier, supplier, is
       contact_info: contactInfo,
       email,
       phone_number: phoneNumber,
-      address
+      address,
+      is_active: isActive
     };
-    handleEditSupplier(updatedSupplier);
+    handleEditSupplier(updatedSupplier, supplier.type);
   };
+  const isDisabled = supplier && !supplier.is_active;
+  const hasChanges = name !== initialSupplierState.name || contactInfo !== initialSupplierState.contact_info || email !== initialSupplierState.email || phoneNumber !== initialSupplierState.phone_number || address !== initialSupplierState.address || isActive !== initialSupplierState.is_active;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(CustomDialog, { title: "Редагувати постачальника", handleClose, open, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         TextField,
         {
-          minLength: 10,
-          maxLength: 100,
+          size: "small",
           required: true,
           autoFocus: true,
           margin: "dense",
@@ -55823,58 +56145,146 @@ const EditSupplierModal = ({ open, handleClose, handleEditSupplier, supplier, is
           value: name,
           onChange: (e2) => setName(e2.target.value),
           error: !!error,
-          helperText: error
+          helperText: error,
+          disabled: isDisabled
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         TextField,
         {
+          size: "small",
           margin: "dense",
           label: "Контактна інформація",
           fullWidth: true,
           value: contactInfo,
-          onChange: (e2) => setContactInfo(e2.target.value)
+          onChange: (e2) => setContactInfo(e2.target.value),
+          disabled: isDisabled
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         TextField,
         {
+          size: "small",
           margin: "dense",
           label: "Email",
           fullWidth: true,
           value: email,
-          onChange: (e2) => setEmail(e2.target.value)
+          onChange: (e2) => setEmail(e2.target.value),
+          disabled: isDisabled
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         TextField,
         {
+          size: "small",
           margin: "dense",
           label: "Телефон",
           fullWidth: true,
           value: phoneNumber,
-          onChange: (e2) => setPhoneNumber(e2.target.value)
+          onChange: (e2) => setPhoneNumber(e2.target.value),
+          disabled: isDisabled
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         TextField,
         {
+          size: "small",
           margin: "dense",
           label: "Адреса",
           fullWidth: true,
           value: address,
-          onChange: (e2) => setAddress(e2.target.value)
+          onChange: (e2) => setAddress(e2.target.value),
+          disabled: isDisabled
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        FormControlLabel,
+        {
+          control: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Switch,
+            {
+              checked: isActive,
+              onChange: () => setIsActive(!isActive)
+            }
+          ),
+          label: isActive ? "Активний" : "Неактивний",
+          sx: { mt: 2 }
         }
       )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(CancelButton, { onClick: handleClose }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { disabled: !isAuthenticated, onClick: handleSave, color: "primary", variant: "contained", children: "Зберегти" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          disabled: !isAuthenticated || !hasChanges,
+          onClick: handleSave,
+          color: "primary",
+          variant: "contained",
+          children: "Зберегти"
+        }
+      )
     ] })
   ] });
 };
+const SupplierPurchaseHistoryTable = ({ supplierId, suppliers, type = "product", purchaseHistory }) => {
+  const supplier = suppliers.find((s) => s.id === supplierId);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", sx: { marginTop: 2 }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(TableHead, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 5, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "h6", children: [
+        "Історія постачань:",
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+          " ",
+          (supplier == null ? void 0 : supplier.name) || "Невідомий постачальник"
+        ] })
+      ] }) }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Дата закупівлі" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: type === "product" ? "Товар" : "Матеріал" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Кількість" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Ціна за одиницю" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: "Загальна вартість" })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: purchaseHistory.length > 0 ? purchaseHistory.map((item, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: new Date(item.purchase_date).toLocaleDateString("uk-UA") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: type === "product" ? item.product : item.material }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: type === "product" ? item.quantity_purchase : item.quantity_purchased }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: type === "product" ? item.purchase_price_per_item : item.purchase_price_per_unit }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: item.purchase_total_price })
+    ] }, index)) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 5, align: "center", children: "Даних немає" }) }) })
+  ] }) });
+};
+const canDeleteSupplier = async (supplierId, type) => {
+  try {
+    if (type === "product") {
+      const data = await fetchGetSupplierPurchaseHistory(supplierId);
+      if (data.purchase_history.length > 0 || data.products.length > 0) {
+        return {
+          canDelete: false,
+          reason: "Неможливо видалити постачальника: є пов’язані закупівлі або товари."
+        };
+      }
+    } else if (type === "packaging") {
+      const data = await fetchGetPackagingSupplierPurchaseHistory(supplierId);
+      if (data.purchase_history.length > 0 || data.materials.length > 0) {
+        return {
+          canDelete: false,
+          reason: "Неможливо видалити постачальника пакування: є пов’язані закупівлі або матеріали."
+        };
+      }
+    }
+    return { canDelete: true };
+  } catch (error) {
+    console.error("Помилка при перевірці постачальника:", error);
+    return {
+      canDelete: false,
+      reason: "Сталася помилка при перевірці. Спробуйте пізніше."
+    };
+  }
+};
 const SupplierPage = () => {
-  const { suppliers, fetchSuppliersFunc } = useSuppliers();
+  const { suppliers, fetchSuppliersFunc, handleToggleSupplierActive } = useSuppliers();
   const [openAddModal, setOpenAddModal] = reactExports.useState(false);
   const [openEditModal, setOpenEditModal] = reactExports.useState(false);
   const [currentSupplier, setCurrentSupplier] = reactExports.useState({
@@ -55886,17 +56296,28 @@ const SupplierPage = () => {
     id: null
   });
   const [openHistory, setOpenHistory] = reactExports.useState(null);
+  const [currentType, setCurrentType] = reactExports.useState("product");
   const [purchaseHistory, setPurchaseHistory] = reactExports.useState([]);
   const { showSnackbarMessage } = useSnackbarMessage();
   const [products, setProducts] = reactExports.useState([]);
   const { isAuthenticated } = useAuth();
+  const [confirmDialogOpen, setConfirmDialogOpen] = reactExports.useState(false);
+  const [confirmDeleteSupplierId, setConfirmDeleteSupplierId] = reactExports.useState(null);
+  const [confirmDeleteSupplierType, setConfirmDeleteSupplierType] = reactExports.useState(null);
   const theme = useTheme();
-  console.log("purchaseHistory: ", purchaseHistory);
-  const fetchPurchaseHistory = async (supplierId) => {
-    fetchGetSupplierPurchaseHistory(supplierId).then((data) => {
-      setPurchaseHistory(data.purchase_history);
-      setProducts(data.products);
-    });
+  const fetchPurchaseHistory = async (supplierId, type) => {
+    setCurrentType(type);
+    if (type === "product") {
+      fetchGetSupplierPurchaseHistory(supplierId).then((data) => {
+        setPurchaseHistory(data.purchase_history);
+        setProducts(data.products);
+      });
+    } else if (type === "packaging") {
+      fetchGetPackagingSupplierPurchaseHistory(supplierId).then((data) => {
+        setPurchaseHistory(data.purchase_history);
+        setProducts(data.materials);
+      });
+    }
   };
   const handleAddSupplier = (newSupplier) => {
     addSupplier(newSupplier).then(() => {
@@ -55912,11 +56333,16 @@ const SupplierPage = () => {
     setCurrentSupplier(editSupplier);
     setOpenEditModal(true);
   };
-  const handleEditSupplier = async (supplier) => {
+  const handleEditSupplier = async (supplier, type = "product") => {
     if (!currentSupplier) return;
     try {
-      if (currentSupplier.id !== null)
-        await updateSupplier(currentSupplier.id, supplier);
+      if (currentSupplier.id !== null) {
+        if (type === "product") {
+          await updateSupplier(currentSupplier.id, supplier);
+        } else if (type === "packaging") {
+          await updatePackagingSupplier(currentSupplier.id, supplier);
+        }
+      }
       fetchSuppliersFunc();
       showSnackbarMessage("Supplier completed successfully!", "success");
       setOpenEditModal(false);
@@ -55924,20 +56350,21 @@ const SupplierPage = () => {
       console.error("Error editing supplier:", error);
     }
   };
-  const handleDeleteSupplier = async (id2) => {
-    try {
-      await deleteSupplier(id2);
-      fetchSuppliersFunc();
-      showSnackbarMessage("Supplier deleted successfully!", "success");
-    } catch (error) {
-      console.error("Failed to delete supplier:", error);
+  const handleDeleteSupplier = async (supplierId, type) => {
+    const { canDelete, reason } = await canDeleteSupplier(supplierId, type);
+    if (!canDelete) {
+      showSnackbarMessage(reason || "Цього постачальника не можна видалити.", "warning");
+      return;
     }
+    setConfirmDeleteSupplierId(supplierId);
+    setConfirmDeleteSupplierType(type);
+    setConfirmDialogOpen(true);
   };
-  const toggleHistory = (id2) => {
+  const toggleHistory = (id2, type) => {
     if (openHistory === id2) {
       setOpenHistory(null);
     } else {
-      fetchPurchaseHistory(id2);
+      fetchPurchaseHistory(id2, type);
       setOpenHistory(id2);
     }
   };
@@ -55954,6 +56381,13 @@ const SupplierPage = () => {
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
+  const textColorDis = (is_active) => {
+    if (!is_active) {
+      return theme.palette.text.disabled;
+    } else {
+      return "inherit";
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { marginBlockEnd: 1, variant: "h4", children: "Постачальники" }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, spacing: 2, justifyContent: "space-between", marginBottom: 4, children: [
@@ -55978,19 +56412,21 @@ const SupplierPage = () => {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { component: Paper, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Назва постачальника" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Контактна інформація" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Email" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Телефон" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Адреса" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Дії" }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Тип" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Назва постачальника" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Контактна інформація" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Email" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Телефон" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Адреса" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RenderHeaderCell, { children: "Дії" })
       ] }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: paginatedSuppliers.map((supplier) => /* @__PURE__ */ jsxRuntimeExports.jsxs(React.Fragment, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           TableRow,
           {
-            sx: { background: openHistory === supplier.id ? theme.palette.grey[500] : "inherit" },
+            sx: { background: !supplier.is_active ? theme.palette.grey[300] : openHistory === supplier.id ? theme.palette.grey[500] : "inherit" },
             children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PurchasesTableTypeProductCell, { type: supplier.type }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Typography,
                 {
@@ -55998,16 +56434,54 @@ const SupplierPage = () => {
                   title: supplier.name,
                   sx: {
                     textOverflow: "ellipsis",
-                    whiteSpace: "nowrap"
+                    whiteSpace: "nowrap",
+                    color: textColorDis(supplier.is_active)
                   },
                   children: supplier.name
                 }
               ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: supplier.contact_info || "Не вказано" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: supplier.email || "Не вказано" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: supplier.phone_number || "Не вказано" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: supplier.address || "Не вказано" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { size: "small", sx: {
+                color: textColorDis(supplier.is_active)
+              }, children: [
+                " ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Typography,
+                  {
+                    className: clsx("contact_info"),
+                    title: supplier.contact_info,
+                    sx: {
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      color: textColorDis(supplier.is_active)
+                    },
+                    children: supplier.contact_info || "Не вказано"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", sx: {
+                color: textColorDis(supplier.is_active)
+              }, children: supplier.email || "Не вказано" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", sx: {
+                color: textColorDis(supplier.is_active)
+              }, children: supplier.phone_number || "Не вказано" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", sx: {
+                color: textColorDis(supplier.is_active)
+              }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Typography,
+                {
+                  className: clsx("contact_info"),
+                  title: supplier.name,
+                  sx: {
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    color: textColorDis(supplier.is_active)
+                  },
+                  children: supplier.address || "Не вказано"
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", sx: {
+                color: textColorDis(supplier.is_active)
+              }, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Grid, { container: true, children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Редагувати", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   IconButton,
                   {
@@ -56020,16 +56494,30 @@ const SupplierPage = () => {
                   IconButton,
                   {
                     color: "info",
-                    onClick: () => toggleHistory(supplier.id),
+                    onClick: () => toggleHistory(supplier.id, supplier.type),
                     children: /* @__PURE__ */ jsxRuntimeExports.jsx(HistoryIcon, { fontSize: "small" })
                   }
                 ) }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Tooltip$1,
+                  {
+                    title: supplier.is_active ? "Відключити постачальника" : "Увімкнути постачальника",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      IconButton,
+                      {
+                        color: supplier.is_active ? "warning" : "success",
+                        onClick: () => handleToggleSupplierActive(supplier.id, supplier, supplier.type),
+                        children: supplier.is_active ? /* @__PURE__ */ jsxRuntimeExports.jsx(BlockIcon, { fontSize: "small" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(CheckCircleIcon, { fontSize: "small" })
+                      }
+                    )
+                  }
+                ) }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip$1, { title: "Видалити постачальника", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   IconButton,
                   {
                     disabled: !isAuthenticated,
                     color: "error",
-                    onClick: () => handleDeleteSupplier(supplier.id),
+                    onClick: () => handleDeleteSupplier(supplier.id, supplier.type),
                     children: /* @__PURE__ */ jsxRuntimeExports.jsx(Delete, { fontSize: "small" })
                   }
                 ) }) })
@@ -56037,55 +56525,15 @@ const SupplierPage = () => {
             ]
           }
         ),
-        openHistory === supplier.id && /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { sx: { background: theme.palette.grey[500] }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 6, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: openHistory === supplier.id, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableContainer, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { size: "small", sx: { marginTop: 2 }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs(TableHead, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 7, size: "small", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography, { variant: "h6", children: [
-              "Історія операцій постачальника",
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-                " ",
-                suppliers.find((supplier2) => supplier2.id === openHistory).name
-              ] })
-            ] }) }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: "Дата закупівлі" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: "Товар" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: "Кількість" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: "Ціна за одиницю" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: "Загальна вартість" })
-            ] })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: purchaseHistory.length > 0 ? purchaseHistory.map((purchase, index) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { size: "small", children: new Date(purchase.purchase_date).toLocaleDateString("uk-UA") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TableCell,
-              {
-                size: "small",
-                children: purchase.product
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TableCell,
-              {
-                size: "small",
-                children: purchase.quantity_purchase
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TableCell,
-              {
-                size: "small",
-                children: purchase.purchase_price_per_item
-              }
-            ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              TableCell,
-              {
-                size: "small",
-                children: purchase.purchase_total_price
-              }
-            )
-          ] }, index)) : /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 5, align: "center", children: "Даних немає" }) }) })
-        ] }) }) }) }) })
+        openHistory === supplier.id && /* @__PURE__ */ jsxRuntimeExports.jsx(TableRow, { sx: { background: theme.palette.grey[500] }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { colSpan: 8, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse, { in: openHistory === supplier.id, timeout: "auto", unmountOnExit: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SupplierPurchaseHistoryTable,
+          {
+            type: currentType,
+            supplierId: openHistory,
+            suppliers,
+            purchaseHistory
+          }
+        ) }) }) })
       ] }, supplier.id)) })
     ] }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -56119,7 +56567,40 @@ const SupplierPage = () => {
         handleEditSupplier,
         supplier: currentSupplier
       }
-    )
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open: confirmDialogOpen, onClose: () => setConfirmDialogOpen(false), children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Підтвердження видалення" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContent, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { children: "Ви дійсно хочете видалити постачальника?" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogActions, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: () => setConfirmDialogOpen(false), children: "Скасувати" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            color: "error",
+            onClick: async () => {
+              if (confirmDeleteSupplierId !== null && confirmDeleteSupplierType) {
+                try {
+                  if (confirmDeleteSupplierType === "product") {
+                    await deleteSupplier(confirmDeleteSupplierId);
+                  } else if (confirmDeleteSupplierType === "packaging") {
+                    await deletePackagingSupplier(confirmDeleteSupplierId);
+                  }
+                  showSnackbarMessage("Постачальника успішно видалено", "success");
+                  fetchSuppliersFunc();
+                } catch (e2) {
+                  showSnackbarMessage("Помилка при видаленні постачальника", "error");
+                } finally {
+                  setConfirmDialogOpen(false);
+                  setConfirmDeleteSupplierId(null);
+                  setConfirmDeleteSupplierType(null);
+                }
+              }
+            },
+            children: "Видалити"
+          }
+        )
+      ] })
+    ] })
   ] });
 };
 const SaleGiftSetDetails = ({ sale }) => {
