@@ -55723,7 +55723,7 @@ const InvestmentsPage = () => {
     setOpenConfirmInvestmentDialog(false);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: "Інші вкладення" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography, { marginBlockEnd: 1, variant: "h4", children: "Інші вкладення" }),
     isAuthenticated && /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { container: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Grid, { item: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(DeleteAllInvestmentsDialog, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(AddButton, { onClick: () => setAddInvestDialogOpen(true), text: "Додати інвестицію" }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
