@@ -10,7 +10,10 @@ const fakeDate = {
     getMaterialHistory: (materialId: number) => {
     },
     getAllGiftSets: [],
-    getAllCustomers: []
+    getAllCustomers: [],
+    getAllSalesHistory: [],
+    getSuppliersHistory: (supplierlId: number) => {
+    },
 };
 
 fakeDate.productsFake = [
@@ -19,16 +22,20 @@ fakeDate.productsFake = [
         "category_ids": [],
         "created_date": "2024-09-15T00:00:00",
         "id": 10,
-        "name": "Крем від укусів комах 999",
+        "name": "Крем від укусів комах",
         "purchase_price_per_item": 80,
         "purchase_total_price": 560,
         "selling_price_per_item": 0,
         "selling_total_price": 0,
         "sold_quantity": 0,
         "supplier": {
+            "address": null,
             "contact_info": null,
+            "email": null,
             "id": 10,
-            "name": "https://epicentrk.ua/ua/shop/sredstva-ot-komarov/"
+            "is_active": true,
+            "name": "https://epicentrk.ua/ua/shop/sredstva-ot-komarov/",
+            "phone_number": null
         },
         "supplier_id": 10,
         "total_quantity": 7
@@ -45,15 +52,19 @@ fakeDate.productsFake = [
         "selling_total_price": 0,
         "sold_quantity": 0,
         "supplier": {
-            "contact_info": null,
+            "address": "https://paket.kh.ua/product/kartonka15x10x5",
+            "contact_info": "https://paket.kh.ua/product/kartonka15x10x5",
+            "email": "",
             "id": 2,
-            "name": "https://epicentrk.ua/ua/shop/termokruzhka.html"
+            "is_active": true,
+            "name": "https://paket.kh.ua/product/ka",
+            "phone_number": ""
         },
         "supplier_id": 2,
         "total_quantity": 5
     },
     {
-        "available_quantity": 3,
+        "available_quantity": 2,
         "category_ids": [],
         "created_date": "2024-09-15T00:00:00",
         "id": 5,
@@ -64,15 +75,19 @@ fakeDate.productsFake = [
         "selling_total_price": 0,
         "sold_quantity": 0,
         "supplier": {
+            "address": null,
             "contact_info": null,
+            "email": null,
             "id": 5,
-            "name": "https://rozetka.com.ua/ua/gas_burners/c80163/"
+            "is_active": false,
+            "name": "https://rozetka.com.ua/ua/gas_burners/c80163/",
+            "phone_number": null
         },
         "supplier_id": 5,
         "total_quantity": 3
     },
     {
-        "available_quantity": 3,
+        "available_quantity": 1,
         "category_ids": [],
         "created_date": "2024-09-15T00:00:00",
         "id": 8,
@@ -81,11 +96,15 @@ fakeDate.productsFake = [
         "purchase_total_price": 5400,
         "selling_price_per_item": 0,
         "selling_total_price": 0,
-        "sold_quantity": 0,
+        "sold_quantity": 1,
         "supplier": {
+            "address": null,
             "contact_info": null,
+            "email": null,
             "id": 8,
-            "name": "https://decathlon.ua/ruckzaki"
+            "is_active": true,
+            "name": "https://decathlon.ua/ruckzaki",
+            "phone_number": null
         },
         "supplier_id": 8,
         "total_quantity": 3
@@ -102,50 +121,39 @@ fakeDate.productsFake = [
         "selling_total_price": 0,
         "sold_quantity": 0,
         "supplier": {
+            "address": null,
             "contact_info": null,
+            "email": null,
             "id": 6,
-            "name": "https://epicentrk.ua/ua/shop/nalochnye-fonari/"
+            "is_active": false,
+            "name": "https://epicentrk.ua/ua/shop/nalochnye-fonari/",
+            "phone_number": null
         },
         "supplier_id": 6,
         "total_quantity": 6
     },
     {
-        "available_quantity": 8,
+        "available_quantity": 6,
         "category_ids": [],
         "created_date": "2024-09-15T00:00:00",
         "id": 4,
         "name": "Каремат пінка",
         "purchase_price_per_item": 120,
         "purchase_total_price": 960,
-        "selling_price_per_item": 0,
-        "selling_total_price": 0,
-        "sold_quantity": 0,
+        "selling_price_per_item": 400,
+        "selling_total_price": 400,
+        "sold_quantity": 2,
         "supplier": {
+            "address": null,
             "contact_info": null,
+            "email": null,
             "id": 4,
-            "name": "https://decathlon.ua/karimaty"
+            "is_active": false,
+            "name": "https://decathlon.ua/karimaty",
+            "phone_number": null
         },
         "supplier_id": 4,
         "total_quantity": 8
-    },
-    {
-        "available_quantity": 10,
-        "category_ids": [],
-        "created_date": "2024-09-15T00:00:00",
-        "id": 1,
-        "name": "Пляшка для води 1л",
-        "purchase_price_per_item": 70,
-        "purchase_total_price": 700,
-        "selling_price_per_item": 0,
-        "selling_total_price": 0,
-        "sold_quantity": 0,
-        "supplier": {
-            "contact_info": null,
-            "id": 1,
-            "name": "https://rozetka.com.ua/ua/tourist_water_bottles/c80161/"
-        },
-        "supplier_id": 1,
-        "total_quantity": 10
     },
     {
         "available_quantity": 2,
@@ -159,9 +167,13 @@ fakeDate.productsFake = [
         "selling_total_price": 0,
         "sold_quantity": 0,
         "supplier": {
-            "contact_info": null,
+            "address": "",
+            "contact_info": "",
+            "email": "",
             "id": 3,
-            "name": "https://allo.ua/ua/palatki/"
+            "is_active": true,
+            "name": "https://allo.ua/ua/palatki/",
+            "phone_number": ""
         },
         "supplier_id": 3,
         "total_quantity": 2
@@ -173,39 +185,46 @@ fakeDate.productsFake = [
         "id": 9,
         "name": "Аптечка туристична",
         "purchase_price_per_item": 200,
-        "purchase_total_price": 1000,
-        "selling_price_per_item": 0,
-        "selling_total_price": 0,
-        "sold_quantity": 0,
+        "purchase_total_price": 1200,
+        "selling_price_per_item": 500,
+        "selling_total_price": 700,
+        "sold_quantity": 1,
         "supplier": {
+            "address": null,
             "contact_info": null,
+            "email": null,
             "id": 9,
-            "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/"
+            "is_active": true,
+            "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/",
+            "phone_number": null
         },
         "supplier_id": 9,
-        "total_quantity": 5
+        "total_quantity": 6
     },
     {
-        "available_quantity": 4,
+        "available_quantity": 3,
         "category_ids": [],
         "created_date": "2024-09-15T00:00:00",
         "id": 7,
         "name": "Портативний душ",
         "purchase_price_per_item": 450,
         "purchase_total_price": 1800,
-        "selling_price_per_item": 0,
-        "selling_total_price": 0,
-        "sold_quantity": 0,
+        "selling_price_per_item": 400,
+        "selling_total_price": 400,
+        "sold_quantity": 1,
         "supplier": {
+            "address": null,
             "contact_info": null,
+            "email": null,
             "id": 7,
-            "name": "https://allo.ua/ua/portativnye-dushi/"
+            "is_active": false,
+            "name": "https://allo.ua/ua/portativnye-dushi/",
+            "phone_number": null
         },
         "supplier_id": 7,
         "total_quantity": 4
     }
 ]
-
 fakeDate.categoriesFake = [
     {
         "id": 1,
@@ -259,190 +278,243 @@ fakeDate.categoriesFake = [
 
 fakeDate.suppliersListFake = [
     {
-        "address": null,
-        "contact_info": null,
-        "email": null,
-        "id": 1,
-        "name": "https://rozetka.com.ua/ua/tourist_water_bottles/c80161/",
-        "phone_number": null
-    },
-    {
-        "address": null,
-        "contact_info": null,
-        "email": null,
-        "id": 2,
-        "name": "https://epicentrk.ua/ua/shop/termokruzhka.html",
-        "phone_number": null
-    },
-    {
-        "address": null,
-        "contact_info": null,
-        "email": null,
+        "address": "",
+        "contact_info": "",
+        "email": "",
         "id": 3,
+        "is_active": true,
         "name": "https://allo.ua/ua/palatki/",
-        "phone_number": null
-    },
-    {
-        "address": null,
-        "contact_info": null,
-        "email": null,
-        "id": 4,
-        "name": "https://decathlon.ua/karimaty",
-        "phone_number": null
-    },
-    {
-        "address": null,
-        "contact_info": null,
-        "email": null,
-        "id": 5,
-        "name": "https://rozetka.com.ua/ua/gas_burners/c80163/",
-        "phone_number": null
-    },
-    {
-        "address": null,
-        "contact_info": null,
-        "email": null,
-        "id": 6,
-        "name": "https://epicentrk.ua/ua/shop/nalochnye-fonari/",
-        "phone_number": null
+        "phone_number": "",
+        "type": "product"
     },
     {
         "address": null,
         "contact_info": null,
         "email": null,
         "id": 7,
+        "is_active": false,
         "name": "https://allo.ua/ua/portativnye-dushi/",
-        "phone_number": null
+        "phone_number": null,
+        "type": "product"
+    },
+    {
+        "address": null,
+        "contact_info": null,
+        "email": null,
+        "id": 4,
+        "is_active": false,
+        "name": "https://decathlon.ua/karimaty",
+        "phone_number": null,
+        "type": "product"
     },
     {
         "address": null,
         "contact_info": null,
         "email": null,
         "id": 8,
+        "is_active": true,
         "name": "https://decathlon.ua/ruckzaki",
-        "phone_number": null
+        "phone_number": null,
+        "type": "product"
     },
     {
         "address": null,
         "contact_info": null,
         "email": null,
-        "id": 9,
-        "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/",
-        "phone_number": null
+        "id": 6,
+        "is_active": false,
+        "name": "https://epicentrk.ua/ua/shop/nalochnye-fonari/",
+        "phone_number": null,
+        "type": "product"
     },
     {
         "address": null,
         "contact_info": null,
         "email": null,
         "id": 10,
+        "is_active": true,
         "name": "https://epicentrk.ua/ua/shop/sredstva-ot-komarov/",
-        "phone_number": null
+        "phone_number": null,
+        "type": "product"
+    },
+    {
+        "address": "https://paket.kh.ua/product/kartonka15x10x5",
+        "contact_info": "https://paket.kh.ua/product/kartonka15x10x5",
+        "email": "",
+        "id": 2,
+        "is_active": true,
+        "name": "https://paket.kh.ua/product/ka",
+        "phone_number": "",
+        "type": "product"
+    },
+    {
+        "address": null,
+        "contact_info": null,
+        "email": null,
+        "id": 5,
+        "is_active": false,
+        "name": "https://rozetka.com.ua/ua/gas_burners/c80163/",
+        "phone_number": null,
+        "type": "product"
+    },
+    {
+        "address": null,
+        "contact_info": null,
+        "email": null,
+        "id": 9,
+        "is_active": true,
+        "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/",
+        "phone_number": null,
+        "type": "product"
+    },
+    {
+        "address": "https://paket.kh.ua/product/kartonka15x10x5",
+        "contact_info": "https://paket.kh.ua/product/kartonka15x10x5",
+        "email": "111",
+        "id": 2,
+        "is_active": false,
+        "name": "https://paket.kh.ua/product/ka",
+        "phone_number": "",
+        "type": "packaging"
+    },
+    {
+        "address": "https://paket.kh.ua/product/podarunkoviy-paket-decor",
+        "contact_info": "https://paket.kh.ua/product/podarunkoviy-paket-decor",
+        "email": "343",
+        "id": 3,
+        "is_active": false,
+        "name": "https://paket.kh.ua/product/po",
+        "phone_number": "",
+        "type": "packaging"
+    },
+    {
+        "address": "https://paket.kh.ua/product/zip10x15",
+        "contact_info": "https://paket.kh.ua/product/zip10x15",
+        "email": null,
+        "id": 4,
+        "is_active": true,
+        "name": "https://paket.kh.ua/product/zi",
+        "phone_number": null,
+        "type": "packaging"
+    },
+    {
+        "address": "https://prom.ua/ua/p2380296884-podarochnyj-meshochek-meshkoviny.html?adjust_campaign=share&adjust_adgroup=android&adjust_creative=product&utm_campaign=share_button&utm_medium=referral_link&utm_source=b2c_app_android",
+        "contact_info": "https://prom.ua/ua/p2380296884-podarochnyj-meshochek-meshkoviny.html?adjust_campaign=share&adjust_adgroup=android&adjust_creative=product&utm_campaign=share_button&utm_medium=referral_link&utm_source=b2c_app_android",
+        "email": null,
+        "id": 1,
+        "is_active": false,
+        "name": "https://prom.ua/ua/p2380296884",
+        "phone_number": null,
+        "type": "packaging"
     }
 ]
-
 fakeDate.packagingMaterialsFake = [
     {
-        "available_quantity": 10.0,
-        "available_stock_cost": 99.0,
+        "available_quantity": 10,
+        "available_stock_cost": 99,
         "created_date": "2025-01-15T00:00:00",
         "id": 1,
-        "name": "\u0422\u0443\u0440\u0438\u0441\u0442\u0438\u0447\u043d\u0456 \u043c\u0456\u0448\u0435\u0447\u043a\u0438 7\u04459 \u0441\u043c",
+        "name": "Туристичні мішечки 7х9 см",
         "packaging_material_supplier_id": 1,
         "purchase_price_per_unit": 9.9,
-        "reorder_level": 0.0,
+        "reorder_level": 0,
         "supplier": {
             "address": "https://prom.ua/ua/p2380296884-podarochnyj-meshochek-meshkoviny.html?adjust_campaign=share&adjust_adgroup=android&adjust_creative=product&utm_campaign=share_button&utm_medium=referral_link&utm_source=b2c_app_android",
             "contact_info": "https://prom.ua/ua/p2380296884-podarochnyj-meshochek-meshkoviny.html?adjust_campaign=share&adjust_adgroup=android&adjust_creative=product&utm_campaign=share_button&utm_medium=referral_link&utm_source=b2c_app_android",
             "email": null,
             "id": 1,
+            "is_active": false,
             "name": "https://prom.ua/ua/p2380296884",
             "phone_number": null
         },
-        "total_purchase_cost": 99.0,
-        "total_quantity": 10.0
+        "total_purchase_cost": 99,
+        "total_quantity": 10
     },
     {
-        "available_quantity": 20.0,
-        "available_stock_cost": 180.0,
+        "available_quantity": 94,
+        "available_stock_cost": 115.2,
+        "created_date": "2025-01-15T00:00:00",
+        "id": 5,
+        "name": "Зіп-пакет 7х10 см",
+        "packaging_material_supplier_id": 4,
+        "purchase_price_per_unit": 1.2,
+        "reorder_level": 0,
+        "supplier": {
+            "address": "https://paket.kh.ua/product/zip10x15",
+            "contact_info": "https://paket.kh.ua/product/zip10x15",
+            "email": null,
+            "id": 4,
+            "is_active": true,
+            "name": "https://paket.kh.ua/product/zi",
+            "phone_number": null
+        },
+        "total_purchase_cost": 120,
+        "total_quantity": 100
+    },
+    {
+        "available_quantity": 16,
+        "available_stock_cost": 162,
         "created_date": "2025-01-15T00:00:00",
         "id": 2,
-        "name": "\u041a\u0430\u0440\u0442\u043e\u043d\u043d\u0430 \u043a\u043e\u0440\u043e\u0431\u043a\u0430 15\u044510\u04455 \u0441\u043c",
+        "name": "Картонна коробка 15х10х5 см",
         "packaging_material_supplier_id": 2,
-        "purchase_price_per_unit": 9.0,
-        "reorder_level": 0.0,
+        "purchase_price_per_unit": 9,
+        "reorder_level": 0,
         "supplier": {
             "address": "https://paket.kh.ua/product/kartonka15x10x5",
             "contact_info": "https://paket.kh.ua/product/kartonka15x10x5",
-            "email": null,
+            "email": "111",
             "id": 2,
+            "is_active": false,
             "name": "https://paket.kh.ua/product/ka",
-            "phone_number": null
+            "phone_number": ""
         },
-        "total_purchase_cost": 180.0,
-        "total_quantity": 20.0
+        "total_purchase_cost": 180,
+        "total_quantity": 20
     },
     {
-        "available_quantity": 15.0,
-        "available_stock_cost": 135.0,
+        "available_quantity": 13,
+        "available_stock_cost": 117,
         "created_date": "2025-01-15T00:00:00",
         "id": 3,
-        "name": "\u041f\u043e\u0434\u0430\u0440\u0443\u043d\u043a\u043e\u0432\u0438\u0439 \u043f\u0430\u043a\u0435\u0442 \u0437 \u0432\u0456\u0437\u0435\u0440\u0443\u043d\u043a\u043e\u043c",
+        "name": "Подарунковий пакет з візерунком",
         "packaging_material_supplier_id": 3,
-        "purchase_price_per_unit": 9.0,
-        "reorder_level": 0.0,
+        "purchase_price_per_unit": 9,
+        "reorder_level": 0,
         "supplier": {
             "address": "https://paket.kh.ua/product/podarunkoviy-paket-decor",
             "contact_info": "https://paket.kh.ua/product/podarunkoviy-paket-decor",
-            "email": null,
+            "email": "343",
             "id": 3,
+            "is_active": false,
             "name": "https://paket.kh.ua/product/po",
-            "phone_number": null
+            "phone_number": ""
         },
-        "total_purchase_cost": 135.0,
-        "total_quantity": 15.0
+        "total_purchase_cost": 135,
+        "total_quantity": 15
     },
     {
-        "available_quantity": 100.0,
-        "available_stock_cost": 120.0,
-        "created_date": "2025-01-15T00:00:00",
-        "id": 5,
-        "name": "\u0417\u0456\u043f-\u043f\u0430\u043a\u0435\u0442 7\u044510 \u0441\u043c",
-        "packaging_material_supplier_id": 4,
-        "purchase_price_per_unit": 1.2,
-        "reorder_level": 0.0,
-        "supplier": {
-            "address": "https://paket.kh.ua/product/zip10x15",
-            "contact_info": "https://paket.kh.ua/product/zip10x15",
-            "email": null,
-            "id": 4,
-            "name": "https://paket.kh.ua/product/zi",
-            "phone_number": null
-        },
-        "total_purchase_cost": 120.0,
-        "total_quantity": 100.0
-    },
-    {
-        "available_quantity": 51.0,
-        "available_stock_cost": 102.0,
+        "available_quantity": 46,
+        "available_stock_cost": 92,
         "created_date": "2025-01-15T00:00:00",
         "id": 4,
-        "name": "\u0417\u0456\u043f-\u043f\u0430\u043a\u0435\u0442 10\u044515 \u0441\u043c",
+        "name": "Зіп-пакет 10х15 см",
         "packaging_material_supplier_id": 4,
-        "purchase_price_per_unit": 2.0,
-        "reorder_level": 0.0,
+        "purchase_price_per_unit": 2,
+        "reorder_level": 0,
         "supplier": {
             "address": "https://paket.kh.ua/product/zip10x15",
             "contact_info": "https://paket.kh.ua/product/zip10x15",
             "email": null,
             "id": 4,
+            "is_active": true,
             "name": "https://paket.kh.ua/product/zi",
             "phone_number": null
         },
-        "total_purchase_cost": 102.0,
-        "total_quantity": 51.0
+        "total_purchase_cost": 112,
+        "total_quantity": 56
     }
 ]
-
 fakeDate.purchaseHistoryFake = [
     {
         "categories": [],
@@ -695,39 +767,45 @@ fakeDate.investmentsFake = [
 
 // Імітація purchase, stock і sale історії для конкретного продукту
 fakeDate.getProductHistory = (productId) => ({
-    purchase_history: [
+    "purchase_history": [],
+    "sale_history": [
         {
-            id: productId,
-            product_id: productId,
-            purchase_date: "2024-09-15",
-            purchase_price_per_item: 200,
-            purchase_total_price: 1000,
-            quantity_purchase: 5,
-            supplier: {
-                contact_info: null,
-                id: productId,
-                name: "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/"
+            "customer": {
+                "address": "",
+                "email": "",
+                "id": 1,
+                "name": "test dfgdfgdfgd",
+                "phone_number": ""
             },
-            supplier_id: productId,
-        },
+            "customer_id": 1,
+            "id": 2,
+            "packaging_material_id": 2,
+            "packaging_quantity": 1,
+            "product_id": 4,
+            "profit": 271,
+            "quantity_sold": 1,
+            "sale_date": "2025-06-30 00:00:00",
+            "selling_price_per_item": 400,
+            "selling_total_price": 400,
+            "total_packaging_cost": 9
+        }
     ],
-    sale_history: [],
-    stock_history: [
+    "stock_history": [
         {
-            change_amount: 5,
-            change_type: "create",
-            id: productId,
-            product_id: productId,
-            timestamp: "2024-09-15 00:00:00",
-        },
-    ],
+            "change_amount": 8,
+            "change_type": "create",
+            "id": 4,
+            "product_id": 4,
+            "timestamp": "2024-09-15 00:00:00"
+        }
+    ]
 });
 
 fakeDate.getMaterialHistory = (materialId) => ({
     "packaging_material_id": materialId,
     "purchase_history": [
         {
-            "id": materialId,
+            "id": 4,
             "material_id": materialId,
             "purchase_date": "2025-01-15T00:00:00",
             "purchase_price_per_unit": 2,
@@ -738,7 +816,16 @@ fakeDate.getMaterialHistory = (materialId) => ({
         {
             "id": 6,
             "material_id": materialId,
-            "purchase_date": "2025-05-16T08:45:14.130048",
+            "purchase_date": "2025-06-30T09:16:36.824714",
+            "purchase_price_per_unit": 2,
+            "purchase_total_price": 10,
+            "quantity_purchased": 5,
+            "supplier_id": 4
+        },
+        {
+            "id": 7,
+            "material_id": materialId,
+            "purchase_date": "2025-06-30T09:18:37.437368",
             "purchase_price_per_unit": 2,
             "purchase_total_price": 2,
             "quantity_purchased": 1,
@@ -750,7 +837,7 @@ fakeDate.getMaterialHistory = (materialId) => ({
         {
             "change_amount": 50,
             "change_type": "purchase",
-            "id": materialId,
+            "id": 4,
             "material_id": materialId,
             "timestamp": "2025-01-15T00:00:00"
         }
@@ -759,55 +846,243 @@ fakeDate.getMaterialHistory = (materialId) => ({
 
 fakeDate.getAllGiftSets = [
     {
-        "description": "Тестовий набір",
+        "description": "tset 32423",
         "gift_selling_price": 2000,
-        "id": 2,
-        "name": "Тестовий набір",
+        "id": 4,
+        "name": "tset 32423",
         "packagings": [
             {
-                "name": "Подарунковий пакет з візерунком",
-                "packaging_id": 3,
-                "price": "9.00",
-                "quantity": 1,
+                "name": "Зіп-пакет 7х10 см",
+                "packaging_id": 5,
+                "price": "1.20",
+                "quantity": 2,
                 "type": "packaging"
             }
         ],
         "products": [
             {
-                "name": "rtyrtygggggggggggggg",
-                "price": "400.00",
-                "product_id": 13,
+                "name": "Туристичний рюкзак 60л",
+                "price": "1800.00",
+                "product_id": 8,
                 "quantity": 1,
                 "type": "product"
             },
             {
-                "name": "test 2 ryrtyrtyrty",
-                "price": "200.00",
-                "product_id": 12,
+                "name": "Компактна газова плита",
+                "price": "900.00",
+                "product_id": 5,
                 "quantity": 1,
-                "type": "product"
-            },
-            {
-                "name": "Аптечка туристична",
-                "price": "200.00",
-                "product_id": 9,
-                "quantity": 4,
                 "type": "product"
             }
         ],
-        "total_price": 1409
+        "total_price": 2702.4
     }
 ]
-
 fakeDate.getAllCustomers = [
     {
         "address": "",
         "email": "",
         "id": 1,
-        "name": "test",
+        "name": "test dfgdfgdfgd",
         "phone_number": ""
     }
 ]
 
+fakeDate.getAllSalesHistory = [
+    {
+        "categories": [],
+        "cost_price": "200.00",
+        "customer": {
+            "id": 1,
+            "name": "test dfgdfgdfgd"
+        },
+        "packaging_details": [],
+        "product_name": "Аптечка туристична",
+        "profit": "300.00",
+        "quantity_sold": 1,
+        "sale_date": "2025-06-30",
+        "sale_history_id": "cf3f9e38-a86f-4ee8-9551-7415aa1365d6",
+        "supplier": {
+            "address": null,
+            "contact_info": null,
+            "email": null,
+            "id": 9,
+            "is_active": true,
+            "name": "https://rozetka.com.ua/ua/tourist_first_aid_kits/c80159/",
+            "phone_number": null
+        },
+        "total_price": "500.00",
+        "type": "product",
+        "unit_price": "500.00"
+    },
+    {
+        "categories": [],
+        "cost_price": "129.00",
+        "customer": {
+            "id": 1,
+            "name": "test dfgdfgdfgd"
+        },
+        "packaging_details": [
+            {
+                "package_id": 2,
+                "packaging_name": "Картонна коробка 15х10х5 см",
+                "quantity_sold": 1,
+                "supplier": {
+                    "id": 2,
+                    "name": "https://paket.kh.ua/product/ka"
+                },
+                "total_price": "9.00",
+                "unit_price": "9.00"
+            }
+        ],
+        "product_name": "Каремат пінка",
+        "profit": "271.00",
+        "quantity_sold": 1,
+        "sale_date": "2025-06-30",
+        "sale_history_id": "d930d3a9-cde2-4a0d-88c8-70212435312c",
+        "supplier": {
+            "address": null,
+            "contact_info": null,
+            "email": null,
+            "id": 4,
+            "is_active": false,
+            "name": "https://decathlon.ua/karimaty",
+            "phone_number": null
+        },
+        "total_price": "400.00",
+        "type": "product_with_packaging",
+        "unit_price": "400.00"
+    },
+    {
+        "categories": [],
+        "cost_price": "459.00",
+        "customer": {
+            "id": 1,
+            "name": "test dfgdfgdfgd"
+        },
+        "packaging_details": [
+            {
+                "package_id": 3,
+                "packaging_name": "Подарунковий пакет з візерунком",
+                "quantity_sold": 1,
+                "supplier": {
+                    "id": 3,
+                    "name": "https://paket.kh.ua/product/po"
+                },
+                "total_price": "9.00",
+                "unit_price": "9.00"
+            }
+        ],
+        "product_name": "Портативний душ",
+        "profit": "-59.00",
+        "quantity_sold": 1,
+        "sale_date": "2025-06-30",
+        "sale_history_id": "cc2ea6c9-a5f1-4465-9ce4-63a683fc596a",
+        "supplier": {
+            "address": null,
+            "contact_info": null,
+            "email": null,
+            "id": 7,
+            "is_active": false,
+            "name": "https://allo.ua/ua/portativnye-dushi/",
+            "phone_number": null
+        },
+        "total_price": "400.00",
+        "type": "product_with_packaging",
+        "unit_price": "400.00"
+    },
+    {
+        "cost_price": "1809.00",
+        "customer": {
+            "id": 1,
+            "name": "test dfgdfgdfgd"
+        },
+        "gift_set_id": 2,
+        "id": 1,
+        "packagings": [
+            {
+                "packaging_id": 2,
+                "packaging_name": "Картонна коробка 15х10х5 см",
+                "quantity": 1,
+                "supplier": {
+                    "id": 2,
+                    "name": "https://paket.kh.ua/product/ka"
+                },
+                "total_price": "9.00",
+                "unit_price": "9.00"
+            }
+        ],
+        "product_name": "test 23434",
+        "products": [
+            {
+                "name": "Туристичний рюкзак 60л",
+                "product_id": 8,
+                "quantity": 1,
+                "supplier": {
+                    "id": 8,
+                    "name": "https://decathlon.ua/ruckzaki"
+                },
+                "total_price": "1800.00",
+                "unit_price": "1800.00"
+            }
+        ],
+        "profit": "191.00",
+        "quantity": 1,
+        "sale_date": "2025-06-30",
+        "sale_history_id": "6b8064cb-7d5f-4bf9-b207-680e5ac29c80",
+        "total_price": "2000.0",
+        "type": "gift_set"
+    },
+    {
+        "cost_price": "120.00",
+        "customer": {
+            "id": 1,
+            "name": "test dfgdfgdfgd"
+        },
+        "gift_set_id": 3,
+        "id": 2,
+        "packagings": [],
+        "product_name": "test deactive",
+        "products": [
+            {
+                "name": "Каремат пінка",
+                "product_id": 4,
+                "quantity": 1,
+                "supplier": {
+                    "id": 4,
+                    "name": "https://decathlon.ua/karimaty"
+                },
+                "total_price": "120.00",
+                "unit_price": "120.00"
+            }
+        ],
+        "profit": "1880.00",
+        "quantity": 1,
+        "sale_date": "2025-06-30",
+        "sale_history_id": "42cbe170-3d1e-4ce5-93e0-553b71661c12",
+        "total_price": "2000.0",
+        "type": "gift_set"
+    }
+]
+
+
+fakeDate.getSuppliersHistory = (supplierlId) => ({
+    "products": [
+        {
+            "id": supplierlId,
+            "name": "Намет 2-місний"
+        }
+    ],
+    "purchase_history": [
+        {
+            "product": "Намет 2-місний",
+            "purchase_date": "Sun, 15 Sep 2024 00:00:00 GMT",
+            "purchase_price_per_item": "1600.00",
+            "purchase_total_price": "3200.00",
+            "quantity_purchase": 2
+        }
+    ],
+    "supplier": "https://allo.ua/ua/palatki/"
+})
 
 export default fakeDate
