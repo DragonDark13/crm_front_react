@@ -12,12 +12,13 @@ import CustomDialog from "../../CustomDialog/CustomDialog";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 import CancelButton from "../../../Buttons/CancelButton";
 import AddButton from "../../../Buttons/AddButton";
-import {IMaterialSupplier, PurchaseMaterialDialogProps} from "../../../../utils/types";
+import {IMaterialSupplier, ISupplierFull, PurchaseMaterialDialogProps} from "../../../../utils/types";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
 import QuantityField from "../../../FormComponents/QuantityField";
 import PriceField from "../../../FormComponents/PriceField";
 import {parseDecimalInput} from "../../../../utils/_validation";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
+import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
 
 
 const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
@@ -35,7 +36,8 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
     const [pricePerUnit, setPricePerUnit] = useState<number>(defaultPricePerUnit || 0);
     const [totalPurchaseCost, setTotalPurchaseCost] = useState<number>(quantity * (defaultPricePerUnit || 0)); // Загальна вартість закупівлі
     const [addSupplierOpen, setAddSupplierOpen] = useState(false);
-    const [suppliers, setSuppliers] = useState<any[]>([]);
+    const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
+    const {showSnackbarMessage} = useSnackbarMessage();
 
 
     // Функція для розрахунку загальної суми закупівлі
@@ -115,7 +117,8 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
             };
 
             await axiosInstance.post('/purchase_current_packaging', purchaseData);
-            alert('Закупівля успішно виконана');
+            showSnackbarMessage('Закупівля успішно виконана', 'success');
+
             onPurchaseSuccess();
             onClose();
         } catch (error) {
@@ -181,7 +184,9 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                 </DialogContent>
                 <DialogActions>
                     <CancelButton onClick={onClose}/>
-                    <Button disabled={!isAuthenticated || supplierId && !suppliers.find(s => s.id === supplierId)?.is_active} onClick={handlePurchase} color="primary" variant="contained">
+                    <Button
+                        disabled={!isAuthenticated || supplierId && !suppliers.find(s => s.id === supplierId)?.is_active}
+                        onClick={handlePurchase} color="primary" variant="contained">
                         Закупити
                     </Button>
                 </DialogActions>

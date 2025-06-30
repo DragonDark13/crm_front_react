@@ -32,6 +32,8 @@ import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import CancelButton from "../../Buttons/CancelButton";
 import SalesHistoryInfoModal from "./SalesHistoryInfoModal";
 import RenderHeaderCell from "../../_elements/RenderHeaderCell";
+import clsx from "clsx";
+import {ISupplierFull} from "../../../utils/types";
 
 
 // Інтерфейс для постачальника
@@ -73,7 +75,7 @@ export interface SaleItemInfo {
     sale_history_id: number;  // Ідентифікатор історії продажу
     product_name: string;  // Назва продукту чи набору
     categories: { id: number; name: string }[];  // Категорії товарів
-    supplier: Supplier;  // Постачальник
+    supplier: ISupplierFull;  // Постачальник
     customer: { id: number; name: string };  // Інформація про покупця
     quantity_sold: number;  // Кількість проданого
     unit_price: string;  // Ціна за одиницю
@@ -257,9 +259,21 @@ const SalesHistoryTable: React.FC = () => {
                                     <TableRow>
                                         <TableCell size={"small"}>{getSaleIcon(sale.type)}</TableCell>
                                         <TableCell
-                                            size={"small"}>{sale.type === "product_with_packaging" && sale.packaging_details.length > 0
+                                            size={"small"}>
+                                             <Typography
+                                                className={clsx("supplier_name")}
+                                                title={sale.type === "product_with_packaging" && sale.packaging_details.length > 0
                                             ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}`
-                                            : sale.product_name}</TableCell>
+                                            : sale.product_name}
+                                                sx={{
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap'
+                                                }}>
+                                            {sale.type === "product_with_packaging" && sale.packaging_details.length > 0
+                                            ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}`
+                                            : sale.product_name}
+                                             </Typography>
+                                        </TableCell>
                                         <TableCell>{sale.customer.name}</TableCell>
                                         <TableCell size={"small"}>{sale.total_price}</TableCell>
                                         <TableCell size={"small"}>{sale.cost_price}</TableCell>

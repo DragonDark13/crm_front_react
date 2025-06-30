@@ -35,7 +35,7 @@ import CircleBadge from "../../_elements/CircleBadge";
 import MaterialHistoryDialog from "../../dialogs/packagingModal/MaterialHistoryDialog/MaterialHistoryDialog";
 
 const PackagingMaterialList: React.FC = () => {
-        const {packagingMaterials} = usePackaging()
+        const {packagingMaterials, fetchPackagingOptions} = usePackaging()
         const {isAuthenticated} = useAuth();
         const [searchTerm, setSearchTerm] = useState<string>('');
         const [sortBy, setSortBy] = useState<string>('name');
@@ -111,6 +111,7 @@ const PackagingMaterialList: React.FC = () => {
 
         const handleUpdateSuccess = () => {
             // Логіка оновлення після успішного позначення пакування як використаного
+            fetchPackagingOptions()
             console.log("Update was successful!");
             handleCloseDialogUpdate(); // Закриваємо діалог після успіху
         };
@@ -363,7 +364,7 @@ const PackagingMaterialList: React.FC = () => {
 
 
                                                 <CircleBadge title="За наявне пакування"
-                                                             color={"secondary.dark"}>  {material.total_purchase_cost}</CircleBadge>
+                                                             color={"secondary.dark"}>  {material.available_stock_cost}</CircleBadge>
 
 
                                             </Box>
@@ -384,7 +385,7 @@ const PackagingMaterialList: React.FC = () => {
                                                 </Tooltip>
                                             </Grid>
                                             <Grid item>
-                                                <Tooltip title="Використано" placement="top">
+                                                <Tooltip title="Помвтити як використане" placement="top">
                                                     <IconButton color="primary"
                                                                 onClick={() => handleOpenDialogUpdate(material)}>
                                                         <Update fontSize={"small"}/>

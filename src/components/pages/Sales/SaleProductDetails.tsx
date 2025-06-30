@@ -1,46 +1,52 @@
 import React from "react";
-import {TableRow, TableCell, Collapse, Table, TableHead, TableBody} from "@mui/material";
+import {TableRow, TableCell, Collapse, Table, TableHead, TableBody, Typography} from "@mui/material";
 import RenderHeaderCell from "../../_elements/RenderHeaderCell";
 
-const SaleProductDetails = ({sale}) => (
-    <TableRow>
-        <TableCell colSpan={8}>
-            <Collapse in={true} timeout="auto" unmountOnExit>
-                <Table size="small">
-                    <TableHead>
-                        <TableRow>
-                            <RenderHeaderCell>Тип</RenderHeaderCell>
-                            <RenderHeaderCell>Назва</RenderHeaderCell>
-                            <RenderHeaderCell>Постачальник</RenderHeaderCell>
-                            <RenderHeaderCell>Ціна за од.</RenderHeaderCell>
-                            <RenderHeaderCell>Кількість</RenderHeaderCell>
-                            <RenderHeaderCell>Сума</RenderHeaderCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>Товар</TableCell>
-                            <TableCell>{sale.product_name}</TableCell>
-                            <TableCell>{sale.supplier?.name || 'Невідомо'}</TableCell>
-                            <TableCell>{sale.unit_price}</TableCell>
-                            <TableCell>{sale.quantity_sold}</TableCell>
-                            <TableCell>{sale.total_price}</TableCell>
-                        </TableRow>
-                        {sale.packaging_details?.map(packaging => (
-                            <TableRow key={packaging.package_id}>
-                                <TableCell>Пакування</TableCell>
-                                <TableCell>{packaging.packaging_name}</TableCell>
-                                <TableCell>{packaging.supplier?.name || 'Невідомо'}</TableCell>
-                                <TableCell>{packaging.unit_price}</TableCell>
-                                <TableCell>{packaging.quantity_sold}</TableCell>
-                                <TableCell>{packaging.total_price}</TableCell>
+const SaleProductDetails = ({sale}) => {
+    console.log("sale", sale);
+    return (<TableRow>
+            <TableCell colSpan={8}>
+                <Collapse in={true} timeout="auto" unmountOnExit>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <RenderHeaderCell>Тип</RenderHeaderCell>
+                                <RenderHeaderCell>Назва</RenderHeaderCell>
+                                <RenderHeaderCell>Постачальник</RenderHeaderCell>
+                                <RenderHeaderCell>Ціна за од.</RenderHeaderCell>
+                                <RenderHeaderCell>Кількість</RenderHeaderCell>
+                                <RenderHeaderCell>Сума</RenderHeaderCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </Collapse>
-        </TableCell>
-    </TableRow>
-);
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Товар</TableCell>
+                                <TableCell>{sale.product_name}</TableCell>
+                                <TableCell color={sale.supplier?.is_active || 'textDisabled'}>
+                                    <Typography
+                                        color={sale.supplier?.is_active === false ? 'textDisabled' : 'inherit'}> {sale.supplier?.name || 'Невідомо'}
+                                    </Typography>
+                                </TableCell>
+                                <TableCell>{sale.unit_price}</TableCell>
+                                <TableCell>{sale.quantity_sold}</TableCell>
+                                <TableCell>{sale.total_price}</TableCell>
+                            </TableRow>
+                            {sale.packaging_details?.map(packaging => (
+                                <TableRow key={packaging.package_id}>
+                                    <TableCell>Пакування</TableCell>
+                                    <TableCell>{packaging.packaging_name}</TableCell>
+                                    <TableCell>{packaging.supplier?.name || 'Невідомо'}</TableCell>
+                                    <TableCell>{packaging.unit_price}</TableCell>
+                                    <TableCell>{packaging.quantity_sold}</TableCell>
+                                    <TableCell>{packaging.total_price}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Collapse>
+            </TableCell>
+        </TableRow>
+    )
+};
 
 export default SaleProductDetails;

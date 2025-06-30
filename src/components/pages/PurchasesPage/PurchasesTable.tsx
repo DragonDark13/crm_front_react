@@ -35,7 +35,7 @@ import {AttachMoney, Luggage, ShoppingBag} from "@mui/icons-material";
 import PurchaseHistoryFilter from "./PurchaseHistoryFilter";
 import PurchasesTableTypeProductCell from "./PurchasesTableTypeProductCell";   // Інше
 
-interface IPurchasesTable {
+export interface IPurchasesTable {
     categories: [number];
     type: string,
     purchase_id: number;
@@ -48,6 +48,7 @@ interface IPurchasesTable {
     total_price: number;
     date: string;
     product_categories: [number]
+    supplier_is_active:boolean
 }
 
 const PurchasesTable: React.FC = () => {
@@ -230,7 +231,7 @@ const PurchasesTable: React.FC = () => {
         {key: 'date', label: 'Дата'}
     ];
 
-    console.log('paginatedData',paginatedData);
+    console.log('paginatedData', paginatedData);
 
     return (
         <div>
@@ -318,6 +319,7 @@ const PurchasesTable: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Typography
+                                        color={row.supplier_is_active || 'textDisabled'}
                                         className={clsx("supplier_name")}
                                         title={row.supplier_name}
                                         sx={{
