@@ -10,7 +10,8 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import { ICategory } from "../../../utils/types";
+import {ICategory} from "../../../utils/types";
+import {IPurchasesTable} from "./PurchasesTable";
 
 interface PurchaseHistoryFilterProps {
     filter: string;
@@ -22,7 +23,7 @@ interface PurchaseHistoryFilterProps {
     categories: ICategory[];
     supplierFilter: string;
     handleSupplierFilterChange: (e: any) => void;
-    purchaseHistory: { supplier_name: string }[];
+    purchaseHistory: IPurchasesTable[];
     typeFilter: string;
     handleTypeFilterChange: (e: any) => void;
     priceBounds: number[];
@@ -31,22 +32,22 @@ interface PurchaseHistoryFilterProps {
 }
 
 const PurchaseHistoryFilter: React.FC<PurchaseHistoryFilterProps> = ({
-    filter,
-    handleFilterChange,
-    dateRangeFilter,
-    handleDateRangeFilterChange,
-    categoryFilter,
-    handleCategoryFilterChange,
-    categories,
-    supplierFilter,
-    handleSupplierFilterChange,
-    purchaseHistory,
-    typeFilter,
-    handleTypeFilterChange,
-    priceBounds,
-    priceRangeFilterSlider,
-    setPriceRangeFilterSlider
-}) => {
+                                                                         filter,
+                                                                         handleFilterChange,
+                                                                         dateRangeFilter,
+                                                                         handleDateRangeFilterChange,
+                                                                         categoryFilter,
+                                                                         handleCategoryFilterChange,
+                                                                         categories,
+                                                                         supplierFilter,
+                                                                         handleSupplierFilterChange,
+                                                                         purchaseHistory,
+                                                                         typeFilter,
+                                                                         handleTypeFilterChange,
+                                                                         priceBounds,
+                                                                         priceRangeFilterSlider,
+                                                                         setPriceRangeFilterSlider
+                                                                     }) => {
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} sm={6} md={5}>
@@ -71,7 +72,7 @@ const PurchaseHistoryFilter: React.FC<PurchaseHistoryFilterProps> = ({
                     fullWidth
                     value={dateRangeFilter.start}
                     onChange={(e) => handleDateRangeFilterChange('start', e.target.value)}
-                    InputLabelProps={{ shrink: true }}
+                    InputLabelProps={{shrink: true}}
                 />
             </Grid>
 
@@ -84,8 +85,8 @@ const PurchaseHistoryFilter: React.FC<PurchaseHistoryFilterProps> = ({
                     fullWidth
                     value={dateRangeFilter.end}
                     onChange={(e) => handleDateRangeFilterChange('end', e.target.value)}
-                    inputProps={{ min: dateRangeFilter.start || undefined }}
-                    InputLabelProps={{ shrink: true }}
+                    inputProps={{min: dateRangeFilter.start || undefined}}
+                    InputLabelProps={{shrink: true}}
                 />
             </Grid>
 
@@ -106,11 +107,21 @@ const PurchaseHistoryFilter: React.FC<PurchaseHistoryFilterProps> = ({
                     <InputLabel>Постачальник</InputLabel>
                     <Select label="Постачальник" value={supplierFilter} onChange={handleSupplierFilterChange}>
                         <MenuItem value="">Всі постачальники</MenuItem>
-                        {Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))).map(
-                            (supplier, index) => (
-                                <MenuItem key={supplier + index} value={supplier}>{supplier}</MenuItem>
-                            )
-                        )}
+                        {Array.from(new Set(purchaseHistory.map((item) =>
+                            JSON.stringify({
+                                name: item.supplier_name,
+                                is_active: item.supplier_is_active
+                            })
+                        ))).map((str, index) => {
+                            const supplier = JSON.parse(str);
+                            return (
+                                <MenuItem key={supplier.name + index} value={supplier.name}>
+                                    <Typography color={supplier.is_active || 'textDisabled'}>
+                                        {supplier.name} {supplier.is_active ? '' : '(неактивний)'}
+                                    </Typography>
+                                </MenuItem>
+                            );
+                        })}
                     </Select>
                 </FormControl>
             </Grid>
@@ -138,8 +149,8 @@ const PurchaseHistoryFilter: React.FC<PurchaseHistoryFilterProps> = ({
                             min={priceBounds[0]}
                             max={priceBounds[1]}
                             marks={[
-                                { value: priceBounds[0], label: `${priceBounds[0]}₴` },
-                                { value: priceBounds[1], label: `${priceBounds[1]}₴` }
+                                {value: priceBounds[0], label: `${priceBounds[0]}₴`},
+                                {value: priceBounds[1], label: `${priceBounds[1]}₴`}
                             ]}
                         />
                     )}

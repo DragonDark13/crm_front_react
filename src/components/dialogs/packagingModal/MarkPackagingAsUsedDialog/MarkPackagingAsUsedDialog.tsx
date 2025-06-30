@@ -5,6 +5,7 @@ import CustomDialog from "../../CustomDialog/CustomDialog";
 import CancelButton from "../../../Buttons/CancelButton";
 import QuantityField from "../../../FormComponents/QuantityField";
 import {handleDecrementGlobal, handleIncrementGlobal, handleQuantityChangeGlobal} from "../../../../utils/function";
+import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
 
 interface MarkPackagingAsUsedDialogProps {
     open: boolean;
@@ -25,6 +26,8 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
                                                                                  onUpdateSuccess,
                                                                                  isAuthenticated = false
                                                                              }) => {
+    const {showSnackbarMessage} = useSnackbarMessage();
+
     const [quantityUsed, setQuantityUsed] = useState<number>(0);
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -44,7 +47,8 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
                 quantity_used: quantityUsed,
             });
 
-            alert('Пакування успішно позначено як використане');
+            showSnackbarMessage('Пакування успішно позначено як використане', 'success');
+
             onUpdateSuccess();
             onClose();
         } catch (error: any) {
