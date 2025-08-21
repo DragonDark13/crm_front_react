@@ -109,6 +109,11 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell size={"small"}>
+
+                                Артікул
+
+                            </TableCell>
+                            <TableCell size={"small"}>
                                 <TableSortLabel
                                     active={orderBy === 'supplier'}
                                     direction={orderBy === 'supplier' ? order : 'asc'}
@@ -183,108 +188,114 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                     </TableHead>
                     <TableBody>
                         {filteredAndSearchedProducts.length >= 0 &&
-                        sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
-                            .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
-                            .map((product: IProduct, index) => {
-                                const lowQuantity = product.total_quantity < 5; // умова для низької кількості
-                                return (
-                                    <TableRow key={`${product.id}${index}${product.purchase_total_price}`}
-                                              ref={el => {
-                                                  if (ref && typeof ref === 'function') {
-                                                      ref(el, index + currentPage * itemsPerPage);
-                                                  } else if (ref && ref.current) {
-                                                      ref.current[index + currentPage * itemsPerPage] = el;
-                                                  }
-                                              }}
-                                              className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
-                                        <TableCell sx={{display: "none"}}>
-                                            {product.id}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography variant={"subtitle2"}>
-                                                {product.name}
-                                            </Typography>
+                            sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
+                                .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
+                                .map((product: IProduct, index) => {
+                                    const lowQuantity = product.total_quantity < 5; // умова для низької кількості
+                                    return (
+                                        <TableRow key={`${product.id}${index}${product.purchase_total_price}`}
+                                                  ref={el => {
+                                                      if (ref && typeof ref === 'function') {
+                                                          ref(el, index + currentPage * itemsPerPage);
+                                                      } else if (ref && ref.current) {
+                                                          ref.current[index + currentPage * itemsPerPage] = el;
+                                                      }
+                                                  }}
+                                                  className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
+                                            <TableCell sx={{display: "none"}}>
+                                                {product.id}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant={"subtitle2"}>
+                                                    {product.name}
+                                                </Typography>
 
-                                        </TableCell>
-                                        <TableCell>
-                                            <Typography
-                                                variant={"subtitle2"}
-                                                className={clsx("supplier_name")}
-                                                title={product.supplier?.name || 'N/A'}
-                                                color={product.supplier?.is_active ? 'textDisabled' : 'inherit'}
-                                                sx={{
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap'
-                                                }}>
-                                                {product.supplier?.name || 'N/A'}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div>
-                                                <Box display="flex" alignItems="center" gap={2}>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography variant={"subtitle2"}>
+                                                    {product.article}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Typography
+                                                    variant={"subtitle2"}
+                                                    className={clsx("supplier_name")}
+                                                    title={product.supplier?.name || 'N/A'}
+                                                    color={product.supplier?.is_active ? 'textDisabled' : 'inherit'}
+                                                    sx={{
+                                                        textOverflow: 'ellipsis',
+                                                        whiteSpace: 'nowrap'
+                                                    }}>
+                                                    {product.supplier?.name || 'N/A'}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div>
+                                                    <Box display="flex" alignItems="center" gap={2}>
 
-                                                    <CircleBadge title="Загальна кількість товару">
-                                                        {product.total_quantity}
-                                                    </CircleBadge>
+                                                        <CircleBadge title="Загальна кількість товару">
+                                                            {product.total_quantity}
+                                                        </CircleBadge>
 
 
-                                                    <CircleBadge color={lowQuantity ? "error.main" : "secondary.dark"}
-                                                                 title="Кількість товару, яка є в наявності">
-                                                        {product.available_quantity}
-                                                    </CircleBadge>
+                                                        <CircleBadge
+                                                            color={lowQuantity ? "error.main" : "secondary.dark"}
+                                                            title="Кількість товару, яка є в наявності">
+                                                            {product.available_quantity}
+                                                        </CircleBadge>
 
-                                                    <CircleBadge color={'primary.main'}
-                                                                 title="Кількість проданого товару">
-                                                        {product.sold_quantity}
-                                                    </CircleBadge>
+                                                        <CircleBadge color={'primary.main'}
+                                                                     title="Кількість проданого товару">
+                                                            {product.sold_quantity}
+                                                        </CircleBadge>
 
-                                                </Box>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
+                                                    </Box>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
 
-                                            <Typography color={"secondary"} variant={"subtitle2"}>
-                                                {product.purchase_price_per_item.toFixed(2)}
-                                            </Typography>
+                                                <Typography color={"secondary"} variant={"subtitle2"}>
+                                                    {product.purchase_price_per_item.toFixed(2)}
+                                                </Typography>
 
-                                            <Typography color={"primary"} variant={"subtitle2"}>
-                                                {product.selling_price_per_item.toFixed(2)}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell>
+                                                <Typography color={"primary"} variant={"subtitle2"}>
+                                                    {product.selling_price_per_item.toFixed(2)}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell>
 
-                                            <Typography color={"secondary"} variant={"subtitle2"}>
-                                                {(product.purchase_total_price).toFixed(2)}
-                                            </Typography>
+                                                <Typography color={"secondary"} variant={"subtitle2"}>
+                                                    {(product.purchase_total_price).toFixed(2)}
+                                                </Typography>
 
-                                            <Typography color={"primary"} variant={"subtitle2"}>
-                                                {(product.sold_quantity * product.selling_price_per_item).toFixed(2)}
-                                            </Typography>
-                                        </TableCell>
+                                                <Typography color={"primary"} variant={"subtitle2"}>
+                                                    {(product.sold_quantity * product.selling_price_per_item).toFixed(2)}
+                                                </Typography>
+                                            </TableCell>
 
-                                        <TableCell align={"right"}>
-                                            <Tooltip title="Дії">
-                                                <IconButton id="demo-positioned-button"
-                                                            onClick={(event => handleClick(event, product))}>
-                                                    <MoreVertIcon/>
-                                                </IconButton>
-                                            </Tooltip>
-                                            <EditProductMenu
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                handleClose={handleClose}
-                                                selectedProduct={selectedProduct}
-                                                handleOpenEdit={handleOpenEdit}
-                                                handlePurchase={handlePurchase}
-                                                handleOpenSale={handleOpenSale}
-                                                handleOpenHistoryModal={handleOpenHistoryModal}
-                                                handleDelete={handleDelete}
-                                                isAuthenticated={isAuthenticated}
-                                                handleOpenProductInfoModal={handleOpenProductInfoModal}
-                                            /> </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                            <TableCell align={"right"}>
+                                                <Tooltip title="Дії">
+                                                    <IconButton id="demo-positioned-button"
+                                                                onClick={(event => handleClick(event, product))}>
+                                                        <MoreVertIcon/>
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <EditProductMenu
+                                                    anchorEl={anchorEl}
+                                                    open={open}
+                                                    handleClose={handleClose}
+                                                    selectedProduct={selectedProduct}
+                                                    handleOpenEdit={handleOpenEdit}
+                                                    handlePurchase={handlePurchase}
+                                                    handleOpenSale={handleOpenSale}
+                                                    handleOpenHistoryModal={handleOpenHistoryModal}
+                                                    handleDelete={handleDelete}
+                                                    isAuthenticated={isAuthenticated}
+                                                    handleOpenProductInfoModal={handleOpenProductInfoModal}
+                                                /> </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
                     </TableBody>
                     <TableFooter>
                         <TableRow>

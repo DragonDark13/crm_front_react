@@ -11,6 +11,7 @@ export interface IBaseProduct {
     selling_total_price: number;
     selling_price_per_item: number;
     selling_quantity: number
+    article: string
 }
 
 export interface IProduct extends IBaseProduct {
@@ -149,7 +150,7 @@ export interface ISupplierFull {
     phone_number: string;   // Номер телефону, може бути відсутнім
     address: string;        // Адреса, може бути відсутня
     is_active: boolean;
-    type:ISupplierType
+    type: ISupplierType
 }
 
 export interface ISupplierForSuppPage extends ISupplierFull {
