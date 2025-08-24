@@ -25,7 +25,10 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({open, onClose, produ
             <DialogContent dividers>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <Typography variant="h6">{product.name}</Typography>
+                        <Typography variant="h6">Назва: {product.name}</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography >Артікул: {product.article}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant={"h6"}>Кількість: </Typography>

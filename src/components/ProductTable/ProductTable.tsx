@@ -109,9 +109,13 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                 </TableSortLabel>
                             </TableCell>
                             <TableCell size={"small"}>
-
-                                Артікул
-
+                                <TableSortLabel
+                                    active={orderBy === 'article'}
+                                    direction={orderBy === 'article' ? order : 'asc'}
+                                    onClick={() => handleSort('article')}
+                                >
+                                    Артікул
+                                </TableSortLabel>
                             </TableCell>
                             <TableCell size={"small"}>
                                 <TableSortLabel
@@ -202,21 +206,21 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                       }
                                                   }}
                                                   className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
-                                            <TableCell sx={{display: "none"}}>
+                                            <TableCell size={"small"} sx={{display: "none"}}>
                                                 {product.id}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell size={"small"}>
                                                 <Typography variant={"subtitle2"}>
                                                     {product.name}
                                                 </Typography>
 
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell size={"small"}>
                                                 <Typography variant={"subtitle2"}>
                                                     {product.article}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell size={"small"}>
                                                 <Typography
                                                     variant={"subtitle2"}
                                                     className={clsx("supplier_name")}
@@ -229,7 +233,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                     {product.supplier?.name || 'N/A'}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell size={"small"}>
                                                 <div>
                                                     <Box display="flex" alignItems="center" gap={2}>
 
@@ -252,7 +256,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                     </Box>
                                                 </div>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell size={"small"}>
 
                                                 <Typography color={"secondary"} variant={"subtitle2"}>
                                                     {product.purchase_price_per_item.toFixed(2)}
@@ -262,7 +266,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                     {product.selling_price_per_item.toFixed(2)}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell size={"small"}>
 
                                                 <Typography color={"secondary"} variant={"subtitle2"}>
                                                     {(product.purchase_total_price).toFixed(2)}
@@ -273,7 +277,7 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                                 </Typography>
                                             </TableCell>
 
-                                            <TableCell align={"right"}>
+                                            <TableCell size={"small"} align={"right"}>
                                                 <Tooltip title="Дії">
                                                     <IconButton id="demo-positioned-button"
                                                                 onClick={(event => handleClick(event, product))}>
