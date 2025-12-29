@@ -1,7 +1,7 @@
 import {
     Button,
     DialogContent,
-    DialogActions, Grid, TextField, Typography, Box,
+    DialogActions, Grid,  Typography,
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import React, {useEffect, useState} from "react";
@@ -12,7 +12,7 @@ import QuantityField from "../../../FormComponents/QuantityField";
 import CategoriesSelect from "../../../FormComponents/CategoriesSelect";
 import {roundToDecimalPlaces} from "../../../../utils/function";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
-import {ICategory, INewProduct, INewSupplier, modalNames, ModalNames} from "../../../../utils/types";
+import { INewProduct, modalNames} from "../../../../utils/types";
 import {useCategories} from "../../../Provider/CategoryContext";
 import {useSuppliers} from "../../../Provider/SupplierContext";
 import AddSupplierModal from "../../AddSupplierModal/AddSupplierModal";
@@ -249,7 +249,9 @@ const AddProductModal = ({
                                     }
                                 }}
 
-                                error={errors.available_quantity}
+                                error={errors.available_quantity!==''}
+                                helperText={errors.available_quantity}
+
                             />
 
                         </Grid>

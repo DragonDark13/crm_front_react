@@ -27,7 +27,7 @@ const SupplierSelect: FC<ISupplierSelectProps> = ({
             label="Постачальник"
         >
             {suppliers.map((supplier) => (
-                <MenuItem disabled={!supplier.is_active} title={supplier.name} key={supplier.id} value={supplier.id}>
+                <MenuItem disabled={!supplier.is_active} title={supplier.name} key={supplier.id+supplier.name} value={supplier.id}>
                     <Typography color={!supplier.is_active && (supplier.id ===value) ? 'textDisabled' : 'inherit'}> {!supplier.is_active ? "не" +
                         " активний" +
                         " " : null} {supplier.name}</Typography>

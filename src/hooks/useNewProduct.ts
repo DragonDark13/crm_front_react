@@ -4,9 +4,11 @@ import {INewProduct} from "../utils/types";
 import {addProduct} from "../api/_product";
 import {useProducts} from "../components/Provider/ProductContext";
 import {useSnackbarMessage} from "../components/Provider/SnackbarMessageContext";
+import {createEmptyProduct} from "../utils/function.ts";
 
 export const useNewProduct = () => {
     const [newProduct, setNewProduct] = useState<INewProduct>({
+        article: "",
         name: '',
         supplier_id: '',
         total_quantity: 0,
@@ -26,20 +28,7 @@ export const useNewProduct = () => {
     const {showSnackbarMessage} = useSnackbarMessage();
 
     const resetNewProduct = () => {
-        setNewProduct({
-            name: '',
-            supplier_id: '',
-            total_quantity: 0,
-            available_quantity: 0,
-            sold_quantity: 0,
-            purchase_total_price: 0.00,
-            purchase_price_per_item: 0.00,
-            category_ids: [],
-            created_date: new Date().toISOString().slice(0, 10),
-            selling_total_price: 0.00,
-            selling_price_per_item: 0.00,
-            selling_quantity: 0
-        });
+        setNewProduct(createEmptyProduct());
         setSelectedCategories([]);
     };
 

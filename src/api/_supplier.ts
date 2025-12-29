@@ -1,12 +1,13 @@
 // Операції з постачальниками
 import {INewSupplier, IProduct, ISupplierFull} from "../utils/types";
 import {API_ENDPOINTS, axiosInstance, fetchResource, handleError, postResource} from "./api";
+import {AxiosResponse} from "axios";
 
 export const addSupplier = (newSupplier: INewSupplier): Promise<{ message: string; supplier_id: number }> => {
     return postResource<{ message: string; supplier_id: number }>(API_ENDPOINTS.ADD_SUPPLIERS, newSupplier);
 };
 
-export const updateSupplier = (supplierId: number, editSupplier: ISupplierFull): Promise<void> => {
+export const updateSupplier = (supplierId: number, editSupplier: ISupplierFull): Promise<AxiosResponse> => {
     return axiosInstance.put(API_ENDPOINTS.EDIT_SUPPLIERS(supplierId), editSupplier).catch(handleError);
 };
 

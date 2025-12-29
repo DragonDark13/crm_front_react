@@ -33,10 +33,11 @@ interface IResponsiveProductViewProps {
     itemsPerPage: number;
     setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
     filteredAndSearchedProducts: IProduct[];
-    selectedLowProductId: number
+    selectedLowProductId: number | null,
+    onRowRef?: (el: HTMLTableRowElement | null, index: number) => void;
 }
 
-const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(({
+const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = ({
                                                                                      filteredProducts,
                                                                                      order,
                                                                                      orderBy,
@@ -56,7 +57,8 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                                                                                      setItemsPerPage,
                                                                                      filteredAndSearchedProducts,
                                                                                      selectedLowProductId,
-                                                                                     handleOpenProductInfoModal
+                                                                                     handleOpenProductInfoModal,
+                                                                          onRowRef
 
                                                                                  }: IResponsiveProductViewProps, ref) => {
     const theme = useTheme();
@@ -67,6 +69,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
     const {
         newProduct,
         setNewProduct,
+        resetNewProduct,
         selectedCategories,
         handleCategoryChange,
         handleRemoveCategory,
@@ -79,7 +82,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
                 <Grid item xs={12} md={6} sx={{marginTop: 1}}>
                     <AddButton onClick={() => setOpenAddProductModal(true)}
                                text={'Hовий товар'} title={'Придбати' +
-                    ' новий товар'}/>
+                        ' новий товар'}/>
 
                 </Grid>
 
@@ -145,7 +148,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
             ) : (
                 <ProductTable
                     selectedLowProductId={selectedLowProductId}
-                    ref={ref}
+                    onRowRef={onRowRef}
                     itemsPerPage={itemsPerPage}
                     currentPage={currentPage}
                     searchTerm={searchTerm}
@@ -180,7 +183,10 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
 
             <AddProductModal
                 openAdd={openAddProductModal}
-                handleCloseAdd={() => setOpenAddProductModal(false)}
+                handleCloseAdd={() => {
+                    setOpenAddProductModal(false)
+                    resetNewProduct()
+                }}
                 isAuthenticated={isAuthenticated}
                 newProduct={newProduct}
                 setNewProduct={setNewProduct}
@@ -192,6 +198,6 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = forwardRef(
 
         </React.Fragment>
     );
-});
+}
 
 export default ResponsiveProductView;

@@ -1,7 +1,7 @@
 import React from 'react';
-import {TextField, TextFieldProps} from "@mui/material";
+import {FilledTextFieldProps, TextField, TextFieldProps} from "@mui/material";
 
-interface IDateFieldCustom extends TextFieldProps {
+interface IDateFieldCustom extends FilledTextFieldProps {
 
 }
 

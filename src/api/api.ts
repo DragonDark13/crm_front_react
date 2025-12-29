@@ -29,13 +29,13 @@ export const API_ENDPOINTS = {
     LOGIN: '/login',
     LOGOUT: '/logout',
     PRODUCTS: '/get_all_products',
-    CATEGORIES: '/categories',
+    CATEGORIES: '/categories/get_all_categories',
     ADD_NEW_CATEGORIES: '/add_new_category',
     ADD_SUPPLIERS: '/create_supplier',
     EDIT_SUPPLIERS: (id: number) => `/supplier_edit/${id}`,
     EDIT_PACKAGING_SUPPLIER: (id: number) => `/packaging_supplier_edit/${id}`,
-    GET_ALL_SUPPLIERS: '/suppliers/list',
-    CUSTOMERS: '/get_all_customers',
+    GET_ALL_SUPPLIERS: '/suppliers/get_suppliers_list',
+    CUSTOMERS: '/customers/get_all_customers',
     CREATED_CUSTOMER: '/customer_create',
     SUPPLIER_PURCHASE_HISTORY: (id: number) => `/supplier/${id}/purchase-history`,
     SUPPLIER_PRODUCTS: (id: number) => `/supplier/${id}/products`,
@@ -45,7 +45,7 @@ export const API_ENDPOINTS = {
     PRODUCT_PURCHASE: (id: number) => `/product/${id}/purchase`,
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
     PRODUCT: (id: number) => `/product/${id}`,
-    GET_ALL_PACKAGING_MATERIALS: '/get_all_packaging_materials',  // New endpoint for packaging materials
+    GET_ALL_PACKAGING_MATERIALS: '/packaging/get_all_packaging_materials',  // New endpoint for packaging materials
     CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`,
     CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY: (id: number) => `/packaging-supplier/${id}/purchase-history`,
     ADD_NEW_PACKAGING_MATERIAL: '/packaging_materials/purchase',
@@ -58,7 +58,7 @@ export const API_ENDPOINTS = {
                          productId, historyType, historyId
                      }: IonDeleteHistoryRecord) => `/delete-history/${productId}/${historyType}/${historyId}`,
     // Додані шляхи для інвестицій
-    GET_ALL_INVESTMENTS: '/gel_all_investments',
+    GET_ALL_INVESTMENTS: '/investments/get_all_investments',
     CREATE_NEW_INVESTMENT: '/create_new_investments',
     DELETE_INVESTMENT: (id: number) => `/delete_investments/${id}`,
     DELETE_ALL_INVESTMENTS: '/delete_all_investments',

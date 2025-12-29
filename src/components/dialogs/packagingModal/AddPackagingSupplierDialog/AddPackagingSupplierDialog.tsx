@@ -1,15 +1,14 @@
 import {
-    Dialog,
+
     DialogActions,
     DialogContent,
-    DialogTitle,
     TextField,
     Button,
     CircularProgress,
     Typography,
-    Box
+
 } from '@mui/material';
-import React, {useState} from 'react';
+import  {useState} from 'react';
 import {axiosInstance} from "../../../../api/api";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import CancelButton from "../../../Buttons/CancelButton";

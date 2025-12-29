@@ -1,26 +1,35 @@
 // PackagingContext.js
 import {createContext, useContext, useEffect, useState} from 'react';
-import axios from 'axios';
 import {IMaterial} from "../../utils/types";
 import {fetchListPackagingMaterials} from "../../api/_packagingMaterials";
+import { PropsWithChildren } from 'react';
+
 
 interface IPackagingContextProps {
     packagingMaterials: IMaterial[];
     fetchPackagingOptions: () => void;
+
+    loading: boolean;
+    error: string | null;
     // addPackaging: (newPackaging: any) => void;
     // updatePackaging: (id: number, updatedPackaging: any) => void;
     // deletePackaging: (id: number) => void;
-    loading: boolean;
-    error: string | null;
 }
 
 const PackagingContext = createContext<IPackagingContextProps | undefined>(undefined);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const usePackaging = () => {
-    return useContext(PackagingContext);
+    const context = useContext(PackagingContext);
+
+    if (!context) {
+        throw new Error('usePackaging must be used within PackagingProvider');
+    }
+
+    return context;
 };
 
-export const PackagingProvider = ({children}) => {
+export const PackagingProvider = ({ children }: PropsWithChildren) => {
     const [packagingMaterials, setPackagingMaterials] = useState<IMaterial[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | string>(null);

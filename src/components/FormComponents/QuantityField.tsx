@@ -1,10 +1,15 @@
 import {ChangeEvent, FC} from "react";
-import {Box, Button, IconButton, InputAdornment, TextField, TextFieldProps} from "@mui/material";
+import {
+    Box, FilledTextFieldProps,
+    IconButton,
+    InputAdornment,
+    TextField,
+} from "@mui/material";
 //TODO інркремент і дкремент
 import {Add, Remove} from '@mui/icons-material';
 
 
-interface QuantityFieldProps extends TextFieldProps {
+interface QuantityFieldProps extends FilledTextFieldProps {
     value: number;
     onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     onIncrement: () => void; // Інкремент
@@ -34,7 +39,11 @@ const  QuantityField: FC<QuantityFieldProps> = ({
             <TextField
                 {...rest}
                 size={"small"}
-                readOnly={readonly}  // Додано проп для запрету редагування поля
+                slotProps={{
+                    input: {
+                        readOnly: readonly,
+                    },
+                }} // Додано проп для запрету редагування поля
                 label={label}
                 type="text"
                 value={value.toString()}

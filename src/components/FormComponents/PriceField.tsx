@@ -1,12 +1,15 @@
-import {ChangeEvent, FC, useState} from "react";
-import {TextField, TextFieldProps} from "@mui/material";
+import {ChangeEvent} from "react";
+import { TextField, TextFieldProps} from "@mui/material";
 
 
-export interface IPriceField extends TextFieldProps {
+export type IPriceField = Omit<
+    TextFieldProps,
+    'value' | 'onChange' | 'variant'
+> & {
     value: number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    label?: string,
-}
+    label?: string;
+};
 
 
 const PriceField: ({value, onChange, label, ...rest}: IPriceField) => JSX.Element = ({
@@ -18,6 +21,7 @@ const PriceField: ({value, onChange, label, ...rest}: IPriceField) => JSX.Elemen
 
 
     return (<TextField
+            variant={"filled"}
             size={"small"}
             label={label}
             type="number"

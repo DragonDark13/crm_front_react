@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import {
     Button,
@@ -6,14 +6,11 @@ import {
     DialogActions,
     DialogContent,
     Grid,
-    MenuItem,
-    TextField,
     Typography
 } from "@mui/material";
 import {axiosInstance} from "../../../../api/api";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 import CancelButton from "../../../Buttons/CancelButton";
-import AddIcon from "@mui/icons-material/Add";
 import ProductNameField from "../../../FormComponents/ProductNameField";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
 import {parseDecimalInput} from "../../../../utils/_validation";
@@ -22,17 +19,20 @@ import QuantityField from "../../../FormComponents/QuantityField";
 import {handleDecrementGlobal, handleIncrementGlobal} from "../../../../utils/function";
 import PriceField from "../../../FormComponents/PriceField";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
+import {IPurchasePackagingMaterial, ISupplier, ISupplierFull} from "../../../../utils/types.ts";
 
 interface IAddNewPackaging {
     openAddNewPackaging: boolean;
     handleCloseAddNewPackaging: () => void;
-    handlePurchaseNewPackaging: (IPurchasePackagingMaterial) => void;
+    handlePurchaseNewPackaging: (material: IPurchasePackagingMaterial) => void;
+    isAuthenticated: boolean
 }
 
 const AddNewPackagingModal = ({
                                   handlePurchaseNewPackaging,
                                   handleCloseAddNewPackaging,
-                                  openAddNewPackaging
+                                  openAddNewPackaging,
+                                  isAuthenticated
                               }: IAddNewPackaging) => {
 
     const [isAddButtonDisabled, setIsAddButtonDisabled] = useState(true);
@@ -42,7 +42,7 @@ const AddNewPackagingModal = ({
     const [purchasePricePerUnit, setPurchasePricePerUnit] = useState("");
     const [totalPurchaseCost, setTotalPurchaseCost] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [suppliers, setSuppliers] = useState<any[]>([]);
+    const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const [error, setError] = useState("");
     const [openAddSupplier, setOpenAddSupplier] = useState(false);
 
@@ -60,7 +60,7 @@ const AddNewPackagingModal = ({
         fetchSuppliers();
     }, []);
 
-    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleQuantityChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         // const value = e.target.value;
         const parsed = parseDecimalInput(e.target.value);
         if (parsed !== null) {
@@ -110,7 +110,7 @@ const AddNewPackagingModal = ({
                     <Grid container spacing={1} alignItems={"center"}>
                         <Grid item xs={12} md={12}>
                             <ProductNameField label={"Назва матеріалу"} value={name}
-                                              onChange={(e) => setName(e.target.value)} error={null}/>
+                                              onChange={(e) => setName(e.target.value)} error={''}/>
 
                             {/*<TextField*/}
                             {/*    label="Назва матеріалу"*/}
@@ -146,7 +146,7 @@ const AddNewPackagingModal = ({
                             {/*</TextField>*/}
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
-                            <AddButton sx={{marginTop:1}} onClick={handleOpenAddSupplier}/>
+                            <AddButton sx={{marginTop: 1}} onClick={handleOpenAddSupplier}/>
                         </Grid>
                         <Grid item xs={12} sm={3} md={4}>
                             <QuantityField
@@ -154,13 +154,9 @@ const AddNewPackagingModal = ({
                                 label={"Кількість придбаного"}
                                 value={quantityPurchased}
                                 onChange={handleQuantityChange}
-                                onIncrement={() =>
-                                    handleIncrementGlobal(quantityPurchased, 1000, setQuantityPurchased)
-                                }
-                                onDecrement={() =>
-                                    handleDecrementGlobal(quantityPurchased, setQuantityPurchased)
-                                }
-                            />
+                                onIncrement={() => handleIncrementGlobal(quantityPurchased, 1000, setQuantityPurchased)}
+                                onDecrement={() => handleDecrementGlobal(quantityPurchased, setQuantityPurchased)}
+                                variant={"filled"}/>
 
                             {/*<TextField*/}
                             {/*    label="Кількість придбаного"*/}
@@ -173,7 +169,8 @@ const AddNewPackagingModal = ({
                             {/*/>*/}
                         </Grid>
                         <Grid item xs={12} sm={6} md={4}>
-                            <PriceField label={'Ціна за одиницю'} value={purchasePricePerUnit}
+                            <PriceField label={'Ціна за одиницю'}
+                                        value={Number(purchasePricePerUnit)}
                                         onChange={handlePriceChange}/>
                             {/*<TextField*/}
                             {/*    label="Ціна за одиницю"*/}
@@ -186,7 +183,8 @@ const AddNewPackagingModal = ({
                             {/*/>*/}
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <TotalPriceField label={"Загальна вартість покупки"} value={totalPurchaseCost.toFixed(2)}/>
+                            <TotalPriceField label={"Загальна вартість покупки"}
+                                             value={Number(totalPurchaseCost.toFixed(2))}/>
                             {/*<TextField*/}
                             {/*    label="Загальна вартість покупки"*/}
                             {/*    value={totalPurchaseCost.toFixed(2)}*/}
@@ -209,10 +207,10 @@ const AddNewPackagingModal = ({
                     <Button variant="contained" color="primary"
                             onClick={() => handlePurchaseNewPackaging({
                                 name: name,
-                                supplier_id: supplierId,
-                                quantity_purchased: quantityPurchased,
+                                supplier_id: Number(supplierId),
+                                quantity_purchased: quantityPurchased.toString(),
                                 purchase_price_per_unit: purchasePricePerUnit,
-                                total_purchase_cost: totalPurchaseCost
+                                total_purchase_cost: totalPurchaseCost.toString()
                             })}
 
                             disabled={isAddButtonDisabled || loading}>
@@ -222,7 +220,8 @@ const AddNewPackagingModal = ({
             </CustomDialog>
 
             {openAddSupplier && (
-                <AddPackagingSupplierDialog handleCloseAddSupplier={handleCloseAddSupplier}
+                <AddPackagingSupplierDialog isAuthenticated={isAuthenticated}
+                                            handleCloseAddSupplier={handleCloseAddSupplier}
                                             openAddSupplier={openAddSupplier}/>
             )}
         </>

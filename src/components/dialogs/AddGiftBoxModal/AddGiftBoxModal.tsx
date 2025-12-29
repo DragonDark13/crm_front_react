@@ -1,24 +1,14 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
 import {useProducts} from "../../Provider/ProductContext";
 import {
-    Autocomplete,
     Button, DialogActions,
     DialogContent,
     Grid,
-    IconButton,
-    InputAdornment,
-    TextField,
-    Typography
 } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
 import {IHandleAddNewGiftBox, IMaterial, IProduct} from "../../../utils/types";
 import {usePackaging} from "../../Provider/PackagingContext";
-import {axiosInstance} from "../../../api/api";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import ProductsSection from "./ProductsSection";
-import PackagingMaterialList from "../../pages/PackagingMaterial/PackagingMaterialList";
 import PackagingSection from "./PackagingSection";
 import GiftSetDetailsSection from "./GiftSetDetailsSection";
 import SummarySection from "./SummarySection";
@@ -28,7 +18,7 @@ import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 interface ICreateGiftBox {
     handleCloseGiftModal: () => void;
     openGiftModal: boolean;
-    handleAddNewGiftBox: (IHandleAddNewGiftBox) => void;
+    handleAddNewGiftBox: (giftBox:IHandleAddNewGiftBox) => void;
     isAuthenticated: boolean
 }
 
@@ -42,9 +32,8 @@ const AddGiftBoxModal = ({
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
-    const [items, setItems] = useState([]); // Для всіх товарів
     const {products, fetchProductsFunc} = useProducts();
-    const {packagingMaterials, fetchPackagingOptions} = usePackaging();
+    const {packagingMaterials,fetchPackagingOptions} = usePackaging();
     const [selectedProducts, setSelectedProducts] = useState<{ product: IProduct, quantity: number }[]>([]);
     const [selectedPackaging, setSelectedPackaging] = useState<{ material: IMaterial, quantity: number }[]>([]);
     const [showSelectProduct, setShowSelectProduct] = useState(false);
@@ -57,7 +46,8 @@ const AddGiftBoxModal = ({
     }, []);
 
 
-    const handleProductSelect = (event: any, value: any) => {
+    const handleProductSelect = (_: React.SyntheticEvent,
+                                 value: IProduct | null) => {
         if (value) {
             // Перевіряємо чи вже обраний цей продукт
             setSelectedProducts((prev) => {
@@ -89,7 +79,8 @@ const AddGiftBoxModal = ({
         }
     };
 
-    const handlePackagingSelect = (event: any, value: any) => {
+    const handlePackagingSelect = (_: React.SyntheticEvent,
+                                   value: IMaterial | null) => {
         if (value) {
             setSelectedPackaging((prev) => {
                 const existingIndex = prev.findIndex(item => item.material.id === value.id);
@@ -133,11 +124,12 @@ const AddGiftBoxModal = ({
         const getItemById = (id: number, type: 'product' | 'packaging') => {
             return type === 'product'
                 ? products.find((product) => product.id === id)
-                : packagingMaterials.find((packaging) => packaging.id === id);
+                : packagingMaterials.find((packaging:IMaterial) => packaging.id === id);
         };
 
         const availableQuantity = getItemById(itemId, type)?.available_quantity;
-        if (newQuantity <= availableQuantity) {
+
+        if (availableQuantity!==undefined && newQuantity <= availableQuantity) {
             if (type === 'product') {
                 // Оновлюємо кількість продуктів
                 setSelectedProducts((prevSelectedProducts) =>
@@ -176,9 +168,9 @@ const AddGiftBoxModal = ({
     };
 
 // Функція для отримання продукту за ID (для доступу до `available_quantity` та іншого)
-    const getProductById = (id: number) => {
-        return products.find((product) => product.id === id);
-    };
+//     const getProductById = (id: number) => {
+//         return products.find((product) => product.id === id);
+//     };
 
     const calculateProfit = () => {
         const totalCost = calculateTotalCost();

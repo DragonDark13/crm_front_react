@@ -30,7 +30,7 @@ interface IProductTableProps {
     currentPage: number;
     itemsPerPage: number;
     selectedLowProductId: number,
-
+    onRowRef?: (el: HTMLTableRowElement | null, index: number) => void;
 }
 
 import clsx from 'clsx';
@@ -38,26 +38,27 @@ import EditProductMenu from "./EditProductMenu";
 import CircleBadge from "../_elements/CircleBadge"; // Бібліотека для зручної роботи з класами
 
 
-const ProductTable: React.FC<IProductTableProps> = forwardRef(({
-                                                                   filteredProducts,
-                                                                   order,
-                                                                   orderBy,
-                                                                   handleSort,
-                                                                   sortProducts,
-                                                                   getComparator,
-                                                                   handleOpenEdit,
-                                                                   handleDelete,
-                                                                   handlePurchase,
-                                                                   handleOpenSale,
-                                                                   handleOpenHistoryModal,
-                                                                   searchTerm,
-                                                                   filteredAndSearchedProducts,
-                                                                   itemsPerPage,
-                                                                   currentPage,
-                                                                   selectedLowProductId,
-                                                                   isAuthenticated,
-                                                                   handleOpenProductInfoModal
-                                                               }, ref) => {
+const ProductTable: React.FC<IProductTableProps> = ({
+                                                        filteredProducts,
+                                                        order,
+                                                        orderBy,
+                                                        handleSort,
+                                                        sortProducts,
+                                                        getComparator,
+                                                        handleOpenEdit,
+                                                        handleDelete,
+                                                        handlePurchase,
+                                                        handleOpenSale,
+                                                        handleOpenHistoryModal,
+                                                        searchTerm,
+                                                        filteredAndSearchedProducts,
+                                                        itemsPerPage,
+                                                        currentPage,
+                                                        selectedLowProductId,
+                                                        isAuthenticated,
+                                                        handleOpenProductInfoModal,
+                                                        onRowRef
+                                                    }, ref) => {
 
 // Підрахунок загальної кількості та суми для закупівлі та продажу
     const totalQuantityPurchaseAllTime = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_quantity, 0);
@@ -198,12 +199,8 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
                                     const lowQuantity = product.total_quantity < 5; // умова для низької кількості
                                     return (
                                         <TableRow key={`${product.id}${index}${product.purchase_total_price}`}
-                                                  ref={el => {
-                                                      if (ref && typeof ref === 'function') {
-                                                          ref(el, index + currentPage * itemsPerPage);
-                                                      } else if (ref && ref.current) {
-                                                          ref.current[index + currentPage * itemsPerPage] = el;
-                                                      }
+                                                  ref={(el) => {
+                                                      onRowRef?.(el, product.id);
                                                   }}
                                                   className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                             <TableCell size={"small"} sx={{display: "none"}}>
@@ -338,6 +335,6 @@ const ProductTable: React.FC<IProductTableProps> = forwardRef(({
             </TableContainer>
         </React.Fragment>
     );
-});
+};
 
 export default ProductTable;

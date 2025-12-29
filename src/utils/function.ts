@@ -1,11 +1,12 @@
-import React, {ChangeEvent} from "react";
+import  {ChangeEvent} from "react";
+import {INewProduct} from "./types.ts";
 
 export function roundToDecimalPlaces(num: number, decimalPlaces: number) {
     const factor = Math.pow(10, decimalPlaces);
     return Math.round(num * factor) / factor;
 }
 
-export const formatDate = (dateString) => {
+export const formatDate = (dateString:string) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Місяці нумеруються з 0
@@ -13,7 +14,7 @@ export const formatDate = (dateString) => {
     return `${year}-${month}-${day}`;
 };
 
-export const formatDateToBack = (dateString) => {
+export const formatDateToBack = (dateString:string) => {
 
 // Перетворюємо рядок у об'єкт Date
     const createdDate = new Date(dateString);
@@ -71,3 +72,20 @@ export const handleDecrementGlobal = (
         setError && setError('');
     }
 };
+
+
+export const createEmptyProduct = (): INewProduct => ({
+    article: "",
+    available_quantity: 1,
+    sold_quantity: 0,
+    total_quantity: 0,
+    name: "",
+    supplier_id: "",
+    purchase_total_price: 0,
+    purchase_price_per_item: 0,
+    category_ids: [],
+    created_date: new Date().toISOString().slice(0, 10),
+    selling_total_price: 0,
+    selling_price_per_item: 0,
+    selling_quantity: 0
+});

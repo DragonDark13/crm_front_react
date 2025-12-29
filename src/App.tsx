@@ -1,20 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
     Button,
     Box,
     Drawer,
     Grid,
-    Container,
-    Alert,
-    Snackbar, IconButton, Badge, CssBaseline
+    IconButton, Badge, CssBaseline
 } from '@mui/material';
 
 
 import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 import CloseIcon from '@mui/icons-material/Close';
 
-import ProductHistoryModal from "./components/dialogs/productsDialogs/ProductHistoryModal/ProductHistoryModal";
-import {CircularProgress, Typography} from '@mui/material'; // Імпорт компонентів Material-UI
 
 //TODO add handle error
 //TODO сторінкі Товари Продажі Упаковки
@@ -26,9 +22,8 @@ import Dashboard from "./components/Dachboard/Dashboard";
 import ProductsCatalog from "./components/pages/ProductsCatalog";
 import ClientsManagement from "./components/pages/ClientsManagement";
 import Purchases from "./components/pages/PurchasesPage/Purchases";
-import {BrowserRouter as Router, Route, Routes, useNavigate} from 'react-router-dom';
+import {Route, Routes, useNavigate} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
-import SpeedDial from "./components/SpeedDial/SpeedDial";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Login from "./components/Login/Login";
 import PackagingMaterialList from "./components/pages/PackagingMaterial/PackagingMaterialList";
@@ -41,17 +36,15 @@ import LoginIcon from "@mui/icons-material/Login";
 import {useAuth} from "./components/context/AuthContext";
 import {useProducts} from "./components/Provider/ProductContext";
 import {IProduct, IStateFilters, modalNames, ModalNames} from "./utils/types";
-import {logoutUser} from "./api/_user";
 import {useSnackbarMessage} from "./components/Provider/SnackbarMessageContext";
 import NotificationPanel from "./components/NotificationPanel/NotificationPanel";
-import ResponsiveProductView from "./components/ResponsiveProductView/ResponsiveProductView";
 
 
 function App() {
 
-    const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
+    const tableRowRefs = useRef<Record<number, HTMLTableRowElement | null>>({});
 
-    const {products, loadingState} = useProducts();
+    const {products} = useProducts();
 
     const {isAuthenticated, logout} = useAuth();
     const {showSnackbarMessage} = useSnackbarMessage()
@@ -93,22 +86,21 @@ function App() {
             ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
             : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
     };
-    const getFieldValue = (product: IProduct, field: keyof IProduct): any => {
+    const getFieldValue = (product: IProduct, field: keyof IProduct): string => {
         if (field === 'supplier') {
             return product.supplier?.name || ''; // Повертає ім'я постачальника або порожній рядок
         }
-        return product[field];
+        return '';
     };
 
     const handleModalOpen = (modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: true}));
     };
 
-    const resetStatesMap = {};
 
     const handleModalClose = (modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: false}));
-        resetStatesMap[modal]?.(); // Виклик відповідної функції скидання
+        // resetStatesMap[modal]?.(); // Виклик відповідної функції скидання
     };
 
     const resetFilters = () => {
@@ -121,51 +113,118 @@ function App() {
     }
 
 
+    // const handleListItemClick = (productId: number) => {
+    //     console.log("Натиснули на товар з ID:", productId);
+    //
+    //     // Спочатку скидаємо фільтри
+    //     // resetFiltersAndOrderAndSearch();
+    //     resetFilters()
+    //     setSelectedLowProductId(productId);  // Встановлюємо ID обраного продукту
+    //
+    //     setSearchTerm(''); // Скидання пошуку
+    //     console.log("Фільтри скинуті");
+    //
+    //     // Знайти рядок таблиці за ID продукту
+    //     const sortedProducts = sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy));
+    //     const rowIndex = sortedProducts.findIndex(product => product.id === productId);
+    //     console.log("Знайдений індекс продукту:", rowIndex);
+    //
+    //     if (rowIndex !== -1) {
+    //         // Обчислити, на якій сторінці знаходиться цей продукт
+    //         const targetPage = Math.floor(rowIndex / itemsPerPage);
+    //         console.log("Продукт знаходиться на сторінці:", targetPage);
+    //         console.log(currentPage);
+    //         // Змінюємо сторінку
+    //         setCurrentPage(targetPage);
+    //
+    //         // Використати setTimeout для прокрутки, щоб дати час на оновлення сторінки
+    //         setTimeout(() => {
+    //             const rowElement = tableRowRefs.current[rowIndex];
+    //             console.log("Елемент рядка таблиці:", rowElement);
+    //
+    //             if (rowElement) {
+    //                 handleModalClose("openNotificationDrawer")
+    //                 console.log("Прокрутка до елемента:", rowElement);
+    //                 rowElement.scrollIntoView({behavior: 'smooth', block: 'center'});
+    //             } else {
+    //                 console.log("Елемент не знайдено для індексу:", rowIndex);
+    //             }
+    //         }, 100);
+    //
+    //         setTimeout(() => {
+    //             setSelectedLowProductId(null)
+    //         }, 3000)
+    //     } else {
+    //         console.log("Продукт з ID", productId, "не знайдений");
+    //     }
+    // };
+
+
     const handleListItemClick = (productId: number) => {
-        console.log("Натиснули на товар з ID:", productId);
+        resetFilters();
+        setSearchTerm('');
+        setSelectedLowProductId(productId);
+        handleModalClose("openNotificationDrawer");
 
-        // Спочатку скидаємо фільтри
-        // resetFiltersAndOrderAndSearch();
-        resetFilters()
-        setSelectedLowProductId(productId);  // Встановлюємо ID обраного продукту
-
-        setSearchTerm(''); // Скидання пошуку
-        console.log("Фільтри скинуті");
-
-        // Знайти рядок таблиці за ID продукту
-        const sortedProducts = sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy));
-        const rowIndex = sortedProducts.findIndex(product => product.id === productId);
-        console.log("Знайдений індекс продукту:", rowIndex);
-
-        if (rowIndex !== -1) {
-            // Обчислити, на якій сторінці знаходиться цей продукт
-            const targetPage = Math.floor(rowIndex / itemsPerPage);
-            console.log("Продукт знаходиться на сторінці:", targetPage);
-
-            // Змінюємо сторінку
-            setCurrentPage(targetPage);
-
-            // Використати setTimeout для прокрутки, щоб дати час на оновлення сторінки
-            setTimeout(() => {
-                const rowElement = tableRowRefs.current[rowIndex];
-                console.log("Елемент рядка таблиці:", rowElement);
-
-                if (rowElement) {
-                    handleModalClose("openNotificationDrawer")
-                    console.log("Прокрутка до елемента:", rowElement);
-                    rowElement.scrollIntoView({behavior: 'smooth', block: 'center'});
-                } else {
-                    console.log("Елемент не знайдено для індексу:", rowIndex);
-                }
-            }, 100);
-
-            setTimeout(() => {
-                setSelectedLowProductId(null)
-            }, 3000)
-        } else {
-            console.log("Продукт з ID", productId, "не знайдений");
-        }
     };
+
+    const scrollToSelectedRow = () => {
+        if (selectedLowProductId == null) return;
+
+        const row = tableRowRefs.current[selectedLowProductId];
+        row?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+    };
+
+    useEffect(() => {
+        if (selectedLowProductId == null) return;
+
+        const sortedProducts = sortProducts(
+            filteredAndSearchedProducts,
+            getComparator(order, orderBy)
+        );
+
+        const rowIndex = sortedProducts.findIndex(
+            product => product.id === selectedLowProductId
+        );
+
+        if (rowIndex === -1) return;
+
+        const targetPage = Math.floor(rowIndex / itemsPerPage);
+        if (currentPage!==targetPage) setCurrentPage(targetPage);
+    }, [
+        selectedLowProductId,
+        filteredAndSearchedProducts,
+        order,
+        orderBy,
+        itemsPerPage
+    ]);
+
+    useLayoutEffect(() => {
+        if (selectedLowProductId == null) return;
+
+        const row = tableRowRefs.current[selectedLowProductId];
+        if (!row) return;
+
+
+        // ⬇️ scroll
+        row.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+
+        // ⏱ автоочистка через 10 секунд
+        const timeoutId = setTimeout(() => {
+            setSelectedLowProductId(null);
+        }, 5_000);
+
+        // 🧹 cleanup
+        return () => clearTimeout(timeoutId);
+
+    }, [selectedLowProductId, currentPage]);
 
 
     useEffect(() => {
@@ -180,7 +239,8 @@ function App() {
 
     };
 
-    let navigate = useNavigate();
+
+    const navigate = useNavigate();
 
 
     return (
@@ -226,11 +286,20 @@ function App() {
                         )}
                     </div>
 
-                    <Drawer classes={{
-                        paper: "filter_container"
-                    }} anchor="right" open={modalState.openNotificationDrawer}
+                    <Drawer
+                        classes={{
+                            paper: "filter_container"
+                        }}
+                        anchor="right"
+                        open={modalState.openNotificationDrawer}
+                        slotProps={
+                        {transition:{onExited: () => {
+                                    scrollToSelectedRow();
+                                }}
+                        }}
 
-                            onClose={() => handleModalClose("openNotificationDrawer")}>
+
+                        onClose={() => handleModalClose("openNotificationDrawer")}>
                         <Grid p={1} container>
                             <Grid item xs={12}>
                                 <Button fullWidth endIcon={<CloseIcon/>} variant={"outlined"}
@@ -253,8 +322,8 @@ function App() {
                         />
                         <Route path="/crm_front_react/" element={
                             <ProductsCatalog
-                                ref={(el, index) => {
-                                    tableRowRefs.current[index] = el;
+                                onRowRef={(el, productId) => {
+                                    tableRowRefs.current[productId] = el;
                                 }}
                                 setSearchTerm={setSearchTerm}
                                 searchTerm={searchTerm}
@@ -281,6 +350,7 @@ function App() {
                                 getComparator={getComparator}
                                 getFieldValue={getFieldValue}
                                 setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
+                                resetFilters={resetFilters}
                             />
                         }/>
                         <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
@@ -288,8 +358,8 @@ function App() {
                         <Route path="/crm_front_react/sales" element={<Sales/>}/>
                         <Route path="/crm_front_react/products" element={
                             <ProductsCatalog
-                                ref={(el, index) => {
-                                    tableRowRefs.current[index] = el;
+                                onRowRef={(el, productId) => {
+                                    tableRowRefs.current[productId] = el;
                                 }}
                                 searchTerm={searchTerm}
                                 setSearchTerm={setSearchTerm}
@@ -316,6 +386,7 @@ function App() {
                                 getComparator={getComparator}
                                 getFieldValue={getFieldValue}
                                 setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
+                                resetFilters={resetFilters}
                             />
 
                         }/>

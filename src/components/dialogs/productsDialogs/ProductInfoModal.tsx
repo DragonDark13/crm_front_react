@@ -24,54 +24,129 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({open, onClose, produ
 
             <DialogContent dividers>
                 <Grid container spacing={2}>
+                    {/* Назва */}
                     <Grid item xs={12}>
-                        <Typography variant="h6">Назва: {product.name}</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography >Артікул: {product.article}</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant={"h6"}>Кількість: </Typography>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography>Загальна: {product.total_quantity}</Typography>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography>На складі: {product.available_quantity}</Typography>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Typography>Продано од.: {product.sold_quantity}</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography>Дата створення: {new Date(product.created_date).toLocaleDateString()}</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography>Ціна закупки за одиницю: {product.purchase_price_per_item} грн</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography>Загальна ціна закупки: {product.purchase_total_price} грн</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography>Ціна продажу за одиницю: {product.selling_price_per_item} грн</Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography>Очікуваний дохід за
-                            од: {product.selling_total_price - product.purchase_price_per_item} грн</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography>
-                            Постачальник:
-                            <Typography color={product.supplier?.is_active===false ? 'textDisabled':'inherit'} component={"span"}> {!product.supplier?.is_active ? 'не активний ': null} {product.supplier?.name || '—'}  </Typography>
+                        <Typography variant="overline" color="text.secondary">
+                            Назва
                         </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography>
-                            Категорії: {matchedCategories
-                            .map(c => c.name)
-                            .join(', ') || '—'}
+                        <Typography variant="h6">
+                            {product.name}
                         </Typography>
                     </Grid>
 
+                    {/* Артикул */}
+                    <Grid item xs={12}>
+                        <Typography variant="overline" color="text.secondary">
+                            Артикул
+                        </Typography>
+                        <Typography>
+                            {product.article}
+                        </Typography>
+                    </Grid>
+
+                    {/* Кількість */}
+                    <Grid item xs={12}>
+                        <Typography variant="subtitle1" fontWeight={600}>
+                            Кількість
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                        <Typography variant="caption" color="text.secondary">
+                            Загальна
+                        </Typography>
+                        <Typography fontWeight={500}>
+                            {product.total_quantity}
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                        <Typography variant="caption" color="text.secondary">
+                            На складі
+                        </Typography>
+                        <Typography fontWeight={500}>
+                            {product.available_quantity}
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={4}>
+                        <Typography variant="caption" color="text.secondary">
+                            Продано, од.
+                        </Typography>
+                        <Typography fontWeight={500}>
+                            {product.sold_quantity}
+                        </Typography>
+                    </Grid>
+
+                    {/* Ціни */}
+                    <Grid item xs={6}>
+                        <Typography variant="caption" color="text.secondary">
+                            Ціна закупки (за од.)
+                        </Typography>
+                        <Typography fontWeight={500}>
+                            {product.purchase_price_per_item} грн
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Typography variant="caption" color="text.secondary">
+                            Загальна ціна закупки
+                        </Typography>
+                        <Typography fontWeight={500}>
+                            {product.purchase_total_price} грн
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Typography variant="caption" color="text.secondary">
+                            Ціна продажу (за од.)
+                        </Typography>
+                        <Typography fontWeight={500}>
+                            {product.selling_price_per_item} грн
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <Typography variant="caption" color="text.secondary">
+                            Очікуваний дохід (за од.)
+                        </Typography>
+                        <Typography fontWeight={500}>
+                            {product.selling_price_per_item - product.purchase_price_per_item} грн
+                        </Typography>
+                    </Grid>
+
+                    {/* Дата */}
+                    <Grid item xs={6}>
+                        <Typography variant="caption" color="text.secondary">
+                            Дата створення
+                        </Typography>
+                        <Typography>
+                            {new Date(product.created_date).toLocaleDateString()}
+                        </Typography>
+                    </Grid>
+
+                    {/* Постачальник */}
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="text.secondary">
+                            Постачальник
+                        </Typography>
+                        <Typography
+                            color={product.supplier?.is_active === false ? 'text.disabled' : 'text.primary'}
+                        >
+                            {!product.supplier?.is_active && 'не активний '}
+                            {product.supplier?.name || '—'}
+                        </Typography>
+                    </Grid>
+
+                    {/* Категорії */}
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="text.secondary">
+                            Категорії
+                        </Typography>
+                        <Typography>
+                            {matchedCategories.map(c => c.name).join(', ') || '—'}
+                        </Typography>
+                    </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>

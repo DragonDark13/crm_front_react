@@ -1,10 +1,21 @@
-import {Autocomplete, Button, DialogContent, Divider, Grid, IconButton, TextField, Typography} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import React from "react";
+import {Autocomplete, Button, Divider, Grid, TextField, Typography} from "@mui/material";
+
+import React, {Dispatch, SetStateAction} from "react";
 import QuantityField from "../../FormComponents/QuantityField";
 import AddButton from "../../Buttons/AddButton";
 import {Delete} from "@mui/icons-material";
+import {IProduct} from "../../../utils/types.ts";
+
+interface ProductsSection {
+    showSelectProduct: boolean
+    setShowSelectProduct: Dispatch<SetStateAction<boolean>>;
+    products:IProduct[],
+    selectedProducts:{ product: IProduct, quantity: number }[]
+    handleProductSelect: (_: React.SyntheticEvent,
+                          value: IProduct | null)=>void,
+    handleQuantityChange:(itemId: number, newQuantity: number, type: 'product' | 'packaging')=>void,
+    handleRemoveProduct:(productId: number)=>void
+}
 
 const ProductsSection = ({
                              showSelectProduct,
@@ -14,7 +25,7 @@ const ProductsSection = ({
                              handleProductSelect,
                              handleQuantityChange,
                              handleRemoveProduct
-                         }) => (
+                         }:ProductsSection) => (
     <>
         <Typography variant="body1" sx={{mt: 2}}>Товари</Typography>
         <Divider sx={{my: 1}}/>
@@ -69,7 +80,7 @@ const ProductsSection = ({
                 {selectedProducts.map((item) => {
 
                     const product = item.product;
-                    const availableQuantity = product.available_quantity;
+                    // const availableQuantity = product.available_quantity;
                     const costPerItem = product.purchase_price_per_item;
                     const totalCost = item.quantity * costPerItem;
 
@@ -87,21 +98,21 @@ const ProductsSection = ({
                                     onChange={(e) => handleQuantityChange(product.id, Number(e.target.value), "product")}
                                     onIncrement={() => handleQuantityChange(product.id, item.quantity + 1, "product")}
                                     onDecrement={() => handleQuantityChange(product.id, item.quantity - 1, "product")}
-                                    error={item.quantity > product.available_quantity ? "Перевищено доступну кількість" : ""}
-                                />
+                                    helperText={item.quantity > product.available_quantity ? "Перевищено доступну кількість" : ""}
+                                    error={item.quantity > product.available_quantity} variant={"filled"}                                />
 
                             </Grid>
                             <Grid item xs={6}>
 
-                            <Button
-                                sx={{marginTop:1}}
-                                variant={"contained"}
-                                color="error"
-                                endIcon={<Delete/>}
-                                onClick={() => handleRemoveProduct(product.id)}
-                            >
-                                Видалити
-                            </Button>
+                                <Button
+                                    sx={{marginTop: 1}}
+                                    variant={"contained"}
+                                    color="error"
+                                    endIcon={<Delete/>}
+                                    onClick={() => handleRemoveProduct(product.id)}
+                                >
+                                    Видалити
+                                </Button>
                             </Grid>
 
 

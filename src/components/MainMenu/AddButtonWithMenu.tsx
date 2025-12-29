@@ -3,7 +3,6 @@ import React, {useState} from "react";
 import {
     GiftSetPayload,
     ICustomerDetails, IHandleAddNewGiftBox,
-    INewProduct,
     INewSupplier,
     IPurchasePackagingMaterial,
     modalNames,
@@ -17,13 +16,12 @@ import {useCategories} from "../Provider/CategoryContext";
 import {useSuppliers} from "../Provider/SupplierContext";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
-import {AxiosError} from "axios";
+import axios, {AxiosError} from "axios";
 import {useCustomers} from "../Provider/CustomerContext";
 import {useAuth} from "../context/AuthContext";
 import AddNewPackagingModal from "../dialogs/packagingModal/AddNewPackagingModal/AddNewPackagingModal";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {addSupplier} from "../../api/_supplier";
-import {addProduct} from "../../api/_product";
 import {addNewCategory} from "../../api/_categories";
 import {addNewPackagingMaterial} from "../../api/_packagingMaterials";
 import AddGiftBoxModal from "../dialogs/AddGiftBoxModal/AddGiftBoxModal";
@@ -32,11 +30,12 @@ import {usePackaging} from "../Provider/PackagingContext";
 import {useNewProduct} from "../../hooks/useNewProduct";
 import AddInvestmentDialog from "../dialogs/AddInvestmentDialog/AddInvestmentDialog";
 import {useInvestments} from "../Provider/InvestmentsContext";
+import {axiosInstance} from "../../api/api.ts";
 
 //TODO Додати опцію Зберігти і додати ще
 
 const AddButtonWithMenu = () => {
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
     const {showSnackbarMessage} = useSnackbarMessage()
     const {createCustomerFunc} = useCustomers(); // Отримуємо функцію з контексту
     const {createNewGiftSet} = useGiftSet();
@@ -51,7 +50,7 @@ const AddButtonWithMenu = () => {
     } = useInvestments();
 
 
-    const handleClick = (event) => {
+    const handleClickAddButton = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
@@ -116,7 +115,7 @@ const AddButtonWithMenu = () => {
     // };
 
 
-    const resetStatesMap = {};
+    // const resetStatesMap = {};
 
     const {fetchProductsFunc} = useProducts();
     const {fetchCategoriesFunc} = useCategories()
@@ -124,7 +123,7 @@ const AddButtonWithMenu = () => {
 
     const handleModalClose = (modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: false}));
-        resetStatesMap[modal]?.(); // Виклик відповідної функції скидання
+        // resetStatesMap[modal]?.(); // Виклик відповідної функції скидання
     };
 
 
@@ -175,7 +174,7 @@ const AddButtonWithMenu = () => {
             })
             .catch((error: AxiosError) => {
                 console.error('Error creating customer:', error);
-                showSnackbarMessage('Error creating customer: ' + error.response?.data?.error || 'Unknown error', 'error');
+                showSnackbarMessage('Error creating customer: ' + error.message || 'Unknown error', 'error');
             });
     };
 
@@ -188,7 +187,7 @@ const AddButtonWithMenu = () => {
             showSnackbarMessage('Packaging Material added successfully!', 'success');
         }).catch((error: AxiosError) => {
             console.error('Error creating packaging material:', error);
-            showSnackbarMessage('Error creating packaging material: ' + error.response?.data?.error || 'Unknown error', 'error');
+            showSnackbarMessage('Error creating packaging material: ' + error.message || 'Unknown error', 'error');
 
         });
     };
@@ -229,9 +228,15 @@ const AddButtonWithMenu = () => {
             fetchProductsFunc()
             fetchPackagingOptions();
 
-        } catch (error: AxiosError) {
-            console.error('Error creating gift box:', error);
-            showSnackbarMessage('Error creating gift box: ' + error || 'Unknown error', 'error');
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                showSnackbarMessage(
+                    'Error creating customer: ' + (error.response?.data?.error ?? 'Unknown error'),
+                    'error'
+                );
+            } else {
+                showSnackbarMessage('Unknown error', 'error');
+            }
         }
 
     };
@@ -250,7 +255,7 @@ const AddButtonWithMenu = () => {
         <Box>
             <Tooltip title="Додати" placement="right">
                <span>
-                   <IconButton size={"small"} color="primary" onClick={handleClick}>
+                   <IconButton size={"small"} color="primary" onClick={handleClickAddButton}>
                                    <AddCircleOutlineIcon/>
                                </IconButton>
                </span>
@@ -353,9 +358,11 @@ const AddButtonWithMenu = () => {
                 handleCloseAddNewCustomerDialog={() => handleModalClose("createCustomerDialog")}
                 handleAddCustomer={handleCreateCustomer}/>}
 
-            {modalState.addNewPackage && <AddNewPackagingModal openAddNewPackaging={modalState.addNewPackage}
-                                                               handleCloseAddNewPackaging={() => handleModalClose('addNewPackage')}
-                                                               handlePurchaseNewPackaging={handlePurchaseNewPackaging}/>}
+            {modalState.addNewPackage && <AddNewPackagingModal
+                isAuthenticated={isAuthenticated}
+                openAddNewPackaging={modalState.addNewPackage}
+                handleCloseAddNewPackaging={() => handleModalClose('addNewPackage')}
+                handlePurchaseNewPackaging={handlePurchaseNewPackaging}/>}
 
             {modalState.addNewGiftBox && <AddGiftBoxModal
                 isAuthenticated={isAuthenticated}

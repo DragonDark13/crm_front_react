@@ -1,5 +1,5 @@
 import React from "react";
-import {TextField, Button, DialogContent, DialogActions} from "@mui/material";
+import { Button, DialogContent, DialogActions} from "@mui/material";
 import CustomDialog from "../CustomDialog/CustomDialog";
 import {INewInvestment} from "../../../utils/types";
 import ProductNameField from "../../FormComponents/ProductNameField";
@@ -35,7 +35,7 @@ const AddInvestmentDialog: React.FC<AddInvestmentDialogProps> = ({
             <DialogContent>
                 <ProductNameField label={'Назва'} value={newInvestment.type_name} onChange={(e) =>
                     setNewInvestment({...newInvestment, type_name: e.target.value})
-                } error={null}/>
+                } error={''}/>
                 {/*<TextField*/}
                 {/*    label="Назва"*/}
                 {/*    fullWidth*/}
@@ -49,7 +49,7 @@ const AddInvestmentDialog: React.FC<AddInvestmentDialogProps> = ({
                 <ProductNameField label={"Постачальник"} value={newInvestment.supplier}
                                   onChange={(e) =>
                                       setNewInvestment({...newInvestment, supplier: e.target.value})
-                                  } error={null}/>
+                                  } error={''}/>
 
                 <PriceField label={"Вартість"} value={newInvestment.cost} onChange={(e) => {
                     const parsed = parseDecimalInput(e.target.value);
@@ -68,10 +68,10 @@ const AddInvestmentDialog: React.FC<AddInvestmentDialogProps> = ({
                 {/*        setNewInvestment({...newInvestment, cost: e.target.value})*/}
                 {/*    }*/}
                 {/*/>*/}
-                <DateFieldCustom InputLabelProps={{shrink: true}} label="Дата Закупки" value={newInvestment.date}
-                                 onChange={(e) =>
-                                     setNewInvestment({...newInvestment, date: e.target.value})
-                                 }/>
+                <DateFieldCustom slotProps={{inputLabel: {shrink: true}}}
+                                 label="Дата Закупки" value={newInvestment.date}
+                                 onChange={(e) => setNewInvestment({...newInvestment, date: e.target.value})}
+                                 variant={"filled"}/>
                 {/*<TextField*/}
                 {/*    label="Дата"*/}
                 {/*    type="date"*/}

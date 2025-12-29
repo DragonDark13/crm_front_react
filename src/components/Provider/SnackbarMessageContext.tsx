@@ -1,6 +1,5 @@
-import React, {createContext, useState, useContext, ReactNode} from 'react';
-import {Snackbar, IconButton, Alert} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import  {createContext, useState, useContext, ReactNode} from 'react';
+import {Snackbar, Alert} from '@mui/material';
 
 type SnackbarMessageContextType = {
     showSnackbarMessage: (message: string, severity: 'success' | 'error' | 'info' | 'warning') => void;
@@ -8,6 +7,7 @@ type SnackbarMessageContextType = {
 
 const SnackbarMessageContext = createContext<SnackbarMessageContextType | undefined>(undefined);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSnackbarMessage = () => {
     const context = useContext(SnackbarMessageContext);
     if (!context) {

@@ -20,13 +20,14 @@ const CategoryFilter: React.FC<ICategoryFilterProps> = ({
         <FormGroup>
             {categories.map(category => (
                 <FormControlLabel
-                    key={category.id}
+                    key={category.id+category.name}
                     control={
                         <Checkbox
                             checked={selectedFilterCategories.includes(category.id)}
                             onChange={() => handleCategoryFilterChange(category.id)}
                         />
                     }
+
                     title={category.name}
                     label={category.name}
                 />

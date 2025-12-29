@@ -17,8 +17,8 @@ const SupplierFilter: React.FC<ISupplierFilterProps> = ({
         <FormGroup>
             {suppliers.map(supplier => (
                 <FormControlLabel
-                    tid={supplier.name}
-                    key={supplier.id}
+                    id={supplier.name}
+                    key={supplier.id+supplier.name}
                     control={
                         <Checkbox
                             checked={selectedFilterSuppliers.includes(supplier.id)}

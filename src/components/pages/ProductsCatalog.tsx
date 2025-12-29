@@ -1,20 +1,14 @@
-import React, {forwardRef, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useProducts} from "../Provider/ProductContext";
 import {
-    ICategory,
     IEditProduct,
     INewProduct, INewSupplier,
     IProduct,
     IPurchaseData, ISaleData, IStateFilters,
-    ISupplierFull,
-    modalNames,
     ModalNames
 } from "../../utils/types";
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import LoginIcon from '@mui/icons-material/Login';
-import {formatDate} from "../../utils/function";
+import {createEmptyProduct, formatDate} from "../../utils/function";
 import {
-    Badge,
     Box,
     Button,
     CircularProgress,
@@ -33,20 +27,18 @@ import SaleProductModal from "../dialogs/productsDialogs/SaleProductModal/SalePr
 import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
 import ConfirmDeleteModal from "../dialogs/ConfirmDeleteModal/ConfirmDeleteModal";
 import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
-import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
-import NotificationPanel from "../NotificationPanel/NotificationPanel";
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {useAuth} from "../context/AuthContext";
-import {useNavigate} from "react-router-dom";
-import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
-import {addSupplier, fetchGetAllSuppliers} from "../../api/_supplier";
+import {addSupplier} from "../../api/_supplier";
 import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "../../api/_product";
-import {logoutUser} from "../../api/_user";
-import {addNewCategory, fetchGetAllCategories} from "../../api/_categories";
+import {addNewCategory} from "../../api/_categories";
 import {exportToExcel} from "../../api/api";
 import DeleteAllProductsDialog from "../dialogs/productsDialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
 import ProductInfoModal from "../dialogs/productsDialogs/ProductInfoModal";
+import {useNewProduct} from "../../hooks/useNewProduct.ts";
+import {useCategories} from "../Provider/CategoryContext.tsx";
+import {useSuppliers} from "../Provider/SupplierContext.tsx";
+
 
 export interface IProductsCatalogProps {
     products: IProduct[];
@@ -71,46 +63,48 @@ export interface IProductsCatalogProps {
     filteredAndSearchedProducts: IProduct[];
     setFilteredAndSearchedProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
     getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
-    getFieldValue: (product: IProduct, field: keyof IProduct) => any;
+    getFieldValue: (product: IProduct, field: keyof IProduct) => string;
     searchTerm: string
+    resetFilters: () => void;
+    onRowRef?: (el: HTMLTableRowElement | null, index: number) => void;
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>>
 }
 
-const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
-                                                                         currentPage,
-                                                                         setCurrentPage,
-                                                                         filteredAndSearchedProducts,
-                                                                         filters,
-                                                                         setFilters,
-                                                                         getComparator,
-                                                                         setFilteredAndSearchedProducts,
-                                                                         getFieldValue,
-                                                                         setItemsPerPage,
-                                                                         itemsPerPage
-                                                                         ,
-                                                                         setLowQuantityProducts,
-                                                                         lowQuantityProducts,
-                                                                         setModalState, modalState,
-                                                                         setOrder, order, setOrderBy, orderBy,
-                                                                         setSearchTerm, searchTerm,
-                                                                         setSelectedLowProductId,
-                                                                         products,
-                                                                         isAuthenticated,
-                                                                         selectedLowProductId,
-                                                                         showSnackbarMessage,
-                                                                         sortProducts,
-                                                                         resetFilters
+const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
+                                                              currentPage,
+                                                              setCurrentPage,
+                                                              filteredAndSearchedProducts,
+                                                              filters,
+                                                              setFilters,
+                                                              getComparator,
+                                                              setFilteredAndSearchedProducts,
+                                                              setItemsPerPage,
+                                                              itemsPerPage
+                                                              ,
+                                                              lowQuantityProducts,
+                                                              setModalState, modalState,
+                                                              setOrder, order, setOrderBy, orderBy,
+                                                              setSearchTerm,
+                                                              searchTerm,
+                                                              products,
+                                                              isAuthenticated,
+                                                              showSnackbarMessage,
+                                                              sortProducts,
+                                                              resetFilters,
+                                                              onRowRef
 
-
-                                                                     }: IProductsCatalogProps, ref) => {
+                                                          }: IProductsCatalogProps) => {
 
     const {fetchProductsFunc, loadingState} = useProducts();
     // const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
-    const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
-    const [categories, setCategories] = useState<ICategory[]>([]);
+    // const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     // const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     // const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
     // let navigate = useNavigate();
+    const {fetchCategoriesFunc:fetchCategoriesFromContext} = useCategories()
+    const {fetchSuppliersFunc:fetchSuppliersFromContext} = useSuppliers()
+
 
 
     // const {logout} = useAuth();
@@ -128,18 +122,8 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
     //     }
     // };
 
-    const [newProduct, setNewProduct] = useState<INewProduct>({
-        available_quantity: 1, sold_quantity: 0, total_quantity: 0,
-        name: '',
-        supplier_id: '',
-        purchase_total_price: 0.00,
-        purchase_price_per_item: 0.00,
-        category_ids: [],
-        created_date: new Date().toISOString().slice(0, 10),
-        selling_price_per_item: 0.00,
-        selling_total_price: 0.00,
-        selling_quantity: 0
-    });
+    const [newProduct, setNewProduct] = useState<INewProduct>(createEmptyProduct);
+
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
     const [infoProduct, setInfoProduct] = useState<IProduct | null>(null);
 
@@ -162,14 +146,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
 
     const [selectedDeleteModalProductId, setSelectedDeleteModalProductId] = useState<number | null>(null);
 
-    // const [order, setOrder] = useState<'asc' | 'desc'>('asc'); // Порядок сортування (asc/desc)
-    // const [orderBy, setOrderBy] = useState<keyof IProduct>('name'); // Колонка для сортування
-    const [snackbar, setSnackbar] = useState<{ message: string; severity: 'success' | 'error' | 'info' | 'warning' | undefined }>({
-        message: '',
-        severity: undefined,
-    });
 
-    const [openSnackbar, setOpenSnackbar] = useState(false);
     // const [searchTerm, setSearchTerm] = useState('');
     // const [itemsPerPage, setItemsPerPage] = useState(10); // Додайте цей рядок
     // const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = useState<IProduct[]>([])
@@ -184,8 +161,8 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
 
     // Load products and suppliers
     useEffect(() => {
-        fetchSuppliersFunc();
-        fetchCategoriesFunc();
+        fetchSuppliersFromContext();
+        fetchCategoriesFromContext();
         fetchProductsFunc();
     }, []);
 
@@ -196,31 +173,31 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
     }, [products])
 
 
-    const fetchSuppliersFunc = async () => {
-        try {
-            const data = await fetchGetAllSuppliers(); // Assuming fetchGetAllSuppliers() returns a Promise
-            if (Array.isArray(data)) {
-                setSuppliers(data);
-            } else {
-                throw new Error('Fetched data is not an array');
-            }
-        } catch (error) {
-            console.error('Error fetching suppliers', error);
-        }
-    };
+    // const fetchSuppliersFunc = async () => {
+    //     try {
+    //         const data = await fetchGetAllSuppliers(); // Assuming fetchGetAllSuppliers() returns a Promise
+    //         if (Array.isArray(data)) {
+    //             setSuppliers(data);
+    //         } else {
+    //             throw new Error('Fetched data is not an array');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching suppliers', error);
+    //     }
+    // };
 
-    const fetchCategoriesFunc = async () => {
-        try {
-            const data = await fetchGetAllCategories(); // Assuming fetchGetAllCategories() returns a Promise
-            if (Array.isArray(data)) {
-                setCategories(data);
-            } else {
-                throw new Error('Fetched data is not an array');
-            }
-        } catch (error) {
-            console.error('Error fetching categories', error);
-        }
-    };
+    // const fetchCategoriesFunc = async () => {
+    //     try {
+    //         const data: ICategory[] = await fetchGetAllCategories(); // Assuming fetchGetAllCategories() returns a Promise
+    //         if (Array.isArray(data)) {
+    //             setCategories(data);
+    //         } else {
+    //             throw new Error('Fetched data is not an array');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching categories', error);
+    //     }
+    // };
 
     const handleModalOpen = (modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: true}));
@@ -228,19 +205,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
 
 
     const resetNewProduct = () => {
-        setNewProduct({
-            available_quantity: 1, sold_quantity: 0, total_quantity: 0,
-            name: '',
-            supplier_id: '',
-            purchase_total_price: 0.00,
-            purchase_price_per_item: 0.00,
-            category_ids: [],
-            created_date: new Date().toISOString().slice(0, 10),
-            selling_total_price: 0.00,
-            selling_price_per_item: 0.00,
-            selling_quantity: 0
-
-        });
+        setNewProduct(createEmptyProduct());
     };
 
     const resetPurchaseDetails = () => {
@@ -264,7 +229,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         setSaleData(null);
     };
 
-    const resetStatesMap = {
+    const resetStatesMap: Partial<Record<ModalNames, () => void>> = {
         openAdd: resetNewProduct,
         openPurchase: resetPurchaseDetails,
         openEdit: resetEditProduct,
@@ -285,11 +250,6 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         handleModalClose('openDelete');
 
         setSelectedDeleteModalProductId(null);
-    };
-
-    const showSnackbar = (message: string, severity: 'success' | 'error' | 'info' | 'warning') => {
-        setSnackbar({message, severity});
-        setOpenSnackbar(true);
     };
 
 
@@ -355,10 +315,10 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
             await addPurchase(editProduct.id, purchaseData);
             handleModalClose('openPurchase');
             await fetchProductsFunc();
-            showSnackbar('Purchase submitted successfully!', 'success'); // Show success message
+            showSnackbarMessage('Purchase submitted successfully!', 'success')
         } catch (error) {
-            console.error('There was an error processing the purchase!', error);
-            showSnackbar('Failed to process the purchase!', 'error'); // Show error message
+            showSnackbarMessage('There was an error processing the purchase!', 'error')
+
         }
     };
 
@@ -381,12 +341,12 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         addSupplier(newSupplier)
             .then(() => {
                 handleModalClose("openAddSupplierOpen");
-                showSnackbar('Supplier completed successfully!', 'success'); // Show success message
-                fetchSuppliersFunc(); // Оновити список постачальників після додавання
+                showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
+                fetchSuppliersFromContext(); // Оновити список постачальників після додавання
             })
             .catch((error) => {
                 console.error('There was an error saving the supplier!', error);
-                showSnackbar('There was an error saving the supplier!', "error");
+                showSnackbarMessage('There was an error saving the supplier!', "error"); // Show success message
             });
     };
 
@@ -417,6 +377,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         selling_price_per_item: product.selling_price_per_item,
         selling_total_price: product.selling_total_price,
         selling_quantity: product.selling_quantity,
+        article: product.article,
     });
 
 
@@ -450,21 +411,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
     // };
 
     const handleOpenSale = (product: IProduct) => {
-        setEditProduct({
-            available_quantity: product.available_quantity,
-            sold_quantity: product.sold_quantity,
-            total_quantity: product.total_quantity,
-            id: product.id,
-            name: product.name,
-            supplier_id: product.supplier ? product.supplier.id : '',
-            purchase_total_price: product.purchase_total_price,
-            purchase_price_per_item: product.purchase_price_per_item,
-            category_ids: product.category_ids,
-            created_date: formatDate(product.created_date),
-            selling_price_per_item: product.selling_price_per_item,
-            selling_total_price: product.selling_total_price,
-            selling_quantity: product.selling_quantity
-        })
+        setEditProduct(mapProductToEditProduct(product));
 
         setSaleData({
             packaging_id: '',
@@ -502,25 +449,41 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
     };
 
 
+    // const createNewCategory = (categoryName: string) => {
+    //     addNewCategory(categoryName).then(() => {
+    //         fetchGetAllCategories().then(data => {
+    //
+    //             if (Array.isArray(data)) {
+    //                 setCategories(data as ICategory[]);
+    //             } else {
+    //                 console.error('Fetched data is not an array:', data);
+    //                 setCategories([])
+    //             }
+    //
+    //         })
+    //
+    //         handleModalClose("openCategoryCreate"); // Закрити модальне вікно після додавання
+    //     })
+    //         .catch(error => {
+    //             console.error('There was an error adding the product!', error);
+    //         });
+    // };
+
     const createNewCategory = (categoryName: string) => {
         addNewCategory(categoryName).then(() => {
-            fetchGetAllCategories().then(data => {
-
-                if (Array.isArray(data)) {
-                    setCategories(data as ICategory[]);
-                } else {
-                    console.error('Fetched data is not an array:', data);
-                    setCategories([])
-                }
-
-            })
+            fetchCategoriesFromContext();
 
             handleModalClose("openCategoryCreate"); // Закрити модальне вікно після додавання
+            showSnackbarMessage('Category added successfully!', 'success'); // Show success message
+
         })
             .catch(error => {
+                showSnackbarMessage('Failed to add the Category!', 'error'); // Show error message
+
                 console.error('There was an error adding the product!', error);
             });
     };
+
 
     // Use this effect to set low quantity products when data changes
     // useEffect(() => {
@@ -539,7 +502,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
     // }
 
     useEffect(() => {
-        if (filteredProducts.length > 0 && typeof searchTerm === 'string') {
+        if (filteredProducts.length > 0) {
             const array = filteredProducts.filter(product => {
                 const name = product.name ?? '';
                 return name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -602,6 +565,10 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         exportToExcel(productIds);
     };
 
+    const {
+        handleRemoveCategory,
+    } = useNewProduct();
+
 
 // Обробник для зміни слайдера
     return (
@@ -651,20 +618,17 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
                             </Grid>
                         </Grid>
                         <FilterComponent
-                            products={products}
                             setFilteredProducts={setFilteredProducts}
                             filters={filters}
                             setFilters={setFilters}
                             filterArrayLength={filteredProducts.length}
-                            categories={categories}
-                            suppliers={suppliers}
                             resetFilters={resetFilters}/>
                     </Drawer>
 
                     <ResponsiveProductView
-                        selectedLowProductId={selectedLowProductId}
+                        selectedLowProductId={selectedDeleteModalProductId}
                         filteredAndSearchedProducts={filteredAndSearchedProducts}
-                        ref={ref}
+                        onRowRef={onRowRef}
                         currentPage={currentPage}
                         itemsPerPage={itemsPerPage}
                         setCurrentPage={setCurrentPage}
@@ -699,12 +663,13 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
 
 
             {
-                modalState.openAdd && <AddProductModal
-                    suppliers={suppliers}
+                modalState.openAdd &&
+                <AddProductModal
+                    isAuthenticated={isAuthenticated}
+                    handleRemoveCategory={handleRemoveCategory}
                     setNewProduct={setNewProduct}
                     newProduct={newProduct}
                     openAdd={modalState.openAdd}
-                    categories={categories}
                     handleAdd={handleAddProduct}
                     handleCategoryChange={handleCategoryChange}
                     handleCloseAdd={() => handleModalClose("openAdd")}
@@ -712,25 +677,24 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
             }
 
             {(modalState.productInfoModal && infoProduct && !loadingState.isLoading) &&
-            <ProductInfoModal
-                product={infoProduct}
-                open={modalState.productInfoModal}
-                onClose={() => handleModalClose("productInfoModal")}/>
+                <ProductInfoModal
+                    product={infoProduct}
+                    open={modalState.productInfoModal}
+                    onClose={() => handleModalClose("productInfoModal")}/>
             }
 
             {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
-            <EditProductModal suppliers={suppliers}
-                              isAuthenticated={isAuthenticated}
-                              selectedCategories={selectedCategories} categories={categories}
-                              openEdit={modalState.openEdit}
-                              handleCloseEdit={() => handleModalClose("openEdit")}
-                              editProduct={editProduct}
-                              setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
+                <EditProductModal
+                    isAuthenticated={isAuthenticated}
+                    openEdit={modalState.openEdit}
+                    handleCloseEdit={() => handleModalClose("openEdit")}
+                    editProduct={editProduct}
+                    setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
 
 
-            {(modalState.openHistory && productId) && (
+            {(modalState.openHistory && productId && products !== undefined) && (
                 <ProductHistoryModal
-                    productName={products.find(product => product.id === productId).name}
+                    productName={products.find(p => p.id === productId)?.name ?? '—'}
                     openHistory={modalState.openHistory}
                     onClose={() => handleModalClose("openHistory")}
                     productId={productId} // Передаємо productId
@@ -738,15 +702,14 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
             )}
 
             {(modalState.openPurchase && purchaseDetails && editProduct?.name) &&
-            <PurchaseProductModal
-                isAuthenticated={isAuthenticated}
-                nameProduct={editProduct.name}
-                openPurchase={modalState.openPurchase}
-                suppliers={suppliers}
-                handleClosePurchase={() => handleModalClose("openPurchase")}
-                purchaseDetails={purchaseDetails}
-                setPurchaseDetails={setPurchaseDetails}
-                handleSubmitPurchase={handleSubmitPurchase}/>}
+                <PurchaseProductModal
+                    isAuthenticated={isAuthenticated}
+                    nameProduct={editProduct.name}
+                    openPurchase={modalState.openPurchase}
+                    handleClosePurchase={() => handleModalClose("openPurchase")}
+                    purchaseDetails={purchaseDetails}
+                    setPurchaseDetails={setPurchaseDetails}
+                    handleSubmitPurchase={handleSubmitPurchase}/>}
 
 
             {
@@ -774,10 +737,10 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
                 />
             }
 
-            <ConfirmDeleteModal openConfirmDeleteModal={modalState.openDelete}
-                                handleCloseDeleteModal={handleCloseDeleteModal}
-                                selectedDeleteModalProductId={selectedDeleteModalProductId}
-                                handleDelete={handleDelete}/>
+            {selectedDeleteModalProductId!==null && <ConfirmDeleteModal openConfirmDeleteModal={modalState.openDelete}
+                                 handleCloseDeleteModal={handleCloseDeleteModal}
+                                 selectedDeleteModalProductId={selectedDeleteModalProductId}
+                                 handleDelete={handleDelete}/>}
 
             <AddSupplierModal
                 isAuthenticated={isAuthenticated}
@@ -849,6 +812,6 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = forwardRef(({
         </React.Fragment>
 
     );
-});
+};
 
 export default ProductsCatalog;

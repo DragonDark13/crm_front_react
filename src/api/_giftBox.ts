@@ -1,5 +1,5 @@
 import {GiftSetPayload, IGiftSet} from "../utils/types";
-import {API_ENDPOINTS, axiosInstance, deleteResource, fetchResource, postResource, putResource} from "./api";
+import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 
 
 export const createGiftBox = (newGiftBox: GiftSetPayload): Promise<void> => {

@@ -1,8 +1,9 @@
 // Операції з категоріями
 import {API_ENDPOINTS, fetchResource, postResource} from "./api";
+import {ICategory} from "../utils/types.ts";
 
-export const fetchGetAllCategories = (): Promise<string[]> => {
-    return fetchResource<string[]>(API_ENDPOINTS.CATEGORIES);
+export const fetchGetAllCategories = (): Promise<ICategory[]> => {
+    return fetchResource<ICategory[]>(API_ENDPOINTS.CATEGORIES);
 };
 
 export const addNewCategory = (name: string): Promise<{ message: string; category: { id: number; name: string } }> => {
