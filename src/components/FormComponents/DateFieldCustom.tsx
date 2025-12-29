@@ -1,7 +1,7 @@
 import React from 'react';
 import {FilledTextFieldProps, TextField, TextFieldProps} from "@mui/material";
 
-interface IDateFieldCustom extends FilledTextFieldProps {
+interface IDateFieldCustom extends Omit<TextFieldProps,'variant'> {
 
 }
 
@@ -10,6 +10,7 @@ const DateFieldCustom = ({...rest}: IDateFieldCustom) => {
     const minDate = '2023-01-01';
     return (
         <TextField
+            variant="filled"
             {...rest}
             sx={{marginBottom: 0}}
             size={"small"}

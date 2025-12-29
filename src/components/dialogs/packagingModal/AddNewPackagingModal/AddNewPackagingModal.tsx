@@ -156,7 +156,7 @@ const AddNewPackagingModal = ({
                                 onChange={handleQuantityChange}
                                 onIncrement={() => handleIncrementGlobal(quantityPurchased, 1000, setQuantityPurchased)}
                                 onDecrement={() => handleDecrementGlobal(quantityPurchased, setQuantityPurchased)}
-                                variant={"filled"}/>
+                            />
 
                             {/*<TextField*/}
                             {/*    label="Кількість придбаного"*/}

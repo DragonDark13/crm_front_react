@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, {FC, ReactNode} from "react";
 import {
     Select,
     MenuItem,
@@ -6,7 +6,7 @@ import {
     FormControl,
     InputLabel,
     OutlinedInput,
-    Box,
+    Box, SelectChangeEvent,
 } from "@mui/material";
 import {ICategory, IGiftSet} from "../../utils/types";
 
@@ -23,7 +23,7 @@ const CategoriesSelect: FC<ICategoriesProps> = ({
                                                     handleCategoryChange,
                                                     handleRemoveCategory
                                                 }) => {
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleChange = (event: SelectChangeEvent<number[]>, child: ReactNode) => {
         const value = event.target.value as number[];
         handleCategoryChange(value);
     };

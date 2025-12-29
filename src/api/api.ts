@@ -66,7 +66,7 @@ export const API_ENDPOINTS = {
 };
 
 // Уніфікована обробка помилок
-export const handleError = (error: AxiosError): never => {
+export const handleError = (error: AxiosError<unknown,any>): never => {
     const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
     throw new Error(errorMessage);
 };

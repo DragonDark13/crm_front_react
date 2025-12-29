@@ -71,7 +71,7 @@ const AddInvestmentDialog: React.FC<AddInvestmentDialogProps> = ({
                 <DateFieldCustom slotProps={{inputLabel: {shrink: true}}}
                                  label="Дата Закупки" value={newInvestment.date}
                                  onChange={(e) => setNewInvestment({...newInvestment, date: e.target.value})}
-                                 variant={"filled"}/>
+                                 />
                 {/*<TextField*/}
                 {/*    label="Дата"*/}
                 {/*    type="date"*/}

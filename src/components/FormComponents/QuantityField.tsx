@@ -3,13 +3,13 @@ import {
     Box, FilledTextFieldProps,
     IconButton,
     InputAdornment,
-    TextField,
+    TextField, TextFieldProps,
 } from "@mui/material";
 //TODO інркремент і дкремент
 import {Add, Remove} from '@mui/icons-material';
 
 
-interface QuantityFieldProps extends FilledTextFieldProps {
+interface QuantityFieldProps extends Omit<TextFieldProps,'variant'> {
     value: number;
     onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     onIncrement: () => void; // Інкремент
@@ -37,6 +37,7 @@ const  QuantityField: FC<QuantityFieldProps> = ({
         <Box display="flex" alignItems="center">
 
             <TextField
+                variant={'filled'}
                 {...rest}
                 size={"small"}
                 slotProps={{
