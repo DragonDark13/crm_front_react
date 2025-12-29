@@ -9,7 +9,7 @@ import {useCustomers} from "../Provider/CustomerContext";
 import {ICustomerDetails} from "../../utils/types";
 import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
-import {AxiosError} from "axios";
+import axios, {AxiosError} from "axios";
 import {useAuth} from "../context/AuthContext";
 import CustomerDetailsDialog from "../dialogs/CustomersDialogs/CustomerDetailsDialog/CustomerDetailsDialog";
 import EditCustomerDialog from "../dialogs/CustomersDialogs/EditCustomerDialog/EditCustomerDialog";
@@ -67,9 +67,16 @@ const CustomerPage: React.FC = () => {
 
         createCustomerFunc(newCustomerData).then(() => {
             setOpenAddNewCustomerDialog(false);
-        }).catch((error: AxiosError) => {
-            showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
-            console.error('Error creating customer:', error);
+        }).catch((error: unknown) => {
+            if (axios.isAxiosError(error)) {
+                showSnackbarMessage(
+                    'Error creating customer: ' +
+                    (error.response?.data?.error ?? 'Unknown error'),
+                    'error'
+                );
+            } else {
+                showSnackbarMessage('Unknown error', 'error');
+            }
         })
 
     };
@@ -107,9 +114,17 @@ const CustomerPage: React.FC = () => {
             fetchGetAllCustomersFunc()
             setOpenEditCustomerDialog(false);
             showSnackbarMessage('Customer updated successfully!', 'success');
-        }).catch((error: AxiosError) => {
-            showSnackbarMessage('Error updating customer: ' + error.response.data.error, 'error');
-            console.error('Error updating customer:', error);
+        }).catch((error: unknown) => {
+
+            if (axios.isAxiosError(error)) {
+                showSnackbarMessage(
+                    'Error updating customer: ' +
+                    (error.response?.data?.error ?? 'Unknown error'),
+                    'error'
+                );
+            } else {
+                showSnackbarMessage('Unknown error', 'error');
+            }
         })
 
 
@@ -124,9 +139,17 @@ const CustomerPage: React.FC = () => {
         deleteCustomerData(customerId).then(() => {
             fetchGetAllCustomersFunc()
             showSnackbarMessage('Customer deleted successfully!', 'success');
-        }).catch((error: AxiosError) => {
-            showSnackbarMessage('Error deleting customer: ' + error.response.data.error, 'error');
-            console.error('Error deleting customer:', error);
+        }).catch((error: unknown) => {
+            if (axios.isAxiosError(error)) {
+                showSnackbarMessage(
+                    'Error deleting customer: ' +
+                    (error.response?.data?.error ?? 'Unknown error'),
+                    'error'
+                );
+            } else {
+                showSnackbarMessage('Unknown error', 'error');
+            }
+
         })
 
 
@@ -150,9 +173,19 @@ const CustomerPage: React.FC = () => {
                     fetchGetAllCustomersFunc();
                     showSnackbarMessage('Клієнта успішно видалено!', 'success');
                 })
-                .catch((error: AxiosError) => {
-                    showSnackbarMessage('Помилка видалення: ' + error.response?.data?.error || '', 'error');
-                    console.error('Error deleting customer:', error);
+                .catch((error: unknown) => {
+
+                    if (axios.isAxiosError(error)) {
+                        showSnackbarMessage(
+                            'Error deleting customer: ' +
+                            (error.response?.data?.error ?? 'Unknown error'),
+                            'error'
+                        );
+                    } else {
+                        showSnackbarMessage('Unknown error', 'error');
+                    }
+
+
                 })
                 .finally(() => {
                     setOpenConfirmDialog(false);
@@ -234,11 +267,11 @@ const CustomerPage: React.FC = () => {
                 handleCloseAddNewCustomerDialog={handleCloseAddNewCustomerDialog}
                 handleAddCustomer={handleCreateCustomer}/>
 
-            <CustomerDetailsDialog
+            {selectedCustomerDetails && <CustomerDetailsDialog
                 open={openDetailsDialog}
                 customer={selectedCustomerDetails}
                 handleClose={handleCloseDetailsDialog}
-            />
+            />}
 
             {/* Модальне вікно для редагування клієнта */}
             <EditCustomerDialog

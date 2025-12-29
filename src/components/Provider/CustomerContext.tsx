@@ -1,23 +1,16 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
-import {ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
-import {AxiosError} from "axios";
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import {ICustomer, ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
+import axios, {AxiosError} from "axios";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
 
-// Типізація клієнтів
-interface ICustomer {
-    id: number;
-    name: string;
-    email: string;
-    address: string;
-    phone_number: string;
-}
+
 
 // Типізація для контексту
 interface CustomerContextProps {
     customers: ICustomer[];
     fetchGetAllCustomersFunc: () => void;
-    createCustomerFunc: (newCustomerData: INewGiftCustomerDetails) => Promise<void>; // Додаємо функцію для створення
+    createCustomerFunc: (newCustomerData: ICustomerDetails) => Promise<void>; // Додаємо функцію для створення
     loading: boolean; // Додаємо поле для перевірки завантаження
 }
 
@@ -25,7 +18,7 @@ interface CustomerContextProps {
 const CustomerContext = createContext<CustomerContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const CustomerProvider: React.FC = ({children}) => {
+export const CustomerProvider: React.FC = ({children}:PropsWithChildren) => {
     const [customers, setCustomers] = useState<ICustomer[]>([]);
     const [loading, setLoading] = useState(true); // Стан завантаження
     const {showSnackbarMessage} = useSnackbarMessage()
@@ -52,9 +45,16 @@ export const CustomerProvider: React.FC = ({children}) => {
             setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список
             showSnackbarMessage('Customer created successfully!', 'success');
             fetchGetAllCustomersFunc();
-        } catch (error: AxiosError) {
-            console.error('Error creating customer:', error);
-            showSnackbarMessage('Error creating customer: ' + error.response?.data?.error || 'Unknown error', 'error');
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                showSnackbarMessage(
+                    'Error creating customer: ' +
+                    (error.response?.data?.error ?? 'Unknown error'),
+                    'error'
+                );
+            } else {
+                showSnackbarMessage('Unknown error', 'error');
+            }
         }
     };
 

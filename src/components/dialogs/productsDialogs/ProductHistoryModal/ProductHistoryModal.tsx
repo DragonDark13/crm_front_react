@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import axios from "axios";
 import {
     DialogContent,
     MenuItem,
     Paper,
-    Select,
+    Select, SelectChangeEvent,
     Tab,
     Table,
     TableBody,
@@ -197,7 +197,7 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         setTabIndex(newValue);
     };
 
-    const handleViewChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleViewChange = (event: SelectChangeEvent<number>, child: ReactNode) => {
         setSelectedView(event.target.value as number);
     };
 

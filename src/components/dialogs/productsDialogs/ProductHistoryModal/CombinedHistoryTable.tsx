@@ -23,7 +23,7 @@ interface CombinedHistoryRecord {
 }
 
 interface CombinedHistoryTableProps {
-    productHistory: IProductHistory[];
+    productHistory: IProductHistory;
 }
 
 const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {

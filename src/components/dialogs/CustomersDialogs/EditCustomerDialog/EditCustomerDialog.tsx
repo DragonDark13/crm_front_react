@@ -91,7 +91,7 @@ const EditCustomerDialog: React.FC<IEditCustomerDialog> = ({
                 />
             </DialogContent>
             <DialogActions>
-                <CancelButton v onClick={handleCloseEditCustomerDialog} >
+                <CancelButton  onClick={handleCloseEditCustomerDialog} >
                     Скасувати
                 </CancelButton>
                 <Button variant={"contained"} onClick={handleSave} >
