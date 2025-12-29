@@ -11,7 +11,7 @@ import {
     TableFooter, Button, Tooltip, IconButton
 } from "@mui/material";
 import {ICustomer, IonDeleteHistoryRecord} from "../../../../utils/types";
-import {IProductSaleHistoryRecord, ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {IProductSaleHistoryRecord, IProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
@@ -20,7 +20,7 @@ import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 
 interface SalesHistoryTableProps {
     onDeleteHistoryRecord: (params: IonDeleteHistoryRecord) => void;
-    productHistory: ProductHistory;
+    productHistory: IProductHistory;
     sortByDate: (arr: IProductSaleHistoryRecord[], field: string) => IProductSaleHistoryRecord[];
     isAuthenticated: boolean
     refreshHistory: () => void;

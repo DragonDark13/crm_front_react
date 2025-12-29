@@ -1,11 +1,11 @@
 import React from "react";
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from "@mui/material";
-import {IStockHistoryRecord, ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {IStockHistoryRecord, IProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
 
 interface StockHistoryTableProps {
-    productHistory: ProductHistory;
+    productHistory: IProductHistory;
     sortByDate: (arr: IStockHistoryRecord[], field: string) => IStockHistoryRecord[];
 }
 

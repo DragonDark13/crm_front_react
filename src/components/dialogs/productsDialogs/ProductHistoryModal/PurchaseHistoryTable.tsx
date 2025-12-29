@@ -11,7 +11,7 @@ import {
     Typography, Button, IconButton, Tooltip, Box, Dialog, DialogTitle, DialogContent, DialogActions
 } from "@mui/material";
 import {IonDeleteHistoryRecord, ISupplierFull} from "../../../../utils/types";
-import {IProductPurchaseHistoryRecord, ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {IProductPurchaseHistoryRecord, IProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {useAuth} from "../../../context/AuthContext";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
@@ -32,7 +32,7 @@ interface PurchaseHistoryRecord {
 
 interface PurchaseHistoryTableProps {
     onDeleteHistoryRecord: (params: IonDeleteHistoryRecord) => void;
-    productHistory: ProductHistory;
+    productHistory: IProductHistory;
     sortByDate: (arr: IProductPurchaseHistoryRecord[], field: string) => IProductPurchaseHistoryRecord[];
     isAuthenticated: boolean
     refreshHistory: () => void;

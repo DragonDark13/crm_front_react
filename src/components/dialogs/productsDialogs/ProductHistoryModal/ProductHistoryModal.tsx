@@ -95,7 +95,7 @@ export interface IStockHistoryRecord {
     change_amount: number;
 }
 
-export interface ProductHistory {
+export interface IProductHistory {
     stock: IStockHistoryRecord[];
     purchase: IProductPurchaseHistoryRecord[];
     sales: IProductSaleHistoryRecord[];
@@ -123,7 +123,7 @@ const TabPanel: React.FC<TabPanelProps> = ({value, index, children}) => {
 };
 
 const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IProductHistoryModal) => {
-    const [productHistory, setProductHistory] = useState<ProductHistory>({stock: [], purchase: [], sales: []});
+    const [productHistory, setProductHistory] = useState<IProductHistory>({stock: [], purchase: [], sales: []});
     const [tabIndex, setTabIndex] = useState<number>(0);
     const [selectedView, setSelectedView] = useState<number>(0);
     const [isMobile, setIsMobile] = useState<boolean>(false);

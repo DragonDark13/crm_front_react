@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
 import {fetchGetAllCategories} from "../../api/_categories";
 
 // Типізація категорій
@@ -17,7 +17,7 @@ interface CategoryContextProps {
 const CategoryContext = createContext<CategoryContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const CategoryProvider: React.FC = ({ children }) => {
+export const CategoryProvider: React.FC = ({ children }:PropsWithChildren) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   const fetchCategoriesFunc = async () => {

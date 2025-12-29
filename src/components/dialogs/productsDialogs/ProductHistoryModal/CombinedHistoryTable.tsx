@@ -10,7 +10,7 @@ import {
     TableFooter,
     Typography
 } from "@mui/material";
-import {ProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {IProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
 interface CombinedHistoryRecord {
@@ -23,7 +23,7 @@ interface CombinedHistoryRecord {
 }
 
 interface CombinedHistoryTableProps {
-    productHistory: ProductHistory[];
+    productHistory: IProductHistory[];
 }
 
 const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
