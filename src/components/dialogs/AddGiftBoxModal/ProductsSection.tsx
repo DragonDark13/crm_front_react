@@ -99,7 +99,7 @@ const ProductsSection = ({
                                     onIncrement={() => handleQuantityChange(product.id, item.quantity + 1, "product")}
                                     onDecrement={() => handleQuantityChange(product.id, item.quantity - 1, "product")}
                                     helperText={item.quantity > product.available_quantity ? "Перевищено доступну кількість" : ""}
-                                    error={item.quantity > product.available_quantity} variant={"filled"}                                />
+                                    error={item.quantity > product.available_quantity}                                 />
 
                             </Grid>
                             <Grid item xs={6}>

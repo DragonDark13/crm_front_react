@@ -9,7 +9,7 @@ import {
 import {Add, Remove} from '@mui/icons-material';
 
 
-interface QuantityFieldProps extends Omit<TextFieldProps,'variant'> {
+interface QuantityFieldProps extends Omit<TextFieldProps, 'variant'> {
     value: number;
     onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     onIncrement: () => void; // Інкремент
@@ -20,7 +20,7 @@ interface QuantityFieldProps extends Omit<TextFieldProps,'variant'> {
 }
 
 
-const  QuantityField: FC<QuantityFieldProps> = ({
+const QuantityField: FC<QuantityFieldProps> = ({
                                                    value,
                                                    onChange,
                                                    error,
@@ -37,12 +37,42 @@ const  QuantityField: FC<QuantityFieldProps> = ({
         <Box display="flex" alignItems="center">
 
             <TextField
-                variant={'filled'}
-                {...rest}
+                variant={'outlined'}
+
                 size={"small"}
                 slotProps={{
+                    htmlInput:
+                        {
+                            min: min,
+                            max: max,
+                            step: 1,
+                            pattern: "[1-9][0-9]*"
+                        },
                     input: {
                         readOnly: readonly,
+
+
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <IconButton
+                                    onClick={onDecrement}
+                                    disabled={value <= min || readonly} // Вимкнути кнопку, якщо значення <= 1
+                                >
+                                    <Remove/>
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    onClick={onIncrement}
+                                    disabled={value >= max || readonly} // Вимкнути кнопку, якщо значення >= 1000
+                                >
+                                    <Add/>
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+
                     },
                 }} // Додано проп для запрету редагування поля
                 label={label}
@@ -53,35 +83,10 @@ const  QuantityField: FC<QuantityFieldProps> = ({
                 margin="normal"
                 error={!!error}
                 helperText={error}
-                inputProps={{
-                    min: min,
-                    max: max,
-                    step: 1,
-                    pattern: "[1-9][0-9]*"
-                }}
 
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <IconButton
-                                onClick={onDecrement}
-                                disabled={value <= min || readonly} // Вимкнути кнопку, якщо значення <= 1
-                            >
-                                <Remove/>
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                onClick={onIncrement}
-                                disabled={value >= max || readonly} // Вимкнути кнопку, якщо значення >= 1000
-                            >
-                                <Add/>
-                            </IconButton>
-                        </InputAdornment>
-                    ),
-                }}
+
+                {...rest}
+
             />
 
         </Box>

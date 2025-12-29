@@ -91,7 +91,8 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
                                                               showSnackbarMessage,
                                                               sortProducts,
                                                               resetFilters,
-                                                              onRowRef
+                                                              onRowRef,
+                                                              selectedLowProductId
 
                                                           }: IProductsCatalogProps) => {
 
@@ -102,9 +103,8 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
     // const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     // const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
     // let navigate = useNavigate();
-    const {fetchCategoriesFunc:fetchCategoriesFromContext} = useCategories()
-    const {fetchSuppliersFunc:fetchSuppliersFromContext} = useSuppliers()
-
+    const {fetchCategoriesFunc: fetchCategoriesFromContext} = useCategories()
+    const {fetchSuppliersFunc: fetchSuppliersFromContext} = useSuppliers()
 
 
     // const {logout} = useAuth();
@@ -626,7 +626,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
                     </Drawer>
 
                     <ResponsiveProductView
-                        selectedLowProductId={selectedDeleteModalProductId}
+                        selectedLowProductId={selectedLowProductId}
                         filteredAndSearchedProducts={filteredAndSearchedProducts}
                         onRowRef={onRowRef}
                         currentPage={currentPage}
@@ -737,10 +737,10 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
                 />
             }
 
-            {selectedDeleteModalProductId!==null && <ConfirmDeleteModal openConfirmDeleteModal={modalState.openDelete}
-                                 handleCloseDeleteModal={handleCloseDeleteModal}
-                                 selectedDeleteModalProductId={selectedDeleteModalProductId}
-                                 handleDelete={handleDelete}/>}
+            {selectedDeleteModalProductId !== null && <ConfirmDeleteModal openConfirmDeleteModal={modalState.openDelete}
+                                                                          handleCloseDeleteModal={handleCloseDeleteModal}
+                                                                          selectedDeleteModalProductId={selectedDeleteModalProductId}
+                                                                          handleDelete={handleDelete}/>}
 
             <AddSupplierModal
                 isAuthenticated={isAuthenticated}

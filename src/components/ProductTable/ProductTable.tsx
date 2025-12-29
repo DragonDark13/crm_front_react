@@ -29,7 +29,7 @@ interface IProductTableProps {
     filteredAndSearchedProducts: IProduct[]
     currentPage: number;
     itemsPerPage: number;
-    selectedLowProductId: number,
+    selectedLowProductId: number|null,
     onRowRef?: (el: HTMLTableRowElement | null, index: number) => void;
 }
 
