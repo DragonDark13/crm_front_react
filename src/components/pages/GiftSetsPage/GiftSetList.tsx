@@ -30,8 +30,8 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
     const {giftSets, fetchGiftSetsData, deleteGiftSet, updateExistingGiftSet, sellGiftSetData} = useGiftSet();
 
 
-    const [expandedProduct, setExpandedProduct] = useState(null);
-    const [expandedPackaging, setExpandedPackaging] = useState(null);
+    const [expandedProduct, setExpandedProduct] = useState<number|null>(null);
+    const [expandedPackaging, setExpandedPackaging] = useState<number|null>(null);
 
     const [openConfirmGiftDialog, setOpenConfirmGiftDialog] = useState(false);
     const [selectedGiftSetId, setSelectedGiftSetId] = useState<number | null>(null);
@@ -48,11 +48,11 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
         setOpenConfirmGiftDialog(false);
     };
 
-    const handleToggleProduct = (id) => {
+    const handleToggleProduct = (id:number) => {
         setExpandedProduct(expandedProduct === id ? null : id);
     };
 
-    const handleTogglePackaging = (id) => {
+    const handleTogglePackaging = (id:number) => {
         setExpandedPackaging(expandedPackaging === id ? null : id);
     };
 
@@ -219,7 +219,7 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
                     open={openDialogEdit}
                     onClose={handleDialogClose}
                     giftBox={selectedGiftSet}
-                    onSave={handleSaveEdit}
+                    onSaveGiftBox={handleSaveEdit}
                 />
             )}
             {selectedGiftSet && (

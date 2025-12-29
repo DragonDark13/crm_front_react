@@ -38,7 +38,7 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
         setLoading(true);
         setError(null);
         try {
-            const {materials} = await fetchListPackagingMaterials();
+            const materials = await fetchListPackagingMaterials();
             setPackagingMaterials(materials);
         } catch (err) {
             setError('Не вдалося завантажити пакувальні матеріали');

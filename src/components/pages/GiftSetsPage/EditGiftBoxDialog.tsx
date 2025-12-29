@@ -10,12 +10,9 @@ import {
     DialogActions,
     IconButton
 } from "@mui/material";
-import {Autocomplete} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import {useProducts} from "../../Provider/ProductContext";
 import {usePackaging} from "../../Provider/PackagingContext";
-import {IMaterial, IProduct} from "../../../utils/types";
+import {IGiftSet, IMaterial, IProduct} from "../../../utils/types";
 import QuantityField from "../../FormComponents/QuantityField";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import CancelButton from "../../Buttons/CancelButton";
@@ -23,13 +20,22 @@ import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import ProductNameField from "../../FormComponents/ProductNameField";
 import PriceField from "../../FormComponents/PriceField";
 
+interface IEditGiftBoxDialog {
+    open: boolean;
+    onClose: () => void;
+    giftBox:IGiftSet
+    onSaveGiftBox: (giftBox:IGiftSet) => void;
+    isAuthenticated: boolean;
+}
+
+
 const EditGiftBoxDialog = ({
                                open,
                                onClose,
                                giftBox,
-                               onSave,
+                                onSaveGiftBox,
                                isAuthenticated
-                           }) => {
+                           }:IEditGiftBoxDialog) => {
     const {products} = useProducts();
     const {packagingMaterials} = usePackaging();
 
@@ -73,7 +79,7 @@ const EditGiftBoxDialog = ({
         };
 
         const availableQuantity = getItemById(itemId, type)?.available_quantity;
-        if (newQuantity <= availableQuantity) {
+        if (availableQuantity!==undefined && newQuantity <= availableQuantity) {
             if (type === 'product') {
                 // Оновлюємо кількість продуктів
                 setSelectedProducts((prevSelectedProducts) =>
@@ -100,89 +106,6 @@ const EditGiftBoxDialog = ({
     };
 
 
-    const handleIncreaseQuantity = (itemId, type) => {
-        const setItems = type === "product" ? setSelectedProducts : setSelectedPackaging;
-        setItems((prev) =>
-            prev.map((item) =>
-                item.item_id === itemId
-                    ? {...item, quantity: item.quantity + 1}
-                    : item
-            )
-        );
-    };
-
-    const handleDecreaseQuantity = (itemId, type) => {
-        const setItems = type === "product" ? setSelectedProducts : setSelectedPackaging;
-        setItems((prev) =>
-            prev.map((item) =>
-                item.item_id === itemId && item.quantity > 1
-                    ? {...item, quantity: item.quantity - 1}
-                    : item
-            )
-        );
-    };
-
-    const handleRemoveItem = (itemId, type) => {
-        const setItems = type === "product" ? setSelectedProducts : setSelectedPackaging;
-        setItems((prev) => prev.filter((item) => item.item_id !== itemId));
-    };
-
-    const handleProductSelect = (event, value: IProduct) => {
-        if (value) {
-            setSelectedProducts((prev) => {
-                const existingProductIndex = prev.findIndex(item => item.product_id === value.id);
-
-                if (existingProductIndex >= 0) {
-                    const updatedProducts = [...prev];
-                    const existingProduct = updatedProducts[existingProductIndex];
-
-                    if (existingProduct.quantity < value.available_quantity) {
-                        existingProduct.quantity += 1;
-                    } else {
-                        showSnackbarMessage('Max quantity reached for this product.', "warning")
-
-                    }
-
-                    return updatedProducts;
-                } else {
-                    return [...prev, {
-                        product_id: value.id,
-                        quantity: 1,
-                        price: value.purchase_price_per_item,
-                        name: value.name,
-                        type: "product"
-                    }];
-                }
-            });
-        }
-    };
-
-    const handlePackagingSelect = (event, value: IMaterial) => {
-        if (value) {
-            setSelectedPackaging((prev) => {
-                const existingIndex = prev.findIndex(item => item.packaging_id === value.id);
-                if (existingIndex >= 0) {
-                    const updated = [...prev];
-                    const existing = updated[existingIndex];
-                    if (existing.quantity < value.available_quantity) {
-                        existing.quantity += 1;
-                    } else {
-                        showSnackbarMessage('Max quantity reached for this packaging.', "warning")
-                    }
-                    return updated;
-                } else {
-                    return [...prev, {
-                        packaging_id: value.id,
-                        quantity: 1,
-                        price: value.purchase_price_per_unit,
-                        name: value.name,
-                        type: "packaging"
-                    }];
-                }
-            });
-        }
-    };
-
     const handleEditGiftBox = () => {
         const updatedGiftBox = {
             id: giftBox.id,
@@ -191,7 +114,7 @@ const EditGiftBoxDialog = ({
             gift_selling_price: price,
             items: [...selectedProducts, ...selectedPackaging]
         };
-        onSave(updatedGiftBox);
+        onSaveGiftBox(updatedGiftBox);
         onClose();
     };
 

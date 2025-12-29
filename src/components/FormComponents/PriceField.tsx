@@ -21,7 +21,7 @@ const PriceField: ({value, onChange, label, ...rest}: IPriceField) => JSX.Elemen
 
 
     return (<TextField
-            variant={"filled"}
+            variant={"outlined"}
             size={"small"}
             label={label}
             type="number"

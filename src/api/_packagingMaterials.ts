@@ -3,8 +3,8 @@ import {IMaterial, IPurchasePackagingMaterial, ISupplierFull, PackagingMaterialH
 import {API_ENDPOINTS, axiosInstance, fetchResource, handleError, postResource} from "./api";
 import {AxiosResponse} from "axios";
 
-export const fetchListPackagingMaterials = (): Promise<{ materials: IMaterial[] }> => {
-    return fetchResource<{ materials: IMaterial[] }>(API_ENDPOINTS.GET_ALL_PACKAGING_MATERIALS);
+export const fetchListPackagingMaterials = (): Promise<IMaterial[]> => {
+    return fetchResource<IMaterial[]>(API_ENDPOINTS.GET_ALL_PACKAGING_MATERIALS);
 };
 
 export const getCurrentPackagingHistory = (materialId: number): Promise<PackagingMaterialHistory> => {

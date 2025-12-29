@@ -36,6 +36,8 @@ import MaterialHistoryDialog from "../../dialogs/packagingModal/MaterialHistoryD
 
 const PackagingMaterialList: React.FC = () => {
         const {packagingMaterials, fetchPackagingOptions} = usePackaging()
+        const [filteredMaterials, setFilteredMaterials] = useState<IMaterial[]>([])
+        const [currentMaterials, setCurrentMaterials] = useState<IMaterial[]>([])
         const {isAuthenticated} = useAuth();
         const [searchTerm, setSearchTerm] = useState<string>('');
         const [sortBy, setSortBy] = useState<string>('name');
@@ -49,6 +51,8 @@ const PackagingMaterialList: React.FC = () => {
         const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
         const [historyDialogOpen, setHistoryDialogOpen] = useState<boolean>(false);
         const [materialHistory, setMaterialHistory] = useState<MaterialHistoryItem[]>([]);
+
+        console.log(packagingMaterials);
 
         const mapMaterialHistory = (history: PackagingMaterialHistory, supplier: IMaterialSupplier): MaterialHistoryItem[] => {
             const purchaseMapped = history.purchase_history.map(purchase => ({
@@ -130,30 +134,34 @@ const PackagingMaterialList: React.FC = () => {
 
         // Filter and sort materials
 // Filter and sort materials
-        const filteredMaterials = packagingMaterials
-            .filter((material) =>
-                material.name.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .sort((a, b) => {
-                if (sortBy === 'name') {
-                    return sortOrder === 'asc'
-                        ? a.name.localeCompare(b.name)
-                        : b.name.localeCompare(a.name);
-                } else if (sortBy === 'purchase_price_per_unit') {
-                    return sortOrder === 'asc'
-                        ? a.purchase_price_per_unit - b.purchase_price_per_unit
-                        : b.purchase_price_per_unit - a.purchase_price_per_unit;
-                } else if (sortBy === 'available_quantity') {
-                    return sortOrder === 'asc'
-                        ? a.available_quantity - b.available_quantity
-                        : b.available_quantity - a.available_quantity;
-                } else if (sortBy === 'created_date') {
-                    const dateA = new Date(a.created_date);
-                    const dateB = new Date(b.created_date);
-                    return sortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
-                }
-                return 0;
-            });
+        const filteredMaterialsFunc = (packagingMaterials: IMaterial[]) => {
+            return packagingMaterials
+                .filter((material) =>
+                    material.name.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .sort((a, b) => {
+                    if (sortBy === 'name') {
+                        return sortOrder === 'asc'
+                            ? a.name.localeCompare(b.name)
+                            : b.name.localeCompare(a.name);
+                    } else if (sortBy === 'purchase_price_per_unit') {
+                        return sortOrder === 'asc'
+                            ? a.purchase_price_per_unit - b.purchase_price_per_unit
+                            : b.purchase_price_per_unit - a.purchase_price_per_unit;
+                    } else if (sortBy === 'available_quantity') {
+                        return sortOrder === 'asc'
+                            ? a.available_quantity - b.available_quantity
+                            : b.available_quantity - a.available_quantity;
+                    } else if (sortBy === 'created_date') {
+                        const dateA = new Date(a.created_date);
+                        const dateB = new Date(b.created_date);
+                        return sortOrder === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+                    }
+                    return 0;
+                });
+
+        }
+
 
         const handleSort = (property: string) => {
             const isAsc = sortBy === property && sortOrder === 'asc';
@@ -193,7 +201,22 @@ const PackagingMaterialList: React.FC = () => {
         };
 
 // Обчислення відображених даних на поточній сторінці
-        const currentMaterials = filteredMaterials.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        const getCurrentMaterials =(currentMaterials:IMaterial[]) => {
+            return currentMaterials.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        }
+
+        useEffect(() => {
+
+            if (packagingMaterials!==undefined) {
+                const filtered =filteredMaterialsFunc(packagingMaterials)
+                setFilteredMaterials(filtered);
+                setCurrentMaterials(getCurrentMaterials(filtered))
+            } else {
+                setFilteredMaterials([])
+                setCurrentMaterials([])
+            }
+
+        }, [packagingMaterials]);
 
         return (
             <React.Fragment>

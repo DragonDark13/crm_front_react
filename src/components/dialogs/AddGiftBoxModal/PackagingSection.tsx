@@ -1,10 +1,23 @@
 import {Autocomplete, Button, DialogContent, Divider, Grid, IconButton, TextField, Typography} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import React from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import QuantityField from "../../FormComponents/QuantityField";
 import AddButton from "../../Buttons/AddButton";
 import {Delete} from "@mui/icons-material";
+import {IMaterial, IProduct} from "../../../utils/types.ts";
+
+
+interface IPackagingSection {
+    showSelectPackaging:boolean
+    setShowSelectPackaging:Dispatch<SetStateAction<boolean>>
+    packagingMaterials:IMaterial[]
+    selectedPackaging:{ material: IMaterial, quantity: number }[]
+    handlePackagingSelect:(_: React.SyntheticEvent,
+                           value: IMaterial | null)=>void,
+    handleQuantityChange:(itemId: number, newQuantity: number, type: 'product' | 'packaging')=>void,
+    handleRemoveMaterial:(materialId: number) => void
+}
 
 const PackagingSection = ({
                               showSelectPackaging,
@@ -14,7 +27,7 @@ const PackagingSection = ({
                               handlePackagingSelect,
                               handleQuantityChange,
                               handleRemoveMaterial
-                          }) => (
+                          }:IPackagingSection) => (
     <>
         <Typography variant="body1" sx={{mt: 2}}>Пакування</Typography>
         <Divider sx={{my: 1}}/>
@@ -83,7 +96,8 @@ const PackagingSection = ({
                                     onChange={(e) => handleQuantityChange(material.id, Number(e.target.value), "packaging")}
                                     onIncrement={() => handleQuantityChange(material.id, item.quantity + 1, "packaging")}
                                     onDecrement={() => handleQuantityChange(material.id, item.quantity - 1, "packaging")}
-                                    error={item.quantity > material.available_quantity ? "Перевищено доступну кількість" : ""}
+                                    helperText={item.quantity > material.available_quantity ? "Перевищено доступну кількість" : ""}
+                                    error={item.quantity > material.available_quantity }
                                 />
                             </Grid>
                             <Grid item xs={6}>

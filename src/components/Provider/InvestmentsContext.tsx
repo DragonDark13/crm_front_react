@@ -20,6 +20,7 @@ interface InvestmentsContextType {
     fetchInvestments: () => Promise<void>;
     handleAddInvestment: () => Promise<void>;
     handleDeleteInvestment: (id: number) => Promise<void>;
+    handleDeleteAllOtherInvestment: (handleClose: () => void) => Promise<void>;
     handleAddInvestmentClose: () => void;
 }
 
@@ -82,7 +83,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
         setAddInvestDialogOpen(false);
     };
 
-    const handleDeleteAllOtherInvestment = async (handleClose) => {
+    const handleDeleteAllOtherInvestment = async (handleClose:()=>void) => {
         try {
            const res = await deleteAllInvestments();
             await fetchInvestments();
