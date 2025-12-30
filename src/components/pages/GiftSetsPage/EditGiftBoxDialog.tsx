@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import {useProducts} from "../../Provider/ProductContext";
 import {usePackaging} from "../../Provider/PackagingContext";
-import {IGiftSet, IMaterial, IProduct} from "../../../utils/types";
+import {IGiftSet, IGiftUpdateItem, IMaterial, IProduct} from "../../../utils/types";
 import QuantityField from "../../FormComponents/QuantityField";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import CancelButton from "../../Buttons/CancelButton";
@@ -24,7 +24,7 @@ interface IEditGiftBoxDialog {
     open: boolean;
     onClose: () => void;
     giftBox:IGiftSet
-    onSaveGiftBox: (giftBox:IGiftSet) => void;
+    onSaveGiftBox: (giftBox:IGiftUpdateItem) => void;
     isAuthenticated: boolean;
 }
 
@@ -126,13 +126,13 @@ const EditGiftBoxDialog = ({
                 <Grid container spacing={2}>
                     <Grid item xs={6}>
                         <ProductNameField label={"Назва набору"} value={name} onChange={(e) => setName(e.target.value)}
-                                          error={null}/>
+                                          />
                         {/*<TextField fullWidth label="Назва набору" value={name} onChange={(e) => setName(e.target.value)}*/}
                         {/*           margin="normal"/>*/}
                     </Grid>
                     <Grid item xs={6}>
                         <ProductNameField label={"Опис"} value={description}
-                                          onChange={(e) => setDescription(e.target.value)} error={null}/>
+                                          onChange={(e) => setDescription(e.target.value)} />
 
                     </Grid>
                 </Grid>

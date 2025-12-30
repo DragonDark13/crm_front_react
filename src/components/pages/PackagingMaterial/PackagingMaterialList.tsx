@@ -368,11 +368,14 @@ const PackagingMaterialList: React.FC = () => {
                                             <Box display="flex" alignItems="center" gap={1}>
                                                 {/*<Tooltip title="За весь час">*/}
                                                 {/*    <Box display="flex" alignItems="center" gap={1}>*/}
-                                                <CircleBadge title="За весь час"
-                                                             color={"secondary.main"}> {material.total_quantity}</CircleBadge>
 
-                                                <CircleBadge title="Кількість товару, яка є в наявності"
-                                                             color={"secondary.dark"}> {material.available_quantity}</CircleBadge>
+                                                <Tooltip title="За весь час"><CircleBadge
+                                                                color={"secondary.main"}> {material.total_quantity}</CircleBadge></Tooltip>
+
+                                                <Tooltip title="Кількість товару, яка є в наявності">
+                                                    <CircleBadge
+                                                                color={"secondary.dark"}> {material.available_quantity}</CircleBadge>
+                                                </Tooltip>
 
 
                                             </Box>
@@ -382,12 +385,12 @@ const PackagingMaterialList: React.FC = () => {
                                     <TableCell size={"small"}>
                                         <div>
                                             <Box display="flex" alignItems="center" gap={1}>
-                                                <CircleBadge title="За весь час"
-                                                             color={"secondary.main"}>  {material.total_purchase_cost}</CircleBadge>
+                                                <Tooltip title="За весь час"><CircleBadge
+                                                                color={"secondary.main"}>  {material.total_purchase_cost}</CircleBadge></Tooltip>
 
 
-                                                <CircleBadge title="За наявне пакування"
-                                                             color={"secondary.dark"}>  {material.available_stock_cost}</CircleBadge>
+                                                <Tooltip title="За наявне пакування" ><CircleBadge
+                                                                color={"secondary.dark"}>  {material.available_stock_cost}</CircleBadge></Tooltip>
 
 
                                             </Box>
@@ -443,7 +446,7 @@ const PackagingMaterialList: React.FC = () => {
                 />
 
                 {/* Dialog for purchasing material */}
-                {selectedMaterialId && (
+                {selectedMaterialId && selectedMaterial?.name!==undefined && (
                     <PurchaseMaterialDialog
                         isAuthenticated={isAuthenticated}
                         materialName={selectedMaterial?.name}
@@ -453,7 +456,6 @@ const PackagingMaterialList: React.FC = () => {
                         onPurchaseSuccess={fetchListPackagingMaterials}
                         defaultSupplierId={selectedSupplierId}
                         defaultPricePerUnit={defaultPricePerUnit}
-                        suppliers={packagingMaterials.map((m) => m.supplier)}
                     />
                 )}
 
@@ -470,7 +472,7 @@ const PackagingMaterialList: React.FC = () => {
                 )}
 
                 {/* History Dialog */}
-                {selectedMaterial && (
+                {selectedMaterial && selectedSupplierData && (
                     <MaterialHistoryDialog
                         open={historyDialogOpen}
                         handleClose={handleCloseHistoryDialog}

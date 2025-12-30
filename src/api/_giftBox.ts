@@ -1,4 +1,4 @@
-import {GiftSetPayload, IGiftSet} from "../utils/types";
+import {GiftSetPayload, IGiftSet, IGiftUpdateItem} from "../utils/types";
 import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 
 
@@ -14,7 +14,7 @@ export const removeGiftSet = (giftSetId: number): Promise<void> => {
     return deleteResource<void>(API_ENDPOINTS.REMOVE_GIFT_SET(giftSetId))
 };
 
-export const updateGiftSet = (updatedGiftBox: IGiftSet): Promise<void> => {
+export const updateGiftSet = (updatedGiftBox: IGiftUpdateItem): Promise<void> => {
     return putResource(API_ENDPOINTS.UPDATE_GIFT_SET(updatedGiftBox.id), updatedGiftBox)
 };
 

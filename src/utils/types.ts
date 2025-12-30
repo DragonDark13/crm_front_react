@@ -57,7 +57,7 @@ export interface ISaleData {
     sale_date: string
     productId: number
     packaging_id?: number | string
-    packaging_quantity?: number
+    packaging_quantity: number
     total_cost_price: number
     total_packaging_cost?: number
     purchase_price_per_item: number
@@ -196,6 +196,7 @@ export interface IMaterialSupplier {
     id: number;
     name: string;
     phone_number: string | null;
+    is_active:boolean
 }
 
 export interface IMaterial {
@@ -366,4 +367,33 @@ export interface INewInvestment {
 }
 
 export type ISupplierType = 'product' | 'packaging';
+
+
+export interface IGiftUpdateItem {
+    id: number;
+    name: string;
+    description: string;
+    gift_selling_price: number;
+    items: IGiftUpdateFinalyItem[];
+}
+
+interface IGiftUpdateItemBase {
+    name: string;
+    price: string;
+    quantity: number;
+    type: 'product' | 'packaging';
+}
+
+export interface IGiftUpdateProductItem extends IGiftUpdateItemBase {
+    type: 'product';
+    product_id: number;
+}
+
+export interface IGiftUpdatePackagingItem extends IGiftUpdateItemBase {
+    type: 'packaging';
+    packaging_id: number;
+}
+
+export type IGiftUpdateFinalyItem = IPackagingForGiftSet | IProductForGiftSet;
+
 

@@ -3,7 +3,7 @@ import {Card, CardContent, Typography, Button, Grid, CardActions, Collapse} from
 import {Edit, Delete, ShoppingCart, ExpandMore} from '@mui/icons-material';
 import EditGiftBoxDialog from "./EditGiftBoxDialog";
 import GiftSetSaleModal from "./GiftSetSaleModal";
-import {IGiftSet, IPackagingForGiftSet, IProductForGiftSet} from "../../../utils/types";
+import {IGiftSet, IGiftUpdateItem, IPackagingForGiftSet, IProductForGiftSet} from "../../../utils/types";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import {useGiftSet} from "../../Provider/GiftSetContext";
 import ConfirmDeleteGiftDialog from "./ConfirmDeleteGiftDialog";
@@ -90,7 +90,7 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
     };
 
 // Handle saving the edited gift set
-    const handleSaveEdit = (updatedGiftBox: IGiftSet) => {
+    const handleSaveEdit = (updatedGiftBox: IGiftUpdateItem) => {
 
 
         updateExistingGiftSet(updatedGiftBox)

@@ -318,8 +318,8 @@ const SalesHistoryTable: React.FC = () => {
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
-            <SalesHistoryInfoModal handleModalInfoClose={handleModalInfoClose} modalOpen={modalOpen}
-                                   selectedSale={selectedSale}/>
+            {selectedSale && <SalesHistoryInfoModal handleModalInfoClose={handleModalInfoClose} modalOpen={modalOpen}
+                                    selectedSale={selectedSale}/>}
         </div>
     );
 };

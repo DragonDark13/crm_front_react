@@ -2,8 +2,13 @@ import React from "react";
 import {TableRow, TableCell, Collapse, Table, TableHead, TableBody, Tooltip} from "@mui/material";
 import {ShoppingBag, Luggage} from "@mui/icons-material";
 import RenderHeaderCell from "../../_elements/RenderHeaderCell";
+import {SaleItemInfo} from "./SalesHistoryTable.tsx";
 
-const SaleGiftSetDetails = ({sale}) => (
+ interface ISaleGiftSetDetails {
+     sale:SaleItemInfo
+ }
+
+const SaleGiftSetDetails = ({sale}:ISaleGiftSetDetails) => (
     <TableRow>
         <TableCell colSpan={8}>
             <Collapse in={true} timeout="auto" unmountOnExit>

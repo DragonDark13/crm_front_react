@@ -14,7 +14,14 @@ import {useEffect, useState} from "react";
 import QuantityField from "../../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../../utils/function";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
-import {ICustomer, ICustomerDetails, IMaterial, ISaleData, ISaleProductModal} from "../../../../utils/types";
+import {
+    ICustomer,
+    ICustomerDetails,
+    IMaterial,
+    INewGiftCustomerDetails,
+    ISaleData,
+    ISaleProductModal
+} from "../../../../utils/types";
 import {useCustomers} from "../../../Provider/CustomerContext";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
@@ -63,9 +70,8 @@ const SaleProductModal = ({
     // Створення стану для відображення полів пакування
     const [showPackaging, setShowPackaging] = useState(false);
     const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false); // Створення стану для діалогу додавання покупця
-    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
+    const [newCustomerData, setNewCustomerData] = useState<INewGiftCustomerDetails>({
         contact_info: "",
-        id: 0,
         sales: [],
         name: '', email: '', phone_number: '', address: ''
     });
@@ -73,7 +79,6 @@ const SaleProductModal = ({
     const resetNewCustomerData = () => {
         setNewCustomerData({
             contact_info: "",
-            id: 0,
             sales: [],
             name: '', email: '', phone_number: '', address: ''
         })
@@ -125,7 +130,7 @@ const SaleProductModal = ({
         }
     };
 
-    const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
+    const handleCreateCustomer = (newCustomerData: INewGiftCustomerDetails) => {
 
         createCustomerFunc(newCustomerData)
             .then(response => {
@@ -137,7 +142,7 @@ const SaleProductModal = ({
             .catch((error: AxiosError) => {
                 console.log('Error Response:', error.response); // Лог для перевірки помилки
 
-                showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error')
+                showSnackbarMessage('Error creating customer: ' + error.message, 'error')
                 console.error('Error creating customer:', error);
             });
     };
@@ -217,9 +222,9 @@ const SaleProductModal = ({
 
         if (/^\d+$/.test(quantity)) {  // Перевіряємо, чи значення складається тільки з цифр
             // Застосовуємо межі
-            if (quantity < 1) {
+            if (Number(quantity) < 1) {
                 setSaleData({...saleData, quantity: 1});
-            } else if (quantity > quantityOnStock) {
+            } else if (Number(quantity) > Number(quantityOnStock)) {
                 setSaleData({...saleData, quantity: quantityOnStock});
             } else {
                 setSaleData({...saleData, quantity: Number(quantity)});
@@ -260,7 +265,7 @@ const SaleProductModal = ({
                                         const selectedCustomer = Number(e.target.value);
                                         handleChangeCustomer(selectedCustomer)
                                     }}
-                                    error={errors.customer}
+                                    error={errors.customer!==''}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
@@ -310,7 +315,8 @@ const SaleProductModal = ({
                                     value={saleData.quantity}
                                     onChange={(e) => handleChangeQuantitySaleProduct(e.target.value)}
                                     max={quantityOnStock}
-                                    error={errors.quantity}
+                                    error={errors.quantity!==''}
+                                    helperText={errors.quantity}
                                 />
                             </Grid>
 

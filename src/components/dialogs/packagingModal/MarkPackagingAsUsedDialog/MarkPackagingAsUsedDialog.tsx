@@ -58,18 +58,6 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
         }
     };
 
-    const handleQuantityUsed = (e) => {
-        const value = e.target.value.replace(/\D/g, '').replace(/^0+/, '');
-        const numericValue = Number(value);
-
-        if (numericValue <= availableQuantity) {
-            setQuantityUsed(numericValue);
-            setError('');
-        } else {
-            setError('Кількість не може бути більшою за доступну кількість.');
-        }
-
-    }
 
     return (
         <CustomDialog
@@ -95,7 +83,8 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
                     onDecrement={() =>
                         handleDecrementGlobal(quantityUsed, setQuantityUsed, setError)
                     }
-                    error={error}
+                    helperText={error}
+                    error={error!==''}
                 />
 
                 {error && (

@@ -1,6 +1,10 @@
 import {Typography} from "@mui/material";
 
-const SummarySection = ({calculateTotalCost, calculateProfit}) => (
+interface ISummarySection {
+    calculateTotalCost: ()=>number
+    calculateProfit: ()=>number
+}
+const SummarySection = ({calculateTotalCost, calculateProfit}:ISummarySection) => (
     <>
         <Typography variant="h6" sx={{mt: 4}}>
             Загальна собівартість: {calculateTotalCost().toFixed(2)} грн

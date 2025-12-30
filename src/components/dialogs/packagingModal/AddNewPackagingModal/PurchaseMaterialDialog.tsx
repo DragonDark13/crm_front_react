@@ -21,6 +21,8 @@ import TotalPriceField from "../../../FormComponents/TotalPriceField";
 import {useSnackbarMessage} from "../../../Provider/SnackbarMessageContext";
 
 
+
+
 const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                                                                            open,
                                                                            onClose,
@@ -63,7 +65,7 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
     const MAX_QUANTITY = 1000;
 
 // Обробка зміни вручну
-    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement |HTMLTextAreaElement>) => {
         let value = e.target.value.replace(/[^0-9]/g, '');
         if (value.startsWith('0')) {
             value = value.replace(/^0+/, '') || '0';
@@ -172,21 +174,23 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
 
                         {/* Ціна за одиницю */}
                         <Grid item xs={12} sm={6} md={4}>
-                            <PriceField value={pricePerUnit} onChange={handlePriceChange} error={null}/>
+                            <PriceField value={pricePerUnit} onChange={handlePriceChange} />
 
                         </Grid>
 
                         {/* Загальна сума закупівлі */}
                         <Grid item xs={12} sm={12} md={4}>
-                            <TotalPriceField value={totalPurchaseCost.toFixed(2)}/>
+                            <TotalPriceField value={Number(totalPurchaseCost.toFixed(2))}/>
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
                     <CancelButton onClick={onClose}/>
                     <Button
-                        disabled={!isAuthenticated || supplierId && !suppliers.find(s => s.id === supplierId)?.is_active}
-                        onClick={handlePurchase} color="primary" variant="contained">
+                        disabled={!isAuthenticated || supplierId!==null && !suppliers.find(s => s.id === supplierId)?.is_active}
+                        onClick={handlePurchase}
+                        color="primary"
+                        variant="contained">
                         Закупити
                     </Button>
                 </DialogActions>

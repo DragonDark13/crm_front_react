@@ -4,32 +4,32 @@ import {
     TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography, TableFooter, MenuItem, Menu,
 } from '@mui/material';
 import {IconButton, Tooltip} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import SellIcon from '@mui/icons-material/Sell';
-import HistoryIcon from '@mui/icons-material/History';
 import {IProduct} from "../../utils/types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-interface IProductTableProps {
-    filteredProducts: IProduct[];
-    order: 'asc' | 'desc';
-    orderBy: keyof IProduct;
-    handleSort: (property: keyof IProduct) => void;
-    sortProducts: (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => IProduct[];
-    getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
+
+export interface IProductActions {
     handleOpenEdit: (product: IProduct) => void;
     handleOpenProductInfoModal: (product: IProduct) => void;
     handleDelete: (productId: number) => void;
     handleOpenHistoryModal: (productId: number) => void;
     handlePurchase: (product: IProduct) => void;
     handleOpenSale: (product: IProduct) => void;
+    isAuthenticated: boolean;
+}
+
+interface IProductTableProps extends IProductActions {
+    filteredProducts: IProduct[];
+    order: 'asc' | 'desc';
+    orderBy: keyof IProduct;
+    handleSort: (property: keyof IProduct) => void;
+    sortProducts: (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => IProduct[];
+    getComparator: (order: 'asc' | 'desc', orderBy: keyof IProduct) => (a: IProduct, b: IProduct) => number;
     searchTerm: string;
     filteredAndSearchedProducts: IProduct[]
     currentPage: number;
     itemsPerPage: number;
-    selectedLowProductId: number|null,
+    selectedLowProductId: number | null,
     onRowRef?: (el: HTMLTableRowElement | null, index: number) => void;
 }
 
@@ -74,12 +74,13 @@ const ProductTable: React.FC<IProductTableProps> = ({
     // Розрахункова сума продажу (оскільки наявність продукції може змінюватися)
     const totalCalculatedSellingSum = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.available_quantity * product.selling_price_per_item), 0);
     // Розрахункова сума закупівель (оскільки наявність продукці�� може змінюватися)
-    const [selectedProduct, setSelectedProduct] = useState(null); // Додаємо стан для зберігання вибраного товару
+    const [selectedProduct, setSelectedProduct] = useState<null | IProduct>(null); // Додаємо стан для зберігання вибраного
+    // товару
 
-    const [anchorEl, setAnchorEl] = useState(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
     const open = Boolean(anchorEl);
 
-    const handleClick = (event, product) => {
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, product: IProduct) => {
         setAnchorEl(event.currentTarget);
         setSelectedProduct(product);  // Встановлюємо обраний товар
 
@@ -233,22 +234,26 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                             <TableCell size={"small"}>
                                                 <div>
                                                     <Box display="flex" alignItems="center" gap={2}>
+                                                        <Tooltip title="Загальна кількість товару">
+                                                            <CircleBadge>
+                                                                {product.total_quantity}
+                                                            </CircleBadge>
+                                                        </Tooltip>
 
-                                                        <CircleBadge title="Загальна кількість товару">
-                                                            {product.total_quantity}
-                                                        </CircleBadge>
+                                                        <Tooltip title="Кількість товару, яка є в наявності">
+                                                            <CircleBadge
+                                                                color={lowQuantity ? "error.main" : "secondary.dark"}
+                                                            >
+                                                                {product.available_quantity}
+                                                            </CircleBadge>
+                                                        </Tooltip>
+                                                        <Tooltip title="Кількість проданого товару">
 
-
-                                                        <CircleBadge
-                                                            color={lowQuantity ? "error.main" : "secondary.dark"}
-                                                            title="Кількість товару, яка є в наявності">
-                                                            {product.available_quantity}
-                                                        </CircleBadge>
-
-                                                        <CircleBadge color={'primary.main'}
-                                                                     title="Кількість проданого товару">
-                                                            {product.sold_quantity}
-                                                        </CircleBadge>
+                                                            <CircleBadge color={'primary.main'}
+                                                            >
+                                                                {product.sold_quantity}
+                                                            </CircleBadge>
+                                                        </Tooltip>
 
                                                     </Box>
                                                 </div>
@@ -281,7 +286,8 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                         <MoreVertIcon/>
                                                     </IconButton>
                                                 </Tooltip>
-                                                <EditProductMenu
+
+                                                {anchorEl !== null && selectedProduct !== null && <EditProductMenu
                                                     anchorEl={anchorEl}
                                                     open={open}
                                                     handleClose={handleClose}
@@ -293,7 +299,9 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                     handleDelete={handleDelete}
                                                     isAuthenticated={isAuthenticated}
                                                     handleOpenProductInfoModal={handleOpenProductInfoModal}
-                                                /> </TableCell>
+                                                />}
+
+                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

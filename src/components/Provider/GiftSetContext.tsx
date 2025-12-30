@@ -1,10 +1,10 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
 import {fetchGiftSets, removeGiftSet, createGiftBox, updateGiftSet, sellGiftSet} from '../../api/_giftBox.ts'; // Import
 // your API
 // functions
 
 
-import {GiftSetPayload, IGiftSet} from "../../utils/types";
+import {GiftSetPayload, IGiftSet, IGiftUpdateItem} from "../../utils/types";
 import {useSnackbarMessage} from "./SnackbarMessageContext"; // Assuming you have this function
 
 interface GiftSetContextProps {
@@ -13,13 +13,13 @@ interface GiftSetContextProps {
     fetchGiftSetsData: () => void;
     deleteGiftSet: (giftSetId: number) => void;
     createNewGiftSet: (newGiftBox: GiftSetPayload) => void;
-    updateExistingGiftSet: (updatedGiftBox: IGiftSet) => void;
+    updateExistingGiftSet: (updatedGiftBox: IGiftUpdateItem) => void;
     sellGiftSetData: (requestData: { gift_set_id: number; customer_id: number; sale_date: string | null; selling_price: number }) => void;
 }
 
 const GiftSetContext = createContext<GiftSetContextProps | undefined>(undefined);
 
-export const GiftSetProvider: React.FC = ({children}) => {
+export const GiftSetProvider: React.FC = ({children}:PropsWithChildren) => {
     const [giftSets, setGiftSets] = useState<IGiftSet[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
 
@@ -57,7 +57,7 @@ export const GiftSetProvider: React.FC = ({children}) => {
             });
     };
 
-    const updateExistingGiftSet = (updatedGiftBox: IGiftSet) => {
+    const updateExistingGiftSet = (updatedGiftBox: IGiftUpdateItem) => {
         updateGiftSet(updatedGiftBox)
             .then(() => {
                 fetchGiftSetsData(); // Refresh after updating

@@ -12,19 +12,27 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import QuantityField from "../../../FormComponents/QuantityField";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
 import {useTheme} from "@mui/material/styles";
+import {IMaterial, ISaleData} from "../../../../utils/types.ts";
 //TODO add possible adding multipole packaging
+
+interface IPackagingSelector {
+    saleData: ISaleData;
+    setSaleData: (data: ISaleData) => void;
+    packagingMaterials:IMaterial[];
+    removePackage: () => void;
+}
 
 const PackagingSelector = ({
                                saleData,
                                setSaleData,
                                packagingMaterials,
                                removePackage
-                           }) => {
+                           }:IPackagingSelector) => {
     const selectedPackaging = packagingMaterials.find(material => material.id === saleData.packaging_id);
     const maxQuantity = selectedPackaging?.available_quantity || 0;
     const unitCost = selectedPackaging?.purchase_price_per_unit || 0;
 
-    const handlePackagingChange = (e) => {
+    const handlePackagingChange = (e: { target: { value: any; }; }) => {
         setSaleData({
             ...saleData,
             packaging_id: e.target.value,
@@ -50,7 +58,7 @@ const PackagingSelector = ({
         }
     };
 
-    const handleQuantityChange = (e) => {
+    const handleQuantityChange = (e: { target: { value: string; }; }) => {
         let value = e.target.value.replace(/[^0-9]/g, '').replace(/^0+/, '');
         if (/^\d+$/.test(value)) {
             setSaleData({
@@ -96,15 +104,16 @@ const PackagingSelector = ({
                         onDecrement={handleQuantityDecrement}
                         value={saleData.packaging_quantity}
                         onChange={handleQuantityChange}
-                        error={saleData.packaging_quantity > maxQuantity ? "Перевищено доступну кількість" : ""}
+                        helperText={saleData.packaging_quantity > maxQuantity ? "Перевищено доступну кількість" : ""}
+                        error={saleData.packaging_quantity > maxQuantity}
                     />
                 )}
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
-                <TotalPriceField label={"Собівартість за од"} value={unitCost.toFixed(2)}/>
+                <TotalPriceField label={"Собівартість за од"} value={Number(unitCost.toFixed(2))}/>
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
-                <TotalPriceField label={"Сумма"} value={(unitCost * saleData.packaging_quantity).toFixed(2)}/>
+                <TotalPriceField label={"Сумма"} value={Number((unitCost * saleData.packaging_quantity).toFixed(2))}/>
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
                 <Button sx={{marginTop: '16px'}} variant="contained" endIcon={<DeleteIcon/>} onClick={removePackage}

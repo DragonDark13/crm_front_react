@@ -10,7 +10,7 @@ import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
 interface CustomerContextProps {
     customers: ICustomer[];
     fetchGetAllCustomersFunc: () => void;
-    createCustomerFunc: (newCustomerData: ICustomerDetails) => Promise<void>; // Додаємо функцію для створення
+    createCustomerFunc: (newCustomerData: INewGiftCustomerDetails) => Promise<void>; // Додаємо функцію для створення
     loading: boolean; // Додаємо поле для перевірки завантаження
 }
 
@@ -39,7 +39,7 @@ export const CustomerProvider: React.FC = ({children}:PropsWithChildren) => {
         }
     };
 
-    const createCustomerFunc = async (newCustomerData: ICustomerDetails) => {
+    const createCustomerFunc = async (newCustomerData: INewGiftCustomerDetails) => {
         try {
             const newCustomer = await createCustomer(newCustomerData);
             setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список

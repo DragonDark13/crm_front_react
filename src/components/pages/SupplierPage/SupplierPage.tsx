@@ -18,7 +18,7 @@ import {
     IconButton, Typography, Tooltip, Grid, Box, TablePagination
 } from '@mui/material';
 import {ExpandMore as ExpandMoreIcon, Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
-import {INewSupplier, ISupplierFull, ISupplierType} from "../../../utils/types";
+import {IMaterial, INewSupplier, IProduct, ISupplierFull, ISupplierType} from "../../../utils/types";
 import {useSuppliers} from "../../Provider/SupplierContext";
 import clsx from "clsx";
 import HistoryIcon from "@mui/icons-material/History";
@@ -82,7 +82,7 @@ const SupplierPage: React.FC = () => {
     const [currentType, setCurrentType] = useState<ISupplierType>('product');
     const [purchaseHistory, setPurchaseHistory] = useState<ISupplierPurchaseHistoryRecord[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState<IProduct[] | IMaterial[]>([]);
     const {isAuthenticated} = useAuth();
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmDeleteSupplierId, setConfirmDeleteSupplierId] = useState<number | null>(null);
@@ -208,7 +208,7 @@ const SupplierPage: React.FC = () => {
         page * rowsPerPage + rowsPerPage
     );
 
-    const textColorDis = (is_active) => {
+    const textColorDis = (is_active:boolean) => {
 
         if (!is_active) {
             return theme.palette.text.disabled;

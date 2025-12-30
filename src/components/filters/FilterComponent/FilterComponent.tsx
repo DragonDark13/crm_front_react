@@ -42,7 +42,7 @@ const FilterComponent = ({
     const {suppliers} = useSuppliers();
 
 // Функція для застосування фільтрів
-    const applyFilters = (callback?) => {
+    const applyFilters = () => {
         let filtered = products;
 
         const {categories, suppliers, priceRange} = filters;
@@ -65,7 +65,6 @@ const FilterComponent = ({
         );
 
         setFilteredProducts(filtered); // Оновлюємо відфільтровані продукти
-        if (callback) callback(); // Викликаємо callback, якщо він переданий
     };
 
     // Коли завантажуються продукти, обчислімо мінімальну і максимальну ціну
@@ -90,8 +89,17 @@ const FilterComponent = ({
         }
     }, [products]);
 
+    interface IFilters {
+        categories: number[];
+        suppliers: number[];
+        priceRange: [number, number];
+    }
+
 // Загальний обробник змін фільтрів
-    const handleFilterChange = (filterType: 'categories' | 'suppliers' | 'priceRange', newValue) => {
+    const handleFilterChange = <K extends keyof IFilters>(
+        filterType: K,
+        newValue: IFilters[K]
+    ) =>{
         setFilters((prevFilters) => ({
             ...prevFilters,
             [filterType]: newValue,
@@ -172,9 +180,11 @@ const FilterComponent = ({
                 <Box px={"10px"}>
                     <Slider
                         value={filters.priceRange}
-                        onChange={(event, newValue: [number, number]) =>
-                            handleFilterChange("priceRange", newValue)
-                        }
+                        onChange={(_, newValue) => {
+                            if (Array.isArray(newValue)) {
+                                handleFilterChange('priceRange', newValue as [number, number]);
+                            }
+                        }}
                         valueLabelDisplay="auto"
                         min={0}
                         max={priceMax} // Максимальна ціна

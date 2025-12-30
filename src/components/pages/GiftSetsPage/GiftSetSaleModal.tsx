@@ -15,7 +15,7 @@ import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 import {useCustomers} from "../../Provider/CustomerContext";
 import {ICustomerDetails, IGiftSet, INewGiftCustomerDetails} from "../../../utils/types";
 import AddNewCustomerDialog from "../../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
-import {AxiosError} from "axios";
+import axios, {AxiosError} from "axios";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import CancelButton from "../../Buttons/CancelButton";
 import DateFieldCustom from "../../FormComponents/DateFieldCustom";
@@ -49,7 +49,7 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                                                             }) => {
     const [saleDate, setSaleDate] = useState<string>(new Date().toISOString().split('T')[0]); // Встановлення поточної дати за замовчуванням
     const [sellingPrice, setSellingPrice] = useState<number>(giftSet.gift_selling_price || 0);
-    const [customer, setCustomer] = useState<number>('');
+    const [customer, setCustomer] = useState<number| null>(null);
     const [customerName, setCustomerName] = useState<string>('');
 
     const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
@@ -127,8 +127,16 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                 showSnackbarMessage('Customer created successfully!', 'success');
             })
             .catch((error: AxiosError) => {
-                console.log('Error Response:', error.response);
-                showSnackbarMessage('Error creating customer: ' + error.response.data.error, 'error');
+
+                if (axios.isAxiosError(error)) {
+                    showSnackbarMessage(
+                        'Error creating customer: ' + (error.message ?? 'Unknown error'),
+                        'error'
+                    );
+                } else {
+                    showSnackbarMessage('Unknown error', 'error');
+                }
+
             });
     };
 
@@ -210,7 +218,7 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                         <Grid item xs={12} md={6}>
                             <Grid container alignItems={"center"} spacing={2}>
                                 <Grid item xs={12} sm={8}>
-                                    <CustomerSelect customers={customers} value={customer} onChange={(e) => {
+                                    <CustomerSelect customers={customers} value={customer ? customer : ''} onChange={(e) => {
                                         const selectedCustomer = Number(e.target.value);
                                         setCustomer(selectedCustomer)
                                     }}/>

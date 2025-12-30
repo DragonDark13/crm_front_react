@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
 import {ISupplierFull, ISupplierType} from "../../utils/types";
 import {fetchGetAllSuppliers, updateSupplier} from "../../api/_supplier";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
@@ -22,7 +22,7 @@ interface SupplierContextProps {
 const SupplierContext = createContext<SupplierContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const SupplierProvider: React.FC = ({children}) => {
+export const SupplierProvider: React.FC = ({children}:PropsWithChildren) => {
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage()
 

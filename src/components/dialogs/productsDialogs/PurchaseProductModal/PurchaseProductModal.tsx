@@ -104,7 +104,7 @@ const PurchaseProductModal = ({
             <DialogContent>
                 <Grid container>
                     <Grid item xs={12}>
-                        {!currentSupplier.is_active &&
+                        {(currentSupplier && !currentSupplier.is_active )&&
                         <Typography color={"error"}>Ви не можете придбати цей товар- постачальник не
                             активний</Typography>}
                         <Typography>Назва товару:
@@ -165,8 +165,8 @@ const PurchaseProductModal = ({
                                     setPurchaseDetails({...purchaseDetails, quantity: Number(e.target.value)})
                                 }
                             }}
-
-                            error={errors.quantity}
+helperText={errors.quantity}
+                            error={errors.quantity!==undefined}
                         />
 
 
@@ -203,7 +203,7 @@ const PurchaseProductModal = ({
             <DialogActions>
                 <Button variant={"outlined"} onClick={handleClosePurchase}>Закрити</Button>
 
-                <Button variant="contained" color="primary" disabled={!isAuthenticated || !currentSupplier.is_active}
+                <Button variant="contained" color="primary" disabled={!isAuthenticated || currentSupplier && !currentSupplier.is_active}
                         onClick={handleSubmit}>
                     Підтвердити
                 </Button>

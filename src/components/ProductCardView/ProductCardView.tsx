@@ -55,7 +55,7 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                 sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
                     .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
                     .map((product: IProduct, index) => {
-                        const lowQuantity = product.quantity < 5; // умова для низької кількості
+                        const lowQuantity = product.available_quantity < 5; // умова для низької кількості
                         return (
                             <Grid item xs={12} sm={6} md={4}
                                   key={`${product.id}${index}${product.purchase_total_price}`}>
@@ -80,7 +80,7 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                             Кількість: <Typography className={clsx(
                                             {'low-quantity': lowQuantity},
                                         )} component="span" variant="body1"
-                                                                   color={!lowQuantity ? "textSecondary" : 'error'}>{product.quantity}</Typography>
+                                                                   color={!lowQuantity ? "textSecondary" : 'error'}>{product.available_quantity}</Typography>
                                         </Typography>
                                         <Typography variant="subtitle1" color="textSecondary" gutterBottom>
                                             К-ть Продано: <Typography component="span" variant="body1"

@@ -10,6 +10,17 @@ import SellIcon from "@mui/icons-material/Sell";
 import HistoryIcon from "@mui/icons-material/History";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from '@mui/icons-material/Info';
+import {IProduct} from "../../utils/types.ts";
+import {IProductActions} from "./ProductTable.tsx";
+
+
+interface IEditProductMenu  extends IProductActions{
+    anchorEl:  HTMLButtonElement;
+    open:  boolean;
+    handleClose: () => void;
+    selectedProduct:  IProduct;
+}
+
 
 const EditProductMenu = ({
                              anchorEl,
@@ -23,7 +34,7 @@ const EditProductMenu = ({
                              handleDelete,
                              handleOpenProductInfoModal,
                              isAuthenticated
-                         }) => {
+                         }:IEditProductMenu) => {
 
     console.log('selectedProduct',selectedProduct);
     return (

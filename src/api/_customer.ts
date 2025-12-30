@@ -1,7 +1,7 @@
-import {ICustomer, ICustomerDetails} from "../utils/types";
+import {ICustomer, ICustomerDetails, INewGiftCustomerDetails} from "../utils/types";
 import {API_ENDPOINTS, axiosInstance, fetchResource, postResource} from "./api";
 
-export const createCustomer = (customerData: ICustomerDetails): Promise<ICustomer> => {
+export const createCustomer = (customerData: INewGiftCustomerDetails): Promise<ICustomer> => {
     return postResource<ICustomer>(API_ENDPOINTS.CREATED_CUSTOMER, customerData);
 };
 

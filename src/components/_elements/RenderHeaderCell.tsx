@@ -1,8 +1,8 @@
 import React from 'react';
-import {TableCell, TableSortLabel, Typography} from "@mui/material";
+import {TableCell, TableCellProps, TableSortLabel, Typography} from "@mui/material";
 
 
-interface IRenderHeaderCellProps extends TableCell{
+interface IRenderHeaderCellProps extends TableCellProps{
     children: string;
     sortKey?: string;
     orderBy?: string;

@@ -40,7 +40,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 editProduct,
                                                                 setEditProduct,
                                                                 handleEditSave,
-                                                                selectedCategories,
                                                                 isAuthenticated
                                                             }) => {
 
@@ -260,7 +259,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <ProductNameField
-                                label={false}
+                                label={''}
                                 value={editProduct.name}
                                 onChange={(e) => handleFieldChange('name', e.target.value)}
                                 error={errors.name}
@@ -303,8 +302,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                         handleFieldChange('available_quantity', Number(value));
                                     }
                                 }}
-
-                                error={errors.available_quantity}
+helperText={errors.available_quantity}
+                                error={errors.available_quantity!==''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
@@ -319,7 +318,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                     }
 
                                 }}
-                                error={errors.price_per_item}
+                                helperText={errors.price_per_item}
+                                error={errors.price_per_item!==''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
@@ -337,8 +337,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                     }
 
                                 }}
-
-                                error={errors.price_per_item}
+helperText={errors.price_per_item}
+                                error={errors.price_per_item!==''}
                             />
 
                         </Grid>

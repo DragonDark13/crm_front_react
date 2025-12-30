@@ -1,8 +1,14 @@
 import React from "react";
 import {TableRow, TableCell, Collapse, Table, TableHead, TableBody, Typography} from "@mui/material";
 import RenderHeaderCell from "../../_elements/RenderHeaderCell";
+import {SaleItemInfo} from "./SalesHistoryTable.tsx";
 
-const SaleProductDetails = ({sale}) => {
+interface ISaleProductDetails
+{
+    sale:SaleItemInfo;
+}
+
+const SaleProductDetails = ({sale}:ISaleProductDetails) => {
     console.log("sale", sale);
     return (<TableRow>
             <TableCell colSpan={8}>

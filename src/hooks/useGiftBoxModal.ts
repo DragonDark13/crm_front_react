@@ -56,7 +56,7 @@ export const useGiftBoxModal = (
             const axiosError = error as AxiosError;
             console.error('Error creating gift box:', axiosError);
             showSnackbarMessage(
-                'Error creating gift box: ' + (axiosError.response?.data?.message || axiosError.message),
+                'Error creating gift box: ' + (axiosError.message || axiosError.message),
                 'error'
             );
         }
