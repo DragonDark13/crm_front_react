@@ -24,6 +24,7 @@ import CreateNewCategoryModal from "../../CreateNewCategoryModal/CreateNewCatego
 import {addNewCategory} from "../../../../api/_categories";
 import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
 import {Add} from "@mui/icons-material";
+import CustomTextArea from "../../../FormComponents/CustomTextArea.tsx";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -302,8 +303,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                         handleFieldChange('available_quantity', Number(value));
                                     }
                                 }}
-helperText={errors.available_quantity}
-                                error={errors.available_quantity!==''}
+                                helperText={errors.available_quantity}
+                                error={errors.available_quantity !== ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
@@ -319,7 +320,7 @@ helperText={errors.available_quantity}
 
                                 }}
                                 helperText={errors.price_per_item}
-                                error={errors.price_per_item!==''}
+                                error={errors.price_per_item !== ''}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
@@ -337,8 +338,8 @@ helperText={errors.available_quantity}
                                     }
 
                                 }}
-helperText={errors.price_per_item}
-                                error={errors.price_per_item!==''}
+                                helperText={errors.price_per_item}
+                                error={errors.price_per_item !== ''}
                             />
 
                         </Grid>
@@ -386,6 +387,12 @@ helperText={errors.price_per_item}
                         </Grid>
                     </Grid>
 
+                    <Grid mt={2} container spacing={2}>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <CustomTextArea onChange={(e) => handleFieldChange('product_description', e.target.value)} value={editProduct.product_description}/>
+                        </Grid>
+                    </Grid>
+
 
                 </DialogContent>
 
@@ -401,12 +408,12 @@ helperText={errors.price_per_item}
             </CustomDialog>
 
             {supplierModal.modalState.openAddSupplierOpen &&
-            <AddSupplierModal
-                isAuthenticated={isAuthenticated}
-                handleAddSupplier={supplierModal.handleAddSupplier}
-                open={supplierModal.modalState.openAddSupplierOpen}
-                handleCloseAddSupplierModal={() => supplierModal.handleModalClose("openAddSupplierOpen")}
-            />}
+                <AddSupplierModal
+                    isAuthenticated={isAuthenticated}
+                    handleAddSupplier={supplierModal.handleAddSupplier}
+                    open={supplierModal.modalState.openAddSupplierOpen}
+                    handleCloseAddSupplierModal={() => supplierModal.handleModalClose("openAddSupplierOpen")}
+                />}
 
             {
                 categoryModal.modalState.openCategoryCreate &&

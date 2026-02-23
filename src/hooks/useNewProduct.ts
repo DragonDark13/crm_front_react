@@ -8,6 +8,7 @@ import {createEmptyProduct} from "../utils/function.ts";
 
 export const useNewProduct = () => {
     const [newProduct, setNewProduct] = useState<INewProduct>({
+        product_description: "",
         article: "",
         name: '',
         supplier_id: '',

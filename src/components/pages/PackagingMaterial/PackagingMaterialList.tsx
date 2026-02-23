@@ -368,14 +368,11 @@ const PackagingMaterialList: React.FC = () => {
                                             <Box display="flex" alignItems="center" gap={1}>
                                                 {/*<Tooltip title="За весь час">*/}
                                                 {/*    <Box display="flex" alignItems="center" gap={1}>*/}
+                                                <CircleBadge title="За весь час"
+                                                             color={"secondary.main"}> {material.total_quantity}</CircleBadge>
 
-                                                <Tooltip title="За весь час"><CircleBadge
-                                                                color={"secondary.main"}> {material.total_quantity}</CircleBadge></Tooltip>
-
-                                                <Tooltip title="Кількість товару, яка є в наявності">
-                                                    <CircleBadge
-                                                                color={"secondary.dark"}> {material.available_quantity}</CircleBadge>
-                                                </Tooltip>
+                                                <CircleBadge title="Кількість товару, яка є в наявності"
+                                                             color={"secondary.dark"}> {material.available_quantity}</CircleBadge>
 
 
                                             </Box>
@@ -385,12 +382,12 @@ const PackagingMaterialList: React.FC = () => {
                                     <TableCell size={"small"}>
                                         <div>
                                             <Box display="flex" alignItems="center" gap={1}>
-                                                <Tooltip title="За весь час"><CircleBadge
-                                                                color={"secondary.main"}>  {material.total_purchase_cost}</CircleBadge></Tooltip>
+                                                <CircleBadge title="За весь час"
+                                                             color={"secondary.main"}>  {material.total_purchase_cost}</CircleBadge>
 
 
-                                                <Tooltip title="За наявне пакування" ><CircleBadge
-                                                                color={"secondary.dark"}>  {material.available_stock_cost}</CircleBadge></Tooltip>
+                                                <CircleBadge title="За наявне пакування"
+                                                             color={"secondary.dark"}>  {material.total_purchase_cost}</CircleBadge>
 
 
                                             </Box>

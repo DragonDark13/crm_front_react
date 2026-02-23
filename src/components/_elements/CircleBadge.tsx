@@ -1,6 +1,8 @@
 import React from "react";
 import {Box, Tooltip} from "@mui/material";
 
+
+
 const CircleBadge = ({
                          children,
                          color = "secondary.main",
@@ -10,6 +12,7 @@ const CircleBadge = ({
     children: React.ReactNode;
     color?: string;
     sx?: object;
+    title?: string;
 }) => {
     return (
         <Tooltip title={title}>

@@ -87,5 +87,6 @@ export const createEmptyProduct = (): INewProduct => ({
     created_date: new Date().toISOString().slice(0, 10),
     selling_total_price: 0,
     selling_price_per_item: 0,
-    selling_quantity: 0
+    selling_quantity: 0,
+    product_description:''
 });

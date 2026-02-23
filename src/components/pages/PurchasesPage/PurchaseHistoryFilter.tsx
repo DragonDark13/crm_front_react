@@ -18,7 +18,7 @@ interface PurchaseHistoryFilterProps {
     handleFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     dateRangeFilter: { start: string; end: string };
     handleDateRangeFilterChange: (key: 'start' | 'end', value: string) => void;
-    categoryFilter: string;
+    categoryFilter: number | '';
     handleCategoryFilterChange: (e: any) => void;
     categories: ICategory[];
     supplierFilter: string;

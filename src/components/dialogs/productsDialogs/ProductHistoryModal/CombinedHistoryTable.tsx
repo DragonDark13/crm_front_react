@@ -10,7 +10,12 @@ import {
     TableFooter,
     Typography
 } from "@mui/material";
-import {IProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
+import {
+    IProductHistory,
+    IProductPurchaseHistoryRecord,
+    IProductSaleHistoryRecord,
+    ProductHistoryRecord
+} from "./ProductHistoryModal";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
 interface CombinedHistoryRecord {
@@ -26,7 +31,28 @@ interface CombinedHistoryTableProps {
     productHistory: IProductHistory;
 }
 
+type PurchaseHistoryItem =
+    IProductPurchaseHistoryRecord & { type: "purchase" };
+
+type SaleHistoryItem =
+    IProductSaleHistoryRecord & { type: "sale" };
+
+type ProductHistoryItem = PurchaseHistoryItem | SaleHistoryItem;
+
+
 const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
+
+
+
+    const history: ProductHistoryItem[] = [
+        ...productHistory.purchase.map(
+            record => ({ ...record, type: "purchase" as const })
+        ),
+        ...productHistory.sales.map(
+            record => ({ ...record, type: "sale" as const })
+        )
+    ];
+
 
     return (
         <TableContainer component={Paper}>
@@ -44,26 +70,31 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                 <TableBody>
                     {((productHistory && productHistory.purchase && productHistory.purchase.length > 0) || (productHistory.sales && productHistory.sales.length > 0)) ? (
                             // Об'єднання та сортування закупівель і продажів
-                            [...productHistory.purchase.map(record => ({...record, type: 'purchase'})),
-                                ...productHistory.sales.map(record => ({...record, type: 'sale'}))]
-                                .sort((a, b) => {
-                                    const dateA = a.purchase_date ? new Date(a.purchase_date).getTime() : 0;
-                                    const dateB = b.purchase_date ? new Date(b.purchase_date).getTime() : 0;
+                            history.sort((a, b)  => {
+                                    debugger
+                                const dateA =
+                                    a.type === "purchase"
+                                        ? new Date(a.purchase_date).getTime()
+                                        : new Date(a.sale_date).getTime();
 
-                                    const dateSaleA = a.sale_date ? new Date(a.sale_date).getTime() : 0;
-                                    const dateSaleB = b.sale_date ? new Date(b.sale_date).getTime() : 0;
+                                const dateB =
+                                    b.type === "purchase"
+                                        ? new Date(b.purchase_date).getTime()
+                                        : new Date(b.sale_date).getTime();
 
-                                    const finalDateA = dateA || dateSaleA;  // Якщо є дата закупівлі, використовується вона, інакше дата продажу
-                                    const finalDateB = dateB || dateSaleB;  // Те саме для другого запису
-
-                                    return finalDateA - finalDateB;
+                                return dateA - dateB;
                                 }).map((record, index) => (
                                 <TableRow
                                     key={record.id + index + record.type}
                                     style={{backgroundColor: record.type === 'sale' ? '#d1e7dd' : '#f8d7da'}} // Колір для продажу і закупки
                                 >
-                                    <TableCell size={"small"}>{new Date(record.purchase_date || record.sale_date!).toLocaleString()}</TableCell>
-                                    <TableCell size={"small"}>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
+                                    <TableCell size="small">
+                                        {new Date(
+                                            record.type === "purchase"
+                                                ? record.purchase_date
+                                                : record.sale_date
+                                        ).toLocaleString()}
+                                    </TableCell>                                    <TableCell size={"small"}>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
                                     <TableCell size={"small"}>{record.type === 'sale' ? record.customer.name : record.supplier.name}</TableCell>
                                     <TableCell size={"small"}>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_price_per_item}</TableCell>
                                     <TableCell size={"small"}>{record.type === 'sale' ? record.quantity_sold : record.quantity_purchase}</TableCell>

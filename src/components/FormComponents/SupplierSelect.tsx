@@ -17,9 +17,10 @@ const SupplierSelect: FC<ISupplierSelectProps> = ({
                                                       onChange,
                                                       error,
                                                   }) => (
-    <FormControl size="small" disabled={disabled} fullWidth margin="normal" error={!!error}>
+    <FormControl  required={true} size="small" disabled={disabled} fullWidth margin="normal" error={!!error}>
         <InputLabel size="small" id="supplier-select-label">Постачальник</InputLabel>
         <Select
+            required={true}
             size={"small"}
             labelId="supplier-select-label"
             value={value}

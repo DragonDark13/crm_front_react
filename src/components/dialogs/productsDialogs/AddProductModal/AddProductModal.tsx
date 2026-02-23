@@ -23,6 +23,7 @@ import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import {useSupplierModal} from "../../../../hooks/useSupplierModal";
 import CreateNewCategoryModal from "../../CreateNewCategoryModal/CreateNewCategoryModal";
 import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
+import CustomTextArea from "../../../FormComponents/CustomTextArea.tsx";
 
 // TODO додавання нової категорі
 
@@ -230,6 +231,7 @@ const AddProductModal = ({
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
                             <QuantityField
+                                required={true}
                                 onIncrement={incrementQuantity}
                                 onDecrement={decrementQuantity}
                                 value={newProduct.available_quantity}
@@ -285,6 +287,14 @@ const AddProductModal = ({
                             <AddButton fullWidth
                                        onClick={() => categoryModal.handleCategoryModalOpen("openCategoryCreate")}
                                        text={'Додати категорію'}/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid mt={2} container spacing={2}>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <CustomTextArea  onChange={(e) => {
+                                setNewProduct({...newProduct, product_description: e.target.value})
+                            }} value={newProduct.product_description} />
                         </Grid>
                     </Grid>
 

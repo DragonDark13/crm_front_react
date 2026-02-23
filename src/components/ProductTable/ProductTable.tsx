@@ -6,6 +6,7 @@ import {
 import {IconButton, Tooltip} from '@mui/material';
 import {IProduct} from "../../utils/types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { red } from '@mui/material/colors';
 
 
 export interface IProductActions {
@@ -35,7 +36,8 @@ interface IProductTableProps extends IProductActions {
 
 import clsx from 'clsx';
 import EditProductMenu from "./EditProductMenu";
-import CircleBadge from "../_elements/CircleBadge"; // Бібліотека для зручної роботи з класами
+import CircleBadge from "../_elements/CircleBadge";
+import {useTheme} from "@mui/material/styles"; // Бібліотека для зручної роботи з класами
 
 
 const ProductTable: React.FC<IProductTableProps> = ({
@@ -92,6 +94,8 @@ const ProductTable: React.FC<IProductTableProps> = ({
 
     };
 
+
+    const theme = useTheme();
 
     return (
         <React.Fragment>
@@ -203,6 +207,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                   ref={(el) => {
                                                       onRowRef?.(el, product.id);
                                                   }}
+                                                  sx={{  backgroundColor: lowQuantity ? red[200] : 'inherit'}}
                                                   className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                             <TableCell size={"small"} sx={{display: "none"}}>
                                                 {product.id}
@@ -234,26 +239,21 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                             <TableCell size={"small"}>
                                                 <div>
                                                     <Box display="flex" alignItems="center" gap={2}>
-                                                        <Tooltip title="Загальна кількість товару">
-                                                            <CircleBadge>
-                                                                {product.total_quantity}
-                                                            </CircleBadge>
-                                                        </Tooltip>
+                                                        <CircleBadge title="Загальна кількість товару">
+                                                            {product.total_quantity}
+                                                        </CircleBadge>
 
-                                                        <Tooltip title="Кількість товару, яка є в наявності">
-                                                            <CircleBadge
-                                                                color={lowQuantity ? "error.main" : "secondary.dark"}
-                                                            >
-                                                                {product.available_quantity}
-                                                            </CircleBadge>
-                                                        </Tooltip>
-                                                        <Tooltip title="Кількість проданого товару">
 
-                                                            <CircleBadge color={'primary.main'}
-                                                            >
-                                                                {product.sold_quantity}
-                                                            </CircleBadge>
-                                                        </Tooltip>
+                                                        <CircleBadge
+                                                            color={lowQuantity ? "error.main" : "secondary.dark"}
+                                                            title="Кількість товару, яка є в наявності">
+                                                            {product.available_quantity}
+                                                        </CircleBadge>
+
+                                                        <CircleBadge color={'primary.main'}
+                                                                     title="Кількість проданого товару">
+                                                            {product.sold_quantity}
+                                                        </CircleBadge>
 
                                                     </Box>
                                                 </div>

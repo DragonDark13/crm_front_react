@@ -62,12 +62,13 @@ export const API_ENDPOINTS = {
     CREATE_NEW_INVESTMENT: '/create_new_investments',
     DELETE_INVESTMENT: (id: number) => `/delete_investments/${id}`,
     DELETE_ALL_INVESTMENTS: '/delete_all_investments',
+    GET_ALL_PURCHASE_HISTORY: '/get_all_purchase_history'
 
 };
 
 // Уніфікована обробка помилок
-export const handleError = (error: AxiosError<unknown,any>): never => {
-    const errorMessage = error.response?.data?.error || error.message || 'Unknown error';
+export const handleError = (error: AxiosError<unknown, any>): never => {
+    const errorMessage = error.message || 'Unknown error';
     throw new Error(errorMessage);
 };
 

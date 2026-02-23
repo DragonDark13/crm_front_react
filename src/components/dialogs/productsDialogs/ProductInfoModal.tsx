@@ -147,6 +147,15 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({open, onClose, produ
                             {matchedCategories.map(c => c.name).join(', ') || '—'}
                         </Typography>
                     </Grid>
+
+                    <Grid item xs={12}>
+                        <Typography variant="caption" color="text.secondary">
+                            Детальний опис
+                        </Typography>
+                        <Typography>
+                            {product.product_description || '—'}
+                        </Typography>
+                    </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>

@@ -12,6 +12,7 @@ export interface IBaseProduct {
     selling_price_per_item: number;
     selling_quantity: number
     article: string
+    product_description: string;
 }
 
 export interface IProduct extends IBaseProduct {
@@ -166,6 +167,10 @@ export interface ICustomerDetails {
     address?: string;
     sales?: ISaleHistory[];
 }
+
+export type ICustomerDetailForCreate=
+    Omit<ICustomerDetails, "id" | "sales">;
+
 
 export interface INewGiftCustomerDetails {
     name: string;

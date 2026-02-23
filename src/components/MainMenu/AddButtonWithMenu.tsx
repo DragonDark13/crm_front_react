@@ -1,7 +1,7 @@
 import {Box, Button, Grid, IconButton, Popover, Tooltip} from "@mui/material";
 import React, {useState} from "react";
 import {
-    GiftSetPayload,
+    GiftSetPayload, ICustomerDetailForCreate,
     ICustomerDetails, IHandleAddNewGiftBox,
     INewSupplier,
     IPurchasePackagingMaterial,
@@ -158,15 +158,14 @@ const AddButtonWithMenu = () => {
             });
     };
 
-    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
-        id: 0,
+    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetailForCreate>({
         name: '',
         email: '',
         phone_number: '',
         address: '',
     });
 
-    const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
+    const handleCreateCustomer = (newCustomerData: ICustomerDetailForCreate) => {
 
         createCustomerFunc(newCustomerData)
             .then(() => {

@@ -33,13 +33,12 @@ import AllInboxIcon from '@mui/icons-material/AllInbox';     // Пакуванн
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {AttachMoney, Luggage, ShoppingBag} from "@mui/icons-material";
 import PurchaseHistoryFilter from "./PurchaseHistoryFilter";
-import PurchasesTableTypeProductCell from "./PurchasesTableTypeProductCell";   // Інше
+import PurchasesTableTypeProductCell from "./PurchasesTableTypeProductCell";
+import {fetchGetAllPurchaseHistory, IPurchaseTableResponseResponse} from "../../../api/_history.ts";   // Інше
 
 export interface IPurchasesTable {
-    categories: [number];
+    categories: number[];
     type: string,
-    purchase_id: number;
-    product_id: number;
     name: string;
     supplier_id: number;
     supplier_name: string;
@@ -47,13 +46,28 @@ export interface IPurchasesTable {
     price_per_item: number;
     total_price: number;
     date: string;
-    product_categories: [number]
     supplier_is_active:boolean
 }
 
+type SortDirection = 'asc' | 'desc';
+
+interface SortConfig<T> {
+    key: T | null;
+    direction: SortDirection;
+}
+
+type SortableKeys =
+    | "name"
+    | "price_per_item"
+    | "quantity"
+    | "date";
+
 const PurchasesTable: React.FC = () => {
     const [purchaseHistory, setPurchaseHistory] = useState<IPurchasesTable[]>([]);
-    const [sortConfig, setSortConfig] = useState({key: '', direction: 'asc'});
+    const [sortConfig, setSortConfig] = useState<SortConfig<SortableKeys>>({
+        key: null,
+        direction: 'asc',
+    });
     const [filter, setFilter] = useState('');
     const [dateRangeFilter, setDateRangeFilter] = useState({start: '', end: ''});
     const [categoryFilter, setCategoryFilter] = useState<number | ''>('');
@@ -74,9 +88,9 @@ const PurchasesTable: React.FC = () => {
 
     const fetchPurchaseHistory = async () => {
         try {
-            const response = await axiosInstance.get('/get_all_purchase_history');
+          const data =await fetchGetAllPurchaseHistory();
             // Перетворюємо потрібні поля в числа
-            const formattedData = response.data.map((item: any) => ({
+            const formattedData =data.map((item: IPurchaseTableResponseResponse) => ({
                 ...item,
                 price_per_item: parseFloat(item.price_per_item),
                 total_price: parseFloat(item.total_price),
@@ -85,8 +99,8 @@ const PurchasesTable: React.FC = () => {
             setPurchaseHistory(formattedData);
 
             const prices = formattedData
-                .map((item) => parseFloat(item.price_per_item))
-                .filter((price) => !isNaN(price));
+                .map(item => item.price_per_item)
+                .filter(price => !isNaN(price));
 
             if (prices.length > 0) {
                 const min = Math.min(...prices);
@@ -103,20 +117,24 @@ const PurchasesTable: React.FC = () => {
         }
     };
 
-    const handleSort = (key: string) => {
-        let direction = 'asc';
+    const handleSort = (key: SortableKeys) => {
+        let direction: SortDirection = 'asc';
+
         if (sortConfig.key === key && sortConfig.direction === 'asc') {
             direction = 'desc';
         }
-        setSortConfig({key, direction});
+
+        setSortConfig({ key, direction });
 
         const sortedData = [...purchaseHistory].sort((a, b) => {
             if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
             if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
             return 0;
         });
+
         setPurchaseHistory(sortedData);
     };
+
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFilter(event.target.value.toLowerCase());
@@ -319,7 +337,7 @@ const PurchasesTable: React.FC = () => {
                                 </TableCell>
                                 <TableCell>
                                     <Typography
-                                        color={row.supplier_is_active || 'textDisabled'}
+                                        color={!row.supplier_is_active  ? 'textDisabled' : 'inherit'}
                                         className={clsx("supplier_name")}
                                         title={row.supplier_name}
                                         sx={{

@@ -1,5 +1,5 @@
 import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
-import {ICustomer, ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
+import {ICustomer, ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
 import axios, {AxiosError} from "axios";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
@@ -10,7 +10,7 @@ import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
 interface CustomerContextProps {
     customers: ICustomer[];
     fetchGetAllCustomersFunc: () => void;
-    createCustomerFunc: (newCustomerData: INewGiftCustomerDetails) => Promise<void>; // Додаємо функцію для створення
+    createCustomerFunc: (newCustomerData: ICustomerDetailForCreate) => Promise<void>; // Додаємо функцію для створення
     loading: boolean; // Додаємо поле для перевірки завантаження
 }
 
@@ -39,7 +39,7 @@ export const CustomerProvider: React.FC = ({children}:PropsWithChildren) => {
         }
     };
 
-    const createCustomerFunc = async (newCustomerData: INewGiftCustomerDetails) => {
+    const createCustomerFunc = async (newCustomerData: ICustomerDetailForCreate) => {
         try {
             const newCustomer = await createCustomer(newCustomerData);
             setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список

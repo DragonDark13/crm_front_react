@@ -10,7 +10,7 @@
 
 .selected-row {
     background-color: rgba(0, 123, 255, 0.1); /* Підсвічування */
-    border-left: 4px solid #007bff; /* Лінія збоку для виділення */
+    border-left: 0 solid #007bff; /* Лінія збоку для виділення */
 }
 
 

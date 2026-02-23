@@ -10,7 +10,7 @@ const DateFieldCustom = ({...rest}: IDateFieldCustom) => {
     const minDate = '2023-01-01';
     return (
         <TextField
-            variant="filled"
+            variant="outlined"
             {...rest}
             sx={{marginBottom: 0}}
             size={"small"}

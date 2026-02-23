@@ -378,6 +378,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
         selling_total_price: product.selling_total_price,
         selling_quantity: product.selling_quantity,
         article: product.article,
+        product_description:product.product_description
     });
 
 

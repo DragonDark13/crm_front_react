@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {useCustomers} from "../Provider/CustomerContext";
-import {ICustomerDetails} from "../../utils/types";
+import {ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
 import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import axios, {AxiosError} from "axios";
@@ -30,8 +30,7 @@ const CustomerPage: React.FC = () => {
     const {showSnackbarMessage} = useSnackbarMessage()
     const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
     const [openAddNewCustomerDialog, setOpenAddNewCustomerDialog] = useState(false);
-    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetails>({
-        id: 0,
+    const [newCustomerData, setNewCustomerData] = useState<ICustomerDetailForCreate>({
         name: '',
         email: '',
         phone_number: '',
@@ -62,7 +61,7 @@ const CustomerPage: React.FC = () => {
     };
 
     // Функція для створення нового покупця
-    const handleCreateCustomer = (newCustomerData: ICustomerDetails) => {
+    const handleCreateCustomer = (newCustomerData: ICustomerDetailForCreate) => {
 
 
         createCustomerFunc(newCustomerData).then(() => {

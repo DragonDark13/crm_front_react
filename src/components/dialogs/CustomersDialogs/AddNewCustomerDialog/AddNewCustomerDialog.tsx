@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, DialogActions, DialogContent, TextField} from "@mui/material";
-import {ICustomerDetails, INewGiftCustomerDetails} from "../../../../utils/types";
+import {ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../../../../utils/types";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import CancelButton from "../../../Buttons/CancelButton";
 
@@ -8,9 +8,9 @@ import CancelButton from "../../../Buttons/CancelButton";
 export interface IAddNewCustomerDialog {
     openAddNewCustomerDialog: boolean;
     handleCloseAddNewCustomerDialog: () => void;
-    handleAddCustomer: (newCustomer: INewGiftCustomerDetails) => void;
-    newCustomerData: INewGiftCustomerDetails;
-    setNewCustomerData: (data: INewGiftCustomerDetails) => void;
+    handleAddCustomer: (newCustomer: ICustomerDetailForCreate) => void;
+    newCustomerData: ICustomerDetailForCreate;
+    setNewCustomerData: (data: ICustomerDetailForCreate) => void;
     isAuthenticated: boolean;
 }
 
@@ -23,7 +23,7 @@ const AddNewCustomerDialog = ({
                                   isAuthenticated
                               }: IAddNewCustomerDialog) => {
 
-    console.log("isAuthenticated",isAuthenticated);
+    console.log("newCustomerData>>>",newCustomerData);
     const [errors, setErrors] = useState<{ name?: string, email?: string }>({});
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
