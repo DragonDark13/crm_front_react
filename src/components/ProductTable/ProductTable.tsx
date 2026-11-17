@@ -14,6 +14,7 @@ export interface IProductActions {
     handleOpenProductInfoModal: (product: IProduct) => void;
     handleDelete: (productId: number) => void;
     handleOpenHistoryModal: (productId: number) => void;
+    handleOpenInventory: (product: IProduct) => void;
     handlePurchase: (product: IProduct) => void;
     handleOpenSale: (product: IProduct) => void;
     isAuthenticated: boolean;
@@ -52,6 +53,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                         handlePurchase,
                                                         handleOpenSale,
                                                         handleOpenHistoryModal,
+                                                        handleOpenInventory,
                                                         searchTerm,
                                                         filteredAndSearchedProducts,
                                                         itemsPerPage,
@@ -296,6 +298,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                     handlePurchase={handlePurchase}
                                                     handleOpenSale={handleOpenSale}
                                                     handleOpenHistoryModal={handleOpenHistoryModal}
+                                                    handleOpenInventory={handleOpenInventory}
                                                     handleDelete={handleDelete}
                                                     isAuthenticated={isAuthenticated}
                                                     handleOpenProductInfoModal={handleOpenProductInfoModal}
