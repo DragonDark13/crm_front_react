@@ -42,5 +42,8 @@ export interface IProductInventoryData {
 }
 
 export const runProductInventory = (productId: number, data: IProductInventoryData) => {
-    return axiosInstance.post(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data).catch(handleError);
+    const token = localStorage.getItem('token');
+    return axiosInstance.post(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data, {
+        headers: token ? {'Authorization': `Bearer ${token}`} : {}
+    }).catch(handleError);
 };
