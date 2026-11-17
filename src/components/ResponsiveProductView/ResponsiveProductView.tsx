@@ -24,6 +24,7 @@ interface IResponsiveProductViewProps {
     handleOpenEdit: (product: IProduct) => void;
     handleDelete: (productId: number) => void;
     handleOpenHistoryModal: (productId: number) => void;
+    handleOpenInventory: (product: IProduct) => void;
     handlePurchase: (product: IProduct) => void;
     handleOpenSale: (product: IProduct) => void;
     searchTerm: string;
@@ -49,6 +50,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = ({
                                                                                      handlePurchase,
                                                                                      handleOpenSale,
                                                                                      handleOpenHistoryModal,
+                                                                                     handleOpenInventory,
                                                                                      searchTerm,
                                                                                      setSearchTerm,
                                                                                      setCurrentPage,
@@ -143,6 +145,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = ({
                     handlePurchase={handlePurchase}
                     handleOpenSale={handleOpenSale}
                     handleOpenHistoryModal={handleOpenHistoryModal}
+                    handleOpenInventory={handleOpenInventory}
                     isAuthenticated={isAuthenticated}
                 />
             ) : (
@@ -164,6 +167,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = ({
                     handlePurchase={handlePurchase}
                     handleOpenSale={handleOpenSale}
                     handleOpenHistoryModal={handleOpenHistoryModal}
+                    handleOpenInventory={handleOpenInventory}
                     isAuthenticated={isAuthenticated}
                     handleOpenProductInfoModal={handleOpenProductInfoModal}
                 />
