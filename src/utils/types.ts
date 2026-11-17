@@ -4,6 +4,7 @@ import ex = CSS.ex;
 export interface IBaseProduct {
     name: string;
     available_quantity: number;
+    reserved_quantity?: number;
     total_quantity: number;
     sold_quantity: number;
     purchase_total_price: number;
