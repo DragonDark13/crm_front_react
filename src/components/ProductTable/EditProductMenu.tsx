@@ -89,10 +89,12 @@ const EditProductMenu = ({
                 Історія
             </MenuItem>
 
-            <MenuItem onClick={() => {
-                handleOpenInventory(selectedProduct);
-                handleClose();
-            }}>
+            <MenuItem
+                disabled={!isAuthenticated}
+                onClick={() => {
+                    handleOpenInventory(selectedProduct);
+                    handleClose();
+                }}>
                 <InventoryIcon fontSize="small" sx={{mr: 1}}/>
                 Інвентаризація
             </MenuItem>
