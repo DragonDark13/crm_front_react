@@ -10,6 +10,7 @@ import SellIcon from "@mui/icons-material/Sell";
 import HistoryIcon from "@mui/icons-material/History";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InfoIcon from '@mui/icons-material/Info';
+import InventoryIcon from '@mui/icons-material/Inventory2';
 import {IProduct} from "../../utils/types.ts";
 import {IProductActions} from "./ProductTable.tsx";
 
@@ -31,6 +32,7 @@ const EditProductMenu = ({
                              handlePurchase,
                              handleOpenSale,
                              handleOpenHistoryModal,
+                             handleOpenInventory,
                              handleDelete,
                              handleOpenProductInfoModal,
                              isAuthenticated
@@ -85,6 +87,14 @@ const EditProductMenu = ({
             }}>
                 <HistoryIcon fontSize="small" sx={{mr: 1}}/>
                 Історія
+            </MenuItem>
+
+            <MenuItem onClick={() => {
+                handleOpenInventory(selectedProduct);
+                handleClose();
+            }}>
+                <InventoryIcon fontSize="small" sx={{mr: 1}}/>
+                Інвентаризація
             </MenuItem>
 
             <MenuItem
