@@ -1,0 +1,117 @@
+import React, {useEffect, useState} from "react";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+    Typography
+} from "@mui/material";
+import {IProduct} from "../../../../utils/types";
+
+interface ProductInventoryModalProps {
+    product: IProduct;
+    open: boolean;
+    onClose: () => void;
+    onSubmit: (actualQuantity: number, reason: string) => Promise<void>;
+}
+
+const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
+    product,
+    open,
+    onClose,
+    onSubmit
+}) => {
+    const reservedQuantity = product.reserved_quantity ?? 0;
+    const physicalQuantity = product.available_quantity + reservedQuantity;
+    const [actualQuantity, setActualQuantity] = useState(String(physicalQuantity));
+    const [reason, setReason] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        if (open) {
+            setActualQuantity(String(physicalQuantity));
+            setReason("");
+        }
+    }, [open, physicalQuantity]);
+
+    const handleSubmit = async () => {
+        const quantity = Number(actualQuantity);
+        if (!Number.isInteger(quantity) || quantity < 0) return;
+
+        setIsSubmitting(true);
+        try {
+            await onSubmit(quantity, reason);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const isValidQuantity = actualQuantity.trim() !== ""
+        && Number.isInteger(Number(actualQuantity))
+        && Number(actualQuantity) >= 0;
+
+    return (
+        <Dialog open={open} onClose={isSubmitting ? undefined : onClose} fullWidth maxWidth="sm">
+            <DialogTitle>Інвентаризація товару</DialogTitle>
+            <DialogContent>
+                <Typography variant="subtitle1" fontWeight="bold" sx={{mt: 1}}>
+                    {product.name}
+                </Typography>
+                <Typography color="text.secondary" variant="body2">
+                    Артикул: {product.article}
+                </Typography>
+                <Typography sx={{mt: 2}}>
+                    Доступно на складі: <strong>{product.available_quantity}</strong>
+                </Typography>
+                <Typography>
+                    Зарезервовано: <strong>{reservedQuantity}</strong>
+                </Typography>
+                <Typography>
+                    Облікова фізична кількість: <strong>{physicalQuantity}</strong>
+                </Typography>
+                <TextField
+                    autoFocus
+                    fullWidth
+                    type="number"
+                    label="Фактична кількість (усі фізичні одиниці)"
+                    value={actualQuantity}
+                    onChange={(event) => setActualQuantity(event.target.value)}
+                    inputProps={{min: 0, step: 1}}
+                    sx={{mt: 2}}
+                />
+                <Typography sx={{mt: 1}}>
+                    Різниця: <strong>
+                        {isValidQuantity ? Number(actualQuantity) - physicalQuantity : "—"}
+                    </strong>
+                </Typography>
+                <TextField
+                    fullWidth
+                    multiline
+                    minRows={2}
+                    label="Причина / примітка"
+                    value={reason}
+                    onChange={(event) => setReason(event.target.value)}
+                    sx={{mt: 2}}
+                />
+                <Typography variant="body2" color="warning.main" sx={{mt: 2}}>
+                    Під час інвентаризації всі непродані подарункові набори з цим товаром буде видалено,
+                    а резерви їхніх товарів і пакування повернуто на склад. Продані набори залишаться.
+                </Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose} disabled={isSubmitting}>Скасувати</Button>
+                <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    disabled={!isValidQuantity || isSubmitting}
+                >
+                    Провести інвентаризацію
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+};
+
+export default ProductInventoryModal;
