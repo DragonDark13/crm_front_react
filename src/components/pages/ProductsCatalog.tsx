@@ -455,7 +455,6 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
         } catch (error) {
             console.error("Помилка інвентаризації товару:", error);
             showSnackbarMessage("Не вдалося провести інвентаризацію", "error");
-            throw error;
         }
     };
 
