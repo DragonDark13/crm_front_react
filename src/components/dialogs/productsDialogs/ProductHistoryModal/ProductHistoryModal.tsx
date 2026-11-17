@@ -93,6 +93,9 @@ export interface IStockHistoryRecord {
     timestamp: string;
     change_type: string;
     change_amount: number;
+    quantity_before?: number | null;
+    quantity_after?: number | null;
+    reason?: string | null;
 }
 
 export interface IProductHistory {
