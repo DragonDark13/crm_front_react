@@ -17,7 +17,10 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
                     <TableRow>
                         <RenderHeaderCell>Дата</RenderHeaderCell>
                         <RenderHeaderCell>Тип зміни</RenderHeaderCell>
-                        <RenderHeaderCell>Зміни по Кількості</RenderHeaderCell>
+                        <RenderHeaderCell>Було</RenderHeaderCell>
+                        <RenderHeaderCell>Стало</RenderHeaderCell>
+                        <RenderHeaderCell>Різниця</RenderHeaderCell>
+                        <RenderHeaderCell>Причина</RenderHeaderCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -25,13 +28,18 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
                         sortByDate(productHistory.stock, 'timestamp').map((record) => (
                             <TableRow key={record.id}>
                                 <TableCell size={"small"}>{new Date(record.timestamp!).toLocaleString()}</TableCell>
-                                <TableCell size={"small"}>{record.change_type}</TableCell>
+                                <TableCell size={"small"}>
+                                    {record.change_type === "inventory" ? "Інвентаризація" : record.change_type}
+                                </TableCell>
+                                <TableCell size={"small"}>{record.quantity_before ?? "—"}</TableCell>
+                                <TableCell size={"small"}>{record.quantity_after ?? "—"}</TableCell>
                                 <TableCell size={"small"}>{record.change_amount}</TableCell>
+                                <TableCell size={"small"}>{record.reason || "—"}</TableCell>
                             </TableRow>
                         ))
                         : (
                             <TableRow>
-                                <TableCell colSpan={3}>Немає змін в журналі.</TableCell>
+                                <TableCell colSpan={7}>Немає змін в журналі.</TableCell>
                             </TableRow>
                         )
                     }
