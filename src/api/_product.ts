@@ -35,3 +35,12 @@ export const addSale = (productId: number, saleData: ISaleData): Promise<void> =
 export const fetchProductHistory = (productId: number) => {
     return axiosInstance.get(`/product/${productId}/history`);
 };
+
+export interface IProductInventoryData {
+    actual_quantity: number;
+    reason?: string;
+}
+
+export const runProductInventory = (productId: number, data: IProductInventoryData) => {
+    return axiosInstance.post(`/product/${productId}/inventory`, data).catch(handleError);
+};
