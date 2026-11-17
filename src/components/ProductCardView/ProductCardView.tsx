@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SellIcon from '@mui/icons-material/Sell';
 import HistoryIcon from '@mui/icons-material/History';
+import InventoryIcon from '@mui/icons-material/Inventory2';
 import {IProduct} from "../../utils/types";
 import clsx from "clsx";
 
@@ -20,6 +21,7 @@ interface IProductTableProps {
     handleOpenEdit: (product: IProduct) => void;
     handleDelete: (productId: number) => void;
     handleOpenHistoryModal: (productId: number) => void;
+    handleOpenInventory: (product: IProduct) => void;
     handlePurchase: (product: IProduct) => void;
     handleOpenSale: (product: IProduct) => void;
     searchTerm: string;
@@ -41,6 +43,7 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                                            handlePurchase,
                                                            handleOpenSale,
                                                            handleOpenHistoryModal,
+                                                           handleOpenInventory,
                                                            searchTerm,
                                                            filteredAndSearchedProducts,
                                                            currentPage,
@@ -172,6 +175,14 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                                 <IconButton color="info"
                                                             onClick={() => handleOpenHistoryModal(product.id)}>
                                                     <HistoryIcon fontSize="small"/>
+                                                </IconButton>
+                                            </Tooltip>
+
+                                            <Tooltip title="Інвентаризація">
+                                                <IconButton color="primary"
+                                                            disabled={!isAuthenticated}
+                                                            onClick={() => handleOpenInventory(product)}>
+                                                    <InventoryIcon fontSize="small"/>
                                                 </IconButton>
                                             </Tooltip>
                                         </Box>
