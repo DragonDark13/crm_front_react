@@ -42,5 +42,5 @@ export interface IProductInventoryData {
 }
 
 export const runProductInventory = (productId: number, data: IProductInventoryData) => {
-    return axiosInstance.post(`/product/${productId}/inventory`, data).catch(handleError);
+    return axiosInstance.post(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data).catch(handleError);
 };
