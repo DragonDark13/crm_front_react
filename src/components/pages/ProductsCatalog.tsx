@@ -30,11 +30,12 @@ import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {addSupplier} from "../../api/_supplier";
-import {addProduct, addPurchase, addSale, deleteProduct, updateProduct} from "../../api/_product";
+import {addProduct, addPurchase, addSale, deleteProduct, updateProduct, runProductInventory} from "../../api/_product";
 import {addNewCategory} from "../../api/_categories";
 import {exportToExcel} from "../../api/api";
 import DeleteAllProductsDialog from "../dialogs/productsDialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
 import ProductInfoModal from "../dialogs/productsDialogs/ProductInfoModal";
+import ProductInventoryModal from "../dialogs/productsDialogs/ProductInventoryModal/ProductInventoryModal";
 import {useNewProduct} from "../../hooks/useNewProduct.ts";
 import {useCategories} from "../Provider/CategoryContext.tsx";
 import {useSuppliers} from "../Provider/SupplierContext.tsx";
@@ -126,6 +127,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
 
     const [editProduct, setEditProduct] = useState<IEditProduct | null>(null);
     const [infoProduct, setInfoProduct] = useState<IProduct | null>(null);
+    const [inventoryProduct, setInventoryProduct] = useState<IProduct | null>(null);
 
     // Modal States
     // const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
@@ -435,6 +437,28 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
         handleModalOpen("openHistory")
     }
 
+    const handleOpenInventory = (product: IProduct) => {
+        setInventoryProduct(product);
+    };
+
+    const handleSubmitInventory = async (actualQuantity: number, reason: string) => {
+        if (!inventoryProduct) return;
+
+        try {
+            await runProductInventory(inventoryProduct.id, {
+                actual_quantity: actualQuantity,
+                reason
+            });
+            setInventoryProduct(null);
+            await fetchProductsFunc();
+            showSnackbarMessage("Інвентаризацію успішно проведено", "success");
+        } catch (error) {
+            console.error("Помилка інвентаризації товару:", error);
+            showSnackbarMessage("Не вдалося провести інвентаризацію", "error");
+            throw error;
+        }
+    };
+
     const handleCategoryChange = (categoryId: number[]) => {
 
         setSelectedCategories(categoryId)
@@ -654,6 +678,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
                             handleOpenSale(product);
                         }}
                         handleOpenHistoryModal={handleOpenHistoryModal}
+                        handleOpenInventory={handleOpenInventory}
                     />
 
                     {/* Кнопка для відкриття модального вікна для додавання */}
@@ -683,6 +708,15 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
                     open={modalState.productInfoModal}
                     onClose={() => handleModalClose("productInfoModal")}/>
             }
+
+            {inventoryProduct && (
+                <ProductInventoryModal
+                    product={inventoryProduct}
+                    open={Boolean(inventoryProduct)}
+                    onClose={() => setInventoryProduct(null)}
+                    onSubmit={handleSubmitInventory}
+                />
+            )}
 
             {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
                 <EditProductModal
