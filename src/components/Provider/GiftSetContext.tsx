@@ -19,7 +19,7 @@ interface GiftSetContextProps {
 
 const GiftSetContext = createContext<GiftSetContextProps | undefined>(undefined);
 
-export const GiftSetProvider: React.FC = ({children}:PropsWithChildren) => {
+export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
     const [giftSets, setGiftSets] = useState<IGiftSet[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
 
