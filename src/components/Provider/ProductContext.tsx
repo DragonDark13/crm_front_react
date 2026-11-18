@@ -13,7 +13,7 @@ interface ProductContextProps {
 const ProductContext = createContext<ProductContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const ProductProvider: React.FC = ({ children }:PropsWithChildren) => {
+export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: string | null }>({
     isLoading: true,
