@@ -43,10 +43,7 @@ axiosInstance.interceptors.request.use(config => {
 // Інтерсептор для обробки помилок
 axiosInstance.interceptors.response.use(
     response => response,
-    error => {
-        console.error('API Error:', error);
-        return Promise.reject(error);
-    }
+    error => Promise.reject(error)
 );
 // Константи для API-ендпоінтів
 export const API_ENDPOINTS = {
@@ -92,9 +89,23 @@ export const API_ENDPOINTS = {
 };
 
 // Уніфікована обробка помилок
-export const handleError = (error: AxiosError<{error?: string}>): never => {
-    const errorMessage = error.message || 'Unknown error';
-    throw new Error(errorMessage);
+export const getApiErrorMessage = (error: unknown, fallback = 'Unknown error'): string => {
+    if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
+        return error.response?.data?.error
+            || error.response?.data?.message
+            || error.message
+            || fallback;
+    }
+
+    return error instanceof Error ? error.message : fallback;
+};
+
+export const handleError = (error: unknown): never => {
+    if (axios.isAxiosError(error) || error instanceof Error) {
+        throw error;
+    }
+
+    throw new Error(getApiErrorMessage(error));
 };
 
 // Загальна функція для GET-запитів
