@@ -5,7 +5,7 @@ import {fetchProducts} from "../../api/_product";
 // Типізація для контексту
 interface ProductContextProps {
   products: IProduct[];
-  fetchProductsFunc: () => void;
+  fetchProductsFunc: () => Promise<void>;
   loadingState: { isLoading: boolean; error: string | null };
 }
 
@@ -26,13 +26,12 @@ export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsW
       const data = await fetchProducts();
       if (Array.isArray(data)) {
         setProducts(data);
+        setLoadingState({ isLoading: false, error: null });
       } else {
         throw new Error('Fetched data is not an array');
       }
     } catch (error) {
       setLoadingState({ isLoading: false, error: 'There was an error fetching the products!' });
-    } finally {
-      setLoadingState({ isLoading: false, error: null });
     }
   };
 
