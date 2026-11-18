@@ -39,6 +39,7 @@ import ProductInventoryModal from "../dialogs/productsDialogs/ProductInventoryMo
 import {useNewProduct} from "../../hooks/useNewProduct.ts";
 import {useCategories} from "../Provider/CategoryContext.tsx";
 import {useSuppliers} from "../Provider/SupplierContext.tsx";
+import {runCrudAction} from "../../utils/runCrudAction";
 
 
 export interface IProductsCatalogProps {
@@ -249,40 +250,58 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
 
 
     const handleDelete = async (productId: number) => {
-        try {
-            await deleteProduct(productId);
-            handleCloseDeleteModal();
-            await fetchProductsFunc();
-            showSnackbarMessage('Product deleted successfully!', 'success'); // Show success message
-        } catch (error) {
-            console.error('There was an error deleting the product!', error);
-            showSnackbarMessage('Failed to delete the product!', 'error'); // Show error message
-        }
+        await runCrudAction(
+            () => deleteProduct(productId),
+            fetchProductsFunc,
+            {
+                onSuccess: () => {
+                    handleCloseDeleteModal();
+                    showSnackbarMessage('Product deleted successfully!', 'success');
+                },
+                onError: (error) => {
+                    console.error('There was an error deleting the product!', error);
+                    showSnackbarMessage('Failed to delete the product!', 'error');
+                },
+                onRefreshError: () => showSnackbarMessage('Product was deleted, but the product list could not be refreshed.', 'warning')
+            }
+        );
     };
 
     const handleAddProduct = async () => {
-        try {
-            await addProduct(newProduct);
-            await fetchProductsFunc();
-            handleModalClose('openAdd');
-            showSnackbarMessage('Product added successfully!', 'success'); // Show success message
-        } catch (error) {
-            console.error('There was an error adding the product!', error);
-            showSnackbarMessage('Failed to add the product!', 'error'); // Show error message
-        }
+        await runCrudAction(
+            () => addProduct(newProduct),
+            fetchProductsFunc,
+            {
+                onSuccess: () => {
+                    handleModalClose('openAdd');
+                    showSnackbarMessage('Product added successfully!', 'success');
+                },
+                onError: (error) => {
+                    console.error('There was an error adding the product!', error);
+                    showSnackbarMessage('Failed to add the product!', 'error');
+                },
+                onRefreshError: () => showSnackbarMessage('Product was added, but the product list could not be refreshed.', 'warning')
+            }
+        );
     };
 
     const handleEditSave = async () => {
         if (!editProduct) return;
-        try {
-            await updateProduct(editProduct.id, editProduct);
-            handleModalClose('openEdit');
-            await fetchProductsFunc();
-            showSnackbarMessage('Product updated successfully!', 'success'); // Show success message
-        } catch (error) {
-            console.error('There was an error updating the product!', error);
-            showSnackbarMessage('Failed to update the product!', 'error'); // Show error message
-        }
+        await runCrudAction(
+            () => updateProduct(editProduct.id, editProduct),
+            fetchProductsFunc,
+            {
+                onSuccess: () => {
+                    handleModalClose('openEdit');
+                    showSnackbarMessage('Product updated successfully!', 'success');
+                },
+                onError: (error) => {
+                    console.error('There was an error updating the product!', error);
+                    showSnackbarMessage('Failed to update the product!', 'error');
+                },
+                onRefreshError: () => showSnackbarMessage('Product was updated, but the product list could not be refreshed.', 'warning')
+            }
+        );
     };
     const handlePurchase = (product: IProduct) => {
         setEditProduct(null);
@@ -306,43 +325,56 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
             purchase_date: purchaseDetails.purchase_date,
         };
 
-        try {
-            await addPurchase(editProduct.id, purchaseData);
-            handleModalClose('openPurchase');
-            await fetchProductsFunc();
-            showSnackbarMessage('Purchase submitted successfully!', 'success')
-        } catch (error) {
-            showSnackbarMessage('There was an error processing the purchase!', 'error')
-
-        }
+        await runCrudAction(
+            () => addPurchase(editProduct.id, purchaseData),
+            fetchProductsFunc,
+            {
+                onSuccess: () => {
+                    handleModalClose('openPurchase');
+                    showSnackbarMessage('Purchase submitted successfully!', 'success');
+                },
+                onError: () => showSnackbarMessage('There was an error processing the purchase!', 'error'),
+                onRefreshError: () => showSnackbarMessage('Purchase was saved, but the product list could not be refreshed.', 'warning')
+            }
+        );
     };
 
     const handleSale = async () => {
         if (saleData) {
-            try {
-                await addSale(saleData.productId, saleData);
-                handleModalClose('openSale');
-                showSnackbarMessage('Sale completed successfully!', 'success'); // Show success message
-                await fetchProductsFunc();
-            } catch (error) {
-                console.error('There was an error saving the sale!', error);
-                showSnackbarMessage('Failed to save the sale!', 'error'); // Show error message
-            }
+            await runCrudAction(
+                () => addSale(saleData.productId, saleData),
+                fetchProductsFunc,
+                {
+                    onSuccess: () => {
+                        handleModalClose('openSale');
+                        showSnackbarMessage('Sale completed successfully!', 'success');
+                    },
+                    onError: (error) => {
+                        console.error('There was an error saving the sale!', error);
+                        showSnackbarMessage('Failed to save the sale!', 'error');
+                    },
+                    onRefreshError: () => showSnackbarMessage('Sale was saved, but the product list could not be refreshed.', 'warning')
+                }
+            );
         }
     };
 
-    const handleAddSupplier = (newSupplier: INewSupplier) => {
-
-        addSupplier(newSupplier)
-            .then(() => {
-                handleModalClose("openAddSupplierOpen");
-                showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
-                fetchSuppliersFromContext(); // Оновити список постачальників після додавання
-            })
-            .catch((error) => {
-                console.error('There was an error saving the supplier!', error);
-                showSnackbarMessage('There was an error saving the supplier!', "error"); // Show success message
-            });
+    const handleAddSupplier = async (newSupplier: INewSupplier) => {
+        await runCrudAction(
+            () => addSupplier(newSupplier),
+            fetchSuppliersFromContext,
+            {
+                onSuccess: () => {
+                    handleModalClose("openAddSupplierOpen");
+                    showSnackbarMessage('Supplier completed successfully!', 'success');
+                },
+                onError: (error) => {
+                    console.error('There was an error saving the supplier!', error);
+                    showSnackbarMessage('There was an error saving the supplier!', 'error');
+                },
+                onRefreshError: () => showSnackbarMessage('Supplier was saved, but the supplier list could not be refreshed.', 'warning')
+            }
+        );
     };
 
     const handleOpenEdit = (product: IProduct) => {
@@ -437,18 +469,24 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
     const handleSubmitInventory = async (actualQuantity: number, reason: string) => {
         if (!inventoryProduct) return;
 
-        try {
-            await runProductInventory(inventoryProduct.id, {
+        await runCrudAction(
+            () => runProductInventory(inventoryProduct.id, {
                 actual_quantity: actualQuantity,
                 reason
-            });
-            setInventoryProduct(null);
-            await fetchProductsFunc();
-            showSnackbarMessage("Інвентаризацію успішно проведено", "success");
-        } catch (error) {
-            console.error("Помилка інвентаризації товару:", error);
-            showSnackbarMessage("Не вдалося провести інвентаризацію", "error");
-        }
+            }),
+            fetchProductsFunc,
+            {
+                onSuccess: () => {
+                    setInventoryProduct(null);
+                    showSnackbarMessage("Інвентаризацію успішно проведено", "success");
+                },
+                onError: (error) => {
+                    console.error("Помилка інвентаризації товару:", error);
+                    showSnackbarMessage("Не вдалося провести інвентаризацію", "error");
+                },
+                onRefreshError: () => showSnackbarMessage("Інвентаризацію проведено, але список товарів не вдалося оновити.", "warning")
+            }
+        );
     };
 
     const handleCategoryChange = (categoryId: number[]) => {
@@ -486,19 +524,22 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
     //         });
     // };
 
-    const createNewCategory = (categoryName: string) => {
-        addNewCategory(categoryName).then(() => {
-            fetchCategoriesFromContext();
-
-            handleModalClose("openCategoryCreate"); // Закрити модальне вікно після додавання
-            showSnackbarMessage('Category added successfully!', 'success'); // Show success message
-
-        })
-            .catch(error => {
-                showSnackbarMessage('Failed to add the Category!', 'error'); // Show error message
-
-                console.error('There was an error adding the product!', error);
-            });
+    const createNewCategory = async (categoryName: string) => {
+        await runCrudAction(
+            () => addNewCategory(categoryName),
+            fetchCategoriesFromContext,
+            {
+                onSuccess: () => {
+                    handleModalClose("openCategoryCreate");
+                    showSnackbarMessage('Category added successfully!', 'success');
+                },
+                onError: (error) => {
+                    console.error('There was an error adding the category!', error);
+                    showSnackbarMessage('Failed to add the Category!', 'error');
+                },
+                onRefreshError: () => showSnackbarMessage('Category was added, but the category list could not be refreshed.', 'warning')
+            }
+        );
     };
 
 
