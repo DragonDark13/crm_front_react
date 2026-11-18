@@ -1,5 +1,5 @@
 import {ICustomer, ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../utils/types";
-import {API_ENDPOINTS, axiosInstance, fetchResource, postResource} from "./api";
+import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 
 export const createCustomer = (customerData: ICustomerDetailForCreate): Promise<ICustomer> => {
     return postResource<ICustomer>(API_ENDPOINTS.CREATED_CUSTOMER, customerData);
@@ -13,18 +13,10 @@ export const fetchCustomerDetails = (customerId: number): Promise<ICustomerDetai
     return fetchResource<ICustomerDetails>(API_ENDPOINTS.CUSTOMER_DETAILS(customerId));
 };
 
-export const updateCustomerData = async (customerData: ICustomerDetails) => {
-    try {
-        await axiosInstance.put(`/update_customers/${customerData.id}`, customerData);
-    } catch (error) {
-        console.error('Error updating customer:', error);
-    }
+export const updateCustomerData = (customerData: ICustomerDetails): Promise<void> => {
+    return putResource<void>(`/update_customers/${customerData.id}`, customerData);
 };
 
-export const deleteCustomerData = async (customerId: number) => {
-    try {
-        await axiosInstance.delete(`/delete_customers/${customerId}`);
-    } catch (error) {
-        console.error('Error deleting customer:', error);
-    }
+export const deleteCustomerData = (customerId: number): Promise<void> => {
+    return deleteResource<void>(`/delete_customers/${customerId}`);
 };
