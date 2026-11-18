@@ -18,7 +18,7 @@ interface CustomerContextProps {
 const CustomerContext = createContext<CustomerContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const CustomerProvider: React.FC = ({children}:PropsWithChildren) => {
+export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
     const [customers, setCustomers] = useState<ICustomer[]>([]);
     const [loading, setLoading] = useState(true); // Стан завантаження
     const {showSnackbarMessage} = useSnackbarMessage()
