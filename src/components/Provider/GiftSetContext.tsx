@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo} from 'react';
 import {fetchGiftSets, removeGiftSet, createGiftBox, updateGiftSet, sellGiftSet} from '../../api/_giftBox.ts'; // Import
 // your API
 // functions
@@ -33,7 +33,7 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
             });
     }, [showSnackbarMessage]);
 
-    const deleteGiftSet = (giftSetId: number) => {
+    const deleteGiftSet = useCallback((giftSetId: number) => {
         removeGiftSet(giftSetId)
             .then(() => {
                 setGiftSets(prevSets => prevSets.filter(giftSet => giftSet.id !== giftSetId));
@@ -43,9 +43,9 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
                 console.error("Error deleting gift set:", error);
                 showSnackbarMessage('Помилка видалення набору', 'error');
             });
-    };
+    }, [showSnackbarMessage]);
 
-    const createNewGiftSet = (newGiftBox: GiftSetPayload) => {
+    const createNewGiftSet = useCallback((newGiftBox: GiftSetPayload) => {
         createGiftBox(newGiftBox)
             .then(() => {
                 fetchGiftSetsData(); // Refresh gift sets after creation
@@ -55,9 +55,9 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
                 console.error("Error creating gift box:", error);
                 showSnackbarMessage('Помилка створення набору', 'error');
             });
-    };
+    }, [fetchGiftSetsData, showSnackbarMessage]);
 
-    const updateExistingGiftSet = (updatedGiftBox: IGiftUpdateItem) => {
+    const updateExistingGiftSet = useCallback((updatedGiftBox: IGiftUpdateItem) => {
         updateGiftSet(updatedGiftBox)
             .then(() => {
                 fetchGiftSetsData(); // Refresh after updating
@@ -67,9 +67,9 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
                 console.error("Error updating gift set:", error);
                 showSnackbarMessage('Помилка оновлення набору', 'error');
             });
-    };
+    }, [fetchGiftSetsData, showSnackbarMessage]);
 
-    const sellGiftSetData = (requestData: { gift_set_id: number; customer_id: number; sale_date: string | null; selling_price: number }) => {
+    const sellGiftSetData = useCallback((requestData: { gift_set_id: number; customer_id: number; sale_date: string | null; selling_price: number }) => {
         sellGiftSet(requestData)
             .then(() => {
                 fetchGiftSetsData(); // Refresh gift sets after selling
@@ -79,18 +79,27 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
                 console.error("Error selling gift set:", error);
                 showSnackbarMessage('Помилка продажу набору', 'error');
             });
-    };
+    }, [fetchGiftSetsData, showSnackbarMessage]);
+
+    const contextValue = useMemo(() => ({
+        giftSets,
+        setGiftSets,
+        fetchGiftSetsData,
+        deleteGiftSet,
+        createNewGiftSet,
+        updateExistingGiftSet,
+        sellGiftSetData
+    }), [
+        giftSets,
+        fetchGiftSetsData,
+        deleteGiftSet,
+        createNewGiftSet,
+        updateExistingGiftSet,
+        sellGiftSetData
+    ]);
 
     return (
-        <GiftSetContext.Provider value={{
-            giftSets,
-            setGiftSets,
-            fetchGiftSetsData,
-            deleteGiftSet,
-            createNewGiftSet,
-            updateExistingGiftSet,
-            sellGiftSetData
-        }}>
+        <GiftSetContext.Provider value={contextValue}>
             {children}
         </GiftSetContext.Provider>
     );
