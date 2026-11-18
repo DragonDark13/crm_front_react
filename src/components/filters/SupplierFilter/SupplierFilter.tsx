@@ -30,7 +30,7 @@ const SupplierFilter: React.FC<ISupplierFilterProps> = ({
                     componentsProps={{
 
                         typography: {
-                            color:supplier.is_active || 'textDisabled',
+                            color: supplier.is_active ? 'inherit' : 'textDisabled',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap'
                         }
