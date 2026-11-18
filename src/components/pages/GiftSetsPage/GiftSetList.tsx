@@ -59,7 +59,7 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
     // Використання у useEffect
     useEffect(() => {
         fetchGiftSetsData();
-    }, []);
+    }, [fetchGiftSetsData]);
 
 // Open dialog for editing or selling
     const handleDialogOpen = (type: 'edit' | 'sell', giftSet: IGiftSet) => {
