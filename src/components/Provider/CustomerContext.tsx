@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
 import {ICustomer, ICustomerDetailForCreate} from "../../utils/types";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
@@ -17,7 +17,7 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     const [loading, setLoading] = useState(true);
     const {showSnackbarMessage} = useSnackbarMessage();
 
-    const fetchGetAllCustomersFunc = async (): Promise<boolean> => {
+    const fetchGetAllCustomersFunc = useCallback(async (): Promise<boolean> => {
         try {
             setLoading(true);
             const data = await fetchGetAllCustomers();
@@ -32,7 +32,7 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     const createCustomerFunc = async (newCustomerData: ICustomerDetailForCreate) => {
         const newCustomer = await createCustomer(newCustomerData);
@@ -45,8 +45,8 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     };
 
     useEffect(() => {
-        fetchGetAllCustomersFunc();
-    }, []);
+        void fetchGetAllCustomersFunc();
+    }, [fetchGetAllCustomersFunc]);
 
     return (
         <CustomerContext.Provider value={{customers, fetchGetAllCustomersFunc, createCustomerFunc, loading}}>
