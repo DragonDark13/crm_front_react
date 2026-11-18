@@ -17,7 +17,7 @@ interface CategoryContextProps {
 const CategoryContext = createContext<CategoryContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const CategoryProvider: React.FC = ({ children }:PropsWithChildren) => {
+export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
   const fetchCategoriesFunc = async () => {
