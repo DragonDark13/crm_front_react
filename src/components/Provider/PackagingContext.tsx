@@ -1,5 +1,5 @@
 // PackagingContext.js
-import {createContext, useContext, useEffect, useState, useCallback} from 'react';
+import {createContext, useContext, useEffect, useState, useCallback, useMemo} from 'react';
 import {IMaterial} from "../../utils/types";
 import {fetchListPackagingMaterials} from "../../api/_packagingMaterials";
 import { PropsWithChildren } from 'react';
@@ -86,15 +86,15 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
 //         }
 //     };
 
+    const contextValue = useMemo(() => ({
+        packagingMaterials,
+        fetchPackagingOptions,
+        loading,
+        error,
+    }), [packagingMaterials, fetchPackagingOptions, loading, error]);
+
     return (
-        <PackagingContext.Provider
-            value={{
-                packagingMaterials,
-                fetchPackagingOptions,
-                loading,
-                error,
-            }}
-        >
+        <PackagingContext.Provider value={contextValue}>
             {children}
         </PackagingContext.Provider>
     );
