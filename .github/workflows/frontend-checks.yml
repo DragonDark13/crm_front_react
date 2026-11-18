@@ -12,6 +12,7 @@ on:
       - refactor/gift-set-modal-types-2026-11
       - refactor/supplier-api-hooks-2026-11
       - refactor/effect-dependencies-audit-2026-11
+      - perf/react-render-audit-2026-11
   pull_request:
     branches:
       - main
@@ -22,6 +23,7 @@ on:
       - chore/remove-debug-logs-2026-11
       - refactor/gift-set-modal-types-2026-11
       - refactor/supplier-api-hooks-2026-11
+      - refactor/effect-dependencies-audit-2026-11
 
 permissions:
   contents: read
