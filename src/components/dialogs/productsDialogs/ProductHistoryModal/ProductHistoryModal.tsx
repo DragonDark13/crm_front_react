@@ -215,13 +215,24 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         setSelectedView(event.target.value as number);
     };
 
-    const sortByDate = (history: ProductHistoryRecord[], dateKey: keyof ProductHistoryRecord) => {
+    function sortByDate(history: IStockHistoryRecord[], dateKey: 'timestamp'): IStockHistoryRecord[];
+    function sortByDate(history: IProductPurchaseHistoryRecord[], dateKey: 'purchase_date'): IProductPurchaseHistoryRecord[];
+    function sortByDate(history: IProductSaleHistoryRecord[], dateKey: 'sale_date'): IProductSaleHistoryRecord[];
+    function sortByDate(
+        history: IStockHistoryRecord[] | IProductPurchaseHistoryRecord[] | IProductSaleHistoryRecord[],
+        dateKey: 'timestamp' | 'purchase_date' | 'sale_date'
+    ) {
         return history.slice().sort((a, b) => {
-            const dateA = new Date(a[dateKey]!).getTime();
-            const dateB = new Date(b[dateKey]!).getTime();
+            const getDate = (record: IStockHistoryRecord | IProductPurchaseHistoryRecord | IProductSaleHistoryRecord) => {
+                if (dateKey === 'timestamp') return (record as IStockHistoryRecord).timestamp;
+                if (dateKey === 'purchase_date') return (record as IProductPurchaseHistoryRecord).purchase_date;
+                return (record as IProductSaleHistoryRecord).sale_date;
+            };
+            const dateA = new Date(getDate(a)).getTime();
+            const dateB = new Date(getDate(b)).getTime();
             return dateB - dateA; // сортування за спаданням (найновіші записи будуть першими)
         });
-    };
+    }
 
     return (
         <CustomDialog
