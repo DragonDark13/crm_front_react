@@ -141,6 +141,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         setOriginalProduct(editProduct);
         setIsModified(false); // Reset modified state when opening modal
 
+    // Keep the baseline stable while fields change; reset only when the modal opens or product changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [openEdit, editProduct.id]);
 
     const compareCategories = (originalCategories: number[], updatedCategories: number[]) => {
