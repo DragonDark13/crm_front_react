@@ -71,7 +71,6 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                     {((productHistory && productHistory.purchase && productHistory.purchase.length > 0) || (productHistory.sales && productHistory.sales.length > 0)) ? (
                             // Об'єднання та сортування закупівель і продажів
                             history.sort((a, b)  => {
-                                    debugger
                                 const dateA =
                                     a.type === "purchase"
                                         ? new Date(a.purchase_date).getTime()
