@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
+import React, {lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {
     Button,
     Box,
@@ -18,19 +18,20 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import './scss/main.scss';
 
-import Dashboard from "./components/Dachboard/Dashboard";
-import ProductsCatalog from "./components/pages/ProductsCatalog";
-import ClientsManagement from "./components/pages/ClientsManagement";
-import Purchases from "./components/pages/PurchasesPage/Purchases";
+const Dashboard = lazy(() => import("./components/Dachboard/Dashboard"));
+const ProductsCatalog = lazy(() => import("./components/pages/ProductsCatalog"));
+const ClientsManagement = lazy(() => import("./components/pages/ClientsManagement"));
+const Purchases = lazy(() => import("./components/pages/PurchasesPage/Purchases"));
+const PackagingMaterialList = lazy(() => import("./components/pages/PackagingMaterial/PackagingMaterialList"));
+const InvestmentsPage = lazy(() => import("./components/pages/InvestmentsPage"));
+const SupplierPage = lazy(() => import("./components/pages/SupplierPage/SupplierPage"));
+const Sales = lazy(() => import("./components/pages/Sales/Sales"));
+const GiftSetsPage = lazy(() => import("./components/pages/GiftSetsPage/GiftSetsPage"));
+const Login = lazy(() => import("./components/Login/Login"));
+
 import {Route, Routes, useNavigate} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import Login from "./components/Login/Login";
-import PackagingMaterialList from "./components/pages/PackagingMaterial/PackagingMaterialList";
-import InvestmentsPage from "./components/pages/InvestmentsPage";
-import SupplierPage from "./components/pages/SupplierPage/SupplierPage";
-import Sales from "./components/pages/Sales/Sales";
-import GiftSetsPage from "./components/pages/GiftSetsPage/GiftSetsPage";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import LoginIcon from "@mui/icons-material/Login";
 import {useAuth} from "./components/context/AuthContext";
@@ -317,92 +318,95 @@ function App() {
                     </Drawer>
 
                     {/*<SpeedDial/>*/}
-                    <Routes>
-                        <Route path="/crm_front_react/login" element={<Login/>}/>
-                        <Route
-                            path="/crm_front_react/dashboard"
-                            element={
-                                <ProtectedRoute element={<Dashboard/>}/>
-                            }
-                        />
-                        <Route path="/crm_front_react/" element={
-                            <ProductsCatalog
-                                onRowRef={(el, productId) => {
-                                    tableRowRefs.current[productId] = el;
-                                }}
-                                setSearchTerm={setSearchTerm}
-                                searchTerm={searchTerm}
-                                products={products}
-                                isAuthenticated={isAuthenticated}
-                                showSnackbarMessage={showSnackbarMessage}
-                                lowQuantityProducts={lowQuantityProducts}
-                                modalState={modalState}
-                                setModalState={setModalState}
-                                order={order}
-                                setOrder={setOrder}
-                                itemsPerPage={itemsPerPage}
-                                setItemsPerPage={setItemsPerPage}
-                                currentPage={currentPage}
-                                setCurrentPage={setCurrentPage}
-                                sortProducts={sortProducts}
-                                filters={filters}
-                                setFilters={setFilters}
-                                orderBy={orderBy}
-                                setOrderBy={setOrderBy}
-                                selectedLowProductId={selectedLowProductId}
-                                setSelectedLowProductId={setSelectedLowProductId}
-                                filteredAndSearchedProducts={filteredAndSearchedProducts}
-                                getComparator={getComparator}
-                                getFieldValue={getFieldValue}
-                                setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
-                                resetFilters={resetFilters}
+                    <Suspense fallback={<div>Завантаження сторінки...</div>}>
+                        <Routes>
+                            <Route path="/crm_front_react/login" element={<Login/>}/>
+                            <Route
+                                path="/crm_front_react/dashboard"
+                                element={
+                                    <ProtectedRoute element={<Dashboard/>}/>
+                                }
                             />
-                        }/>
-                        <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
-                        <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
-                        <Route path="/crm_front_react/sales" element={<Sales/>}/>
-                        <Route path="/crm_front_react/products" element={
-                            <ProductsCatalog
-                                onRowRef={(el, productId) => {
-                                    tableRowRefs.current[productId] = el;
-                                }}
-                                searchTerm={searchTerm}
-                                setSearchTerm={setSearchTerm}
-                                products={products}
-                                isAuthenticated={isAuthenticated}
-                                showSnackbarMessage={showSnackbarMessage}
-                                lowQuantityProducts={lowQuantityProducts}
-                                modalState={modalState}
-                                setModalState={setModalState}
-                                order={order}
-                                setOrder={setOrder}
-                                itemsPerPage={itemsPerPage}
-                                setItemsPerPage={setItemsPerPage}
-                                currentPage={currentPage}
-                                setCurrentPage={setCurrentPage}
-                                sortProducts={sortProducts}
-                                filters={filters}
-                                setFilters={setFilters}
-                                orderBy={orderBy}
-                                setOrderBy={setOrderBy}
-                                selectedLowProductId={selectedLowProductId}
-                                setSelectedLowProductId={setSelectedLowProductId}
-                                filteredAndSearchedProducts={filteredAndSearchedProducts}
-                                getComparator={getComparator}
-                                getFieldValue={getFieldValue}
-                                setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
-                                resetFilters={resetFilters}
-                            />
+                            <Route path="/crm_front_react/" element={
+                                <ProductsCatalog
+                                    onRowRef={(el, productId) => {
+                                        tableRowRefs.current[productId] = el;
+                                    }}
+                                    setSearchTerm={setSearchTerm}
+                                    searchTerm={searchTerm}
+                                    products={products}
+                                    isAuthenticated={isAuthenticated}
+                                    showSnackbarMessage={showSnackbarMessage}
+                                    lowQuantityProducts={lowQuantityProducts}
+                                    modalState={modalState}
+                                    setModalState={setModalState}
+                                    order={order}
+                                    setOrder={setOrder}
+                                    itemsPerPage={itemsPerPage}
+                                    setItemsPerPage={setItemsPerPage}
+                                    currentPage={currentPage}
+                                    setCurrentPage={setCurrentPage}
+                                    sortProducts={sortProducts}
+                                    filters={filters}
+                                    setFilters={setFilters}
+                                    orderBy={orderBy}
+                                    setOrderBy={setOrderBy}
+                                    selectedLowProductId={selectedLowProductId}
+                                    setSelectedLowProductId={setSelectedLowProductId}
+                                    filteredAndSearchedProducts={filteredAndSearchedProducts}
+                                    getComparator={getComparator}
+                                    getFieldValue={getFieldValue}
+                                    setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
+                                    resetFilters={resetFilters}
+                                />
+                            }/>
+                            <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
+                            <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
+                            <Route path="/crm_front_react/sales" element={<Sales/>}/>
+                            <Route path="/crm_front_react/products" element={
+                                <ProductsCatalog
+                                    onRowRef={(el, productId) => {
+                                        tableRowRefs.current[productId] = el;
+                                    }}
+                                    searchTerm={searchTerm}
+                                    setSearchTerm={setSearchTerm}
+                                    products={products}
+                                    isAuthenticated={isAuthenticated}
+                                    showSnackbarMessage={showSnackbarMessage}
+                                    lowQuantityProducts={lowQuantityProducts}
+                                    modalState={modalState}
+                                    setModalState={setModalState}
+                                    order={order}
+                                    setOrder={setOrder}
+                                    itemsPerPage={itemsPerPage}
+                                    setItemsPerPage={setItemsPerPage}
+                                    currentPage={currentPage}
+                                    setCurrentPage={setCurrentPage}
+                                    sortProducts={sortProducts}
+                                    filters={filters}
+                                    setFilters={setFilters}
+                                    orderBy={orderBy}
+                                    setOrderBy={setOrderBy}
+                                    selectedLowProductId={selectedLowProductId}
+                                    setSelectedLowProductId={setSelectedLowProductId}
+                                    filteredAndSearchedProducts={filteredAndSearchedProducts}
+                                    getComparator={getComparator}
+                                    getFieldValue={getFieldValue}
+                                    setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
+                                    resetFilters={resetFilters}
+                                />
 
-                        }/>
-                        <Route path="/crm_front_react/purchases" element={<Purchases/>}/>
-                        <Route path="/crm_front_react/analytics" element={<Dashboard/>}/>
-                        <Route path="/crm_front_react/packaging" element={<PackagingMaterialList/>}/>
-                        <Route path="/crm_front_react/other-investments" element={<InvestmentsPage/>}/>
-                        <Route path="/crm_front_react/suppliers"
-                               element={<SupplierPage/>}/>
+                            }/>
 
-                    </Routes>
+                            <Route path="/crm_front_react/purchases" element={<Purchases/>}/>
+                            <Route path="/crm_front_react/analytics" element={<Dashboard/>}/>
+                            <Route path="/crm_front_react/packaging" element={<PackagingMaterialList/>}/>
+                            <Route path="/crm_front_react/other-investments" element={<InvestmentsPage/>}/>
+                            <Route path="/crm_front_react/suppliers"
+                                   element={<SupplierPage/>}/>
+
+                        </Routes>
+                    </Suspense>
                 </Box>
             </Box>
         </React.Fragment>
