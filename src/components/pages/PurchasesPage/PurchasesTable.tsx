@@ -62,6 +62,10 @@ type SortableKeys =
     | "quantity"
     | "date";
 
+type PurchaseColumn =
+    | {key: SortableKeys; label: string}
+    | {key: "type" | "supplier_name" | "total_price"; label: string; sortable: false};
+
 const PurchasesTable: React.FC = () => {
     const [purchaseHistory, setPurchaseHistory] = useState<IPurchasesTable[]>([]);
     const [sortConfig, setSortConfig] = useState<SortConfig<SortableKeys>>({
@@ -239,13 +243,13 @@ const PurchasesTable: React.FC = () => {
 
     console.log('Array.from(new Set(purchaseHistory))', Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))));
 
-    const columns = [
+    const columns: PurchaseColumn[] = [
         {key: 'type', label: 'Тип', sortable: false},
         {key: 'name', label: 'Назва продукту'},
-        {key: 'supplier_name', label: 'Назва постачальника'},
+        {key: 'supplier_name', label: 'Назва постачальника', sortable: false},
         {key: 'quantity', label: 'Кількість'},
         {key: 'price_per_item', label: 'Ціна за одиницю'},
-        {key: 'total_price', label: 'Загальна ціна'},
+        {key: 'total_price', label: 'Загальна ціна', sortable: false},
         {key: 'date', label: 'Дата'}
     ];
 
