@@ -9,7 +9,6 @@ interface ISaleProductDetails
 }
 
 const SaleProductDetails = ({sale}:ISaleProductDetails) => {
-    console.log("sale", sale);
     return (<TableRow>
             <TableCell colSpan={8}>
                 <Collapse in={true} timeout="auto" unmountOnExit>
