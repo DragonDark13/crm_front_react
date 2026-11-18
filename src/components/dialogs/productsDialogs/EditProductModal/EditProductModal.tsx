@@ -74,7 +74,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                         purchase_total_price: roundedPrice
                     };
 
-                    setIsModified(compareObjects(originalProduct, updatedProduct));
                     return updatedProduct;
                 });
             }
@@ -83,7 +82,6 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
         editProduct.available_quantity,
         editProduct.purchase_price_per_item,
         editProduct.purchase_total_price,
-        originalProduct,
         setEditProduct
     ]);
 
