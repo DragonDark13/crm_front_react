@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -28,7 +30,7 @@ jobs:
           cache: npm
 
       - name: Synchronize npm lockfile
-        if: github.event_name == 'push' && github.ref == 'refs/heads/fix/frontend-audit-issues-2026-11'
+        if: github.event_name == 'pull_request'
         run: |
           npm install --package-lock-only --ignore-scripts --no-audit --no-fund
           git config user.name "github-actions[bot]"
@@ -36,7 +38,7 @@ jobs:
           git add package-lock.json
           if ! git diff --cached --quiet; then
             git commit -m "chore: synchronize npm lockfile"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_HEAD_REF}"
           fi
 
       - name: Install dependencies
