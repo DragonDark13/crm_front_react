@@ -1,4 +1,4 @@
-import  {createContext, useState, useContext, ReactNode} from 'react';
+import  {createContext, useState, useContext, ReactNode, useCallback} from 'react';
 import {Snackbar, Alert} from '@mui/material';
 
 type SnackbarMessageContextType = {
@@ -25,11 +25,11 @@ export const SnackbarMessageProvider = ({children}: SnackbarMessageProviderProps
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [severity, setSeverity] = useState<'success' | 'error' | 'info' | 'warning'>('info');
 
-    const showSnackbarMessage = (message: string, severity: 'success' | 'error' | 'info' | 'warning') => {
+    const showSnackbarMessage = useCallback((message: string, severity: 'success' | 'error' | 'info' | 'warning') => {
         setSnackbarMessage(message);
         setSeverity(severity);
         setOpenSnackbarMessage(true);
-    };
+    }, []);
 
     const handleClose = () => {
         setOpenSnackbarMessage(false);
