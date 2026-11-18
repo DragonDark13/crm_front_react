@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import axios from 'axios';
 import {
     Table,
@@ -153,7 +153,7 @@ const SalesHistoryTable: React.FC = () => {
     };
 
 
-    const filteredSalesData = salesData
+    const filteredSalesData = useMemo(() => salesData
         .filter((sale) => {
             // Перевіряємо назву продукту або набору
             const productOrGiftSetName = sale.product_name || sale.gift_set_name || '';
@@ -182,7 +182,12 @@ const SalesHistoryTable: React.FC = () => {
                 return (a.quantity_sold < b.quantity_sold ? -1 : 1) * (sortOrder === 'asc' ? 1 : -1);
             }
             return 0;
-        });
+        }), [salesData, searchProduct, searchDate, categoryFilters, startDate, endDate, orderBy, sortOrder]);
+
+    const paginatedSalesData = useMemo(
+        () => filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+        [filteredSalesData, page, rowsPerPage]
+    );
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -254,7 +259,7 @@ const SalesHistoryTable: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length > 0 ? filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((sale) => (
+                        {paginatedSalesData.length > 0 ? paginatedSalesData.map((sale) => (
                                 <React.Fragment key={sale.sale_history_id}>
                                     <TableRow>
                                         <TableCell size={"small"}>{getSaleIcon(sale.type)}</TableCell>
