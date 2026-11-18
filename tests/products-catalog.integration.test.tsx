@@ -155,6 +155,7 @@ const initialModalState = {} as Record<ModalNames, boolean>;
 
 const CatalogHarness = ({ openAdd = false, products = [product] }: { openAdd?: boolean; products?: IProduct[] }) => {
     const [modalState, setModalState] = useState<Record<ModalNames, boolean>>({ ...initialModalState, openAdd });
+    const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = useState<IProduct[]>([product]);
     const props = {
         products,
         isAuthenticated: true,
@@ -175,8 +176,8 @@ const CatalogHarness = ({ openAdd = false, products = [product] }: { openAdd?: b
         setOrderBy: vi.fn(),
         selectedLowProductId: null,
         setSelectedLowProductId: vi.fn(),
-        filteredAndSearchedProducts: [product],
-        setFilteredAndSearchedProducts: vi.fn(),
+        filteredAndSearchedProducts,
+        setFilteredAndSearchedProducts,
         getComparator: () => () => 0,
         getFieldValue: () => '',
         searchTerm: '',
