@@ -27,7 +27,7 @@ export const fetchGetSupplierProducts = (supplierId: number): Promise<IProduct[]
 export const deleteSupplier = (supplierId: number): Promise<void> => {
     return axiosInstance
         .delete(API_ENDPOINTS.DELETE_SUPPLIER(supplierId))
-        .then(() => console.log(`Supplier with ID ${supplierId} deleted successfully.`))
+        .then(() => undefined)
         .catch(handleError);
 };
 
