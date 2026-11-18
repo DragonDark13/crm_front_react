@@ -1,6 +1,6 @@
 // src/pages/PurchaseHistoryPage.tsx
 
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
     Table,
     TableBody,
@@ -86,11 +86,7 @@ const PurchasesTable: React.FC = () => {
 
     const {categories} = useCategories(); // Отримання всіх категорій
 
-    useEffect(() => {
-        fetchPurchaseHistory();
-    }, []);
-
-    const fetchPurchaseHistory = async () => {
+    const fetchPurchaseHistory = useCallback(async () => {
         try {
           const data =await fetchGetAllPurchaseHistory();
             // Перетворюємо потрібні поля в числа
@@ -119,7 +115,11 @@ const PurchasesTable: React.FC = () => {
         } catch (error) {
             console.error('Error fetching purchase history:', error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        void fetchPurchaseHistory();
+    }, [fetchPurchaseHistory]);
 
     const handleSort = (key: SortableKeys) => {
         let direction: SortDirection = 'asc';
