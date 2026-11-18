@@ -23,10 +23,8 @@ export const formatDateToBack = (dateString:string) => {
     if (!isNaN(createdDate.getTime())) {
         // Конвертуємо дату у формат YYYY-MM-DD для відправлення на сервер
         const formattedDate = createdDate.toISOString().slice(0, 10); // Отримуємо формат YYYY-MM-DD
-        console.log(formattedDate); // Ви можете використати цю дату для вашого запиту
         return formattedDate; // Використовуйте цю дату для вашого запиту
     } else {
-        console.log("Неправильний формат дати.");
         return false
     }
 }
