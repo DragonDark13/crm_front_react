@@ -1,4 +1,4 @@
-import axios, {AxiosError, AxiosHeaders} from 'axios';
+import axios, {AxiosHeaders} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
