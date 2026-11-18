@@ -10,7 +10,7 @@ interface ICategory {
 // Типізація для контексту
 interface CategoryContextProps {
   categories: ICategory[];
-  fetchCategoriesFunc: () => void;
+  fetchCategoriesFunc: () => Promise<boolean>;
 }
 
 // Створення контексту
@@ -20,7 +20,7 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(undefine
 export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
-  const fetchCategoriesFunc = async () => {
+  const fetchCategoriesFunc = async (): Promise<boolean> => {
     try {
       const data = await fetchGetAllCategories();
       if (Array.isArray(data)) {
