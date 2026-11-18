@@ -1,4 +1,4 @@
-import axios, {AxiosError, AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosHeaders, AxiosResponse} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
@@ -15,6 +15,30 @@ export const axiosInstance = axios.create({
     },
 });
 
+
+// Інтерсептор для автоматичного додавання JWT до запитів
+axiosInstance.interceptors.request.use(config => {
+    const isLoginRequest = config.url?.replace(/\\/+$/, '').endsWith('/login');
+
+    if (isLoginRequest) {
+        // Авторизація має залишатися доступною без попереднього токена.
+        config.headers = AxiosHeaders.from(config.headers);
+        config.headers.delete('Authorization');
+        return config;
+    }
+
+    const token = localStorage.getItem('token');
+
+    config.headers = AxiosHeaders.from(config.headers);
+
+    if (token) {
+        config.headers.set('Authorization', `Bearer ${token}`);
+    } else {
+        config.headers.delete('Authorization');
+    }
+
+    return config;
+});
 
 // Інтерсептор для обробки помилок
 axiosInstance.interceptors.response.use(
