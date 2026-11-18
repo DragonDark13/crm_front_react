@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import CustomerPage from '../src/components/pages/CustomerPage';
 import { ICustomerDetails } from '../src/utils/types';
@@ -73,6 +73,7 @@ describe('CustomerPage CRUD integration', () => {
     });
 
     afterEach(() => {
+        cleanup();
         vi.clearAllMocks();
     });
 
@@ -82,7 +83,7 @@ describe('CustomerPage CRUD integration', () => {
 
         fireEvent.click(screen.getByRole('button', { name: 'Додати нового Кліента' }));
         const dialog = screen.getByRole('dialog');
-        fireEvent.change(within(dialog).getByLabelText("Ім'я"), { target: { value: 'Новий клієнт' } });
+        fireEvent.change(within(dialog).getAllByRole('textbox')[0], { target: { value: 'Новий клієнт' } });
         fireEvent.click(within(dialog).getByRole('button', { name: 'Створити' }));
 
         await waitFor(() => expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
@@ -112,7 +113,8 @@ describe('CustomerPage CRUD integration', () => {
         mocks.updateCustomerData.mockRejectedValueOnce(new Error('HTTP 403: forbidden'));
         renderCustomerPage();
 
-        fireEvent.click(screen.getByTitle('Редагувати'));
+        const customerRow = screen.getByText(customer.name).closest('tr');
+        fireEvent.click(within(customerRow as HTMLElement).getAllByRole('button')[1]);
         const dialog = screen.getByRole('dialog');
         fireEvent.click(within(dialog).getByRole('button', { name: 'Зберегти' }));
 
@@ -151,7 +153,8 @@ describe('CustomerPage CRUD integration', () => {
         mocks.deleteCustomerData.mockRejectedValueOnce(new Error('HTTP 500: server error'));
         renderCustomerPage();
 
-        fireEvent.click(screen.getByTitle('Видалити'));
+        const customerRow = screen.getByText(customer.name).closest('tr');
+        fireEvent.click(within(customerRow as HTMLElement).getAllByRole('button')[2]);
         const dialog = screen.getByRole('dialog');
         fireEvent.click(within(dialog).getByRole('button', { name: 'Видалити' }));
 
