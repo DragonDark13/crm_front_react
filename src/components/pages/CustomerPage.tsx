@@ -204,7 +204,7 @@ const CustomerPage: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <RenderHeaderCell>Ім'я</RenderHeaderCell>
+                            <RenderHeaderCell>Ім&apos;я</RenderHeaderCell>
                             <RenderHeaderCell>Єлектронна пошта</RenderHeaderCell>
                             <RenderHeaderCell>Телефонний номер</RenderHeaderCell>
                             <RenderHeaderCell>Address</RenderHeaderCell>
