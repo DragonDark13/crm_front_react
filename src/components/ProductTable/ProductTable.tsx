@@ -1,4 +1,4 @@
-import React, {forwardRef, useState} from 'react';
+import React, {forwardRef, useMemo, useState} from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead,
     TableRow, Paper, TableSortLabel, Box, TextField, TablePagination, Grid, Typography, TableFooter, MenuItem, Menu,
@@ -65,18 +65,33 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                     }, ref) => {
 
 // Підрахунок загальної кількості та суми для закупівлі та продажу
-    const totalQuantityPurchaseAllTime = filteredAndSearchedProducts.reduce((sum, product) => sum + product.total_quantity, 0);
+    const {
+        totalQuantityPurchaseAllTime,
+        totalQuantityPurchase,
+        totalSumPurchase,
+        totalQuantitySelling,
+        totalSumSelling,
+        totalCalculatedSellingSum
+    } = useMemo(() => filteredAndSearchedProducts.reduce((totals, product) => ({
+        totalQuantityPurchaseAllTime: totals.totalQuantityPurchaseAllTime + product.total_quantity,
+        totalQuantityPurchase: totals.totalQuantityPurchase + product.available_quantity,
+        totalSumPurchase: totals.totalSumPurchase + (product.total_quantity * product.purchase_price_per_item),
+        totalQuantitySelling: totals.totalQuantitySelling + product.sold_quantity,
+        totalSumSelling: totals.totalSumSelling + (product.sold_quantity * product.selling_price_per_item),
+        totalCalculatedSellingSum: totals.totalCalculatedSellingSum + (product.available_quantity * product.selling_price_per_item)
+    }), {
+        totalQuantityPurchaseAllTime: 0,
+        totalQuantityPurchase: 0,
+        totalSumPurchase: 0,
+        totalQuantitySelling: 0,
+        totalSumSelling: 0,
+        totalCalculatedSellingSum: 0
+    }), [filteredAndSearchedProducts]);
 
-    const totalQuantityPurchase = filteredAndSearchedProducts.reduce((sum, product) => sum + product.available_quantity, 0);
-    const totalSumPurchase =
-        filteredAndSearchedProducts.reduce((sum, product) => sum + (product.total_quantity * product.purchase_price_per_item), 0) // Загальна сума закупівель
-    // Сума закупівлі тільки для залогінених
-
-    const totalQuantitySelling = filteredAndSearchedProducts.reduce((sum, product) => sum + product.sold_quantity, 0);
-    const totalSumSelling = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.sold_quantity * product.selling_price_per_item), 0);
-
-    // Розрахункова сума продажу (оскільки наявність продукції може змінюватися)
-    const totalCalculatedSellingSum = filteredAndSearchedProducts.reduce((sum, product) => sum + (product.available_quantity * product.selling_price_per_item), 0);
+    const visibleProducts = useMemo(() => (
+        sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
+            .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
+    ), [filteredAndSearchedProducts, sortProducts, getComparator, order, orderBy, currentPage, itemsPerPage]);
     // Розрахункова сума закупівель (оскільки наявність продукці�� може змінюватися)
     const [selectedProduct, setSelectedProduct] = useState<null | IProduct>(null); // Додаємо стан для зберігання вибраного
     // товару
@@ -199,10 +214,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredAndSearchedProducts.length >= 0 &&
-                            sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
-                                .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
-                                .map((product: IProduct, index) => {
+                        {visibleProducts.map((product: IProduct, index) => {
                                     const lowQuantity = product.total_quantity < 5; // умова для низької кількості
                                     return (
                                         <TableRow key={`${product.id}${index}${product.purchase_total_price}`}
