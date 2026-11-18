@@ -6,15 +6,9 @@ export const loginUser = (username: string, password: string): Promise<string> =
 };
 
 export const logoutUser = (): Promise<void> => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        return Promise.reject("No token found");
-    }
-    console.log("Token:", token);
-    return axiosInstance.post(API_ENDPOINTS.LOGOUT, {}, {
-        headers: {'Authorization': `Bearer ${token}`},
-    }).then(() => {
-        localStorage.removeItem('token');  // Clear token from localStorage
-        console.log("User logged out successfully");
-    }).catch(handleError);
+    return axiosInstance.post(API_ENDPOINTS.LOGOUT, {})
+        .then(() => {
+            localStorage.removeItem('token');
+        })
+        .catch(handleError);
 };
