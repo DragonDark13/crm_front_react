@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo} from 'react';
 import {ISupplierFull, ISupplierType} from "../../utils/types";
 import {fetchGetAllSuppliers, updateSupplier} from "../../api/_supplier";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
@@ -41,7 +41,7 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
         }
     }, []);
 
-    const handleToggleSupplierActive = async (
+    const handleToggleSupplierActive = useCallback(async (
         supplierId: number,
         currentData: ISupplierFull,
         type: ISupplierType
@@ -68,15 +68,20 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
                 onRefreshError: () => showSnackbarMessage('Статус постачальника змінено, але список не вдалося оновити.', 'warning')
             }
         );
-    };
+    }, [fetchSuppliersFunc, showSnackbarMessage]);
 
     useEffect(() => {
         void fetchSuppliersFunc();
     }, [fetchSuppliersFunc]);
 
 
+    const contextValue = useMemo(
+        () => ({suppliers, fetchSuppliersFunc, handleToggleSupplierActive}),
+        [suppliers, fetchSuppliersFunc, handleToggleSupplierActive]
+    );
+
     return (
-        <SupplierContext.Provider value={{suppliers, fetchSuppliersFunc, handleToggleSupplierActive}}>
+        <SupplierContext.Provider value={contextValue}>
             {children}
         </SupplierContext.Provider>
     );
