@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
 import {fetchGetAllCategories} from "../../api/_categories";
 
 // Типізація категорій
@@ -20,7 +20,7 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(undefine
 export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
-  const fetchCategoriesFunc = async (): Promise<boolean> => {
+  const fetchCategoriesFunc = useCallback(async (): Promise<boolean> => {
     try {
       const data = await fetchGetAllCategories();
       if (Array.isArray(data)) {
@@ -32,11 +32,11 @@ export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:Props
       console.error('Error fetching categories', error);
       return false;
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchCategoriesFunc();
-  }, []);
+    void fetchCategoriesFunc();
+  }, [fetchCategoriesFunc]);
 
   return (
     <CategoryContext.Provider value={{ categories, fetchCategoriesFunc }}>
