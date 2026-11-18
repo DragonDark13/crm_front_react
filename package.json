@@ -9,7 +9,9 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
