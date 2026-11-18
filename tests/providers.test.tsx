@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fetchProducts } from '../src/api/_product';
 import { createCustomer, fetchGetAllCustomers } from '../src/api/_customer';
@@ -52,6 +52,7 @@ const CustomerHarness = () => {
 
 describe('CRUD provider refresh behavior', () => {
     afterEach(() => {
+        cleanup();
         vi.clearAllMocks();
     });
 
