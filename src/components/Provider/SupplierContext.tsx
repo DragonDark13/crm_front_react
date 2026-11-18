@@ -1,8 +1,9 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo} from 'react';
 import {ISupplierFull, ISupplierType} from "../../utils/types";
 import {fetchGetAllSuppliers, updateSupplier} from "../../api/_supplier";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {updatePackagingSupplier} from "../../api/_packagingMaterials";
+import {runCrudAction} from "../../utils/runCrudAction";
 
 // Типізація постачальників
 // interface ISupplier {
@@ -13,7 +14,7 @@ import {updatePackagingSupplier} from "../../api/_packagingMaterials";
 // Типізація для контексту
 interface SupplierContextProps {
     suppliers: ISupplierFull[];
-    fetchSuppliersFunc: () => void;
+    fetchSuppliersFunc: () => Promise<boolean>;
     handleToggleSupplierActive: (supplierId: number,
                                  currentData: ISupplierFull, type: ISupplierType) => void;
 }
@@ -22,59 +23,65 @@ interface SupplierContextProps {
 const SupplierContext = createContext<SupplierContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const SupplierProvider: React.FC = ({children}:PropsWithChildren) => {
+export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage()
 
-    const fetchSuppliersFunc = async () => {
+    const fetchSuppliersFunc = useCallback(async (): Promise<boolean> => {
         try {
             const data = await fetchGetAllSuppliers();
             if (Array.isArray(data)) {
                 setSuppliers(data);
-            } else {
-                throw new Error('Fetched data is not an array');
+                return true;
             }
+            throw new Error('Fetched data is not an array');
         } catch (error) {
             console.error('Error fetching suppliers', error);
+            return false;
         }
-    };
+    }, []);
 
-    const handleToggleSupplierActive = async (
+    const handleToggleSupplierActive = useCallback(async (
         supplierId: number,
         currentData: ISupplierFull,
         type: ISupplierType
     ) => {
-        try {
-            const updatedData = {
-                ...currentData,
-                is_active: !currentData.is_active, // інвертуємо активність
-            };
+        const updatedData = {
+            ...currentData,
+            is_active: !currentData.is_active,
+        };
 
-
-            if (type === 'product') {
-                await updateSupplier(supplierId, updatedData)
-
-            } else if (type === "packaging") {
-                await updatePackagingSupplier(supplierId, updatedData)
+        await runCrudAction(
+            async () => {
+                if (type === 'product') {
+                    return updateSupplier(supplierId, updatedData);
+                }
+                return updatePackagingSupplier(supplierId, updatedData);
+            },
+            fetchSuppliersFunc,
+            {
+                onSuccess: () => showSnackbarMessage(
+                    updatedData.is_active ? 'Постачальника активовано' : 'Постачальника вимкнено',
+                    'success'
+                ),
+                onError: () => showSnackbarMessage('Помилка зміни статусу постачальника', 'error'),
+                onRefreshError: () => showSnackbarMessage('Статус постачальника змінено, але список не вдалося оновити.', 'warning')
             }
-            showSnackbarMessage(
-                updatedData.is_active ? 'Постачальника активовано' : 'Постачальника вимкнено',
-                'success'
-            );
-
-            await fetchSuppliersFunc(); // оновити список постачальників
-        } catch (err) {
-            showSnackbarMessage('Помилка зміни статусу постачальника', 'error');
-        }
-    };
+        );
+    }, [fetchSuppliersFunc, showSnackbarMessage]);
 
     useEffect(() => {
-        fetchSuppliersFunc();
-    }, []);
+        void fetchSuppliersFunc();
+    }, [fetchSuppliersFunc]);
 
+
+    const contextValue = useMemo(
+        () => ({suppliers, fetchSuppliersFunc, handleToggleSupplierActive}),
+        [suppliers, fetchSuppliersFunc, handleToggleSupplierActive]
+    );
 
     return (
-        <SupplierContext.Provider value={{suppliers, fetchSuppliersFunc, handleToggleSupplierActive}}>
+        <SupplierContext.Provider value={contextValue}>
             {children}
         </SupplierContext.Provider>
     );

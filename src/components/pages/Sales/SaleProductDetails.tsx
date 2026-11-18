@@ -9,7 +9,6 @@ interface ISaleProductDetails
 }
 
 const SaleProductDetails = ({sale}:ISaleProductDetails) => {
-    console.log("sale", sale);
     return (<TableRow>
             <TableCell colSpan={8}>
                 <Collapse in={true} timeout="auto" unmountOnExit>
@@ -28,7 +27,7 @@ const SaleProductDetails = ({sale}:ISaleProductDetails) => {
                             <TableRow>
                                 <TableCell>Товар</TableCell>
                                 <TableCell>{sale.product_name}</TableCell>
-                                <TableCell color={sale.supplier?.is_active || 'textDisabled'}>
+                                <TableCell color={sale.supplier?.is_active ? 'inherit' : 'textDisabled'}>
                                     <Typography
                                         color={sale.supplier?.is_active === false ? 'textDisabled' : 'inherit'}> {sale.supplier?.name || 'Невідомо'}
                                     </Typography>

@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {
     Button,
     Box,
@@ -48,7 +48,10 @@ function App() {
 
     const {isAuthenticated, logout} = useAuth();
     const {showSnackbarMessage} = useSnackbarMessage()
-    const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
+    const lowQuantityProducts = useMemo(
+        () => products.filter(product => product.available_quantity < 5),
+        [products]
+    );
     const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
         Object.fromEntries(modalNames.map(modal => [modal, false])) as Record<ModalNames, boolean>
     );
@@ -57,7 +60,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState(0);
 
 
-    const sortProducts = (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => {
+    const sortProducts = useCallback((products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => {
         const stabilizedProducts = products.map((el, index) => [el, index] as [IProduct, number]);
         stabilizedProducts.sort((a, b) => {
             const order = comparator(a[0], b[0]);
@@ -65,7 +68,7 @@ function App() {
             return a[1] - b[1];  // This is fine because index is a number
         });
         return stabilizedProducts.map((el) => el[0]);
-    };
+    }, []);
 
 
     const [filters, setFilters] = useState<IStateFilters>({
@@ -81,27 +84,28 @@ function App() {
 
     const [filteredAndSearchedProducts, setFilteredAndSearchedProducts] = useState<IProduct[]>([])
 
-    const getComparator = (order: 'asc' | 'desc', orderBy: keyof IProduct) => {
-        return order === 'desc'
-            ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
-            : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
-    };
-    const getFieldValue = (product: IProduct, field: keyof IProduct): string => {
+    const getFieldValue = useCallback((product: IProduct, field: keyof IProduct): string => {
         if (field === 'supplier') {
             return product.supplier?.name || ''; // Повертає ім'я постачальника або порожній рядок
         }
         return '';
-    };
+    }, []);
 
-    const handleModalOpen = (modal: ModalNames) => {
+    const getComparator = useCallback((order: 'asc' | 'desc', orderBy: keyof IProduct) => {
+        return order === 'desc'
+            ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
+            : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
+    }, [getFieldValue]);
+
+    const handleModalOpen = useCallback((modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: true}));
-    };
+    }, []);
 
 
-    const handleModalClose = (modal: ModalNames) => {
+    const handleModalClose = useCallback((modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: false}));
         // resetStatesMap[modal]?.(); // Виклик відповідної функції скидання
-    };
+    }, []);
 
     const resetFilters = () => {
         setFilters({
@@ -199,7 +203,10 @@ function App() {
         filteredAndSearchedProducts,
         order,
         orderBy,
-        itemsPerPage
+        itemsPerPage,
+        currentPage,
+        sortProducts,
+        getComparator
     ]);
 
     useLayoutEffect(() => {
@@ -228,10 +235,8 @@ function App() {
 
 
     useEffect(() => {
-        const lowQuantity = products.filter(product => product.available_quantity < 5);
-        setLowQuantityProducts(lowQuantity);
-        lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
-    }, [products]);
+        lowQuantityProducts.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
+    }, [lowQuantityProducts, handleModalOpen, handleModalClose]);
 
     const handleLogout = async () => {
 

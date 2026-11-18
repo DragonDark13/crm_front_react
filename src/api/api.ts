@@ -1,4 +1,4 @@
-import axios, {AxiosError, AxiosHeaders, AxiosResponse} from 'axios';
+import axios, {AxiosHeaders} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
@@ -43,10 +43,7 @@ axiosInstance.interceptors.request.use(config => {
 // Інтерсептор для обробки помилок
 axiosInstance.interceptors.response.use(
     response => response,
-    error => {
-        console.error('API Error:', error);
-        return Promise.reject(error);
-    }
+    error => Promise.reject(error)
 );
 // Константи для API-ендпоінтів
 export const API_ENDPOINTS = {
@@ -92,9 +89,23 @@ export const API_ENDPOINTS = {
 };
 
 // Уніфікована обробка помилок
-export const handleError = (error: AxiosError<unknown, any>): never => {
-    const errorMessage = error.message || 'Unknown error';
-    throw new Error(errorMessage);
+export const getApiErrorMessage = (error: unknown, fallback = 'Unknown error'): string => {
+    if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
+        return error.response?.data?.error
+            || error.response?.data?.message
+            || error.message
+            || fallback;
+    }
+
+    return error instanceof Error ? error.message : fallback;
+};
+
+export const handleError = (error: unknown): never => {
+    if (axios.isAxiosError(error) || error instanceof Error) {
+        throw error;
+    }
+
+    throw new Error(getApiErrorMessage(error));
 };
 
 // Загальна функція для GET-запитів
@@ -103,11 +114,11 @@ export const fetchResource = <T>(endpoint: string): Promise<T> => {
 };
 
 // Загальна функція для POST-запитів
-export const postResource = <T>(endpoint: string, data: any): Promise<T> => {
+export const postResource = <T>(endpoint: string, data: unknown): Promise<T> => {
     return axiosInstance.post(endpoint, data).then(response => response.data).catch(handleError);
 };
 
-export const putResource = <T>(endpoint: string, data: any): Promise<T> => {
+export const putResource = <T>(endpoint: string, data: unknown): Promise<T> => {
     return axiosInstance.put(endpoint, data).then(response => response.data).catch(handleError);
 };
 

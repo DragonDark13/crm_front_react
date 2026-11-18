@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
 import {fetchGetAllCategories} from "../../api/_categories";
 
 // Типізація категорій
@@ -10,32 +10,33 @@ interface ICategory {
 // Типізація для контексту
 interface CategoryContextProps {
   categories: ICategory[];
-  fetchCategoriesFunc: () => void;
+  fetchCategoriesFunc: () => Promise<boolean>;
 }
 
 // Створення контексту
 const CategoryContext = createContext<CategoryContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const CategoryProvider: React.FC = ({ children }:PropsWithChildren) => {
+export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
 
-  const fetchCategoriesFunc = async () => {
+  const fetchCategoriesFunc = useCallback(async (): Promise<boolean> => {
     try {
       const data = await fetchGetAllCategories();
       if (Array.isArray(data)) {
         setCategories(data);
-      } else {
-        throw new Error('Fetched data is not an array');
+        return true;
       }
+      throw new Error('Fetched data is not an array');
     } catch (error) {
       console.error('Error fetching categories', error);
+      return false;
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchCategoriesFunc();
-  }, []);
+    void fetchCategoriesFunc();
+  }, [fetchCategoriesFunc]);
 
   return (
     <CategoryContext.Provider value={{ categories, fetchCategoriesFunc }}>

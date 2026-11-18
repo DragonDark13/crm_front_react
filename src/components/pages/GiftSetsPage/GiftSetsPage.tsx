@@ -22,7 +22,6 @@ const GiftSetsPage = () => {
         handleAddNewGiftBox
     } = useGiftBoxModal(modalNames, fetchProductsFunc, fetchPackagingOptions);
 
-    console.log("isAuthenticated3", isAuthenticated);
 
 
     return (

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useProducts} from "../../Provider/ProductContext";
 import {
     Button, DialogActions,
@@ -32,18 +32,13 @@ const AddGiftBoxModal = ({
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0); // Ціна набору
-    const {products, fetchProductsFunc} = useProducts();
-    const {packagingMaterials,fetchPackagingOptions} = usePackaging();
+    const {products} = useProducts();
+    const {packagingMaterials} = usePackaging();
     const [selectedProducts, setSelectedProducts] = useState<{ product: IProduct, quantity: number }[]>([]);
     const [selectedPackaging, setSelectedPackaging] = useState<{ material: IMaterial, quantity: number }[]>([]);
     const [showSelectProduct, setShowSelectProduct] = useState(false);
     const [showSelectPackaging, setShowSelectPackaging] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage()
-
-    useEffect(() => {
-        fetchProductsFunc()
-        fetchPackagingOptions();
-    }, []);
 
 
     const handleProductSelect = (_: React.SyntheticEvent,

@@ -26,7 +26,7 @@ import AddButton from "../../Buttons/AddButton";
 interface IGiftSetSaleModalProps {
     open: boolean;
     onClose: () => void;
-    giftSet: any; // Модель даних набору
+    giftSet: IGiftSet; // Модель даних набору
     handleGiftSell: (
         giftSet: IGiftSet,
         customer: number | null,
@@ -60,7 +60,7 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
 
     const calculateTotalCost = () => {
         const packagingCost = giftSet.packagings.reduce(
-            (total: number, item: any) => total + item.price * item.quantity,
+            (total, item) => total + item.price * item.quantity,
             0
         );
         const productCost = giftSet.products.reduce(
@@ -160,7 +160,7 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                     <Divider sx={{my: 2}}/>
 
                     <Typography variant="h6">Склад набору</Typography>
-                    {giftSet.products.map((product: any, index: number) => (
+                    {giftSet.products.map((product, index) => (
                         <Grid container key={index} sx={{mb: 1}}>
                             <Grid item xs={5}>{product.name}</Grid>
                             <Grid item xs={3}>{product.price} UAH</Grid>
@@ -169,7 +169,7 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                         </Grid>
                     ))}
 
-                    {giftSet.packagings.map((packaging: any, index: number) => (
+                    {giftSet.packagings.map((packaging, index) => (
                         <Grid container key={index} sx={{mb: 1}}>
                             <Grid item xs={5}>{packaging.name}</Grid>
                             <Grid item xs={3}>{packaging.price} UAH</Grid>

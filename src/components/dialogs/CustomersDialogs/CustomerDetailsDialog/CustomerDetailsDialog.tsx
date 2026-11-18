@@ -22,7 +22,7 @@ const CustomerDetailsDialog: React.FC<CustomerDetailsDialogProps> = ({open, cust
             fullWidth
         >
             <DialogContent>
-                <Typography variant="body1"><strong>Ім'я:</strong> {customer.name}</Typography>
+                <Typography variant="body1"><strong>Ім&apos;я:</strong> {customer.name}</Typography>
                 <Typography variant="body1"><strong>Електронна пошта:</strong> {customer.email || 'Немає даних'}
                 </Typography>
                 <Typography variant="body1"><strong>Телефон:</strong> {customer.phone_number || 'Немає даних'}

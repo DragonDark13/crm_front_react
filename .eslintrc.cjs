@@ -14,6 +14,14 @@ module.exports = {
         'plugin:react-hooks/recommended',
     ],
     ignorePatterns: ['dist'],
+    overrides: [
+        {
+            files: ['*.ts', '*.tsx'],
+            rules: {
+                'react/prop-types': 'off',
+            },
+        },
+    ],
     rules: {
         'react-refresh/only-export-components': [
             'warn',

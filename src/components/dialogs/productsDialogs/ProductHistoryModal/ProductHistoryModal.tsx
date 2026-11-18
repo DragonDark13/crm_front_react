@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {ReactNode, useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {
     DialogContent,
@@ -133,31 +133,43 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
     const {isAuthenticated} = useAuth();
     const {showSnackbarMessage} = useSnackbarMessage();
     const {fetchProductsFunc} = useProducts();
-
+    const historyRequestId = useRef(0);
 
     useEffect(() => {
-        if (openHistory) {
-            fetchProductHistory(productId)
-                .then(response => {
-                    setProductHistory({
-                        stock: response.data.stock_history,
-                        purchase: response.data.purchase_history,
-                        sales: response.data.sale_history,
-                    });
-                })
-                .catch(error => {
-                    console.error('There was an error fetching the product history!', error);
-                });
+        if (!openHistory) return;
 
-        }
+        const requestId = ++historyRequestId.current;
+
+        fetchProductHistory(productId)
+            .then(response => {
+                if (requestId !== historyRequestId.current) return;
+
+                setProductHistory({
+                    stock: response.data.stock_history,
+                    purchase: response.data.purchase_history,
+                    sales: response.data.sale_history,
+                });
+            })
+            .catch(error => {
+                if (requestId !== historyRequestId.current) return;
+                console.error('There was an error fetching the product history!', error);
+            });
+
+        return () => {
+            historyRequestId.current += 1;
+        };
     }, [openHistory, productId]);
 
     const refreshProductHistory = async () => {
+        const requestId = ++historyRequestId.current;
+        const requestedProductId = productId;
+
         try {
             showSnackbarMessage("Запис успішно видалений", "success");
 
-            const response = await fetchProductHistory(productId);
+            const response = await fetchProductHistory(requestedProductId);
 
+            if (requestId !== historyRequestId.current) return;
 
             setProductHistory({
                 stock: response.data.stock_history,
@@ -166,9 +178,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
             });
 
             fetchProductsFunc();
-
-
         } catch (error) {
+            if (requestId !== historyRequestId.current) return;
             console.error('Помилка при оновленні історії товару:', error);
         }
     };
@@ -204,13 +215,24 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         setSelectedView(event.target.value as number);
     };
 
-    const sortByDate = (history: ProductHistoryRecord[], dateKey: keyof ProductHistoryRecord) => {
+    function sortByDate(history: IStockHistoryRecord[], dateKey: string): IStockHistoryRecord[];
+    function sortByDate(history: IProductPurchaseHistoryRecord[], dateKey: string): IProductPurchaseHistoryRecord[];
+    function sortByDate(history: IProductSaleHistoryRecord[], dateKey: string): IProductSaleHistoryRecord[];
+    function sortByDate(
+        history: IStockHistoryRecord[] | IProductPurchaseHistoryRecord[] | IProductSaleHistoryRecord[],
+        dateKey: string
+    ) {
         return history.slice().sort((a, b) => {
-            const dateA = new Date(a[dateKey]!).getTime();
-            const dateB = new Date(b[dateKey]!).getTime();
+            const getDate = (record: IStockHistoryRecord | IProductPurchaseHistoryRecord | IProductSaleHistoryRecord) => {
+                if (dateKey === 'timestamp') return (record as IStockHistoryRecord).timestamp;
+                if (dateKey === 'purchase_date') return (record as IProductPurchaseHistoryRecord).purchase_date;
+                return (record as IProductSaleHistoryRecord).sale_date;
+            };
+            const dateA = new Date(getDate(a)).getTime();
+            const dateB = new Date(getDate(b)).getTime();
             return dateB - dateA; // сортування за спаданням (найновіші записи будуть першими)
         });
-    };
+    }
 
     return (
         <CustomDialog

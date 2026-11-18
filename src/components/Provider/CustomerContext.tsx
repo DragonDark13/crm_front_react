@@ -1,75 +1,60 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
-import {ICustomer, ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
-import axios, {AxiosError} from "axios";
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
+import {ICustomer, ICustomerDetailForCreate} from "../../utils/types";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
 
-
-
-// Типізація для контексту
 interface CustomerContextProps {
     customers: ICustomer[];
-    fetchGetAllCustomersFunc: () => void;
-    createCustomerFunc: (newCustomerData: ICustomerDetailForCreate) => Promise<void>; // Додаємо функцію для створення
-    loading: boolean; // Додаємо поле для перевірки завантаження
+    fetchGetAllCustomersFunc: () => Promise<boolean>;
+    createCustomerFunc: (newCustomerData: ICustomerDetailForCreate) => Promise<void>;
+    loading: boolean;
 }
 
-// Створення контексту
 const CustomerContext = createContext<CustomerContextProps | undefined>(undefined);
 
-// Створення Провайдера
-export const CustomerProvider: React.FC = ({children}:PropsWithChildren) => {
+export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
     const [customers, setCustomers] = useState<ICustomer[]>([]);
-    const [loading, setLoading] = useState(true); // Стан завантаження
-    const {showSnackbarMessage} = useSnackbarMessage()
+    const [loading, setLoading] = useState(true);
+    const {showSnackbarMessage} = useSnackbarMessage();
 
-    const fetchGetAllCustomersFunc = async () => {
+    const fetchGetAllCustomersFunc = useCallback(async (): Promise<boolean> => {
         try {
-            setLoading(true); // Починаємо завантаження
+            setLoading(true);
             const data = await fetchGetAllCustomers();
             if (Array.isArray(data)) {
                 setCustomers(data);
-            } else {
-                throw new Error('Fetched data is not an array');
+                return true;
             }
+            throw new Error('Fetched data is not an array');
         } catch (error) {
             console.error('Error fetching customers:', error);
+            return false;
         } finally {
-            setLoading(false); // Завершуємо завантаження
+            setLoading(false);
         }
-    };
+    }, []);
 
     const createCustomerFunc = async (newCustomerData: ICustomerDetailForCreate) => {
-        try {
-            const newCustomer = await createCustomer(newCustomerData);
-            setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список
-            showSnackbarMessage('Customer created successfully!', 'success');
-            fetchGetAllCustomersFunc();
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                showSnackbarMessage(
-                    'Error creating customer: ' +
-                    (error.response?.data?.error ?? 'Unknown error'),
-                    'error'
-                );
-            } else {
-                showSnackbarMessage('Unknown error', 'error');
-            }
+        const newCustomer = await createCustomer(newCustomerData);
+        setCustomers(prevCustomers => [...prevCustomers, newCustomer]);
+        showSnackbarMessage('Customer created successfully!', 'success');
+        const refreshed = await fetchGetAllCustomersFunc();
+        if (!refreshed) {
+            showSnackbarMessage('Customer was created, but the customer list could not be refreshed.', 'warning');
         }
     };
 
     useEffect(() => {
-        fetchGetAllCustomersFunc();
-    }, []);
+        void fetchGetAllCustomersFunc();
+    }, [fetchGetAllCustomersFunc]);
 
     return (
-        <CustomerContext.Provider value={{customers, fetchGetAllCustomersFunc: fetchGetAllCustomersFunc, createCustomerFunc, loading}}>
+        <CustomerContext.Provider value={{customers, fetchGetAllCustomersFunc, createCustomerFunc, loading}}>
             {children}
         </CustomerContext.Provider>
     );
 };
 
-// Хук для зручного доступу до контексту клієнтів
 export const useCustomers = () => {
     const context = useContext(CustomerContext);
     if (!context) {

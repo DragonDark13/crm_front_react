@@ -30,7 +30,7 @@ const DeleteAllProductsDialog: React.FC = () => {
                 <DialogTitle>Підтвердження видалення</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Ви впевнені, що хочете видалити **усі продукти** та пов'язані з ними дані? Цю дію неможливо
+                        Ви впевнені, що хочете видалити **усі продукти** та пов&apos;язані з ними дані? Цю дію неможливо
                         скасувати!
                     </DialogContentText>
                 </DialogContent>

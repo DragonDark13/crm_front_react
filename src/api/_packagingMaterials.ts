@@ -1,5 +1,5 @@
 // Операції з пакувальними матеріалами
-import {IMaterial, IPurchasePackagingMaterial, ISupplierFull, PackagingMaterialHistory} from "../utils/types";
+import {IMaterial, IPurchasePackagingMaterial, ISupplierFull, PackagingMaterialHistory, IPackagingSupplierPurchaseHistoryResponse} from "../utils/types";
 import {API_ENDPOINTS, axiosInstance, fetchResource, handleError, postResource} from "./api";
 import {AxiosResponse} from "axios";
 
@@ -15,14 +15,14 @@ export const updatePackagingSupplier = (packagingSupplierId: number, editPackagi
     return axiosInstance.put(API_ENDPOINTS.EDIT_PACKAGING_SUPPLIER(packagingSupplierId), editPackagingSupplier).catch(handleError);
 };
 
-export const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId: number): Promise<{ supplier: ISupplierFull, purchase_history: any[]; materials: IMaterial[] }> => {
-    return fetchResource<{ supplier: ISupplierFull, purchase_history: any[]; materials: IMaterial[] }>(API_ENDPOINTS.CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY(pack_supplierId));
+export const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId: number): Promise<IPackagingSupplierPurchaseHistoryResponse> => {
+    return fetchResource<IPackagingSupplierPurchaseHistoryResponse>(API_ENDPOINTS.CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY(pack_supplierId));
 };
 
 export const deletePackagingSupplier = (supplierPackagingId: number): Promise<void> => {
     return axiosInstance
         .delete(API_ENDPOINTS.DELETE_PACKAGING_SUPPLIER(supplierPackagingId))
-        .then(() => console.log(`Supplier with ID ${supplierPackagingId} deleted successfully.`))
+        .then(() => undefined)
         .catch(handleError);
 };
 

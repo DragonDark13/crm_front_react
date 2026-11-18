@@ -1,11 +1,11 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo, useRef} from 'react';
 import {IProduct} from "../../utils/types";
 import {fetchProducts} from "../../api/_product";
 
 // Типізація для контексту
 interface ProductContextProps {
   products: IProduct[];
-  fetchProductsFunc: () => void;
+  fetchProductsFunc: () => Promise<boolean>;
   loadingState: { isLoading: boolean; error: string | null };
 }
 
@@ -13,41 +13,68 @@ interface ProductContextProps {
 const ProductContext = createContext<ProductContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const ProductProvider: React.FC = ({ children }:PropsWithChildren) => {
+export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: string | null }>({
     isLoading: true,
     error: null,
   });
+  const requestIdRef = useRef(0);
+  const isMountedRef = useRef(false);
 
-  const fetchProductsFunc = async () => {
+  const fetchProductsFunc = useCallback(async (): Promise<boolean> => {
+    if (!isMountedRef.current) return false;
+
+    const requestId = ++requestIdRef.current;
+
     try {
       setLoadingState({ isLoading: true, error: null });
       const data = await fetchProducts();
+
+      if (!isMountedRef.current || requestId !== requestIdRef.current) {
+        return false;
+      }
+
       if (Array.isArray(data)) {
         setProducts(data);
-      } else {
-        throw new Error('Fetched data is not an array');
+        setLoadingState({ isLoading: false, error: null });
+        return true;
       }
-    } catch (error) {
-      setLoadingState({ isLoading: false, error: 'There was an error fetching the products!' });
-    } finally {
-      setLoadingState({ isLoading: false, error: null });
-    }
-  };
 
-  useEffect(() => {
-    fetchProductsFunc();
+      throw new Error('Fetched data is not an array');
+    } catch (_error) {
+      if (!isMountedRef.current || requestId !== requestIdRef.current) {
+        return false;
+      }
+
+      setLoadingState({ isLoading: false, error: 'There was an error fetching the products!' });
+      return false;
+    }
   }, []);
 
+  useEffect(() => {
+    isMountedRef.current = true;
+    void fetchProductsFunc();
+
+    return () => {
+      isMountedRef.current = false;
+      requestIdRef.current += 1;
+    };
+  }, [fetchProductsFunc]);
+
+  const contextValue = useMemo(
+    () => ({ products, fetchProductsFunc, loadingState }),
+    [products, fetchProductsFunc, loadingState]
+  );
+
   return (
-    <ProductContext.Provider value={{ products, fetchProductsFunc, loadingState }}>
+    <ProductContext.Provider value={contextValue}>
       {children}
     </ProductContext.Provider>
   );
 };
 
-// Хук для зручного доступу до контексту продуктів
+// Хук для зручного доступу до контексту клієнтів
 export const useProducts = () => {
   const context = useContext(ProductContext);
   if (!context) {

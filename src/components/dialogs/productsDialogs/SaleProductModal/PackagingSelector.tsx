@@ -59,7 +59,7 @@ const PackagingSelector = ({
     };
 
     const handleQuantityChange = (e: { target: { value: string; }; }) => {
-        let value = e.target.value.replace(/[^0-9]/g, '').replace(/^0+/, '');
+        const value = e.target.value.replace(/[^0-9]/g, '').replace(/^0+/, '');
         if (/^\d+$/.test(value)) {
             setSaleData({
                 ...saleData,

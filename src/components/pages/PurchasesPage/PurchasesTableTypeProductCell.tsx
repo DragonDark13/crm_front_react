@@ -10,7 +10,6 @@ const PurchasesTableTypeProductCell = ({type}: IPurchasesTableTypeProductCell) =
 
     type = type.toLowerCase()
 
-    console.log('type',type);
     return (
         <Tooltip title={
             type === "product" ? "Товар" :

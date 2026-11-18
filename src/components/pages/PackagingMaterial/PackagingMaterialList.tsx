@@ -190,7 +190,7 @@ const PackagingMaterialList: React.FC = () => {
         const [rowsPerPage, setRowsPerPage] = useState(5); // Кількість рядків на сторінці
 
 // Функція для обробки зміни сторінки
-        const handleChangePage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, newPage: number) => {
+        const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
             setPage(newPage);
         };
 

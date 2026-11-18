@@ -108,7 +108,7 @@ const AddProductModal = ({
     useEffect(() => {
         const totalPrice = newProduct.available_quantity * newProduct.purchase_price_per_item;
         setNewProduct({...newProduct, purchase_total_price: roundToDecimalPlaces(totalPrice, 2)});
-    }, [newProduct.available_quantity, newProduct.purchase_price_per_item]);
+    }, [newProduct.available_quantity, newProduct.purchase_price_per_item, setNewProduct]);
 
     const isAddButtonDisabled = newProduct.name.trim().length < 10 ||
         !newProduct.supplier_id || newProduct.available_quantity < 0;

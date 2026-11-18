@@ -1,6 +1,6 @@
 // src/pages/PurchaseHistoryPage.tsx
 
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
     Table,
     TableBody,
@@ -62,6 +62,10 @@ type SortableKeys =
     | "quantity"
     | "date";
 
+type PurchaseColumn =
+    | {key: SortableKeys; label: string; sortable: true}
+    | {key: "type" | "supplier_name" | "total_price"; label: string; sortable: false};
+
 const PurchasesTable: React.FC = () => {
     const [purchaseHistory, setPurchaseHistory] = useState<IPurchasesTable[]>([]);
     const [sortConfig, setSortConfig] = useState<SortConfig<SortableKeys>>({
@@ -82,11 +86,7 @@ const PurchasesTable: React.FC = () => {
 
     const {categories} = useCategories(); // Отримання всіх категорій
 
-    useEffect(() => {
-        fetchPurchaseHistory();
-    }, []);
-
-    const fetchPurchaseHistory = async () => {
+    const fetchPurchaseHistory = useCallback(async () => {
         try {
           const data =await fetchGetAllPurchaseHistory();
             // Перетворюємо потрібні поля в числа
@@ -115,7 +115,11 @@ const PurchasesTable: React.FC = () => {
         } catch (error) {
             console.error('Error fetching purchase history:', error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        void fetchPurchaseHistory();
+    }, [fetchPurchaseHistory]);
 
     const handleSort = (key: SortableKeys) => {
         let direction: SortDirection = 'asc';
@@ -239,14 +243,14 @@ const PurchasesTable: React.FC = () => {
 
     console.log('Array.from(new Set(purchaseHistory))', Array.from(new Set(purchaseHistory.map((item) => item.supplier_name))));
 
-    const columns = [
+    const columns: PurchaseColumn[] = [
         {key: 'type', label: 'Тип', sortable: false},
-        {key: 'name', label: 'Назва продукту'},
-        {key: 'supplier_name', label: 'Назва постачальника'},
-        {key: 'quantity', label: 'Кількість'},
-        {key: 'price_per_item', label: 'Ціна за одиницю'},
-        {key: 'total_price', label: 'Загальна ціна'},
-        {key: 'date', label: 'Дата'}
+        {key: 'name', label: 'Назва продукту', sortable: true},
+        {key: 'supplier_name', label: 'Назва постачальника', sortable: false},
+        {key: 'quantity', label: 'Кількість', sortable: true},
+        {key: 'price_per_item', label: 'Ціна за одиницю', sortable: true},
+        {key: 'total_price', label: 'Загальна ціна', sortable: false},
+        {key: 'date', label: 'Дата', sortable: true}
     ];
 
     console.log('paginatedData', paginatedData);

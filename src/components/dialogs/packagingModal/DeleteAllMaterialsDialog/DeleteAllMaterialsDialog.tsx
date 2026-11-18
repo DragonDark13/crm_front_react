@@ -29,7 +29,7 @@ const DeleteAllMaterialsDialog: React.FC = () => {
                 <DialogTitle>Підтвердження видалення</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Ви впевнені, що хочете видалити **усі упаковочні матеріали** та пов'язані з ними дані? Цю дію
+                        Ви впевнені, що хочете видалити **усі упаковочні матеріали** та пов&apos;язані з ними дані? Цю дію
                         неможливо скасувати!
                     </DialogContentText>
                 </DialogContent>

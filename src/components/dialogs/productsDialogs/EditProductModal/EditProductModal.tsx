@@ -66,15 +66,29 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
             // Only update if the value has changed
             if (editProduct.purchase_total_price !== roundedPrice) {
-                handleFieldChange('purchase_total_price', roundedPrice);
+                setEditProduct(prevEd => {
+                    if (!prevEd) return prevEd;
+
+                    const updatedProduct = {
+                        ...prevEd,
+                        purchase_total_price: roundedPrice
+                    };
+
+                    return updatedProduct;
+                });
             }
         }
-    }, [editProduct.available_quantity, editProduct.purchase_price_per_item]);
+    }, [
+        editProduct.available_quantity,
+        editProduct.purchase_price_per_item,
+        editProduct.purchase_total_price,
+        setEditProduct
+    ]);
 
 
     // Валідація полів
     const validateFields = () => {
-        let tempErrors = {name: '', supplier: '', available_quantity: '', price_per_item: '', created_date: ""};
+        const tempErrors = {name: '', supplier: '', available_quantity: '', price_per_item: '', created_date: ""};
         let isValid = true;
 
         if (!editProduct.name.trim()) {
@@ -122,11 +136,14 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     const [originalProduct, setOriginalProduct] = useState<IEditProduct>(editProduct);
 
     useEffect(() => {
+        if (!openEdit) return;
 
         setOriginalProduct(editProduct);
         setIsModified(false); // Reset modified state when opening modal
 
-    }, []);
+    // Keep the baseline stable while fields change; reset only when the modal opens or product changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [openEdit, editProduct.id]);
 
     const compareCategories = (originalCategories: number[], updatedCategories: number[]) => {
         const differences: number[] = [];

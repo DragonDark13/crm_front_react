@@ -30,5 +30,5 @@ export const Chart: React.FC = () => {
     },
   };
 
-  return <Bar type={"bar"} data={data} options={options} />;
+  return <Bar data={data} options={options} />;
 };

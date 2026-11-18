@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {
     Grid,
     Typography,
@@ -42,7 +42,7 @@ const FilterComponent = ({
     const {suppliers} = useSuppliers();
 
 // Функція для застосування фільтрів
-    const applyFilters = () => {
+    const applyFilters = useCallback(() => {
         let filtered = products;
 
         const {categories, suppliers, priceRange} = filters;
@@ -65,7 +65,7 @@ const FilterComponent = ({
         );
 
         setFilteredProducts(filtered); // Оновлюємо відфільтровані продукти
-    };
+    }, [products, filters, setFilteredProducts]);
 
     // Коли завантажуються продукти, обчислімо мінімальну і максимальну ціну
     useEffect(() => {
@@ -116,7 +116,7 @@ const FilterComponent = ({
 // Використовуємо useEffect, щоб автоматично застосовувати фільтри при зміні стейту
     useEffect(() => {
         applyFilters();
-    }, [filters]);
+    }, [applyFilters]);
 
 // Логіка для визначення, чи змінені фільтри
     const isFiltersChanged = JSON.stringify(filters) !== JSON.stringify(initialFilters);

@@ -1,10 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     Dialog,
     DialogTitle,
     DialogContent,
-    TextField,
     DialogActions,
     Button,
     Table,
@@ -15,59 +13,50 @@ import {
     TableRow,
     Paper,
     Collapse,
-    IconButton, Typography, Tooltip, Grid, Box, TablePagination
+    IconButton,
+    Typography,
+    Tooltip,
+    Grid,
+    TablePagination
 } from '@mui/material';
-import {ExpandMore as ExpandMoreIcon, Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
-import {IMaterial, INewSupplier, IProduct, ISupplierFull, ISupplierType} from "../../../utils/types";
+import {Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
+import BlockIcon from '@mui/icons-material/Block';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HistoryIcon from '@mui/icons-material/History';
+import {ISupplierFull, INewSupplier, ISupplierType, ISupplierPurchaseHistoryRecord} from "../../../utils/types";
 import {useSuppliers} from "../../Provider/SupplierContext";
 import clsx from "clsx";
-import HistoryIcon from "@mui/icons-material/History";
 import AddSupplierModal from "../../dialogs/AddSupplierModal/AddSupplierModal";
 import {useSnackbarMessage} from "../../Provider/SnackbarMessageContext";
 import {
-    addSupplier, deleteSupplier,
-    fetchGetSupplierProducts,
+    addSupplier,
+    deleteSupplier,
     fetchGetSupplierPurchaseHistory,
     updateSupplier
 } from "../../../api/_supplier";
-import {useAuth} from "../../context/AuthContext";
-import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
-import EditSupplierModal from "../../dialogs/EditSupplierModal/EditSupplierModal";
-import {useTheme} from "@mui/material/styles";
-import AddButton from "../../Buttons/AddButton";
-import RenderHeaderCell from "../../_elements/RenderHeaderCell";
-
-interface ICurrentSupplier {
-    name: string;
-    contact_info: string;
-    email: string;
-    phone_number: string;
-    address?: string;
-    id: number | null
-}
-
-interface ISupplierPurchaseHistoryRecord {
-    product: string;
-    purchase_date: string;               // ISO string або Date — залежно від використання
-    purchase_price_per_item: string;    // або number, якщо ти далі опрацьовуєш числа
-    purchase_total_price: string;       // те саме
-    quantity_purchase: number;
-}
-
-import BlockIcon from '@mui/icons-material/Block';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PurchasesTableTypeProductCell from "../PurchasesPage/PurchasesTableTypeProductCell";
 import {
     deletePackagingSupplier,
     fetchGetPackagingSupplierPurchaseHistory,
     updatePackagingSupplier
 } from "../../../api/_packagingMaterials";
+import {useAuth} from "../../context/AuthContext";
+import EditSupplierModal from "../../dialogs/EditSupplierModal/EditSupplierModal";
+import {useTheme} from "@mui/material/styles";
+import AddButton from "../../Buttons/AddButton";
+import RenderHeaderCell from "../../_elements/RenderHeaderCell";
+import PurchasesTableTypeProductCell from "../PurchasesPage/PurchasesTableTypeProductCell";
 import SupplierPurchaseHistoryTable from "./SupplierPurchaseHistoryTable";
 import {canDeleteSupplier} from "./canDeleteSupplier";
 
+type ICurrentSupplier = Omit<ISupplierFull, 'id'> & {id: number};
+
+interface IOpenSupplierHistory {
+    id: number;
+    type: ISupplierType;
+}
 
 const SupplierPage: React.FC = () => {
-    const {suppliers, fetchSuppliersFunc, handleToggleSupplierActive} = useSuppliers()
+    const {suppliers, fetchSuppliersFunc, handleToggleSupplierActive} = useSuppliers();
     const [openAddModal, setOpenAddModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState<boolean>(false);
     const [currentSupplier, setCurrentSupplier] = useState<ICurrentSupplier>({
@@ -76,52 +65,76 @@ const SupplierPage: React.FC = () => {
         email: "",
         name: "",
         phone_number: "",
-        id: null
+        id: 0,
+        is_active: true,
+        type: 'product'
     });
-    const [openHistory, setOpenHistory] = useState<number | null>(null);
-    const [currentType, setCurrentType] = useState<ISupplierType>('product');
+    const [openHistory, setOpenHistory] = useState<IOpenSupplierHistory | null>(null);
     const [purchaseHistory, setPurchaseHistory] = useState<ISupplierPurchaseHistoryRecord[]>([]);
+    const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+    const [historyError, setHistoryError] = useState(false);
+    const historyRequestId = useRef(0);
     const {showSnackbarMessage} = useSnackbarMessage();
-    const [products, setProducts] = useState<IProduct[] | IMaterial[]>([]);
     const {isAuthenticated} = useAuth();
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmDeleteSupplierId, setConfirmDeleteSupplierId] = useState<number | null>(null);
     const [confirmDeleteSupplierType, setConfirmDeleteSupplierType] = useState<ISupplierType | null>(null);
-
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [isDeletingSupplier, setIsDeletingSupplier] = useState(false);
 
     const theme = useTheme();
 
+    useEffect(() => () => {
+        historyRequestId.current += 1;
+    }, []);
 
-    // Отримуємо історію закупівель для конкретного постачальника
-    const fetchPurchaseHistory = async (supplierId: number, type: ISupplierType) => {
-        setCurrentType(type)
-        if (type === 'product') {
-            // Отримуємо історію закупівель постачальника
-            fetchGetSupplierPurchaseHistory(supplierId)
-                .then(data => {
-                    setPurchaseHistory(data.purchase_history);
-                    setProducts(data.products);
-                });
-        } else if (type === 'packaging') {
-            fetchGetPackagingSupplierPurchaseHistory(supplierId).then(data => {
-                setPurchaseHistory(data.purchase_history);
-                setProducts(data.materials);
-            });
+    useEffect(() => {
+        const lastPage = Math.max(0, Math.ceil(suppliers.length / rowsPerPage) - 1);
+        if (page > lastPage) {
+            setPage(lastPage);
         }
+    }, [page, rowsPerPage, suppliers.length]);
 
+    // Отримуємо історію закупівель для конкретного постачальника.
+    const fetchPurchaseHistory = async (supplierId: number, type: ISupplierType) => {
+        const requestId = ++historyRequestId.current;
+        setPurchaseHistory([]);
+        setIsHistoryLoading(true);
+        setHistoryError(false);
 
+        try {
+            const data = type === 'product'
+                ? await fetchGetSupplierPurchaseHistory(supplierId)
+                : await fetchGetPackagingSupplierPurchaseHistory(supplierId);
+
+            if (requestId !== historyRequestId.current) {
+                return;
+            }
+
+            setPurchaseHistory(data.purchase_history);
+        } catch (error) {
+            if (requestId !== historyRequestId.current) {
+                return;
+            }
+
+            console.error('Error fetching supplier purchase history:', error);
+            setHistoryError(true);
+            showSnackbarMessage('Не вдалося завантажити історію постачальника.', 'error');
+        } finally {
+            if (requestId === historyRequestId.current) {
+                setIsHistoryLoading(false);
+            }
+        }
     };
 
-
-    // Додавання нового постачальника
+    // Додавання нового постачальника.
     const handleAddSupplier = (newSupplier: INewSupplier) => {
-
         addSupplier(newSupplier)
             .then(() => {
                 setOpenAddModal(false);
-                fetchSuppliersFunc(); // Оновити список постачальників після додавання
-                showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
-
+                fetchSuppliersFunc();
+                showSnackbarMessage('Supplier completed successfully!', 'success');
             })
             .catch((error) => {
                 console.error('There was an error saving the supplier!', error);
@@ -132,41 +145,40 @@ const SupplierPage: React.FC = () => {
     const handleOpenSupplierEdit = (editSupplier: ISupplierFull) => {
         setCurrentSupplier(editSupplier);
         setOpenEditModal(true);
-    }
+    };
 
-    // Редагування постачальника
-    const handleEditSupplier = async (supplier: ISupplierFull, type: ISupplierType = 'product') => {
+    // Редагування постачальника.
+    const handleEditSupplier = async (supplier: INewSupplier, type: ISupplierType = 'product') => {
         if (!currentSupplier) return;
 
+        const updatedSupplier: ISupplierFull = {
+            ...currentSupplier,
+            ...supplier,
+            contact_info: supplier.contact_info ?? currentSupplier.contact_info,
+            email: supplier.email ?? currentSupplier.email,
+            phone_number: supplier.phone_number ?? currentSupplier.phone_number,
+            address: supplier.address ?? currentSupplier.address
+        };
+
         try {
-            if (currentSupplier.id !== null)
-
+            if (currentSupplier.id > 0) {
                 if (type === 'product') {
-                    await updateSupplier(currentSupplier.id, supplier)
-
-                } else if (type === "packaging") {
-                    await updatePackagingSupplier(currentSupplier.id, supplier)
+                    await updateSupplier(currentSupplier.id, updatedSupplier);
+                } else {
+                    await updatePackagingSupplier(currentSupplier.id, updatedSupplier);
                 }
+            }
 
-            fetchSuppliersFunc(); // Оновити список постачальників після додавання
-            showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
+            fetchSuppliersFunc();
+            showSnackbarMessage('Supplier completed successfully!', 'success');
             setOpenEditModal(false);
         } catch (error) {
             console.error('Error editing supplier:', error);
+            showSnackbarMessage('There was an error updating the supplier!', 'error');
         }
     };
 
-    // Видалення постачальника
-    const handleDeleteSupplier455 = async (id: number, type: ISupplierType = 'product') => {
-        try {
-            await deleteSupplier(id);
-            fetchSuppliersFunc(); // Оновити список постачальників після додавання
-            showSnackbarMessage('Supplier deleted successfully!', 'success'); // Show success message
-        } catch (error) {
-            console.error('Failed to delete supplier:', error);
-        }
-    };
-
+    // Перевірка можливості видалення та відкриття підтвердження.
     const handleDeleteSupplier = async (supplierId: number, type: ISupplierType) => {
         const {canDelete, reason} = await canDeleteSupplier(supplierId, type);
 
@@ -180,19 +192,50 @@ const SupplierPage: React.FC = () => {
         setConfirmDialogOpen(true);
     };
 
-    // Відображення історії закупівель
-    const toggleHistory = (id: number, type: 'product' | 'packaging') => {
-        if (openHistory === id) {
-            setOpenHistory(null);
-        } else {
-            fetchPurchaseHistory(id, type);
-            setOpenHistory(id);
+    // Видалення після підтвердження користувачем.
+    const handleConfirmDeleteSupplier = async () => {
+        if (confirmDeleteSupplierId === null || !confirmDeleteSupplierType || isDeletingSupplier) {
+            return;
+        }
+
+        setIsDeletingSupplier(true);
+        try {
+            if (confirmDeleteSupplierType === 'product') {
+                await deleteSupplier(confirmDeleteSupplierId);
+            } else {
+                await deletePackagingSupplier(confirmDeleteSupplierId);
+            }
+
+            showSnackbarMessage('Постачальника успішно видалено', 'success');
+            const refreshed = await fetchSuppliersFunc();
+            if (!refreshed) {
+                showSnackbarMessage('Постачальника видалено, але список не вдалося оновити.', 'warning');
+            }
+        } catch (error) {
+            console.error('Failed to delete supplier:', error);
+            showSnackbarMessage('Помилка при видаленні постачальника', 'error');
+        } finally {
+            setIsDeletingSupplier(false);
+            setConfirmDialogOpen(false);
+            setConfirmDeleteSupplierId(null);
+            setConfirmDeleteSupplierType(null);
         }
     };
 
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    // Відображення історії закупівель конкретного постачальника.
+    const toggleHistory = (id: number, type: ISupplierType) => {
+        if (openHistory?.id === id && openHistory.type === type) {
+            historyRequestId.current += 1;
+            setOpenHistory(null);
+            setIsHistoryLoading(false);
+            setHistoryError(false);
+            setPurchaseHistory([]);
+            return;
+        }
 
+        setOpenHistory({id, type});
+        void fetchPurchaseHistory(id, type);
+    };
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -208,14 +251,12 @@ const SupplierPage: React.FC = () => {
         page * rowsPerPage + rowsPerPage
     );
 
-    const textColorDis = (is_active:boolean) => {
-
+    const textColorDis = (is_active: boolean) => {
         if (!is_active) {
             return theme.palette.text.disabled;
-        } else {
-            return "inherit"
         }
-    }
+        return "inherit";
+    };
 
     return (
         <div>
@@ -224,9 +265,7 @@ const SupplierPage: React.FC = () => {
                 <Grid item> <Typography>Перегляд і керування постачальниками</Typography></Grid>
                 <Grid item>
                     <AddButton text={' Додати постачальника'} onClick={() => setOpenAddModal(true)}/>
-
                 </Grid>
-
             </Grid>
 
             <TablePagination
@@ -255,132 +294,135 @@ const SupplierPage: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedSuppliers.map((supplier) => (
-                            <React.Fragment key={supplier.id}>
-                                <TableRow
-                                    sx={{background: !supplier.is_active ? theme.palette.grey[300] : (openHistory === supplier.id ? theme.palette.grey[500] : "inherit"),}}>
-                                    <TableCell size={"small"}>
-                                        <PurchasesTableTypeProductCell type={supplier.type}/>
-                                    </TableCell>
-                                    <TableCell size={"small"}>
-                                        <Typography
-                                            className={clsx("supplier_name")}
-                                            title={supplier.name}
-                                            sx={{
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                color: textColorDis(supplier.is_active)
-                                            }}>{supplier.name}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell size={"small"} sx={{
-                                        color: textColorDis(supplier.is_active)
-                                    }}> <Typography
-                                        className={clsx("contact_info")}
-                                        title={supplier.contact_info}
-                                        sx={{
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
+                        {paginatedSuppliers.map((supplier) => {
+                            const isHistoryOpen = openHistory?.id === supplier.id && openHistory.type === supplier.type;
+
+                            return (
+                                <React.Fragment key={`${supplier.type}-${supplier.id}`}>
+                                    <TableRow
+                                        sx={{background: !supplier.is_active ? theme.palette.grey[300] : (isHistoryOpen ? theme.palette.grey[500] : "inherit"),}}>
+                                        <TableCell size={"small"}>
+                                            <PurchasesTableTypeProductCell type={supplier.type}/>
+                                        </TableCell>
+                                        <TableCell size={"small"}>
+                                            <Typography
+                                                className={clsx("supplier_name")}
+                                                title={supplier.name}
+                                                sx={{
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    color: textColorDis(supplier.is_active)
+                                                }}>{supplier.name}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell size={"small"} sx={{
                                             color: textColorDis(supplier.is_active)
-                                        }}>
-                                        {supplier.contact_info || 'Не вказано'}
-                                    </Typography>
-                                    </TableCell>
-                                    <TableCell size={"small"} sx={{
-                                        color: textColorDis(supplier.is_active)
-                                    }}>{supplier.email || 'Не вказано'}</TableCell>
-                                    <TableCell size={"small"} sx={{
-                                        color: textColorDis(supplier.is_active)
-                                    }}>{supplier.phone_number || 'Не вказано'}</TableCell>
-                                    <TableCell size={"small"} sx={{
-                                        color: textColorDis(supplier.is_active)
-                                    }}>
-                                        <Typography
+                                        }}> <Typography
                                             className={clsx("contact_info")}
-                                            title={supplier.name}
+                                            title={supplier.contact_info}
                                             sx={{
                                                 textOverflow: 'ellipsis',
                                                 whiteSpace: 'nowrap',
                                                 color: textColorDis(supplier.is_active)
                                             }}>
-                                            {supplier.address || 'Не вказано'}
+                                            {supplier.contact_info || 'Не вказано'}
                                         </Typography>
-                                    </TableCell>
-                                    <TableCell size={"small"} sx={{
-                                        color: textColorDis(supplier.is_active)
-                                    }}>
-                                        <Grid container>
-                                            <Grid item>
-                                                <Tooltip title="Редагувати">
-                                                    <IconButton color="primary"
-                                                                onClick={() => handleOpenSupplierEdit(supplier)}>
-                                                        <EditIcon fontSize="small"/>
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Grid>
-
-
-                                            <Grid item>
-                                                <Tooltip title="Історія постачальника">
-                                                    <IconButton color="info"
-                                                                onClick={() => toggleHistory(supplier.id, supplier.type)}>
-                                                        <HistoryIcon fontSize="small"/>
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Grid>
-
-                                            <Grid item>
-                                                <Tooltip
-                                                    title={supplier.is_active ? 'Відключити постачальника' : 'Увімкнути постачальника'}
-                                                >
-                                                    <IconButton
-                                                        color={supplier.is_active ? 'warning' : 'success'}
-                                                        onClick={() => handleToggleSupplierActive(supplier.id, supplier, supplier.type)}
-                                                    >
-                                                        {supplier.is_active ? (
-                                                            <BlockIcon fontSize="small"/>
-                                                        ) : (
-                                                            <CheckCircleIcon fontSize="small"/>
-                                                        )}
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Grid>
-
-                                            <Grid item>
-                                                <Tooltip title="Видалити постачальника">
-
-                                                    <IconButton disabled={!isAuthenticated} color="error"
-                                                                onClick={() => handleDeleteSupplier(supplier.id, supplier.type)}>
-                                                        <DeleteIcon fontSize="small"/>
-                                                    </IconButton>
-
-
-                                                </Tooltip>
-                                            </Grid>
-
-                                        </Grid>
-                                    </TableCell>
-                                </TableRow>
-
-                                {/* Рядок для розгортання історії */}
-                                {openHistory === supplier.id &&
-                                (
-                                    <TableRow sx={{background: theme.palette.grey[500],}}>
-                                        <TableCell colSpan={8}>
-                                            <Collapse in={openHistory === supplier.id} timeout="auto" unmountOnExit>
-                                                <SupplierPurchaseHistoryTable
-                                                    type={currentType}
-                                                    supplierId={openHistory}
-                                                    suppliers={suppliers}
-                                                    purchaseHistory={purchaseHistory}
-                                                />
-                                            </Collapse>
                                         </TableCell>
-                                    </TableRow>)
-                                }
+                                        <TableCell size={"small"} sx={{
+                                            color: textColorDis(supplier.is_active)
+                                        }}>{supplier.email || 'Не вказано'}</TableCell>
+                                        <TableCell size={"small"} sx={{
+                                            color: textColorDis(supplier.is_active)
+                                        }}>{supplier.phone_number || 'Не вказано'}</TableCell>
+                                        <TableCell size={"small"} sx={{
+                                            color: textColorDis(supplier.is_active)
+                                        }}>
+                                            <Typography
+                                                className={clsx("contact_info")}
+                                                title={supplier.name}
+                                                sx={{
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    color: textColorDis(supplier.is_active)
+                                                }}>
+                                                {supplier.address || 'Не вказано'}
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell size={"small"} sx={{
+                                            color: textColorDis(supplier.is_active)
+                                        }}>
+                                            <Grid container>
+                                                <Grid item>
+                                                    <Tooltip title="Редагувати">
+                                                        <IconButton color="primary"
+                                                                    onClick={() => handleOpenSupplierEdit(supplier)}>
+                                                            <EditIcon fontSize="small"/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Grid>
 
-                            </React.Fragment>
-                        ))}
+                                                <Grid item>
+                                                    <Tooltip title="Історія постачальника">
+                                                        <IconButton color="info"
+                                                                    onClick={() => toggleHistory(supplier.id, supplier.type)}>
+                                                            <HistoryIcon fontSize="small"/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Grid>
+
+                                                <Grid item>
+                                                    <Tooltip
+                                                        title={supplier.is_active ? 'Відключити постачальника' : 'Увімкнути постачальника'}
+                                                    >
+                                                        <IconButton
+                                                            color={supplier.is_active ? 'warning' : 'success'}
+                                                            onClick={() => handleToggleSupplierActive(supplier.id, supplier, supplier.type)}
+                                                        >
+                                                            {supplier.is_active ? (
+                                                                <BlockIcon fontSize="small"/>
+                                                            ) : (
+                                                                <CheckCircleIcon fontSize="small"/>
+                                                            )}
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Grid>
+
+                                                <Grid item>
+                                                    <Tooltip title="Видалити постачальника">
+                                                        <IconButton disabled={!isAuthenticated} color="error"
+                                                                    onClick={() => handleDeleteSupplier(supplier.id, supplier.type)}>
+                                                            <DeleteIcon fontSize="small"/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Grid>
+                                            </Grid>
+                                        </TableCell>
+                                    </TableRow>
+
+                                    {/* Рядок для розгортання історії */}
+                                    {isHistoryOpen && (
+                                        <TableRow sx={{background: theme.palette.grey[500],}}>
+                                            <TableCell colSpan={8}>
+                                                <Collapse in={isHistoryOpen} timeout="auto" unmountOnExit>
+                                                    {isHistoryLoading ? (
+                                                        <Typography>Завантаження історії постачальника...</Typography>
+                                                    ) : historyError ? (
+                                                        <Typography color="error">Не вдалося завантажити історію постачальника.</Typography>
+                                                    ) : (
+                                                        <SupplierPurchaseHistoryTable
+                                                            type={openHistory.type}
+                                                            supplierId={openHistory.id}
+                                                            suppliers={suppliers}
+                                                            purchaseHistory={purchaseHistory}
+                                                        />
+                                                    )}
+                                                </Collapse>
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -394,7 +436,6 @@ const SupplierPage: React.FC = () => {
                 labelRowsPerPage="Рядків на сторінці:"
                 rowsPerPageOptions={[5, 10, 25, 50]}
             />
-
 
             {/* Модальне вікно для додавання постачальника */}
             <AddSupplierModal
@@ -420,122 +461,18 @@ const SupplierPage: React.FC = () => {
                     </Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setConfirmDialogOpen(false)}>Скасувати</Button>
+                    <Button disabled={isDeletingSupplier} onClick={() => setConfirmDialogOpen(false)}>Скасувати</Button>
                     <Button
                         color="error"
-                        onClick={async () => {
-                            if (confirmDeleteSupplierId !== null && confirmDeleteSupplierType) {
-                                try {
-                                    if (confirmDeleteSupplierType === "product") {
-                                        await deleteSupplier(confirmDeleteSupplierId);
-                                    } else if (confirmDeleteSupplierType === "packaging") {
-                                        await deletePackagingSupplier(confirmDeleteSupplierId)
-                                    }
-                                    showSnackbarMessage('Постачальника успішно видалено', 'success');
-                                    fetchSuppliersFunc();
-                                } catch (e) {
-                                    showSnackbarMessage('Помилка при видаленні постачальника', 'error');
-                                } finally {
-                                    setConfirmDialogOpen(false);
-                                    setConfirmDeleteSupplierId(null);
-                                    setConfirmDeleteSupplierType(null);
-                                }
-                            }
-                        }}
+                        disabled={isDeletingSupplier}
+                        onClick={handleConfirmDeleteSupplier}
                     >
                         Видалити
                     </Button>
                 </DialogActions>
             </Dialog>
-
-
         </div>
     );
 };
-
-// Модальне вікно для додавання постачальника
-// const AddSupplierModal: React.FC<{ open: boolean; handleClose: () => void; handleAddSupplier: (supplier: { name: string; contact_info: string; email?: string; phone_number?: string; address?: string }) => void; }> = ({
-//                                                                                                                                                                                                                              open,
-//                                                                                                                                                                                                                              handleClose,
-//                                                                                                                                                                                                                              handleAddSupplier
-//                                                                                                                                                                                                                          }) => {
-//     const [name, setName] = useState('');
-//     const [contactInfo, setContactInfo] = useState('');
-//     const [email, setEmail] = useState('');
-//     const [phoneNumber, setPhoneNumber] = useState('');
-//     const [address, setAddress] = useState('');
-//     const [error, setError] = useState<string | null>(null);
-//
-//     const validate = () => {
-//         if (!name.trim()) {
-//             setError('Назва постачальника обов\'язкова');
-//             return false;
-//         }
-//         setError(null);
-//         return true;
-//     };
-//
-//     const handleSave = () => {
-//         if (!validate()) return;
-//
-//         const newSupplier = {name, contact_info: contactInfo, email, phone_number: phoneNumber, address};
-//         handleAddSupplier(newSupplier);
-//     };
-//
-//     return (
-//         <Dialog open={open} onClose={handleClose}>
-//             <DialogTitle>Додати нового постачальника</DialogTitle>
-//             <DialogContent>
-//                 <TextField
-//                     minLength={10}
-//                     maxLength={100}
-//                     required
-//                     autoFocus
-//                     margin="dense"
-//                     label="Назва постачальника"
-//                     fullWidth
-//                     value={name}
-//                     onChange={(e) => setName(e.target.value)}
-//                     error={!!error}
-//                     helperText={error}
-//                 />
-//                 <TextField
-//                     margin="dense"
-//                     label="Контактна інформація"
-//                     fullWidth
-//                     value={contactInfo}
-//                     onChange={(e) => setContactInfo(e.target.value)}
-//                 />
-//                 <TextField
-//                     margin="dense"
-//                     label="Email"
-//                     fullWidth
-//                     value={email}
-//                     onChange={(e) => setEmail(e.target.value)}
-//                 />
-//                 <TextField
-//                     margin="dense"
-//                     label="Телефон"
-//                     fullWidth
-//                     value={phoneNumber}
-//                     onChange={(e) => setPhoneNumber(e.target.value)}
-//                 />
-//                 <TextField
-//                     margin="dense"
-//                     label="Адреса"
-//                     fullWidth
-//                     value={address}
-//                     onChange={(e) => setAddress(e.target.value)}
-//                 />
-//             </DialogContent>
-//             <DialogActions>
-//                 <Button onClick={handleClose} color="primary">Відміна</Button>
-//                 <Button onClick={handleSave} disabled={!name.trim()} color="primary"
-//                         variant="contained">Зберегти</Button>
-//             </DialogActions>
-//         </Dialog>
-//     );
-// };
-
 
 export default SupplierPage;
