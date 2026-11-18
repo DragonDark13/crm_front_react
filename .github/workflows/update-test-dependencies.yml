@@ -1,0 +1,53 @@
+name: Update test dependency lockfile
+
+on:
+  push:
+    branches:
+      - fix/frontend-audit-issues-2026-11
+
+permissions:
+  contents: write
+
+jobs:
+  update-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: fix/frontend-audit-issues-2026-11
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Generate package lock
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Commit updated lockfile
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update frontend test dependency lockfile"
+            git push
+          fi
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Check application TypeScript
+        run: npx tsc --noEmit -p tsconfig.json
+
+      - name: Check Vite configuration TypeScript
+        run: npx tsc --noEmit -p tsconfig.node.json
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Run ESLint
+        run: npm run lint
