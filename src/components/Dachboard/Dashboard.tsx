@@ -121,10 +121,12 @@ export default function Dashboard() {
                                         position="top"
                                         content={(props) => {
                                             const {x, y, width, value, index} = props;
-                                            const quantity = monthlySales[index]?.total_quantity ?? 0;
+                                            const quantity = typeof index === 'number'
+                                                ? monthlySales[index]?.total_quantity ?? 0
+                                                : 0;
                                             return (
-                                                <text x={x! + width! / 2} y={y! - 5} textAnchor="middle" fill="#000">
-                                                    ${value} / {quantity}
+                                                <text x={Number(x ?? 0) + Number(width ?? 0) / 2} y={Number(y ?? 0) - 5} textAnchor="middle" fill="#000">
+                                                    ${Number(value ?? 0)} / {quantity}
                                                 </text>
                                             );
                                         }}
@@ -155,10 +157,12 @@ export default function Dashboard() {
                                         content={(props) => {
                                             const {x, y, width, value, index} = props;
                                             // Витягуємо кількість закуплених одиниць для підпису
-                                            const quantity = monthlyPurchases[index]?.total_quantity ?? 0;
+                                            const quantity = typeof index === 'number'
+                                                ? monthlyPurchases[index]?.total_quantity ?? 0
+                                                : 0;
                                             return (
-                                                <text x={x! + width! / 2} y={y! - 5} textAnchor="middle" fill="#000">
-                                                    ${value} / {quantity}
+                                                <text x={Number(x ?? 0) + Number(width ?? 0) / 2} y={Number(y ?? 0) - 5} textAnchor="middle" fill="#000">
+                                                    ${Number(value ?? 0)} / {quantity}
                                                 </text>
                                             );
                                         }}
@@ -186,10 +190,12 @@ export default function Dashboard() {
                                         position="top"
                                         content={(props) => {
                                             const {x, y, width, value, index} = props;
-                                            const productName = topProducts[index]?.name ?? "";
+                                            const productName = typeof index === 'number'
+                                                ? topProducts[index]?.name ?? ""
+                                                : "";
                                             return (
-                                                <text x={x! + width! / 2} y={y! - 10} textAnchor="middle" fill="#000">
-                                                    {productName} / {Math.round(value)}
+                                                <text x={Number(x ?? 0) + Number(width ?? 0) / 2} y={Number(y ?? 0) - 10} textAnchor="middle" fill="#000">
+                                                    {productName} / {Math.round(Number(value ?? 0))}
                                                 </text>
                                             );
                                         }}
