@@ -72,14 +72,16 @@ const ProductTable: React.FC<IProductTableProps> = ({
         totalQuantitySelling,
         totalSumSelling,
         totalCalculatedSellingSum
-    } = useMemo(() => filteredAndSearchedProducts.reduce((totals, product) => ({
-        totalQuantityPurchaseAllTime: totals.totalQuantityPurchaseAllTime + product.total_quantity,
-        totalQuantityPurchase: totals.totalQuantityPurchase + product.available_quantity,
-        totalSumPurchase: totals.totalSumPurchase + (product.total_quantity * product.purchase_price_per_item),
-        totalQuantitySelling: totals.totalQuantitySelling + product.sold_quantity,
-        totalSumSelling: totals.totalSumSelling + (product.sold_quantity * product.selling_price_per_item),
-        totalCalculatedSellingSum: totals.totalCalculatedSellingSum + (product.available_quantity * product.selling_price_per_item)
-    }), {
+    } = useMemo(() => filteredAndSearchedProducts.reduce((totals, product) => {
+        totals.totalQuantityPurchaseAllTime += product.total_quantity;
+        totals.totalQuantityPurchase += product.available_quantity;
+        totals.totalSumPurchase += product.total_quantity * product.purchase_price_per_item;
+        totals.totalQuantitySelling += product.sold_quantity;
+        totals.totalSumSelling += product.sold_quantity * product.selling_price_per_item;
+        totals.totalCalculatedSellingSum += product.available_quantity * product.selling_price_per_item;
+
+        return totals;
+    }, {
         totalQuantityPurchaseAllTime: 0,
         totalQuantityPurchase: 0,
         totalSumPurchase: 0,
