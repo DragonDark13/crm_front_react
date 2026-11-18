@@ -51,6 +51,7 @@ vi.mock('../src/components/ResponsiveProductView/ResponsiveProductView', () => (
         <>
             <button onClick={() => handleDelete(41)}>Open product delete</button>
             <button onClick={() => handleOpenEdit(filteredAndSearchedProducts[0])}>Open product edit</button>
+            <span data-testid="visible-product-count">{filteredAndSearchedProducts.length}</span>
         </>
     )
 }));
@@ -152,10 +153,10 @@ const product = {
 
 const initialModalState = {} as Record<ModalNames, boolean>;
 
-const CatalogHarness = ({ openAdd = false }: { openAdd?: boolean }) => {
+const CatalogHarness = ({ openAdd = false, products = [product] }: { openAdd?: boolean; products?: IProduct[] }) => {
     const [modalState, setModalState] = useState<Record<ModalNames, boolean>>({ ...initialModalState, openAdd });
     const props = {
-        products: [product],
+        products,
         isAuthenticated: true,
         showSnackbarMessage: mocks.showSnackbarMessage,
         lowQuantityProducts: [],
@@ -186,7 +187,7 @@ const CatalogHarness = ({ openAdd = false }: { openAdd?: boolean }) => {
     return <ProductsCatalog {...props} />;
 };
 
-const renderCatalog = (openAdd = false) => {
+const renderCatalog = (openAdd = false, products: IProduct[] = [product]) => {
     vi.mocked(useProducts).mockReturnValue({
         fetchProductsFunc: mocks.fetchProductsFunc,
         loadingState: { isLoading: false, error: null }
@@ -200,7 +201,7 @@ const renderCatalog = (openAdd = false) => {
         suppliers: []
     } as ReturnType<typeof useSuppliers>);
 
-    return render(<CatalogHarness openAdd={openAdd} />);
+    return render(<CatalogHarness openAdd={openAdd} products={products} />);
 };
 
 describe('ProductsCatalog CRUD integration', () => {
@@ -212,6 +213,20 @@ describe('ProductsCatalog CRUD integration', () => {
         mocks.deleteProduct.mockReset();
         mocks.addProduct.mockReset();
         mocks.updateProduct.mockReset();
+    });
+
+    it('clears the visible product list when the source products become empty', async () => {
+        const { rerender } = renderCatalog();
+
+        await waitFor(() => {
+            expect(screen.getByTestId('visible-product-count').textContent).toBe('1');
+        });
+
+        rerender(<CatalogHarness products={[]} />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('visible-product-count').textContent).toBe('0');
+        });
     });
 
     it('keeps the delete confirmation open and shows an error when product deletion fails', async () => {
