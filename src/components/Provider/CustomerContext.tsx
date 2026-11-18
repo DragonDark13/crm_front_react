@@ -1,6 +1,5 @@
 import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
 import {ICustomer, ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
-import axios, {AxiosError} from "axios";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
 
