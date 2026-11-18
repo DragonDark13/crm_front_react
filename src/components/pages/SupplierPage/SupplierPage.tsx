@@ -164,6 +164,7 @@ const SupplierPage: React.FC = () => {
             setOpenEditModal(false);
         } catch (error) {
             console.error('Error editing supplier:', error);
+            showSnackbarMessage('There was an error updating the supplier!', 'error');
         }
     };
 
