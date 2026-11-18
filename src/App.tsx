@@ -235,7 +235,7 @@ function App() {
 
     const handleLogout = async () => {
 
-        logout(); // Clear token from context and localStorage
+        await logout();
 
     };
 
@@ -317,10 +317,10 @@ function App() {
                         <Route
                             path="/crm_front_react/dashboard"
                             element={
-                                <ProtectedRoute element={<Dashboard/>}/>
+                                <ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>
                             }
                         />
-                        <Route path="/crm_front_react/" element={
+                        <Route path="/crm_front_react/" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={
                             <ProductsCatalog
                                 onRowRef={(el, productId) => {
                                     tableRowRefs.current[productId] = el;
@@ -352,11 +352,11 @@ function App() {
                                 setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
                                 resetFilters={resetFilters}
                             />
-                        }/>
-                        <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
-                        <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
-                        <Route path="/crm_front_react/sales" element={<Sales/>}/>
-                        <Route path="/crm_front_react/products" element={
+                        }}/>}/>
+                        <Route path="/crm_front_react/gift_sets" element={<ProtectedRoute allowedRoles={['manager']} element={<GiftSetsPage/>}/>}/>
+                        <Route path="/crm_front_react/clients" element={<ProtectedRoute allowedRoles={['manager']} element={<ClientsManagement/>}/>}/>
+                        <Route path="/crm_front_react/sales" element={<ProtectedRoute allowedRoles={['manager']} element={<Sales/>}/>}/>
+                        <Route path="/crm_front_react/products" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={
                             <ProductsCatalog
                                 onRowRef={(el, productId) => {
                                     tableRowRefs.current[productId] = el;
@@ -389,13 +389,12 @@ function App() {
                                 resetFilters={resetFilters}
                             />
 
-                        }/>
-                        <Route path="/crm_front_react/purchases" element={<Purchases/>}/>
-                        <Route path="/crm_front_react/analytics" element={<Dashboard/>}/>
-                        <Route path="/crm_front_react/packaging" element={<PackagingMaterialList/>}/>
-                        <Route path="/crm_front_react/other-investments" element={<InvestmentsPage/>}/>
-                        <Route path="/crm_front_react/suppliers"
-                               element={<SupplierPage/>}/>
+                        }}/>}/>
+                        <Route path="/crm_front_react/purchases" element={<ProtectedRoute allowedRoles={['manager']} element={<Purchases/>}/>}/>
+                        <Route path="/crm_front_react/analytics" element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}/>
+                        <Route path="/crm_front_react/packaging" element={<ProtectedRoute allowedRoles={['manager']} element={<PackagingMaterialList/>}/>}/>
+                        <Route path="/crm_front_react/other-investments" element={<ProtectedRoute allowedRoles={['manager']} element={<InvestmentsPage/>}/>}/>
+                        <Route path="/crm_front_react/suppliers" element={<ProtectedRoute allowedRoles={['manager']} element={<SupplierPage/>}/>}/>
 
                     </Routes>
                 </Box>
