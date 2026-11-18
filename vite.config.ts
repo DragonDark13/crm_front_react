@@ -9,6 +9,7 @@ export default defineConfig({
     base: '/crm_front_react/',
     build: {
         outDir: 'build',
-        minify: false, // disable minification for easier debugging
+        reportCompressedSize: true,
+        chunkSizeWarningLimit: 600,
     }
 })
