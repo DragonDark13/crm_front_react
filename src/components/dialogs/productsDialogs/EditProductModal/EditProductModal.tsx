@@ -74,7 +74,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
     // Валідація полів
     const validateFields = () => {
-        let tempErrors = {name: '', supplier: '', available_quantity: '', price_per_item: '', created_date: ""};
+        const tempErrors = {name: '', supplier: '', available_quantity: '', price_per_item: '', created_date: ""};
         let isValid = true;
 
         if (!editProduct.name.trim()) {
