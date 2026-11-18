@@ -100,7 +100,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
 
     const {fetchProductsFunc, loadingState} = useProducts();
     // const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
-    const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<IProduct[]>(products);
     // const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     // const tableRowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
     // const [selectedLowProductId, setSelectedLowProductId] = useState<number | null>(null);
@@ -163,10 +163,8 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
 
 
     useEffect(() => {
-        if (products.length > 0) {
-            setFilteredProducts(products)
-        }
-    }, [products])
+        setFilteredProducts(products);
+    }, [products]);
 
 
     // const fetchSuppliersFunc = async () => {
@@ -304,7 +302,6 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
         );
     };
     const handlePurchase = (product: IProduct) => {
-        setEditProduct(null);
         setEditProduct(mapProductToEditProduct(product));
         setPurchaseDetails(prevDetails => ({
             ...prevDetails,
@@ -384,7 +381,6 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
         handleModalOpen('openEdit');
     };
     const handleOpenProductInfoModal = (product: IProduct) => {
-        setInfoProduct(null);
         setInfoProduct(product);
         handleModalOpen('productInfoModal');
     };
@@ -560,16 +556,13 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
     // }
 
     useEffect(() => {
-        if (filteredProducts.length > 0) {
-            const array = filteredProducts.filter(product => {
-                const name = product.name ?? '';
-                return name.toLowerCase().includes(searchTerm.toLowerCase());
-            });
-            setFilteredAndSearchedProducts(array);
-        } else {
-            setFilteredAndSearchedProducts([]);
-        }
-    }, [filteredProducts, searchTerm]);
+        const normalizedSearchTerm = searchTerm.toLowerCase();
+        const searchedProducts = filteredProducts.filter(product =>
+            (product.name ?? '').toLowerCase().includes(normalizedSearchTerm)
+        );
+
+        setFilteredAndSearchedProducts(searchedProducts);
+    }, [filteredProducts, searchTerm, setFilteredAndSearchedProducts]);
 
 
     // const handleListItemClick = (productId: number) => {
