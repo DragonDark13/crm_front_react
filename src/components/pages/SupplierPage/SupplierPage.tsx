@@ -23,7 +23,7 @@ import {Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HistoryIcon from '@mui/icons-material/History';
-import {ISupplierFull, INewSupplier, ISupplierType} from "../../../utils/types";
+import {ISupplierFull, INewSupplier, ISupplierType, ISupplierPurchaseHistoryRecord} from "../../../utils/types";
 import {useSuppliers} from "../../Provider/SupplierContext";
 import clsx from "clsx";
 import AddSupplierModal from "../../dialogs/AddSupplierModal/AddSupplierModal";
@@ -49,22 +49,6 @@ import SupplierPurchaseHistoryTable from "./SupplierPurchaseHistoryTable";
 import {canDeleteSupplier} from "./canDeleteSupplier";
 
 type ICurrentSupplier = Omit<ISupplierFull, 'id'> & {id: number};
-
-type ISupplierPurchaseHistoryRecord =
-    | {
-        product: string;
-        purchase_date: string;
-        purchase_price_per_item: number;
-        purchase_total_price: number;
-        quantity_purchase: number;
-    }
-    | {
-        material: string;
-        purchase_date: string;
-        purchase_price_per_unit: number;
-        purchase_total_price: number;
-        quantity_purchased: number;
-    };
 
 interface IOpenSupplierHistory {
     id: number;
