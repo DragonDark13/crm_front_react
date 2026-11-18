@@ -40,22 +40,10 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     };
 
     const createCustomerFunc = async (newCustomerData: ICustomerDetailForCreate) => {
-        try {
-            const newCustomer = await createCustomer(newCustomerData);
-            setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список
-            showSnackbarMessage('Customer created successfully!', 'success');
-            fetchGetAllCustomersFunc();
-        } catch (error: unknown) {
-            if (axios.isAxiosError(error)) {
-                showSnackbarMessage(
-                    'Error creating customer: ' +
-                    (error.response?.data?.error ?? 'Unknown error'),
-                    'error'
-                );
-            } else {
-                showSnackbarMessage('Unknown error', 'error');
-            }
-        }
+        const newCustomer = await createCustomer(newCustomerData);
+        setCustomers(prevCustomers => [...prevCustomers, newCustomer]); // Додаємо нового клієнта в список
+        showSnackbarMessage('Customer created successfully!', 'success');
+        fetchGetAllCustomersFunc();
     };
 
     useEffect(() => {
