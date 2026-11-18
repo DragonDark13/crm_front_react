@@ -1,0 +1,43 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - main
+      - fix/frontend-audit-issues-2026-11
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-checks:
+    name: TypeScript, build and ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check application TypeScript
+        run: npx tsc --noEmit -p tsconfig.json
+
+      - name: Check Vite configuration TypeScript
+        run: npx tsc --noEmit -p tsconfig.node.json
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Run ESLint
+        run: npm run lint
