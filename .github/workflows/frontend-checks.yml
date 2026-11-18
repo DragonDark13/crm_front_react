@@ -9,6 +9,7 @@ on:
       - refactor/products-catalog-cleanup-2026-11
       - refactor/supplier-page-cleanup-2026-11
       - chore/remove-debug-logs-2026-11
+      - refactor/gift-set-modal-types-2026-11
   pull_request:
     branches:
       - main
@@ -16,6 +17,7 @@ on:
       - perf/frontend-state-and-catalog-2026-11
       - refactor/products-catalog-cleanup-2026-11
       - refactor/supplier-page-cleanup-2026-11
+      - chore/remove-debug-logs-2026-11
 
 permissions:
   contents: read
