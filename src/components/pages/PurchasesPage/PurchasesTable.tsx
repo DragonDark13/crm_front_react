@@ -63,7 +63,7 @@ type SortableKeys =
     | "date";
 
 type PurchaseColumn =
-    | {key: SortableKeys; label: string}
+    | {key: SortableKeys; label: string; sortable: true}
     | {key: "type" | "supplier_name" | "total_price"; label: string; sortable: false};
 
 const PurchasesTable: React.FC = () => {
@@ -245,12 +245,12 @@ const PurchasesTable: React.FC = () => {
 
     const columns: PurchaseColumn[] = [
         {key: 'type', label: 'Тип', sortable: false},
-        {key: 'name', label: 'Назва продукту'},
+        {key: 'name', label: 'Назва продукту', sortable: true},
         {key: 'supplier_name', label: 'Назва постачальника', sortable: false},
-        {key: 'quantity', label: 'Кількість'},
-        {key: 'price_per_item', label: 'Ціна за одиницю'},
+        {key: 'quantity', label: 'Кількість', sortable: true},
+        {key: 'price_per_item', label: 'Ціна за одиницю', sortable: true},
         {key: 'total_price', label: 'Загальна ціна', sortable: false},
-        {key: 'date', label: 'Дата'}
+        {key: 'date', label: 'Дата', sortable: true}
     ];
 
     console.log('paginatedData', paginatedData);
