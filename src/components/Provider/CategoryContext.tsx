@@ -25,11 +25,12 @@ export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:Props
       const data = await fetchGetAllCategories();
       if (Array.isArray(data)) {
         setCategories(data);
-      } else {
-        throw new Error('Fetched data is not an array');
+        return true;
       }
+      throw new Error('Fetched data is not an array');
     } catch (error) {
       console.error('Error fetching categories', error);
+      return false;
     }
   };
 
