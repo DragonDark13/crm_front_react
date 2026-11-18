@@ -155,13 +155,13 @@ const SaleProductModal = ({
         const totalPrice = saleData.quantity * saleData.selling_price_per_item;
         const totalCostWitoutPAckaging = saleData.purchase_price_per_item * saleData.quantity;
 
-        setSaleData(prevSaleData => ({
-            ...prevSaleData,
+        setSaleData({
+            ...saleData,
             total_packaging_cost: totalPackagingCost,
             selling_total_price: roundToDecimalPlaces(totalPrice, 2),
             total_cost_price: roundToDecimalPlaces(totalCostWitoutPAckaging + totalPackagingCost, 2)
-        }));
-    }, [saleData.quantity, saleData.selling_price_per_item, saleData.purchase_price_per_item, saleData.packaging_id, saleData.packaging_quantity, packagingMaterials]);
+        });
+    }, [saleData.quantity, saleData.selling_price_per_item, saleData.purchase_price_per_item, saleData.packaging_id, saleData.packaging_quantity, packagingMaterials, setSaleData]);
 
     const incrementQuantity = () => {
         if (saleData.quantity < quantityOnStock) {
