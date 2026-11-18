@@ -10,7 +10,9 @@ import { useSuppliers } from '../src/components/Provider/SupplierContext';
 const mocks = vi.hoisted(() => ({
     fetchProductsFunc: vi.fn(),
     showSnackbarMessage: vi.fn(),
-    deleteProduct: vi.fn()
+    deleteProduct: vi.fn(),
+    addProduct: vi.fn(),
+    updateProduct: vi.fn()
 }));
 
 vi.mock('../src/components/Provider/ProductContext', () => ({
@@ -23,11 +25,11 @@ vi.mock('../src/components/Provider/SupplierContext', () => ({
     useSuppliers: vi.fn()
 }));
 vi.mock('../src/api/_product', () => ({
-    addProduct: vi.fn(),
+    addProduct: mocks.addProduct,
     addPurchase: vi.fn(),
     addSale: vi.fn(),
     deleteProduct: mocks.deleteProduct,
-    updateProduct: vi.fn(),
+    updateProduct: mocks.updateProduct,
     runProductInventory: vi.fn()
 }));
 vi.mock('../src/api/_supplier', () => ({ addSupplier: vi.fn() }));
@@ -37,8 +39,19 @@ vi.mock('../src/hooks/useNewProduct.ts', () => ({
     useNewProduct: () => ({ handleRemoveCategory: vi.fn() })
 }));
 vi.mock('../src/components/ResponsiveProductView/ResponsiveProductView', () => ({
-    default: ({ handleDelete }: { handleDelete: (id: number) => void }) => (
-        <button onClick={() => handleDelete(41)}>Open product delete</button>
+    default: ({
+        handleDelete,
+        handleOpenEdit,
+        filteredAndSearchedProducts
+    }: {
+        handleDelete: (id: number) => void;
+        handleOpenEdit: (product: IProduct) => void;
+        filteredAndSearchedProducts: IProduct[];
+    }) => (
+        <>
+            <button onClick={() => handleDelete(41)}>Open product delete</button>
+            <button onClick={() => handleOpenEdit(filteredAndSearchedProducts[0])}>Open product edit</button>
+        </>
     )
 }));
 vi.mock('../src/components/dialogs/ConfirmDeleteModal/ConfirmDeleteModal', () => ({
@@ -66,10 +79,39 @@ vi.mock('../src/components/filters/FilterComponent/FilterComponent', () => ({
     default: () => null
 }));
 vi.mock('../src/components/dialogs/productsDialogs/AddProductModal/AddProductModal', () => ({
-    default: () => null
+    default: ({
+        openAdd,
+        handleAdd
+    }: {
+        openAdd: boolean;
+        handleAdd: () => void;
+    }) => openAdd ? (
+        <div role="dialog">
+            <button onClick={handleAdd}>Save new product</button>
+        </div>
+    ) : null
 }));
 vi.mock('../src/components/dialogs/productsDialogs/EditProductModal/EditProductModal', () => ({
-    default: () => null
+    default: ({
+        openEdit,
+        editProduct,
+        setEditProduct,
+        handleEditSave
+    }: {
+        openEdit: boolean;
+        editProduct: { name: string };
+        setEditProduct: (product: { name: string }) => void;
+        handleEditSave: () => void;
+    }) => openEdit ? (
+        <div role="dialog">
+            <input
+                aria-label="Product name"
+                value={editProduct.name}
+                onChange={event => setEditProduct({ ...editProduct, name: event.target.value })}
+            />
+            <button onClick={handleEditSave}>Save product edit</button>
+        </div>
+    ) : null
 }));
 vi.mock('../src/components/dialogs/productsDialogs/ProductHistoryModal/ProductHistoryModal', () => ({
     default: () => null
@@ -110,8 +152,8 @@ const product = {
 
 const initialModalState = {} as Record<ModalNames, boolean>;
 
-const CatalogHarness = () => {
-    const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(initialModalState);
+const CatalogHarness = ({ openAdd = false }: { openAdd?: boolean }) => {
+    const [modalState, setModalState] = useState<Record<ModalNames, boolean>>({ ...initialModalState, openAdd });
     const props = {
         products: [product],
         isAuthenticated: true,
@@ -144,7 +186,7 @@ const CatalogHarness = () => {
     return <ProductsCatalog {...props} />;
 };
 
-const renderCatalog = () => {
+const renderCatalog = (openAdd = false) => {
     vi.mocked(useProducts).mockReturnValue({
         fetchProductsFunc: mocks.fetchProductsFunc,
         loadingState: { isLoading: false, error: null }
@@ -158,7 +200,7 @@ const renderCatalog = () => {
         suppliers: []
     } as ReturnType<typeof useSuppliers>);
 
-    return render(<CatalogHarness />);
+    return render(<CatalogHarness openAdd={openAdd} />);
 };
 
 describe('ProductsCatalog CRUD integration', () => {
@@ -168,6 +210,8 @@ describe('ProductsCatalog CRUD integration', () => {
         mocks.fetchProductsFunc.mockReset().mockResolvedValue(true);
         mocks.showSnackbarMessage.mockReset();
         mocks.deleteProduct.mockReset();
+        mocks.addProduct.mockReset();
+        mocks.updateProduct.mockReset();
     });
 
     it('keeps the delete confirmation open and shows an error when product deletion fails', async () => {
@@ -210,4 +254,86 @@ describe('ProductsCatalog CRUD integration', () => {
         expect(mocks.fetchProductsFunc).toHaveBeenCalledOnce();
         expect(screen.queryByRole('dialog')).toBeNull();
     });
+    it('keeps the add-product dialog open and displays an error when creation fails', async () => {
+        mocks.addProduct.mockRejectedValueOnce(new Error('HTTP 400: invalid product'));
+        renderCatalog(true);
+
+        const dialog = screen.getByRole('dialog');
+        fireEvent.click(within(dialog).getByRole('button', { name: 'Save new product' }));
+
+        await waitFor(() => expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'Failed to add the product!',
+            'error'
+        ));
+        expect(screen.getByRole('dialog')).toBeTruthy();
+        expect(mocks.fetchProductsFunc).not.toHaveBeenCalled();
+        expect(mocks.showSnackbarMessage).not.toHaveBeenCalledWith(
+            'Product added successfully!',
+            'success'
+        );
+    });
+
+    it('closes the add-product dialog after creation and warns when list refresh fails', async () => {
+        mocks.addProduct.mockResolvedValueOnce({ id: 42 });
+        mocks.fetchProductsFunc.mockResolvedValueOnce(false);
+        renderCatalog(true);
+
+        const dialog = screen.getByRole('dialog');
+        fireEvent.click(within(dialog).getByRole('button', { name: 'Save new product' }));
+
+        await waitFor(() => expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'Product added successfully!',
+            'success'
+        ));
+        expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'Product was added, but the product list could not be refreshed.',
+            'warning'
+        );
+        await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    });
+
+    it('keeps the edit-product dialog open and displays an error when update fails', async () => {
+        mocks.updateProduct.mockRejectedValueOnce(new Error('HTTP 403: forbidden'));
+        renderCatalog();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open product edit' }));
+        const dialog = screen.getByRole('dialog');
+        fireEvent.change(within(dialog).getByRole('textbox', { name: 'Product name' }), {
+            target: { value: 'Edited product name' }
+        });
+        fireEvent.click(within(dialog).getByRole('button', { name: 'Save product edit' }));
+
+        await waitFor(() => expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'Failed to update the product!',
+            'error'
+        ));
+        expect(screen.getByRole('dialog')).toBeTruthy();
+        expect(within(dialog).getByRole('textbox', { name: 'Product name' })).toHaveValue('Edited product name');
+        expect(mocks.fetchProductsFunc).not.toHaveBeenCalled();
+        expect(mocks.showSnackbarMessage).not.toHaveBeenCalledWith(
+            'Product updated successfully!',
+            'success'
+        );
+    });
+
+    it('closes the edit-product dialog after update and warns when list refresh fails', async () => {
+        mocks.updateProduct.mockResolvedValueOnce({ success: true });
+        mocks.fetchProductsFunc.mockResolvedValueOnce(false);
+        renderCatalog();
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open product edit' }));
+        const dialog = screen.getByRole('dialog');
+        fireEvent.click(within(dialog).getByRole('button', { name: 'Save product edit' }));
+
+        await waitFor(() => expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'Product updated successfully!',
+            'success'
+        ));
+        expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'Product was updated, but the product list could not be refreshed.',
+            'warning'
+        );
+        await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    });
+
 });
