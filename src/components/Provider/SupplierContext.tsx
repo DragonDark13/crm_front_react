@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
 import {ISupplierFull, ISupplierType} from "../../utils/types";
 import {fetchGetAllSuppliers, updateSupplier} from "../../api/_supplier";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
@@ -27,7 +27,7 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage()
 
-    const fetchSuppliersFunc = async (): Promise<boolean> => {
+    const fetchSuppliersFunc = useCallback(async (): Promise<boolean> => {
         try {
             const data = await fetchGetAllSuppliers();
             if (Array.isArray(data)) {
@@ -39,7 +39,7 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
             console.error('Error fetching suppliers', error);
             return false;
         }
-    };
+    }, []);
 
     const handleToggleSupplierActive = async (
         supplierId: number,
@@ -71,8 +71,8 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     };
 
     useEffect(() => {
-        fetchSuppliersFunc();
-    }, []);
+        void fetchSuppliersFunc();
+    }, [fetchSuppliersFunc]);
 
 
     return (
