@@ -308,7 +308,7 @@ describe('ProductsCatalog CRUD integration', () => {
             'error'
         ));
         expect(screen.getByRole('dialog')).toBeTruthy();
-        expect(within(dialog).getByRole('textbox', { name: 'Product name' })).toHaveValue('Edited product name');
+        expect((within(dialog).getByRole('textbox', { name: 'Product name' }) as HTMLInputElement).value).toBe('Edited product name');
         expect(mocks.fetchProductsFunc).not.toHaveBeenCalled();
         expect(mocks.showSnackbarMessage).not.toHaveBeenCalledWith(
             'Product updated successfully!',
