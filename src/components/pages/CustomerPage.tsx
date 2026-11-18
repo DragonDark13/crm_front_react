@@ -10,6 +10,7 @@ import {ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} fro
 import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import {getApiErrorMessage} from "../../api/api";
+import {runCrudAction} from "../../utils/runCrudAction";
 import {useAuth} from "../context/AuthContext";
 import CustomerDetailsDialog from "../dialogs/CustomersDialogs/CustomerDetailsDialog/CustomerDetailsDialog";
 import EditCustomerDialog from "../dialogs/CustomersDialogs/EditCustomerDialog/EditCustomerDialog";
@@ -105,27 +106,23 @@ const CustomerPage: React.FC = () => {
     const [openEditCustomerDialog, setOpenEditCustomerDialog] = useState(false);
     const [customerToEdit, setCustomerToEdit] = useState<ICustomerDetails | null>(null);
 
-    const handleEditCustomer = (customerData: ICustomerDetails) => {
-        // Логіка для редагування клієнта
-        updateCustomerData(customerData).then(() => {
-            fetchGetAllCustomersFunc()
-            setOpenEditCustomerDialog(false);
-            showSnackbarMessage('Customer updated successfully!', 'success');
-        }).catch((error: unknown) => {
-
-            showSnackbarMessage(
-
-
-                'Error updating customer: ' + getApiErrorMessage(error),
-
-
-                'error'
-
-
-            );
-        })
-
-
+    const handleEditCustomer = async (customerData: ICustomerDetails) => {
+        await runCrudAction(
+            () => updateCustomerData(customerData),
+            fetchGetAllCustomersFunc,
+            {
+                onSuccess: () => {
+                    setOpenEditCustomerDialog(false);
+                    showSnackbarMessage('Customer updated successfully!', 'success');
+                },
+                onError: (error) => {
+                    showSnackbarMessage('Error updating customer: ' + getApiErrorMessage(error), 'error');
+                },
+                onRefreshError: () => {
+                    showSnackbarMessage('Customer was updated, but the customer list could not be refreshed.', 'warning');
+                }
+            }
+        );
     };
 
     const handleOpenEditModal = (customer: ICustomerDetails) => {
@@ -133,22 +130,16 @@ const CustomerPage: React.FC = () => {
         setOpenEditCustomerDialog(true);
     };
 
-    const handleDeleteCustomer = (customerId: number) => {
-        deleteCustomerData(customerId).then(() => {
-            fetchGetAllCustomersFunc()
-            showSnackbarMessage('Customer deleted successfully!', 'success');
-        }).catch((error: unknown) => {
-            showSnackbarMessage(
-
-                'Error deleting customer: ' + getApiErrorMessage(error),
-
-                'error'
-
-            );
-
-        })
-
-
+    const handleDeleteCustomer = async (customerId: number) => {
+        await runCrudAction(
+            () => deleteCustomerData(customerId),
+            fetchGetAllCustomersFunc,
+            {
+                onSuccess: () => showSnackbarMessage('Customer deleted successfully!', 'success'),
+                onError: (error) => showSnackbarMessage('Error deleting customer: ' + getApiErrorMessage(error), 'error'),
+                onRefreshError: () => showSnackbarMessage('Customer was deleted, but the customer list could not be refreshed.', 'warning')
+            }
+        );
     };
 
 
@@ -162,32 +153,19 @@ const CustomerPage: React.FC = () => {
         setCustomerIdToDelete(null);
     };
 
-    const handleDeleteConfirmed = () => {
+    const handleDeleteConfirmed = async () => {
         if (customerIdToDelete !== null) {
-            deleteCustomerData(customerIdToDelete)
-                .then(() => {
-                    fetchGetAllCustomersFunc();
-                    showSnackbarMessage('Клієнта успішно видалено!', 'success');
-                })
-                .catch((error: unknown) => {
-
-                    showSnackbarMessage(
-
-
-                        'Error deleting customer: ' + getApiErrorMessage(error),
-
-
-                        'error'
-
-
-                    );
-
-
-                })
-                .finally(() => {
-                    setOpenConfirmDialog(false);
-                    setCustomerIdToDelete(null);
-                });
+            await runCrudAction(
+                () => deleteCustomerData(customerIdToDelete),
+                fetchGetAllCustomersFunc,
+                {
+                    onSuccess: () => showSnackbarMessage('Клієнта успішно видалено!', 'success'),
+                    onError: (error) => showSnackbarMessage('Error deleting customer: ' + getApiErrorMessage(error), 'error'),
+                    onRefreshError: () => showSnackbarMessage('Клієнта видалено, але список не вдалося оновити.', 'warning')
+                }
+            );
+            setOpenConfirmDialog(false);
+            setCustomerIdToDelete(null);
         }
     };
 
