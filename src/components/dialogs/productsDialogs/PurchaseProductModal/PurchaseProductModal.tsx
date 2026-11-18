@@ -5,7 +5,7 @@ import {
     DialogContent, Grid, Typography,
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
-import React, {useState, useEffect} from "react";
+import React, {useCallback, useState, useEffect} from "react";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
 import QuantityField from "../../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../../utils/function";
@@ -44,7 +44,7 @@ const PurchaseProductModal = ({
     const {suppliers} = useSuppliers()
 
     // Функція валідації полів
-    const validateFields = () => {
+    const validateFields = useCallback(() => {
         const newErrors = {
             quantity: purchaseDetails.quantity <= 0 ? 'Quantity must be greater than 0' : '',
             price_per_item: purchaseDetails.purchase_price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
@@ -56,7 +56,7 @@ const PurchaseProductModal = ({
 
         // Перевірка, чи всі поля валідні (без помилок)
         return Object.values(newErrors).every(error => error === '');
-    };
+    }, [purchaseDetails.quantity, purchaseDetails.purchase_price_per_item, purchaseDetails.purchase_total_price, purchaseDetails.supplier_id, purchaseDetails.purchase_date]);
 
     // Обробник сабміту з валідацією
     const handleSubmit = () => {
@@ -67,10 +67,20 @@ const PurchaseProductModal = ({
 
     // Автоматичний розрахунок total_price
     useEffect(() => {
-        validateFields()
+        validateFields();
         const totalPrice = purchaseDetails.quantity * purchaseDetails.purchase_price_per_item;
-        setPurchaseDetails({...purchaseDetails, purchase_total_price: roundToDecimalPlaces(totalPrice, 2)});
-    }, [purchaseDetails.quantity, purchaseDetails.purchase_price_per_item]);
+        const roundedTotalPrice = roundToDecimalPlaces(totalPrice, 2);
+
+        if (purchaseDetails.purchase_total_price !== roundedTotalPrice) {
+            setPurchaseDetails({...purchaseDetails, purchase_total_price: roundedTotalPrice});
+        }
+    }, [
+        purchaseDetails.quantity,
+        purchaseDetails.purchase_price_per_item,
+        purchaseDetails.purchase_total_price,
+        validateFields,
+        setPurchaseDetails
+    ]);
 
     const incrementQuantity = () => {
         if (purchaseDetails.quantity < 1000) {
