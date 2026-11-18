@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
     addSupplier: vi.fn(),
     updateSupplier: vi.fn(),
     deleteSupplier: vi.fn(),
+    deletePackagingSupplier: vi.fn(),
     fetchGetSupplierPurchaseHistory: vi.fn(),
     fetchGetPackagingSupplierPurchaseHistory: vi.fn(),
     canDeleteSupplier: vi.fn()
@@ -30,7 +31,7 @@ vi.mock('../src/api/_supplier', () => ({
     updateSupplier: mocks.updateSupplier
 }));
 vi.mock('../src/api/_packagingMaterials', () => ({
-    deletePackagingSupplier: vi.fn(),
+    deletePackagingSupplier: mocks.deletePackagingSupplier,
     fetchGetPackagingSupplierPurchaseHistory: mocks.fetchGetPackagingSupplierPurchaseHistory,
     updatePackagingSupplier: vi.fn()
 }));
@@ -47,8 +48,8 @@ vi.mock('../src/components/pages/PurchasesPage/PurchasesTableTypeProductCell', (
     default: ({ type }: { type: string }) => <span>{type}</span>
 }));
 vi.mock('../src/components/pages/SupplierPage/SupplierPurchaseHistoryTable', () => ({
-    default: ({ purchaseHistory }: { purchaseHistory: unknown[] }) => (
-        <div data-testid="supplier-purchase-history">Records: {purchaseHistory.length}</div>
+    default: ({ type, supplierId, purchaseHistory }: { type?: string; supplierId?: number; purchaseHistory: Array<{ product?: string; material?: string }> }) => (
+        <div data-testid="supplier-purchase-history">{type}:{supplierId}:{purchaseHistory.map(item => item.product || item.material || '').join(',')}</div>
     )
 }));
 
@@ -63,9 +64,9 @@ const supplier = {
     type: 'product' as const
 };
 
-const renderSupplierPage = (isAuthenticated = true) => {
+const renderSupplierPage = (isAuthenticated = true, supplierList = [supplier]) => {
     vi.mocked(useSuppliers).mockReturnValue({
-        suppliers: [supplier],
+        suppliers: supplierList,
         fetchSuppliersFunc: mocks.fetchSuppliersFunc,
         handleToggleSupplierActive: mocks.handleToggleSupplierActive
     } as unknown as ReturnType<typeof useSuppliers>);
@@ -85,6 +86,7 @@ describe('SupplierPage integration', () => {
         mocks.addSupplier.mockReset();
         mocks.updateSupplier.mockReset();
         mocks.deleteSupplier.mockReset();
+        mocks.deletePackagingSupplier.mockReset();
         mocks.fetchGetSupplierPurchaseHistory.mockReset().mockResolvedValue({
             purchase_history: [{ product: 'Test product', quantity_purchase: 2 }],
             products: []
@@ -233,7 +235,7 @@ describe('SupplierPage integration', () => {
         fireEvent.click(within(supplierRow).getAllByRole('button')[1]);
 
         await waitFor(() => expect(mocks.fetchGetSupplierPurchaseHistory).toHaveBeenCalledWith(12));
-        expect((await screen.findByTestId('supplier-purchase-history')).textContent).toContain('Records: 1');
+        expect((await screen.findByTestId('supplier-purchase-history')).textContent).toContain('product:12:Test product');
     });
 
     it('delegates supplier activation to the provider with the selected supplier type', () => {
@@ -244,4 +246,105 @@ describe('SupplierPage integration', () => {
 
         expect(mocks.handleToggleSupplierActive).toHaveBeenCalledWith(12, supplier, 'product');
     });
+    it('distinguishes product and packaging suppliers with the same ID', async () => {
+        const packagingSupplier = {...supplier, type: 'packaging' as const, name: 'Packaging supplier'};
+        renderSupplierPage(true, [supplier, packagingSupplier]);
+
+        const productRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(productRow).getAllByRole('button')[1]);
+        expect(await screen.findByText('product:12:Test product')).toBeTruthy();
+
+        const packagingRow = screen.getByText(packagingSupplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(packagingRow).getAllByRole('button')[1]);
+        expect(await screen.findByText('packaging:12:Packaging history')).toBeTruthy();
+        expect(mocks.fetchGetPackagingSupplierPurchaseHistory).toHaveBeenCalledWith(12);
+    });
+
+    it('ignores an older supplier history response after a newer request completes', async () => {
+        let resolveOlder!: (value: {purchase_history: Array<{product: string}>; products: never[]}) => void;
+        let resolveNewer!: (value: {purchase_history: Array<{product: string}>; products: never[]}) => void;
+        const olderRequest = new Promise<{purchase_history: Array<{product: string}>; products: never[]}>(resolve => {
+            resolveOlder = resolve;
+        });
+        const newerRequest = new Promise<{purchase_history: Array<{product: string}>; products: never[]}>(resolve => {
+            resolveNewer = resolve;
+        });
+        mocks.fetchGetSupplierPurchaseHistory
+            .mockReturnValueOnce(olderRequest)
+            .mockReturnValueOnce(newerRequest);
+        const secondSupplier = {...supplier, id: 14, name: 'Second supplier'};
+        renderSupplierPage(true, [supplier, secondSupplier]);
+
+        const firstRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const secondRow = screen.getByText(secondSupplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(firstRow).getAllByRole('button')[1]);
+        fireEvent.click(within(secondRow).getAllByRole('button')[1]);
+
+        resolveNewer({purchase_history: [{product: 'Newest history'}], products: []});
+        expect(await screen.findByText('product:14:Newest history')).toBeTruthy();
+        resolveOlder({purchase_history: [{product: 'Stale history'}], products: []});
+
+        await waitFor(() => expect(screen.getByText('product:14:Newest history')).toBeTruthy());
+        expect(screen.queryByText(/Stale history/)).toBeNull();
+    });
+
+    it('shows history loading and error states when the history request fails', async () => {
+        let rejectRequest!: (error: Error) => void;
+        const pendingRequest = new Promise<never>((_, reject) => {
+            rejectRequest = reject;
+        });
+        mocks.fetchGetSupplierPurchaseHistory.mockReturnValueOnce(pendingRequest);
+        renderSupplierPage();
+
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[1]);
+        expect(screen.getByText('Завантаження історії постачальника...')).toBeTruthy();
+
+        rejectRequest(new Error('History request failed'));
+        expect(await screen.findByText('Не вдалося завантажити історію постачальника.')).toBeTruthy();
+        expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'Не вдалося завантажити історію постачальника.',
+            'error'
+        );
+    });
+
+    it('clamps the current pagination page when the supplier list shrinks', async () => {
+        const suppliers = Array.from({length: 11}, (_, index) => ({
+            ...supplier,
+            id: index + 1,
+            name: `Supplier ${index + 1}`
+        }));
+        const {rerender} = renderSupplierPage(true, suppliers);
+
+        fireEvent.click(screen.getByLabelText('Go to next page'));
+        expect(screen.getByLabelText('Go to previous page').hasAttribute('disabled')).toBe(false);
+
+        vi.mocked(useSuppliers).mockReturnValue({
+            suppliers: suppliers.slice(0, 10),
+            fetchSuppliersFunc: mocks.fetchSuppliersFunc,
+            handleToggleSupplierActive: mocks.handleToggleSupplierActive
+        } as unknown as ReturnType<typeof useSuppliers>);
+        rerender(<SupplierPage />);
+
+        await waitFor(() => {
+            expect(screen.getByLabelText('Go to previous page').hasAttribute('disabled')).toBe(true);
+        });
+    });
+
+    it('deletes a packaging supplier through the packaging delete API', async () => {
+        const packagingSupplier = {...supplier, type: 'packaging' as const};
+        mocks.deletePackagingSupplier.mockResolvedValueOnce(undefined);
+        renderSupplierPage(true, [packagingSupplier]);
+
+        const supplierRow = screen.getByText(packagingSupplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
+        await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledWith(12, 'packaging'));
+
+        const dialog = screen.getByRole('dialog');
+        fireEvent.click(within(dialog).getByRole('button', {name: 'Видалити'}));
+
+        await waitFor(() => expect(mocks.deletePackagingSupplier).toHaveBeenCalledWith(12));
+        expect(mocks.deleteSupplier).not.toHaveBeenCalled();
+    });
+
 });
