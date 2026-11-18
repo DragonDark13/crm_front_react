@@ -158,7 +158,8 @@ describe('SupplierPage integration', () => {
         mocks.updateSupplier.mockRejectedValueOnce(new Error('HTTP 500: update failed'));
         renderSupplierPage();
 
-        fireEvent.click(screen.getByTitle('Редагувати'));
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[0]);
         const dialog = screen.getByRole('dialog');
         fireEvent.change(within(dialog).getByRole('textbox', { name: 'Назва постачальника' }), {
             target: { value: 'ТОВ Оновлений постачальник' }
@@ -190,7 +191,8 @@ describe('SupplierPage integration', () => {
         mocks.deleteSupplier.mockResolvedValueOnce(undefined);
         renderSupplierPage();
 
-        fireEvent.click(screen.getByTitle('Видалити постачальника'));
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledOnce());
         const dialog = screen.getByRole('dialog');
         fireEvent.click(within(dialog).getByRole('button', { name: 'Видалити' }));
@@ -205,7 +207,8 @@ describe('SupplierPage integration', () => {
         mocks.deleteSupplier.mockRejectedValueOnce(new Error('HTTP 403: forbidden'));
         renderSupplierPage();
 
-        fireEvent.click(screen.getByTitle('Видалити постачальника'));
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledOnce());
         const dialog = screen.getByRole('dialog');
         fireEvent.click(within(dialog).getByRole('button', { name: 'Видалити' }));
