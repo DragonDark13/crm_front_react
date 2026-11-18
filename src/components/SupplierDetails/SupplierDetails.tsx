@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {fetchGetSupplierProducts, fetchGetSupplierPurchaseHistory} from "../../api/_supplier";
+import {fetchGetSupplierPurchaseHistory} from "../../api/_supplier";
 import {IProduct, IProductSupplierPurchaseHistoryRecord} from "../../utils/types";
 
 interface SupplierDetailsProps {
@@ -11,16 +11,20 @@ const SupplierDetails: React.FC<SupplierDetailsProps> = ({supplierId}) => {
     const [products, setProducts] = useState<IProduct[]>([]);
 
     useEffect(() => {
-        // Отримуємо історію закупівель постачальника
+        let isActive = true;
+
+        // Отримуємо історію закупівель і список продуктів одним запитом.
         fetchGetSupplierPurchaseHistory(supplierId)
             .then(data => {
+                if (!isActive) return;
+
                 setPurchaseHistory(data.purchase_history);
                 setProducts(data.products);
             });
 
-        // Отримуємо список продуктів постачальника
-        fetchGetSupplierProducts(supplierId)
-            .then(data => setProducts(data));
+        return () => {
+            isActive = false;
+        };
     }, [supplierId]);
 
     return (
