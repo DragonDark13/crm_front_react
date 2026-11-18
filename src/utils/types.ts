@@ -165,7 +165,7 @@ export type ISupplierPurchaseHistoryRecord =
     | IPackagingSupplierPurchaseHistoryRecord;
 
 export interface ISupplierPurchaseHistoryResponse {
-    purchase_history: ISupplierPurchaseHistoryRecord[];
+    purchase_history: IProductSupplierPurchaseHistoryRecord[];
     products: IProduct[];
 }
 
