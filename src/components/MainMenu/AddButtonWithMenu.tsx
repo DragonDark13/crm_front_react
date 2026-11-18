@@ -16,7 +16,7 @@ import {useCategories} from "../Provider/CategoryContext";
 import {useSuppliers} from "../Provider/SupplierContext";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
-import axios, {AxiosError} from "axios";
+import {AxiosError} from "axios";
 import {useCustomers} from "../Provider/CustomerContext";
 import {useAuth} from "../context/AuthContext";
 import AddNewPackagingModal from "../dialogs/packagingModal/AddNewPackagingModal/AddNewPackagingModal";
