@@ -234,9 +234,11 @@ function App() {
     }, [products]);
 
     const handleLogout = async () => {
-
-        await logout();
-
+        try {
+            await logout();
+        } catch (error) {
+            console.error('Logout request failed', error);
+        }
     };
 
 
