@@ -37,22 +37,23 @@ import {useTheme} from "@mui/material/styles";
 import AddButton from "../../Buttons/AddButton";
 import RenderHeaderCell from "../../_elements/RenderHeaderCell";
 
-interface ICurrentSupplier {
-    name: string;
-    contact_info: string;
-    email: string;
-    phone_number: string;
-    address?: string;
-    id: number | null
-}
+type ICurrentSupplier = Omit<ISupplierFull, 'id'> & {id: number};
 
-interface ISupplierPurchaseHistoryRecord {
-    product: string;
-    purchase_date: string;               // ISO string або Date — залежно від використання
-    purchase_price_per_item: string;    // або number, якщо ти далі опрацьовуєш числа
-    purchase_total_price: string;       // те саме
-    quantity_purchase: number;
-}
+type ISupplierPurchaseHistoryRecord =
+    | {
+        product: string;
+        purchase_date: string;
+        purchase_price_per_item: number;
+        purchase_total_price: number;
+        quantity_purchase: number;
+    }
+    | {
+        material: string;
+        purchase_date: string;
+        purchase_price_per_unit: number;
+        purchase_total_price: number;
+        quantity_purchased: number;
+    };
 
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -76,7 +77,9 @@ const SupplierPage: React.FC = () => {
         email: "",
         name: "",
         phone_number: "",
-        id: null
+        id: 0,
+        is_active: true,
+        type: 'product'
     });
     const [openHistory, setOpenHistory] = useState<number | null>(null);
     const [currentType, setCurrentType] = useState<ISupplierType>('product');
@@ -139,7 +142,7 @@ const SupplierPage: React.FC = () => {
         if (!currentSupplier) return;
 
         try {
-            if (currentSupplier.id !== null)
+            if (currentSupplier.id > 0)
 
                 if (type === 'product') {
                     await updateSupplier(currentSupplier.id, supplier)
