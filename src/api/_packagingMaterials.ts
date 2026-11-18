@@ -22,7 +22,7 @@ export const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId: number
 export const deletePackagingSupplier = (supplierPackagingId: number): Promise<void> => {
     return axiosInstance
         .delete(API_ENDPOINTS.DELETE_PACKAGING_SUPPLIER(supplierPackagingId))
-        .then(() => console.log(`Supplier with ID ${supplierPackagingId} deleted successfully.`))
+        .then(() => undefined)
         .catch(handleError);
 };
 
