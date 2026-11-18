@@ -138,7 +138,8 @@ describe('SupplierPage integration', () => {
         mocks.updateSupplier.mockResolvedValueOnce({ status: 200 });
         renderSupplierPage();
 
-        fireEvent.click(screen.getByTitle('Редагувати'));
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[0]);
         const dialog = screen.getByRole('dialog');
         fireEvent.change(within(dialog).getByRole('textbox', { name: 'Назва постачальника' }), {
             target: { value: 'ТОВ Оновлений постачальник' }
@@ -177,7 +178,8 @@ describe('SupplierPage integration', () => {
         });
         renderSupplierPage();
 
-        fireEvent.click(screen.getByTitle('Видалити постачальника'));
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
 
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledWith(12, 'product'));
         expect(screen.queryByText('Підтвердження видалення')).toBeNull();
@@ -220,7 +222,8 @@ describe('SupplierPage integration', () => {
     it('loads and renders the supplier purchase history', async () => {
         renderSupplierPage();
 
-        fireEvent.click(screen.getByTitle('Історія постачальника'));
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[1]);
 
         await waitFor(() => expect(mocks.fetchGetSupplierPurchaseHistory).toHaveBeenCalledWith(12));
         expect((await screen.findByTestId('supplier-purchase-history')).textContent).toContain('Records: 1');
@@ -229,7 +232,8 @@ describe('SupplierPage integration', () => {
     it('delegates supplier activation to the provider with the selected supplier type', () => {
         renderSupplierPage();
 
-        fireEvent.click(screen.getByTitle('Відключити постачальника'));
+        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        fireEvent.click(within(supplierRow).getAllByRole('button')[2]);
 
         expect(mocks.handleToggleSupplierActive).toHaveBeenCalledWith(12, supplier, 'product');
     });
