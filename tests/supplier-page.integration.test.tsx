@@ -91,7 +91,9 @@ describe('SupplierPage integration', () => {
             purchase_history: [{ product: 'Test product', quantity_purchase: 2 }],
             products: []
         });
-        mocks.fetchGetPackagingSupplierPurchaseHistory.mockReset();
+        mocks.fetchGetPackagingSupplierPurchaseHistory.mockReset().mockResolvedValue({
+            purchase_history: [{ material: 'Packaging history' }]
+        });
         mocks.canDeleteSupplier.mockReset().mockResolvedValue({ canDelete: true });
     });
 
@@ -316,8 +318,8 @@ describe('SupplierPage integration', () => {
         }));
         const {rerender} = renderSupplierPage(true, suppliers);
 
-        fireEvent.click(screen.getByLabelText('Go to next page'));
-        expect(screen.getByLabelText('Go to previous page').hasAttribute('disabled')).toBe(false);
+        fireEvent.click(screen.getAllByLabelText('Go to next page')[0]);
+        expect(screen.getAllByLabelText('Go to previous page')[0].hasAttribute('disabled')).toBe(false);
 
         vi.mocked(useSuppliers).mockReturnValue({
             suppliers: suppliers.slice(0, 10),
@@ -327,7 +329,7 @@ describe('SupplierPage integration', () => {
         rerender(<SupplierPage />);
 
         await waitFor(() => {
-            expect(screen.getByLabelText('Go to previous page').hasAttribute('disabled')).toBe(true);
+            expect(screen.getAllByLabelText('Go to previous page').every(button => button.hasAttribute('disabled'))).toBe(true);
         });
     });
 
