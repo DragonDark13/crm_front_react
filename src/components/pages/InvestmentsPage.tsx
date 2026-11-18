@@ -23,7 +23,6 @@ import {INewInvestment, Investment} from "../../utils/types";
 import RenderHeaderCell from "../_elements/RenderHeaderCell";
 import ConfirmDeleteGiftDialog from "./GiftSetsPage/ConfirmDeleteGiftDialog";
 import AddButton from "../Buttons/AddButton";
-import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import {useInvestments} from "../Provider/InvestmentsContext";
 
 
