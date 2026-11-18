@@ -9,6 +9,7 @@ on:
   pull_request:
     branches:
       - main
+      - fix/frontend-audit-issues-2026-11
 
 permissions:
   contents: read
