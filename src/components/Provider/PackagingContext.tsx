@@ -1,5 +1,5 @@
 // PackagingContext.js
-import {createContext, useContext, useEffect, useState} from 'react';
+import {createContext, useContext, useEffect, useState, useCallback} from 'react';
 import {IMaterial} from "../../utils/types";
 import {fetchListPackagingMaterials} from "../../api/_packagingMaterials";
 import { PropsWithChildren } from 'react';
@@ -7,7 +7,7 @@ import { PropsWithChildren } from 'react';
 
 interface IPackagingContextProps {
     packagingMaterials: IMaterial[];
-    fetchPackagingOptions: () => void;
+    fetchPackagingOptions: () => Promise<void>;
 
     loading: boolean;
     error: string | null;
@@ -34,7 +34,7 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | string>(null);
 
-    const fetchPackagingOptions = async () => {
+    const fetchPackagingOptions = useCallback(async (): Promise<void> => {
         setLoading(true);
         setError(null);
         try {
@@ -45,11 +45,11 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        fetchPackagingOptions();
-    }, []);
+        void fetchPackagingOptions();
+    }, [fetchPackagingOptions]);
 
 
     // TODO addPackaging
