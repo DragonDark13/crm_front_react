@@ -16,7 +16,7 @@ interface InvestmentsContextType {
     setNewInvestment: React.Dispatch<React.SetStateAction<INewInvestment>>;
     addInvestDialogOpen: boolean;
     setAddInvestDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchInvestments: () => Promise<boolean>;
+    fetchInvestments: (notifyError?: boolean) => Promise<boolean>;
     handleAddInvestment: () => Promise<void>;
     handleDeleteInvestment: (id: number) => Promise<void>;
     handleDeleteAllOtherInvestment: (handleClose: () => void) => Promise<void>;
@@ -36,13 +36,15 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const [addInvestDialogOpen, setAddInvestDialogOpen] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage();
 
-    const fetchInvestments = useCallback(async (): Promise<boolean> => {
+    const fetchInvestments = useCallback(async (notifyError = true): Promise<boolean> => {
         try {
             const data = await getAllInvestments();
             setInvestments(data);
             return true;
         } catch (error) {
-            showSnackbarMessage("Помилка завантаження інвестицій", "error");
+            if (notifyError) {
+                showSnackbarMessage("Помилка завантаження інвестицій", "error");
+            }
             return false;
         }
     }, [showSnackbarMessage]);
@@ -59,7 +61,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const handleAddInvestment = useCallback(async () => {
         try {
             await createInvestment(newInvestment);
-            const refreshed = await fetchInvestments();
+            const refreshed = await fetchInvestments(false);
             setAddInvestDialogOpen(false);
             resetNewInvestmentDialog();
             showSnackbarMessage("Інвестицію додано", "success");
@@ -74,7 +76,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const handleDeleteInvestment = useCallback(async (id: number) => {
         try {
             await deleteInvestmentById(id);
-            const refreshed = await fetchInvestments();
+            const refreshed = await fetchInvestments(false);
             showSnackbarMessage("Інвестицію видалено", "success");
             if (!refreshed) {
                 showSnackbarMessage("Запис видалено, але список не вдалося оновити.", "warning");
@@ -92,7 +94,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const handleDeleteAllOtherInvestment = useCallback(async (handleClose: () => void) => {
         try {
             await deleteAllInvestments();
-            const refreshed = await fetchInvestments();
+            const refreshed = await fetchInvestments(false);
             showSnackbarMessage('Всі записи успішно видалені', 'success');
             if (!refreshed) {
                 showSnackbarMessage('Записи видалено, але список не вдалося оновити.', 'warning');
