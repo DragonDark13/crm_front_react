@@ -34,7 +34,7 @@ const Login: React.FC = () => {
             if (isLocalStorageAvailable()) {
                 localStorage.setItem('token', token); // Зберігаємо токен
             }
-            login(token); // Встановлюємо токен в контекст
+            await login(token); // Перевіряємо токен на сервері та завантажуємо ролі
             showSnackbarMessage('Ви ввійшли в систему', 'success')
             navigate('/crm_front_react/'); // Перенаправляємо на захищену сторінку після логіну
         } catch (error) {
