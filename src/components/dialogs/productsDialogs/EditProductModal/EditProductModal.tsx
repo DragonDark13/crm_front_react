@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {
     DialogContent,
     Button,
@@ -69,7 +69,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                 handleFieldChange('purchase_total_price', roundedPrice);
             }
         }
-    }, [editProduct.available_quantity, editProduct.purchase_price_per_item]);
+    }, [editProduct.available_quantity, editProduct.purchase_price_per_item, handleFieldChange]);
 
 
     // Валідація полів
@@ -122,11 +122,12 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     const [originalProduct, setOriginalProduct] = useState<IEditProduct>(editProduct);
 
     useEffect(() => {
+        if (!openEdit) return;
 
         setOriginalProduct(editProduct);
         setIsModified(false); // Reset modified state when opening modal
 
-    }, []);
+    }, [openEdit, editProduct.id]);
 
     const compareCategories = (originalCategories: number[], updatedCategories: number[]) => {
         const differences: number[] = [];
@@ -198,7 +199,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     };
 
 
-    const handleFieldChange = (field: keyof IEditProduct, value: any) => {
+    const handleFieldChange = useCallback((field: keyof IEditProduct, value: any) => {
         setEditProduct((prevEd) => {
             // Якщо prevEd = null, повертаємо початковий стан
             if (!prevEd) return prevEd;
@@ -216,7 +217,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
             // Повертаємо оновлений продукт
             return updatedProduct;
         });
-    };
+    }, [originalProduct]);
 
 
     const handleSave = () => {
