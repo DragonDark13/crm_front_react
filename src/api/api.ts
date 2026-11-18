@@ -18,7 +18,7 @@ export const axiosInstance = axios.create({
 
 // Інтерсептор для автоматичного додавання JWT до запитів
 axiosInstance.interceptors.request.use(config => {
-    const isLoginRequest = config.url?.replace(/\\/+$/, '').endsWith('/login');
+    const isLoginRequest = config.url?.split('?')[0].endsWith('/login');
 
     if (isLoginRequest) {
         // Авторизація має залишатися доступною без попереднього токена.
