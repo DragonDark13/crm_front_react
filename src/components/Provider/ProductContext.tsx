@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo, useRef} from 'react';
 import {IProduct} from "../../utils/types";
 import {fetchProducts} from "../../api/_product";
 
@@ -19,29 +19,54 @@ export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsW
     isLoading: true,
     error: null,
   });
+  const requestIdRef = useRef(0);
+  const isMountedRef = useRef(false);
 
-  const fetchProductsFunc = async (): Promise<boolean> => {
+  const fetchProductsFunc = useCallback(async (): Promise<boolean> => {
+    const requestId = ++requestIdRef.current;
+
     try {
       setLoadingState({ isLoading: true, error: null });
       const data = await fetchProducts();
+
+      if (!isMountedRef.current || requestId !== requestIdRef.current) {
+        return false;
+      }
+
       if (Array.isArray(data)) {
         setProducts(data);
         setLoadingState({ isLoading: false, error: null });
         return true;
       }
+
       throw new Error('Fetched data is not an array');
     } catch (error) {
+      if (!isMountedRef.current || requestId !== requestIdRef.current) {
+        return false;
+      }
+
       setLoadingState({ isLoading: false, error: 'There was an error fetching the products!' });
       return false;
     }
-  };
-
-  useEffect(() => {
-    fetchProductsFunc();
   }, []);
 
+  useEffect(() => {
+    isMountedRef.current = true;
+    void fetchProductsFunc();
+
+    return () => {
+      isMountedRef.current = false;
+      requestIdRef.current += 1;
+    };
+  }, [fetchProductsFunc]);
+
+  const contextValue = useMemo(
+    () => ({ products, fetchProductsFunc, loadingState }),
+    [products, fetchProductsFunc, loadingState]
+  );
+
   return (
-    <ProductContext.Provider value={{ products, fetchProductsFunc, loadingState }}>
+    <ProductContext.Provider value={contextValue}>
       {children}
     </ProductContext.Provider>
   );
