@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {
     Button,
     Box,
@@ -48,7 +48,10 @@ function App() {
 
     const {isAuthenticated, logout} = useAuth();
     const {showSnackbarMessage} = useSnackbarMessage()
-    const [lowQuantityProducts, setLowQuantityProducts] = useState<IProduct[]>([]);
+    const lowQuantityProducts = useMemo(
+        () => products.filter(product => product.available_quantity < 5),
+        [products]
+    );
     const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
         Object.fromEntries(modalNames.map(modal => [modal, false])) as Record<ModalNames, boolean>
     );
@@ -232,10 +235,8 @@ function App() {
 
 
     useEffect(() => {
-        const lowQuantity = products.filter(product => product.available_quantity < 5);
-        setLowQuantityProducts(lowQuantity);
-        lowQuantity.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
-    }, [products, handleModalOpen, handleModalClose]);
+        lowQuantityProducts.length > 0 ? handleModalOpen("snackbarNotifyOpen") : handleModalClose("snackbarNotifyOpen")
+    }, [lowQuantityProducts, handleModalOpen, handleModalClose]);
 
     const handleLogout = async () => {
 
