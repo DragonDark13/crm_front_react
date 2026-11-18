@@ -22,7 +22,7 @@ interface SupplierContextProps {
 const SupplierContext = createContext<SupplierContextProps | undefined>(undefined);
 
 // Створення Провайдера
-export const SupplierProvider: React.FC = ({children}:PropsWithChildren) => {
+export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage()
 
