@@ -161,13 +161,6 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
     // });
 
 
-    // Load products and suppliers
-    useEffect(() => {
-        fetchSuppliersFromContext();
-        fetchCategoriesFromContext();
-        fetchProductsFunc();
-    }, []);
-
     useEffect(() => {
         if (products.length > 0) {
             setFilteredProducts(products)
