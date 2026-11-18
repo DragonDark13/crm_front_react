@@ -103,7 +103,7 @@ describe('CustomerPage CRUD integration', () => {
 
         fireEvent.click(screen.getByRole('button', { name: 'Додати нового Кліента' }));
         const dialog = screen.getByRole('dialog');
-        fireEvent.change(within(dialog).getByLabelText("Ім'я"), { target: { value: 'Новий клієнт' } });
+        fireEvent.change(within(dialog).getAllByRole('textbox')[0], { target: { value: 'Новий клієнт' } });
         fireEvent.click(within(dialog).getByRole('button', { name: 'Створити' }));
 
         await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
@@ -134,7 +134,8 @@ describe('CustomerPage CRUD integration', () => {
         mocks.fetchGetAllCustomersFunc.mockResolvedValueOnce(false);
         renderCustomerPage();
 
-        fireEvent.click(screen.getByTitle('Редагувати'));
+        const customerRow = screen.getByText(customer.name).closest('tr');
+        fireEvent.click(within(customerRow as HTMLElement).getAllByRole('button')[1]);
         const dialog = screen.getByRole('dialog');
         fireEvent.click(within(dialog).getByRole('button', { name: 'Зберегти' }));
 
