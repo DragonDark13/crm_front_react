@@ -193,7 +193,7 @@ const SalesHistoryTable: React.FC = () => {
         setPage(0);
     };
 
-    const getSaleIcon = (type) => {
+    const getSaleIcon = (type: string) => {
         switch (type) {
             case "product":
                 return (
