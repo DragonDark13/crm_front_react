@@ -1,4 +1,4 @@
-import axios, {AxiosError, AxiosHeaders, AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosHeaders} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
@@ -92,7 +92,7 @@ export const API_ENDPOINTS = {
 };
 
 // Уніфікована обробка помилок
-export const handleError = (error: AxiosError<unknown, any>): never => {
+export const handleError = (error: AxiosError<{error?: string}>): never => {
     const errorMessage = error.message || 'Unknown error';
     throw new Error(errorMessage);
 };
@@ -103,11 +103,11 @@ export const fetchResource = <T>(endpoint: string): Promise<T> => {
 };
 
 // Загальна функція для POST-запитів
-export const postResource = <T>(endpoint: string, data: any): Promise<T> => {
+export const postResource = <T>(endpoint: string, data: unknown): Promise<T> => {
     return axiosInstance.post(endpoint, data).then(response => response.data).catch(handleError);
 };
 
-export const putResource = <T>(endpoint: string, data: any): Promise<T> => {
+export const putResource = <T>(endpoint: string, data: unknown): Promise<T> => {
     return axiosInstance.put(endpoint, data).then(response => response.data).catch(handleError);
 };
 
