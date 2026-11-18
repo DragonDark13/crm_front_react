@@ -23,6 +23,8 @@ export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsW
   const isMountedRef = useRef(false);
 
   const fetchProductsFunc = useCallback(async (): Promise<boolean> => {
+    if (!isMountedRef.current) return false;
+
     const requestId = ++requestIdRef.current;
 
     try {
@@ -40,7 +42,7 @@ export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsW
       }
 
       throw new Error('Fetched data is not an array');
-    } catch (error) {
+    } catch (_error) {
       if (!isMountedRef.current || requestId !== requestIdRef.current) {
         return false;
       }
