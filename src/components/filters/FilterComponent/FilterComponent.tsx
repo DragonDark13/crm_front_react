@@ -116,7 +116,7 @@ const FilterComponent = ({
 // Використовуємо useEffect, щоб автоматично застосовувати фільтри при зміні стейту
     useEffect(() => {
         applyFilters();
-    }, [filters]);
+    }, [filters, products, setFilteredProducts]);
 
 // Логіка для визначення, чи змінені фільтри
     const isFiltersChanged = JSON.stringify(filters) !== JSON.stringify(initialFilters);
