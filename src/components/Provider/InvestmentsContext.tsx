@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, useEffect, ReactNode} from "react";
+import React, {createContext, useContext, useState, useEffect, ReactNode, useCallback} from "react";
 import {axiosInstance} from "../../api/api";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {INewInvestment, Investment} from "../../utils/types";
@@ -37,14 +37,14 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const [addInvestDialogOpen, setAddInvestDialogOpen] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage();
 
-    const fetchInvestments = async () => {
+    const fetchInvestments = useCallback(async () => {
         try {
             const data = await getAllInvestments();
             setInvestments(data);
         } catch (error) {
             showSnackbarMessage("Помилка завантаження інвестицій", "error");
         }
-    };
+    }, [showSnackbarMessage]);
 
     const resetNewInvestmentDialog = () => {
         setNewInvestment({
@@ -97,8 +97,8 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     };
 
     useEffect(() => {
-        fetchInvestments();
-    }, []);
+        void fetchInvestments();
+    }, [fetchInvestments]);
 
     return (
         <InvestmentsContext.Provider value={{
