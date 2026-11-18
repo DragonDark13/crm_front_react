@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
 import {fetchGiftSets, removeGiftSet, createGiftBox, updateGiftSet, sellGiftSet} from '../../api/_giftBox.ts'; // Import
 // your API
 // functions
@@ -24,14 +24,14 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
     const {showSnackbarMessage} = useSnackbarMessage();
 
 
-    const fetchGiftSetsData = () => {
+    const fetchGiftSetsData = useCallback(() => {
         fetchGiftSets()
             .then(setGiftSets)
             .catch((error) => {
                 console.error("Error fetching gift sets:", error);
                 showSnackbarMessage('Помилка отримання наборів', 'error');
             });
-    };
+    }, [showSnackbarMessage]);
 
     const deleteGiftSet = (giftSetId: number) => {
         removeGiftSet(giftSetId)
