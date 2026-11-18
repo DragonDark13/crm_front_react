@@ -144,6 +144,37 @@ export interface ICustomer {
     phone_number?: string;   // Номер телефону, може бути відсутній
 }
 
+export interface IProductSupplierPurchaseHistoryRecord {
+    product: string;
+    purchase_date: string;
+    purchase_price_per_item: number;
+    purchase_total_price: number;
+    quantity_purchase: number;
+}
+
+export interface IPackagingSupplierPurchaseHistoryRecord {
+    material: string;
+    purchase_date: string;
+    purchase_price_per_unit: number;
+    purchase_total_price: number;
+    quantity_purchased: number;
+}
+
+export type ISupplierPurchaseHistoryRecord =
+    | IProductSupplierPurchaseHistoryRecord
+    | IPackagingSupplierPurchaseHistoryRecord;
+
+export interface ISupplierPurchaseHistoryResponse {
+    purchase_history: ISupplierPurchaseHistoryRecord[];
+    products: IProduct[];
+}
+
+export interface IPackagingSupplierPurchaseHistoryResponse {
+    supplier: ISupplierFull;
+    purchase_history: IPackagingSupplierPurchaseHistoryRecord[];
+    materials: IMaterial[];
+}
+
 export interface ISupplierFull {
     id: number;              // Унікальний ідентифікатор постачальника
     name: string;            // Ім'я постачальника, унікальне,
