@@ -1,5 +1,5 @@
 // Операції з постачальниками
-import {INewSupplier, IProduct, ISupplierFull} from "../utils/types";
+import {INewSupplier, IProduct, ISupplierFull, ISupplierPurchaseHistoryResponse} from "../utils/types";
 import {API_ENDPOINTS, axiosInstance, fetchResource, handleError, postResource} from "./api";
 import {AxiosResponse} from "axios";
 
@@ -15,8 +15,8 @@ export const fetchGetAllSuppliers = (): Promise<ISupplierFull[]> => {
     return fetchResource<ISupplierFull[]>(API_ENDPOINTS.GET_ALL_SUPPLIERS);
 };
 
-export const fetchGetSupplierPurchaseHistory = (supplierId: number): Promise<{ purchase_history: any[]; products: IProduct[] }> => {
-    return fetchResource<{ purchase_history: any[]; products: IProduct[] }>(API_ENDPOINTS.SUPPLIER_PURCHASE_HISTORY(supplierId));
+export const fetchGetSupplierPurchaseHistory = (supplierId: number): Promise<ISupplierPurchaseHistoryResponse> => {
+    return fetchResource<ISupplierPurchaseHistoryResponse>(API_ENDPOINTS.SUPPLIER_PURCHASE_HISTORY(supplierId));
 };
 
 export const fetchGetSupplierProducts = (supplierId: number): Promise<IProduct[]> => {
