@@ -223,7 +223,7 @@ describe('SupplierPage integration', () => {
         fireEvent.click(screen.getByTitle('Історія постачальника'));
 
         await waitFor(() => expect(mocks.fetchGetSupplierPurchaseHistory).toHaveBeenCalledWith(12));
-        expect(await screen.findByTestId('supplier-purchase-history')).toHaveTextContent('Records: 1');
+        expect((await screen.findByTestId('supplier-purchase-history')).textContent).toContain('Records: 1');
     });
 
     it('delegates supplier activation to the provider with the selected supplier type', () => {
