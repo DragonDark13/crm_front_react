@@ -1,19 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {fetchGetSupplierProducts, fetchGetSupplierPurchaseHistory} from "../../api/_supplier";
-import {IProduct} from "../../utils/types";
-
-interface SupplierPurchaseRecord {
-    product: string;
-    quantity_purchase: number;
-    purchase_date: string;
-}
+import {IProduct, IProductSupplierPurchaseHistoryRecord} from "../../utils/types";
 
 interface SupplierDetailsProps {
     supplierId: number;
 }
 
 const SupplierDetails: React.FC<SupplierDetailsProps> = ({supplierId}) => {
-    const [purchaseHistory, setPurchaseHistory] = useState<SupplierPurchaseRecord[]>([]);
+    const [purchaseHistory, setPurchaseHistory] = useState<IProductSupplierPurchaseHistoryRecord[]>([]);
     const [products, setProducts] = useState<IProduct[]>([]);
 
     useEffect(() => {
