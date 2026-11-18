@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import {
     Button,
@@ -47,18 +47,18 @@ const AddNewPackagingModal = ({
     const [openAddSupplier, setOpenAddSupplier] = useState(false);
 
 
-    const fetchSuppliers = async () => {
+    const fetchSuppliers = useCallback(async () => {
         try {
             const response = await axiosInstance.get("/get_all_packaging_suppliers");
             setSuppliers(response.data);
         } catch (error) {
             console.error("Error fetching suppliers", error);
         }
-    };
-
-    React.useEffect(() => {
-        fetchSuppliers();
     }, []);
+
+    useEffect(() => {
+        void fetchSuppliers();
+    }, [fetchSuppliers]);
 
     const handleQuantityChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         // const value = e.target.value;
