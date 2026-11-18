@@ -1,6 +1,6 @@
 // hooks/useSupplierModal.ts
 import {useState} from 'react';
-import {INewSupplier, ModalNames} from "../utils/types";
+import {INewSupplier, ISupplierID, ModalNames} from "../utils/types";
 import {useSnackbarMessage} from "../components/Provider/SnackbarMessageContext";
 import {useSuppliers} from "../components/Provider/SupplierContext";
 import {addSupplier} from "../api/_supplier";
@@ -8,10 +8,10 @@ import {addSupplier} from "../api/_supplier";
 
 
 
-export const useSupplierModal = (
+export const useSupplierModal = <T extends ISupplierID>(
     modalNames: ModalNames[],
-    editProduct: any,
-    setEditProduct: (val: any) => void
+    editProduct: T,
+    setEditProduct: (val: T) => void
 ) => {
     const [modalState, setModalState] = useState<Record<ModalNames, boolean>>(
         Object.fromEntries(modalNames.map(modal => [modal, false])) as Record<ModalNames, boolean>
