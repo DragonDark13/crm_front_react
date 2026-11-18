@@ -27,6 +27,7 @@ on:
       - refactor/effect-dependencies-audit-2026-11
       - perf/react-render-audit-2026-11
       - refactor/context-provider-memoization-2026-11
+      - perf/bundle-minification-lazy-pages-2026-11
 
 permissions:
   contents: read
