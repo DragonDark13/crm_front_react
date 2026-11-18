@@ -138,18 +138,26 @@ const SupplierPage: React.FC = () => {
     }
 
     // Редагування постачальника
-    const handleEditSupplier = async (supplier: ISupplierFull, type: ISupplierType = 'product') => {
+    const handleEditSupplier = async (supplier: INewSupplier, type: ISupplierType = 'product') => {
         if (!currentSupplier) return;
 
+        const updatedSupplier: ISupplierFull = {
+            ...currentSupplier,
+            ...supplier,
+            contact_info: supplier.contact_info ?? currentSupplier.contact_info,
+            email: supplier.email ?? currentSupplier.email,
+            phone_number: supplier.phone_number ?? currentSupplier.phone_number,
+            address: supplier.address ?? currentSupplier.address
+        };
+
         try {
-            if (currentSupplier.id > 0)
-
+            if (currentSupplier.id > 0) {
                 if (type === 'product') {
-                    await updateSupplier(currentSupplier.id, supplier)
-
+                    await updateSupplier(currentSupplier.id, updatedSupplier);
                 } else if (type === "packaging") {
-                    await updatePackagingSupplier(currentSupplier.id, supplier)
+                    await updatePackagingSupplier(currentSupplier.id, updatedSupplier);
                 }
+            }
 
             fetchSuppliersFunc(); // Оновити список постачальників після додавання
             showSnackbarMessage('Supplier completed successfully!', 'success'); // Show success message
