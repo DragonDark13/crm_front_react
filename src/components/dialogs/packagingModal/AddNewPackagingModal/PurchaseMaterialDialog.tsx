@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
     Dialog,
     DialogActions,
@@ -47,18 +47,18 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
         return quantity * pricePerUnit;
     };
 
-    const fetchSuppliers = async () => {
+    const fetchSuppliers = useCallback(async () => {
         try {
             const response = await axiosInstance.get("/get_all_packaging_suppliers");
             setSuppliers(response.data);
         } catch (error) {
             console.error("Error fetching suppliers", error);
         }
-    };
-
-    React.useEffect(() => {
-        fetchSuppliers();
     }, []);
+
+    useEffect(() => {
+        void fetchSuppliers();
+    }, [fetchSuppliers]);
 
     // Викликається при зміні кількості
     const MIN_QUANTITY = 0;
