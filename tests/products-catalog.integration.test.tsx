@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ProductsCatalog, { IProductsCatalogProps } from '../src/components/pages/ProductsCatalog';
 import { IProduct, ModalNames } from '../src/utils/types';
 import { useProducts } from '../src/components/Provider/ProductContext';
@@ -162,6 +162,8 @@ const renderCatalog = () => {
 };
 
 describe('ProductsCatalog CRUD integration', () => {
+    afterEach(() => cleanup());
+
     beforeEach(() => {
         mocks.fetchProductsFunc.mockReset().mockResolvedValue(true);
         mocks.showSnackbarMessage.mockReset();
