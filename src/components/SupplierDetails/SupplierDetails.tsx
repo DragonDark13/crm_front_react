@@ -1,9 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import {fetchGetSupplierProducts, fetchGetSupplierPurchaseHistory} from "../../api/_supplier";
+import {IProduct} from "../../utils/types";
 
-const SupplierDetails = ({supplierId}) => {
-    const [purchaseHistory, setPurchaseHistory] = useState([]);
-    const [products, setProducts] = useState([]);
+interface SupplierPurchaseRecord {
+    product: string;
+    quantity_purchase: number;
+    purchase_date: string;
+}
+
+interface SupplierDetailsProps {
+    supplierId: number;
+}
+
+const SupplierDetails: React.FC<SupplierDetailsProps> = ({supplierId}) => {
+    const [purchaseHistory, setPurchaseHistory] = useState<SupplierPurchaseRecord[]>([]);
+    const [products, setProducts] = useState<IProduct[]>([]);
 
     useEffect(() => {
         // Отримуємо історію закупівель постачальника
@@ -15,7 +26,7 @@ const SupplierDetails = ({supplierId}) => {
 
         // Отримуємо список продуктів постачальника
         fetchGetSupplierProducts(supplierId)
-            .then(data => setProducts(data.products));
+            .then(data => setProducts(data));
     }, [supplierId]);
 
     return (
