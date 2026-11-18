@@ -215,12 +215,12 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
         setSelectedView(event.target.value as number);
     };
 
-    function sortByDate(history: IStockHistoryRecord[], dateKey: 'timestamp'): IStockHistoryRecord[];
-    function sortByDate(history: IProductPurchaseHistoryRecord[], dateKey: 'purchase_date'): IProductPurchaseHistoryRecord[];
-    function sortByDate(history: IProductSaleHistoryRecord[], dateKey: 'sale_date'): IProductSaleHistoryRecord[];
+    function sortByDate(history: IStockHistoryRecord[], dateKey: string): IStockHistoryRecord[];
+    function sortByDate(history: IProductPurchaseHistoryRecord[], dateKey: string): IProductPurchaseHistoryRecord[];
+    function sortByDate(history: IProductSaleHistoryRecord[], dateKey: string): IProductSaleHistoryRecord[];
     function sortByDate(
         history: IStockHistoryRecord[] | IProductPurchaseHistoryRecord[] | IProductSaleHistoryRecord[],
-        dateKey: 'timestamp' | 'purchase_date' | 'sale_date'
+        dateKey: string
     ) {
         return history.slice().sort((a, b) => {
             const getDate = (record: IStockHistoryRecord | IProductPurchaseHistoryRecord | IProductSaleHistoryRecord) => {
