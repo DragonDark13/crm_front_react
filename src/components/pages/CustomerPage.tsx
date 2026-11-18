@@ -9,7 +9,7 @@ import {useCustomers} from "../Provider/CustomerContext";
 import {ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../../utils/types";
 import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
-import axios, {AxiosError} from "axios";
+import {getApiErrorMessage} from "../../api/api";
 import {useAuth} from "../context/AuthContext";
 import CustomerDetailsDialog from "../dialogs/CustomersDialogs/CustomerDetailsDialog/CustomerDetailsDialog";
 import EditCustomerDialog from "../dialogs/CustomersDialogs/EditCustomerDialog/EditCustomerDialog";
@@ -67,15 +67,13 @@ const CustomerPage: React.FC = () => {
         createCustomerFunc(newCustomerData).then(() => {
             setOpenAddNewCustomerDialog(false);
         }).catch((error: unknown) => {
-            if (axios.isAxiosError(error)) {
-                showSnackbarMessage(
-                    'Error creating customer: ' +
-                    (error.response?.data?.error ?? 'Unknown error'),
-                    'error'
-                );
-            } else {
-                showSnackbarMessage('Unknown error', 'error');
-            }
+            showSnackbarMessage(
+
+                'Error creating customer: ' + getApiErrorMessage(error),
+
+                'error'
+
+            );
         })
 
     };
@@ -115,15 +113,16 @@ const CustomerPage: React.FC = () => {
             showSnackbarMessage('Customer updated successfully!', 'success');
         }).catch((error: unknown) => {
 
-            if (axios.isAxiosError(error)) {
-                showSnackbarMessage(
-                    'Error updating customer: ' +
-                    (error.response?.data?.error ?? 'Unknown error'),
-                    'error'
-                );
-            } else {
-                showSnackbarMessage('Unknown error', 'error');
-            }
+            showSnackbarMessage(
+
+
+                'Error updating customer: ' + getApiErrorMessage(error),
+
+
+                'error'
+
+
+            );
         })
 
 
@@ -139,15 +138,13 @@ const CustomerPage: React.FC = () => {
             fetchGetAllCustomersFunc()
             showSnackbarMessage('Customer deleted successfully!', 'success');
         }).catch((error: unknown) => {
-            if (axios.isAxiosError(error)) {
-                showSnackbarMessage(
-                    'Error deleting customer: ' +
-                    (error.response?.data?.error ?? 'Unknown error'),
-                    'error'
-                );
-            } else {
-                showSnackbarMessage('Unknown error', 'error');
-            }
+            showSnackbarMessage(
+
+                'Error deleting customer: ' + getApiErrorMessage(error),
+
+                'error'
+
+            );
 
         })
 
@@ -174,15 +171,16 @@ const CustomerPage: React.FC = () => {
                 })
                 .catch((error: unknown) => {
 
-                    if (axios.isAxiosError(error)) {
-                        showSnackbarMessage(
-                            'Error deleting customer: ' +
-                            (error.response?.data?.error ?? 'Unknown error'),
-                            'error'
-                        );
-                    } else {
-                        showSnackbarMessage('Unknown error', 'error');
-                    }
+                    showSnackbarMessage(
+
+
+                        'Error deleting customer: ' + getApiErrorMessage(error),
+
+
+                        'error'
+
+
+                    );
 
 
                 })
