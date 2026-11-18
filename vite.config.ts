@@ -10,6 +10,6 @@ export default defineConfig({
     build: {
         outDir: 'build',
         reportCompressedSize: true,
-        chunkSizeWarningLimit: 600,
+        chunkSizeWarningLimit: 500,
     }
 })
