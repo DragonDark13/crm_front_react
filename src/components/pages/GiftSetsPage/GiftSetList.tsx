@@ -121,10 +121,10 @@ const GiftSetList: React.FC<IGiftSetList> = ({isAuthenticated}) => {
         };
 
         try {
-            await sellGiftSetData(requestData);
-
-
-            handleDialogClose();
+            const sold = await sellGiftSetData(requestData);
+            if (sold) {
+                handleDialogClose();
+            }
         } catch (err: any) {
             setError(err.message);
 
