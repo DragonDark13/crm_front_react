@@ -221,21 +221,15 @@ const AddButtonWithMenu = () => {
         };
 
         try {
-            await createNewGiftSet(payload)
+            const created = await createNewGiftSet(payload);
+            if (!created) return;
+
             handleModalClose("addNewGiftBox");
-
-            fetchProductsFunc()
+            fetchProductsFunc();
             fetchPackagingOptions();
-
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                showSnackbarMessage(
-                    'Error creating customer: ' + (error.response?.data?.error ?? 'Unknown error'),
-                    'error'
-                );
-            } else {
-                showSnackbarMessage('Unknown error', 'error');
-            }
+            console.error('Unexpected error creating gift set:', error);
+            showSnackbarMessage('Помилка створення набору', 'error');
         }
 
     };
