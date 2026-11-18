@@ -85,7 +85,7 @@ const PurchaseProductModal = ({
         if (purchaseDetails.quantity > 1) {
             setPurchaseDetails({
                 ...purchaseDetails,
-                quantity: purchaseDetails.quantity = 1
+                quantity: purchaseDetails.quantity - 1
             });
         }
     };
