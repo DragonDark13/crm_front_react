@@ -167,6 +167,10 @@ describe('SupplierPage integration', () => {
         fireEvent.click(within(dialog).getByRole('button', { name: 'Зберегти' }));
 
         await waitFor(() => expect(mocks.updateSupplier).toHaveBeenCalledOnce());
+        await waitFor(() => expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
+            'There was an error updating the supplier!',
+            'error'
+        ));
         expect(screen.getByRole('dialog')).toBeTruthy();
         expect(mocks.fetchSuppliersFunc).not.toHaveBeenCalled();
         expect(mocks.showSnackbarMessage).not.toHaveBeenCalledWith('Supplier completed successfully!', 'success');
