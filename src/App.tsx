@@ -57,7 +57,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState(0);
 
 
-    const sortProducts = (products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => {
+    const sortProducts = useCallback((products: IProduct[], comparator: (a: IProduct, b: IProduct) => number) => {
         const stabilizedProducts = products.map((el, index) => [el, index] as [IProduct, number]);
         stabilizedProducts.sort((a, b) => {
             const order = comparator(a[0], b[0]);
@@ -65,7 +65,7 @@ function App() {
             return a[1] - b[1];  // This is fine because index is a number
         });
         return stabilizedProducts.map((el) => el[0]);
-    };
+    }, []);
 
 
     const [filters, setFilters] = useState<IStateFilters>({
