@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useProducts} from "../../Provider/ProductContext";
 import {
     Button, DialogActions,
@@ -39,11 +39,6 @@ const AddGiftBoxModal = ({
     const [showSelectProduct, setShowSelectProduct] = useState(false);
     const [showSelectPackaging, setShowSelectPackaging] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage()
-
-    useEffect(() => {
-        fetchProductsFunc()
-        fetchPackagingOptions();
-    }, []);
 
 
     const handleProductSelect = (_: React.SyntheticEvent,
