@@ -1,7 +1,6 @@
 // src/pages/LoginPage.tsx
 import React, { useState } from 'react';
 import { Button, TextField } from '@mui/material';
-import { useAuth } from '../components/context/AuthContext';
 
 interface LoginPageProps {
   setUserRole: React.Dispatch<React.SetStateAction<string>>;
