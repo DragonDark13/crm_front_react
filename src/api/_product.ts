@@ -1,7 +1,6 @@
 // Операції з продуктами
-import {API_ENDPOINTS, axiosInstance, handleError, postResource, fetchResource} from "./api";
+import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
-import {AxiosResponse} from "axios";
 
 export const fetchProducts = (): Promise<IProduct[]> => {
     return fetchResource<IProduct[]>(API_ENDPOINTS.PRODUCTS);
@@ -9,15 +8,15 @@ export const fetchProducts = (): Promise<IProduct[]> => {
 
 // Функція для додавання продукту
 export const addProduct = (newProduct: INewProduct) => {
-    return axiosInstance.post('/add_new_product', newProduct).catch(handleError);
+    return postResource(API_ENDPOINTS.ADD_PRODUCT, newProduct);
 };
 
-export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<AxiosResponse> => {
-    return axiosInstance.put(API_ENDPOINTS.PRODUCT(productId), editProduct).catch(handleError);
+export const updateProduct = (productId: number, editProduct: IEditProduct) => {
+    return putResource(API_ENDPOINTS.PRODUCT(productId), editProduct);
 };
 
-export const deleteProduct = (productId: number): Promise<AxiosResponse> => {
-    return axiosInstance.delete(API_ENDPOINTS.PRODUCT(productId)).catch(handleError);
+export const deleteProduct = (productId: number) => {
+    return deleteResource(API_ENDPOINTS.PRODUCT(productId));
 };
 
 export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<void> => {
@@ -28,8 +27,14 @@ export const addSale = (productId: number, saleData: ISaleData): Promise<void> =
     return postResource<void>(API_ENDPOINTS.PRODUCT_SALE(productId), saleData);
 };
 
-export const fetchProductHistory = (productId: number) => {
-    return axiosInstance.get(`/product/${productId}/history`).catch(handleError);
+export interface IProductHistoryResponse {
+    stock_history: unknown[];
+    purchase_history: unknown[];
+    sale_history: unknown[];
+}
+
+export const fetchProductHistory = (productId: number): Promise<IProductHistoryResponse> => {
+    return fetchResource<IProductHistoryResponse>(`/product/${productId}/history`);
 };
 
 export interface IProductInventoryData {
@@ -38,5 +43,5 @@ export interface IProductInventoryData {
 }
 
 export const runProductInventory = (productId: number, data: IProductInventoryData) => {
-    return axiosInstance.post(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data).catch(handleError);
+    return postResource(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data);
 };
