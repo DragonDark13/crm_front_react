@@ -1,9 +1,7 @@
 import React from 'react';
 import {
-    IEditProduct,
-    INewProduct, INewSupplier,
     IProduct,
-    IPurchaseData, ISaleData, IStateFilters,
+    IStateFilters,
     ModalNames
 } from "../../utils/types";
 import {
