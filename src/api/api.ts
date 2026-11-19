@@ -1,5 +1,6 @@
 import axios, {AxiosHeaders, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
+import {ApiErrorResponse} from "./contracts";
 
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
@@ -160,7 +161,7 @@ export const getApiErrorMessage = (error: unknown, fallback = 'Unknown error'): 
         return 'Запит скасовано';
     }
 
-    if (axios.isAxiosError<{ error?: string; message?: string; details?: string }>(error)) {
+    if (axios.isAxiosError<ApiErrorResponse>(error)) {
         return error.response?.data?.error
             || error.response?.data?.message
             || error.response?.data?.details
