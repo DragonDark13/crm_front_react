@@ -309,8 +309,8 @@ export interface IHandleAddNewGiftBox {
     name: string,
     description: string,
     price: number,
-    selectedProducts: any[],
-    selectedPackaging: any[],
+    selectedProducts: Array<{ product: IProduct; quantity: number }>;
+    selectedPackaging: Array<{ material: IMaterial; quantity: number }>;
 }
 
 export interface IProductForGiftSet {
