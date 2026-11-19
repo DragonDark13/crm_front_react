@@ -20,7 +20,7 @@ export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsW
     error: null,
   });
   const requestIdRef = useRef(0);
-  const isMountedRef = useRef(false);
+  const isMountedRef = useRef(true);
 
   const fetchProductsFunc = useCallback(async (): Promise<boolean> => {
     if (!isMountedRef.current) return false;

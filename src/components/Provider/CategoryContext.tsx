@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo, useRef} from 'react';
 import {fetchGetAllCategories} from "../../api/_categories";
 
 // Типізація категорій
@@ -19,23 +19,44 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(undefine
 // Створення Провайдера
 export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const requestIdRef = useRef(0);
+  const isMountedRef = useRef(true);
 
   const fetchCategoriesFunc = useCallback(async (): Promise<boolean> => {
+    if (!isMountedRef.current) return false;
+
+    const requestId = ++requestIdRef.current;
+
     try {
       const data = await fetchGetAllCategories();
+
+      if (!isMountedRef.current || requestId !== requestIdRef.current) {
+        return false;
+      }
+
       if (Array.isArray(data)) {
         setCategories(data);
         return true;
       }
       throw new Error('Fetched data is not an array');
     } catch (error) {
+      if (!isMountedRef.current || requestId !== requestIdRef.current) {
+        return false;
+      }
+
       console.error('Error fetching categories', error);
       return false;
     }
   }, []);
 
   useEffect(() => {
+    isMountedRef.current = true;
     void fetchCategoriesFunc();
+
+    return () => {
+      isMountedRef.current = false;
+      requestIdRef.current += 1;
+    };
   }, [fetchCategoriesFunc]);
 
   const contextValue = useMemo(() => ({

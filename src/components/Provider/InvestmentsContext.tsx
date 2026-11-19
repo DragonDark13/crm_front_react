@@ -9,7 +9,6 @@ import {
 } from '../../api/_investmentsApi.ts';
 
 // Типи
-
 interface InvestmentsContextType {
     investments: Investment[];
     newInvestment: INewInvestment;
@@ -36,24 +35,27 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const [addInvestDialogOpen, setAddInvestDialogOpen] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage();
     const fetchRequestId = useRef(0);
+    const isMountedRef = useRef(true);
 
     const fetchInvestments = useCallback(async (
         notifyError = true,
         signal?: AbortSignal
     ): Promise<boolean> => {
+        if (!isMountedRef.current || signal?.aborted) return false;
+
         const requestId = ++fetchRequestId.current;
 
         try {
             const data = await getAllInvestments(signal);
 
-            if (signal?.aborted || requestId !== fetchRequestId.current) {
+            if (!isMountedRef.current || signal?.aborted || requestId !== fetchRequestId.current) {
                 return false;
             }
 
             setInvestments(data);
             return true;
-        } catch (error) {
-            if (signal?.aborted || requestId !== fetchRequestId.current) {
+        } catch {
+            if (!isMountedRef.current || signal?.aborted || requestId !== fetchRequestId.current) {
                 return false;
             }
 
@@ -74,30 +76,46 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     }, []);
 
     const handleAddInvestment = useCallback(async () => {
+        if (!isMountedRef.current) return;
+
         try {
             await createInvestment(newInvestment);
+            if (!isMountedRef.current) return;
+
             const refreshed = await fetchInvestments(false);
+            if (!isMountedRef.current) return;
+
             setAddInvestDialogOpen(false);
             resetNewInvestmentDialog();
             showSnackbarMessage("Інвестицію додано", "success");
             if (!refreshed) {
                 showSnackbarMessage("Інвестицію додано, але список не вдалося оновити.", "warning");
             }
-        } catch (error) {
-            showSnackbarMessage("Помилка додавання інвестиції", "error");
+        } catch {
+            if (isMountedRef.current) {
+                showSnackbarMessage("Помилка додавання інвестиції", "error");
+            }
         }
     }, [newInvestment, fetchInvestments, resetNewInvestmentDialog, showSnackbarMessage]);
 
     const handleDeleteInvestment = useCallback(async (id: number) => {
+        if (!isMountedRef.current) return;
+
         try {
             await deleteInvestmentById(id);
+            if (!isMountedRef.current) return;
+
             const refreshed = await fetchInvestments(false);
+            if (!isMountedRef.current) return;
+
             showSnackbarMessage("Інвестицію видалено", "success");
             if (!refreshed) {
                 showSnackbarMessage("Запис видалено, але список не вдалося оновити.", "warning");
             }
-        } catch (error) {
-            showSnackbarMessage("Помилка видалення інвестиції", "error");
+        } catch {
+            if (isMountedRef.current) {
+                showSnackbarMessage("Помилка видалення інвестиції", "error");
+            }
         }
     }, [fetchInvestments, showSnackbarMessage]);
 
@@ -107,26 +125,36 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     }, [resetNewInvestmentDialog]);
 
     const handleDeleteAllOtherInvestment = useCallback(async (handleClose: () => void) => {
+        if (!isMountedRef.current) return;
+
         try {
             await deleteAllInvestments();
+            if (!isMountedRef.current) return;
+
             const refreshed = await fetchInvestments(false);
+            if (!isMountedRef.current) return;
+
             showSnackbarMessage('Всі записи успішно видалені', 'success');
             if (!refreshed) {
                 showSnackbarMessage('Записи видалено, але список не вдалося оновити.', 'warning');
             }
             handleClose();
         } catch (error: unknown) {
+            if (!isMountedRef.current) return;
+
             console.error('Помилка під час видалення:', error);
             showSnackbarMessage('Сталася помилка під час видалення.', 'error');
         }
     }, [fetchInvestments, showSnackbarMessage]);
 
     useEffect(() => {
+        isMountedRef.current = true;
         const controller = new AbortController();
 
         void fetchInvestments(true, controller.signal);
 
         return () => {
+            isMountedRef.current = false;
             controller.abort();
             fetchRequestId.current += 1;
         };
