@@ -30,7 +30,6 @@ import {usePackaging} from "../Provider/PackagingContext";
 import {useNewProduct} from "../../hooks/useNewProduct";
 import AddInvestmentDialog from "../dialogs/AddInvestmentDialog/AddInvestmentDialog";
 import {useInvestments} from "../Provider/InvestmentsContext";
-import {axiosInstance} from "../../api/api.ts";
 
 //TODO Додати опцію Зберігти і додати ще
 
