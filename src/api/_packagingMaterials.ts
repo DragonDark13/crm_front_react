@@ -33,7 +33,7 @@ export const fetchPackagingSuppliers = async (signal?: AbortSignal): Promise<ISu
         phone_number: supplier.phone_number ?? '',
         address: supplier.address ?? '',
         is_active: supplier.is_active ?? true,
-        type: 'packaging'
+        type: 'packaging' as const
     }));
 };
 
