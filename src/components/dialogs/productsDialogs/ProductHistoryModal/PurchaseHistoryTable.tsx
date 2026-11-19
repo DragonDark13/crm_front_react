@@ -26,7 +26,7 @@ interface PurchaseHistoryRecord {
     quantity_purchase: number;
     purchase_price_per_item: number;
     purchase_total_price: number;
-    supplier: ISupplierFull;
+    supplier: Pick<ISupplierFull, 'id' | 'name' | 'is_active'> | null;
 }
 
 
@@ -96,8 +96,8 @@ const PurchaseHistoryTable: React.FC<PurchaseHistoryTableProps> =
                                         <TableCell
                                             size={"small"}>{new Date(record.purchase_date!).toLocaleString()}</TableCell>
                                         <TableCell  size={"small"}>
-                                        <Typography color={  !record.supplier.is_active ? 'textDisabled' :'inherit'}>
-                                           {!record.supplier.is_active && "не активний"}  {record.supplier.name}
+                                        <Typography color={  !record.supplier?.is_active ? 'textDisabled' :'inherit'}>
+                                           {record.supplier && !record.supplier.is_active && "не активний"}  {record.supplier?.name ?? '—'}
                                         </Typography>
 
 
