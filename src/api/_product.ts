@@ -1,7 +1,7 @@
 // Операції з продуктами
 import {AxiosResponse} from "axios";
 import {API_ENDPOINTS, deleteResource, fetchResource, fetchResponse, postResource, putResource} from "./api";
-import {ApiMessageResponse, ProductInventoryResponse, ProductMutationResponse} from "./contracts";
+import {ApiMessageResponse, ProductHistoryResponse, ProductInventoryResponse, ProductMutationResponse} from "./contracts";
 import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
 
 export const deleteAllProducts = (): Promise<ApiMessageResponse> => {
@@ -33,8 +33,8 @@ export const addSale = (productId: number, saleData: ISaleData): Promise<void> =
     return postResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT_SALE(productId), saleData);
 };
 
-export const fetchProductHistory = (productId: number): Promise<AxiosResponse<unknown>> => {
-    return fetchResponse<unknown>(`/product/${productId}/history`);
+export const fetchProductHistory = (productId: number): Promise<AxiosResponse<ProductHistoryResponse>> => {
+    return fetchResponse<ProductHistoryResponse>(`/product/${productId}/history`);
 };
 
 export interface IProductInventoryData {
