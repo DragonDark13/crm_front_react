@@ -180,12 +180,12 @@ export const handleError = (error: unknown): never => {
 
 // Загальна функція для GET-запитів.
 // Повторюються лише тимчасові помилки GET; мутації автоматично не повторюються.
-export const fetchResponse = async (
+export const fetchResponse = async <T = unknown>(
     endpoint: string,
     config: AxiosRequestConfig = {}
-): Promise<AxiosResponse> => {
+): Promise<AxiosResponse<T>> => {
     try {
-        return await getWithRetry(endpoint, config);
+        return await getWithRetry<T>(endpoint, config);
     } catch (error) {
         return handleError(error);
     }
