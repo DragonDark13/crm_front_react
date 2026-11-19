@@ -367,8 +367,6 @@ function App() {
                             <Route path="/crm_front_react/sales" element={<Sales/>}/>
                             <Route path="/crm_front_react/products" element={productsCatalogElement}/>
 
-                            }/>
-
                             <Route path="/crm_front_react/purchases" element={<Purchases/>}/>
                             <Route path="/crm_front_react/analytics" element={<Dashboard/>}/>
                             <Route path="/crm_front_react/packaging" element={<PackagingMaterialList/>}/>
