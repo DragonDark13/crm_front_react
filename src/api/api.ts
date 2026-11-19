@@ -1,4 +1,4 @@
-import axios, {AxiosHeaders, AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosHeaders, AxiosRequestConfig} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 
 // Встановлення базового URL залежно від середовища
@@ -180,17 +180,6 @@ export const handleError = (error: unknown): never => {
 
 // Загальна функція для GET-запитів.
 // Повторюються лише тимчасові помилки GET; мутації автоматично не повторюються.
-export const fetchResponse = async <T>(
-    endpoint: string,
-    config: AxiosRequestConfig = {}
-): Promise<AxiosResponse<T>> => {
-    try {
-        return await getWithRetry<T>(endpoint, config);
-    } catch (error) {
-        return handleError(error);
-    }
-};
-
 export const fetchResource = async <T>(
     endpoint: string,
     config: AxiosRequestConfig = {}
