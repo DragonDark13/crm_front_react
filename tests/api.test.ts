@@ -61,6 +61,7 @@ describe('CRUD API error handling', () => {
             .mockResolvedValueOnce({data: [{id: 1}]} as never);
 
         const request = fetchResource('/test');
+        await Promise.resolve();
         await vi.advanceTimersByTimeAsync(300);
 
         await expect(request).resolves.toEqual([{id: 1}]);
