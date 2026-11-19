@@ -20,7 +20,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, allowedRoles }
   }
 
   if (allowedRoles && !allowedRoles.some(role => roles.includes(role))) {
-    return <Navigate to="/crm_front_react/" replace />;
+    const fallbackPath = roles.includes('guest')
+      ? '/crm_front_react/'
+      : '/crm_front_react/login';
+    return <Navigate to={fallbackPath} replace />;
   }
 
   return <>{element}</>;
