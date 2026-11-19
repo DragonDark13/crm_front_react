@@ -115,7 +115,7 @@ const ProductsCatalogDialogs: React.FC<IProductsCatalogDialogsProps> = ({
                 />
             )}
 
-            {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
+            {(modalState.openEdit && editProduct && !isLoading) &&
                 <EditProductModal
                     isAuthenticated={isAuthenticated}
                     openEdit={modalState.openEdit}
