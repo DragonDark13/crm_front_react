@@ -31,6 +31,8 @@ interface IProductsCatalogDialogsProps {
     selectedCategories: number[];
     infoProduct: IProduct | null;
     inventoryProduct: IProduct | null;
+    setInventoryProduct: React.Dispatch<React.SetStateAction<IProduct | null>>;
+    isLoading: boolean;
     handleSubmitInventory: (actualQuantity: number, reason: string) => Promise<void>;
     editProduct: IEditProduct | null;
     setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct | null>>;
@@ -62,6 +64,8 @@ const ProductsCatalogDialogs: React.FC<IProductsCatalogDialogsProps> = ({
     selectedCategories,
     infoProduct,
     inventoryProduct,
+    setInventoryProduct,
+    isLoading,
     handleSubmitInventory,
     editProduct,
     setEditProduct,
@@ -95,7 +99,7 @@ const ProductsCatalogDialogs: React.FC<IProductsCatalogDialogsProps> = ({
                     selectedCategories={selectedCategories}/>
             }
 
-            {(modalState.productInfoModal && infoProduct && !loadingState.isLoading) &&
+            {(modalState.productInfoModal && infoProduct && !isLoading) &&
                 <ProductInfoModal
                     product={infoProduct}
                     open={modalState.productInfoModal}
