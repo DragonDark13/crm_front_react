@@ -1,5 +1,5 @@
 // Операції з продуктами
-import {API_ENDPOINTS, axiosInstance, deleteResource, fetchResource, handleError, postResource, putResource} from "./api";
+import {API_ENDPOINTS, deleteResource, fetchResource, fetchResponse, postResource, putResource} from "./api";
 import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
 
 export const deleteAllProducts = (): Promise<void> => {
@@ -32,7 +32,7 @@ export const addSale = (productId: number, saleData: ISaleData): Promise<void> =
 };
 
 export const fetchProductHistory = (productId: number) => {
-    return axiosInstance.get(`/product/${productId}/history`).catch(handleError);
+    return fetchResponse(`/product/${productId}/history`);
 };
 
 export interface IProductInventoryData {
