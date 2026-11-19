@@ -18,7 +18,7 @@ interface ProductPurchase {
 }
 
 interface PackagingPurchase {
-    material: string;
+    material: string | null;
     quantity_purchased: number;
     purchase_price_per_unit: number;
     purchase_total_price: number;
@@ -62,12 +62,12 @@ const SupplierPurchaseHistoryTable: React.FC<Props> = ({ supplierId, suppliers, 
                 </TableHead>
                 <TableBody>
                     {purchaseHistory.length > 0 ? (
-                        purchaseHistory.map((item: any, index) => (
+                        purchaseHistory.map((item, index) => (
                             <TableRow key={index}>
                                 <TableCell>{new Date(item.purchase_date).toLocaleDateString('uk-UA')}</TableCell>
-                                <TableCell>{type === 'product' ? item.product : item.material}</TableCell>
-                                <TableCell>{type === 'product' ? item.quantity_purchase : item.quantity_purchased}</TableCell>
-                                <TableCell>{type === 'product' ? item.purchase_price_per_item : item.purchase_price_per_unit}</TableCell>
+                                <TableCell>{type === 'product' ? (item as ProductPurchase).product : (item as PackagingPurchase).material ?? '—'}</TableCell>
+                                <TableCell>{type === 'product' ? (item as ProductPurchase).quantity_purchase : (item as PackagingPurchase).quantity_purchased}</TableCell>
+                                <TableCell>{type === 'product' ? (item as ProductPurchase).purchase_price_per_item : (item as PackagingPurchase).purchase_price_per_unit}</TableCell>
                                 <TableCell>{item.purchase_total_price}</TableCell>
                             </TableRow>
                         ))
