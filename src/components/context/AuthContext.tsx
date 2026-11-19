@@ -1,3 +1,4 @@
+// src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 
 interface AuthContextType {
@@ -22,7 +23,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('token'); // Очищаємо токен з localStorage
   }, []);
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!token; // Перевірка, чи є токен
 
   const contextValue = useMemo(() => ({
     token,
