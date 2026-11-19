@@ -8,6 +8,20 @@ import {
     TopProductStatistics
 } from "./contracts";
 
+export type {TopProductStatistics, StockLevelStatistics, CustomerActivityStatistics} from "./contracts";
+export interface MonthlyStatistics {
+    year: number;
+    month: number;
+    total_sales?: number;
+    total_spent?: number;
+    total_quantity?: number;
+    total_profit?: number;
+    avg_price?: number;
+    sales?: number;
+    profit?: number;
+    expenses?: number;
+}
+
 export interface DashboardStatistics {
     monthlySales: MonthlySalesStatistics[];
     monthlyPurchases: MonthlyPurchaseStatistics[];
