@@ -7,7 +7,7 @@ import {
     Button,
     TextField, Box, MenuItem, Grid, Typography,
 } from '@mui/material';
-import {axiosInstance} from "../../../../api/api";
+import {fetchPackagingSuppliers, purchaseCurrentPackaging} from "../../../../api/_packagingMaterials";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 import CancelButton from "../../../Buttons/CancelButton";
@@ -49,8 +49,8 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
 
     const fetchSuppliers = useCallback(async () => {
         try {
-            const response = await axiosInstance.get("/get_all_packaging_suppliers");
-            setSuppliers(response.data);
+            const data = await fetchPackagingSuppliers();
+            setSuppliers(data);
         } catch (error) {
             console.error("Error fetching suppliers", error);
         }
@@ -118,7 +118,7 @@ const PurchaseMaterialDialog: React.FC<PurchaseMaterialDialogProps> = ({
                 total_purchase_cost: totalPurchaseCost, // Відправляємо загальну вартість
             };
 
-            await axiosInstance.post('/purchase_current_packaging', purchaseData);
+            await purchaseCurrentPackaging(purchaseData);
             showSnackbarMessage('Закупівля успішно виконана', 'success');
 
             onPurchaseSuccess();

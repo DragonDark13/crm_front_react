@@ -1,4 +1,4 @@
-import axios, {AxiosHeaders, AxiosRequestConfig} from 'axios';
+import axios, {AxiosHeaders, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 
 // Встановлення базового URL залежно від середовища
@@ -50,6 +50,13 @@ export const API_ENDPOINTS = {
     LOGIN: '/login',
     LOGOUT: '/logout',
     PRODUCTS: '/get_all_products',
+    ADD_PRODUCT: '/add_new_product',
+    DELETE_ALL_PRODUCTS: '/delete_all_products',
+    DELETE_ALL_MATERIALS: '/delete_all_materials',
+    PACKAGING_SUPPLIERS: '/get_all_packaging_suppliers',
+    ADD_PACKAGING_SUPPLIER: '/add_new_packaging_suppliers',
+    UPDATE_PACKAGING_STATUS: '/update_packaging_status',
+    PURCHASE_CURRENT_PACKAGING: '/purchase_current_packaging',
     CATEGORIES: '/categories/get_all_categories',
     ADD_NEW_CATEGORIES: '/add_new_category',
     ADD_SUPPLIERS: '/create_supplier',
@@ -173,6 +180,17 @@ export const handleError = (error: unknown): never => {
 
 // Загальна функція для GET-запитів.
 // Повторюються лише тимчасові помилки GET; мутації автоматично не повторюються.
+export const fetchResponse = async (
+    endpoint: string,
+    config: AxiosRequestConfig = {}
+): Promise<AxiosResponse> => {
+    try {
+        return await getWithRetry(endpoint, config);
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
 export const fetchResource = async <T>(
     endpoint: string,
     config: AxiosRequestConfig = {}

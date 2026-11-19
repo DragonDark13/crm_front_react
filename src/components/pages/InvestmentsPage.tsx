@@ -12,7 +12,6 @@ import {
     Paper,
     TableContainer, Typography, IconButton, Tooltip
 } from "@mui/material";
-import {axiosInstance} from "../../api/api";
 import DeleteAllMaterialsDialog from "../dialogs/packagingModal/DeleteAllMaterialsDialog/DeleteAllMaterialsDialog";
 import {useAuth} from "../context/AuthContext";
 import DeleteAllInvestmentsDialog from "../dialogs/DeleteAllInvestmentsDialog/DeleteAllInvestmentsDialog";

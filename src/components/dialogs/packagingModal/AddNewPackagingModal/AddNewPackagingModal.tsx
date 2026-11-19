@@ -8,7 +8,7 @@ import {
     Grid,
     Typography
 } from "@mui/material";
-import {axiosInstance} from "../../../../api/api";
+import {fetchPackagingSuppliers} from "../../../../api/_packagingMaterials";
 import AddPackagingSupplierDialog from "../AddPackagingSupplierDialog/AddPackagingSupplierDialog";
 import CancelButton from "../../../Buttons/CancelButton";
 import ProductNameField from "../../../FormComponents/ProductNameField";
@@ -49,8 +49,8 @@ const AddNewPackagingModal = ({
 
     const fetchSuppliers = useCallback(async () => {
         try {
-            const response = await axiosInstance.get("/get_all_packaging_suppliers");
-            setSuppliers(response.data);
+            const data = await fetchPackagingSuppliers();
+            setSuppliers(data);
         } catch (error) {
             console.error("Error fetching suppliers", error);
         }

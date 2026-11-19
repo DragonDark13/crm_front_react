@@ -1,14 +1,13 @@
 // Операції з постачальниками
 import {INewSupplier, IProduct, ISupplierFull, ISupplierPurchaseHistoryResponse} from "../utils/types";
-import {API_ENDPOINTS, axiosInstance, fetchResource, handleError, postResource} from "./api";
-import {AxiosResponse} from "axios";
+import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 
 export const addSupplier = (newSupplier: INewSupplier): Promise<{ message: string; supplier_id: number }> => {
     return postResource<{ message: string; supplier_id: number }>(API_ENDPOINTS.ADD_SUPPLIERS, newSupplier);
 };
 
-export const updateSupplier = (supplierId: number, editSupplier: ISupplierFull): Promise<AxiosResponse> => {
-    return axiosInstance.put(API_ENDPOINTS.EDIT_SUPPLIERS(supplierId), editSupplier).catch(handleError);
+export const updateSupplier = (supplierId: number, editSupplier: ISupplierFull) => {
+    return putResource(API_ENDPOINTS.EDIT_SUPPLIERS(supplierId), editSupplier);
 };
 
 export const fetchGetAllSuppliers = (): Promise<ISupplierFull[]> => {
@@ -25,9 +24,6 @@ export const fetchGetSupplierProducts = (supplierId: number): Promise<IProduct[]
 
 
 export const deleteSupplier = (supplierId: number): Promise<void> => {
-    return axiosInstance
-        .delete(API_ENDPOINTS.DELETE_SUPPLIER(supplierId))
-        .then(() => undefined)
-        .catch(handleError);
+    return deleteResource<void>(API_ENDPOINTS.DELETE_SUPPLIER(supplierId));
 };
 

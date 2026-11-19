@@ -22,7 +22,6 @@ import {
     Button,
     Grid, Slider, Collapse, Tooltip
 } from '@mui/material';
-import {axiosInstance} from "../../../api/api";
 import clsx from "clsx";
 import {ICategory} from "../../../utils/types";
 import {useCategories} from "../../Provider/CategoryContext";

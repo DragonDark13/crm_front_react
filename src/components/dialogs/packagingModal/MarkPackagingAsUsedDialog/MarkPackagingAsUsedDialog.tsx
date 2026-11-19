@@ -1,5 +1,5 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography} from "@mui/material";
-import {axiosInstance} from "../../../../api/api";
+import {updatePackagingStatus} from "../../../../api/_packagingMaterials";
 import React, {useState} from "react";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import CancelButton from "../../../Buttons/CancelButton";
@@ -42,10 +42,7 @@ const MarkPackagingAsUsedDialog: React.FC<MarkPackagingAsUsedDialogProps> = ({
         setError('');
 
         try {
-            const response = await axiosInstance.post('/update_packaging_status', {
-                material_id: materialId,
-                quantity_used: quantityUsed,
-            });
+            await updatePackagingStatus(materialId, quantityUsed);
 
             showSnackbarMessage('Пакування успішно позначено як використане', 'success');
 
