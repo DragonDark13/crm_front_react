@@ -145,9 +145,9 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                 if (requestId !== historyRequestId.current) return;
 
                 setProductHistory({
-                    stock: response.data.stock_history,
-                    purchase: response.data.purchase_history,
-                    sales: response.data.sale_history,
+                    stock: response.stock_history,
+                    purchase: response.purchase_history,
+                    sales: response.sale_history,
                 });
             })
             .catch(error => {
