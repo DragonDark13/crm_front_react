@@ -1,5 +1,4 @@
-// src/context/AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback, useMemo } from 'react';
 
 interface AuthContextType {
   token: string | null;
@@ -11,22 +10,29 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token') || null);
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token') || null);
 
-  const login = (token: string) => {
+  const login = useCallback((token: string) => {
     setToken(token);
     localStorage.setItem('token', token); // Зберігаємо токен в localStorage
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     localStorage.removeItem('token'); // Очищаємо токен з localStorage
-  };
+  }, []);
 
-  const isAuthenticated = !!token; // Перевірка, чи є токен
+  const isAuthenticated = !!token;
+
+  const contextValue = useMemo(() => ({
+    token,
+    isAuthenticated,
+    login,
+    logout
+  }), [token, isAuthenticated, login, logout]);
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
