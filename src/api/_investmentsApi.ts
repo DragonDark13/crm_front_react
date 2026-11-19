@@ -1,9 +1,9 @@
-// src/api/investmentsApi.ts
 import {API_ENDPOINTS, deleteResource, fetchResource, postResource} from "./api";
 import {INewInvestment, Investment} from "../utils/types";
 
-export const getAllInvestments = (): Promise<Investment[]> => {
-  return fetchResource<Investment[]>(API_ENDPOINTS.GET_ALL_INVESTMENTS);
+export const getAllInvestments = (signal?: AbortSignal): Promise<Investment[]> => {
+  const config = signal ? {signal} : {};
+  return fetchResource<Investment[]>(API_ENDPOINTS.GET_ALL_INVESTMENTS, config);
 };
 
 export const createInvestment = (newInvestment: INewInvestment): Promise<void> => {

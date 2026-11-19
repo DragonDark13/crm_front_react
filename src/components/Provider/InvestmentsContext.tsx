@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo} from "react";
+import React, {createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef} from "react";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {INewInvestment, Investment} from "../../utils/types";
 import {
@@ -16,7 +16,7 @@ interface InvestmentsContextType {
     setNewInvestment: React.Dispatch<React.SetStateAction<INewInvestment>>;
     addInvestDialogOpen: boolean;
     setAddInvestDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchInvestments: (notifyError?: boolean) => Promise<boolean>;
+    fetchInvestments: (notifyError?: boolean, signal?: AbortSignal) => Promise<boolean>;
     handleAddInvestment: () => Promise<void>;
     handleDeleteInvestment: (id: number) => Promise<void>;
     handleDeleteAllOtherInvestment: (handleClose: () => void) => Promise<void>;
@@ -35,13 +35,28 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     });
     const [addInvestDialogOpen, setAddInvestDialogOpen] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage();
+    const fetchRequestId = useRef(0);
 
-    const fetchInvestments = useCallback(async (notifyError = true): Promise<boolean> => {
+    const fetchInvestments = useCallback(async (
+        notifyError = true,
+        signal?: AbortSignal
+    ): Promise<boolean> => {
+        const requestId = ++fetchRequestId.current;
+
         try {
-            const data = await getAllInvestments();
+            const data = await getAllInvestments(signal);
+
+            if (signal?.aborted || requestId !== fetchRequestId.current) {
+                return false;
+            }
+
             setInvestments(data);
             return true;
         } catch (error) {
+            if (signal?.aborted || requestId !== fetchRequestId.current) {
+                return false;
+            }
+
             if (notifyError) {
                 showSnackbarMessage("Помилка завантаження інвестицій", "error");
             }
@@ -107,7 +122,14 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     }, [fetchInvestments, showSnackbarMessage]);
 
     useEffect(() => {
-        void fetchInvestments();
+        const controller = new AbortController();
+
+        void fetchInvestments(true, controller.signal);
+
+        return () => {
+            controller.abort();
+            fetchRequestId.current += 1;
+        };
     }, [fetchInvestments]);
 
     const contextValue = useMemo(() => ({

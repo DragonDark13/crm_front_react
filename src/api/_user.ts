@@ -1,5 +1,5 @@
 // Операції з користувачем
-import {API_ENDPOINTS, axiosInstance, handleError, postResource} from "./api";
+import {API_ENDPOINTS, postResource} from "./api";
 
 export const loginUser = (username: string, password: string): Promise<string> => {
     return postResource<{ token: string }>(API_ENDPOINTS.LOGIN, {username, password}).then(data => data.token);
@@ -10,9 +10,7 @@ export const logoutUser = (): Promise<void> => {
     if (!token) {
         return Promise.reject("No token found");
     }
-    return axiosInstance.post(API_ENDPOINTS.LOGOUT, {}, {
-        headers: {'Authorization': `Bearer ${token}`},
-    }).then(() => {
-        localStorage.removeItem('token');  // Clear token from localStorage
-    }).catch(handleError);
+    return postResource<void>(API_ENDPOINTS.LOGOUT, {}).then(() => {
+        localStorage.removeItem('token');
+    });
 };
