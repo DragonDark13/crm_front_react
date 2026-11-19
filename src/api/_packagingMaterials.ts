@@ -1,6 +1,6 @@
 // Операції з пакувальними матеріалами
-import {IMaterial, IPurchasePackagingMaterial, ISupplierFull, PackagingMaterialHistory, IPackagingSupplierPurchaseHistoryResponse} from "../utils/types";
-import {ApiMessageResponse, PackagingMaterialResponse, PackagingSupplierResponse} from "./contracts";
+import {IMaterial, IPurchasePackagingMaterial, ISupplierFull, PackagingMaterialHistory} from "../utils/types";
+import {ApiMessageResponse, PackagingMaterialResponse, PackagingSupplierPurchaseHistoryResponse, PackagingSupplierResponse} from "./contracts";
 import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 
 export const fetchListPackagingMaterials = (): Promise<IMaterial[]> => {
@@ -15,8 +15,8 @@ export const updatePackagingSupplier = (packagingSupplierId: number, editPackagi
     return putResource<ApiMessageResponse>(API_ENDPOINTS.EDIT_PACKAGING_SUPPLIER(packagingSupplierId), editPackagingSupplier);
 };
 
-export const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId: number): Promise<IPackagingSupplierPurchaseHistoryResponse> => {
-    return fetchResource<IPackagingSupplierPurchaseHistoryResponse>(API_ENDPOINTS.CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY(pack_supplierId));
+export const fetchGetPackagingSupplierPurchaseHistory = (pack_supplierId: number): Promise<PackagingSupplierPurchaseHistoryResponse> => {
+    return fetchResource<PackagingSupplierPurchaseHistoryResponse>(API_ENDPOINTS.CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY(pack_supplierId));
 };
 
 export const deletePackagingSupplier = (supplierPackagingId: number): Promise<ApiMessageResponse> => {
