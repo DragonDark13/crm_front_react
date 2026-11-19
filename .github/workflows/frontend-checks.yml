@@ -15,6 +15,7 @@ on:
       - perf/react-render-audit-2026-11
       - refactor/context-provider-memoization-2026-11
       - fix/context-api-request-flows-2026-11
+      - refactor/api-layer-race-retry-2026-11
   pull_request:
     branches:
       - main
