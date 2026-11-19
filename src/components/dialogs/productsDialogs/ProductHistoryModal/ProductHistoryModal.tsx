@@ -60,15 +60,15 @@ export interface IProductPurchaseHistoryRecord {
     purchase_total_price: number;
     quantity_purchase: number;
     supplier_id: number;
-    supplier: ISupplierFull;
+    supplier: Pick<ISupplierFull, 'id' | 'name' | 'is_active'> | null;
 }
 
 interface IProductHistoryRecordCustomer {
     id: number;
     name: string;
-    email: string;
-    address: string;
-    phone_number: string;
+    email?: string;
+    address?: string;
+    phone_number?: string;
 }
 
 
