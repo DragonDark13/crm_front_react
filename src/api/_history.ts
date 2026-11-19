@@ -6,17 +6,13 @@ import {ICustomer, IonDeleteHistoryRecord} from "../utils/types";
 export interface IPurchaseTableResponseResponse {
     id: number;
     name: string;
-    type: "Product" | 'Other Investment' | 'Packaging' ;
-    date: string; // ISO date string (YYYY-MM-DD)
-
+    type: "Product" | "Other Investment" | "Packaging";
+    date: string;
     categories: number[];
-
-    quantity: number;
-
-    price_per_item: string; // приходить як string з backend
-    total_price: string;    // також string
-
-    supplier_id: number;
+    quantity: number | null;
+    price_per_item: string | number | null;
+    total_price: string | number;
+    supplier_id: number | null;
     supplier_name: string;
     supplier_is_active: boolean;
 }

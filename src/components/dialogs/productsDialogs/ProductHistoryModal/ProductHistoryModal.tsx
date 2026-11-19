@@ -59,16 +59,16 @@ export interface IProductPurchaseHistoryRecord {
     purchase_price_per_item: number;
     purchase_total_price: number;
     quantity_purchase: number;
-    supplier_id: number;
-    supplier: ISupplierFull;
+    supplier_id: number | null;
+    supplier: Pick<ISupplierFull, 'id' | 'name' | 'is_active'> | null;
 }
 
 interface IProductHistoryRecordCustomer {
     id: number;
     name: string;
-    email: string;
-    address: string;
-    phone_number: string;
+    email?: string;
+    address?: string;
+    phone_number?: string;
 }
 
 
@@ -79,8 +79,8 @@ export interface IProductSaleHistoryRecord {
     selling_price_per_item: number;
     selling_total_price: number;
     packaging_material_id: number | null;
-    packaging_quantity: number;
-    total_packaging_cost: number;
+    packaging_quantity: number | null;
+    total_packaging_cost: number | null;
     profit: number;
     sale_date: string; // ISO string, або можеш використати `Date` якщо парсиш
     customer_id: number;

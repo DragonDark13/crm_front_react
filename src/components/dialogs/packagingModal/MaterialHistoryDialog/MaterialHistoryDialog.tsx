@@ -3,14 +3,14 @@ import {DialogContent, DialogActions} from "@mui/material";
 import MaterialHistoryTable from "./MaterialHistoryTable";
 import CancelButton from "../../../Buttons/CancelButton";
 import CustomDialog from "../../CustomDialog/CustomDialog";
-import {IMaterialSupplier} from "../../../../utils/types";
+import {IMaterialSupplier, MaterialHistoryItem} from "../../../../utils/types";
 
 
 interface MaterialHistoryDialogProps {
     open: boolean;
     handleClose: () => void;
     selectedMaterial: { name: string } | null;
-    materialHistory: any[]; // типізуй точніше за потреби
+    materialHistory: MaterialHistoryItem[];
     selectedSupplierData: IMaterialSupplier
 }
 
