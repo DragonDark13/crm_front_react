@@ -2,6 +2,10 @@
 import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
 
+export const deleteAllProducts = (): Promise<void> => {
+    return deleteResource<void>(API_ENDPOINTS.DELETE_ALL_PRODUCTS);
+};
+
 export const fetchProducts = (): Promise<IProduct[]> => {
     return fetchResource<IProduct[]>(API_ENDPOINTS.PRODUCTS);
 };
