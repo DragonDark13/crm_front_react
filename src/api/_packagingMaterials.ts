@@ -59,41 +59,6 @@ export const deleteAllPackagingMaterials = (): Promise<void> => {
 };
 
 
-export const fetchPackagingSuppliers = (signal?: AbortSignal): Promise<ISupplierFull[]> => {
-    const config = signal ? {signal} : {};
-    return fetchResource<ISupplierFull[]>(API_ENDPOINTS.PACKAGING_SUPPLIERS, config);
-};
-
-export const addPackagingSupplier = (name: string, contactInfo: string): Promise<void> => {
-    return postResource<void>(API_ENDPOINTS.ADD_PACKAGING_SUPPLIER, {
-        name,
-        contact_info: contactInfo,
-    });
-};
-
-export const updatePackagingStatus = (materialId: number, quantityUsed: number): Promise<void> => {
-    return postResource<void>(API_ENDPOINTS.UPDATE_PACKAGING_STATUS, {
-        material_id: materialId,
-        quantity_used: quantityUsed,
-    });
-};
-
-export interface IPurchaseCurrentPackagingData {
-    material_id: number;
-    supplier_id: number | null;
-    quantity: number;
-    purchase_price_per_unit: number;
-    total_purchase_cost: number;
-}
-
-export const purchaseCurrentPackaging = (purchaseData: IPurchaseCurrentPackagingData): Promise<void> => {
-    return postResource<void>(API_ENDPOINTS.PURCHASE_CURRENT_PACKAGING, purchaseData);
-};
-
-export const deleteAllPackagingMaterials = (): Promise<void> => {
-    return deleteResource<void>(API_ENDPOINTS.DELETE_ALL_MATERIALS);
-};
-
 
 export const addNewPackagingMaterial = (addNewPackaging: IPurchasePackagingMaterial): Promise<void> => {
     return postResource<void>(API_ENDPOINTS.ADD_NEW_PACKAGING_MATERIAL, {
