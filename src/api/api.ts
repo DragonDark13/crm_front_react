@@ -160,9 +160,10 @@ export const getApiErrorMessage = (error: unknown, fallback = 'Unknown error'): 
         return 'Запит скасовано';
     }
 
-    if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
+    if (axios.isAxiosError<{ error?: string; message?: string; details?: string }>(error)) {
         return error.response?.data?.error
             || error.response?.data?.message
+            || error.response?.data?.details
             || error.message
             || fallback;
     }
