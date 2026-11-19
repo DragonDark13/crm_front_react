@@ -17,7 +17,7 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     const [loading, setLoading] = useState(true);
     const {showSnackbarMessage} = useSnackbarMessage();
     const requestIdRef = useRef(0);
-    const isMountedRef = useRef(false);
+    const isMountedRef = useRef(true);
 
     const fetchGetAllCustomersFunc = useCallback(async (): Promise<boolean> => {
         if (!isMountedRef.current) return false;

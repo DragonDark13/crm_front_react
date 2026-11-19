@@ -30,7 +30,7 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | string>(null);
     const requestIdRef = useRef(0);
-    const isMountedRef = useRef(false);
+    const isMountedRef = useRef(true);
 
     const fetchPackagingOptions = useCallback(async (): Promise<void> => {
         if (!isMountedRef.current) return;

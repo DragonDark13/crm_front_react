@@ -20,7 +20,7 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(undefine
 export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const requestIdRef = useRef(0);
-  const isMountedRef = useRef(false);
+  const isMountedRef = useRef(true);
 
   const fetchCategoriesFunc = useCallback(async (): Promise<boolean> => {
     if (!isMountedRef.current) return false;

@@ -35,7 +35,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const [addInvestDialogOpen, setAddInvestDialogOpen] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage();
     const fetchRequestId = useRef(0);
-    const isMountedRef = useRef(false);
+    const isMountedRef = useRef(true);
 
     const fetchInvestments = useCallback(async (
         notifyError = true,

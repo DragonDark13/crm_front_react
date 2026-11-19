@@ -17,7 +17,6 @@ on:
       - fix/context-api-request-flows-2026-11
       - refactor/api-layer-race-retry-2026-11
       - refactor/api-service-coverage-2026-11
-      - refactor/all-context-lifecycle-2026-11
       - refactor/api-contract-types-2026-11
       - refactor/customer-provider-request-lifecycle-2026-11
       - refactor/all-context-lifecycle-2026-11
@@ -38,6 +37,7 @@ on:
       - fix/context-api-request-flows-2026-11
       - refactor/api-layer-race-retry-2026-11
       - refactor/api-service-coverage-2026-11
+      - refactor/customer-provider-request-lifecycle-2026-11
 
 permissions:
   contents: read

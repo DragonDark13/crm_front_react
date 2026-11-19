@@ -19,7 +19,7 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
     const [giftSets, setGiftSets] = useState<IGiftSet[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
     const requestIdRef = useRef(0);
-    const isMountedRef = useRef(false);
+    const isMountedRef = useRef(true);
 
     const fetchGiftSetsData = useCallback(async (): Promise<boolean> => {
         if (!isMountedRef.current) return false;

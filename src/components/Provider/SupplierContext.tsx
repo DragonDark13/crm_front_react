@@ -27,7 +27,7 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
     const requestIdRef = useRef(0);
-    const isMountedRef = useRef(false);
+    const isMountedRef = useRef(true);
 
     const fetchSuppliersFunc = useCallback(async (): Promise<boolean> => {
         if (!isMountedRef.current) return false;
