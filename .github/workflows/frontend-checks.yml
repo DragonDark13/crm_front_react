@@ -22,6 +22,7 @@ on:
       - refactor/all-context-lifecycle-2026-11
       - refactor/frontend-structure-2026-11
       - refactor/products-catalog-components-2026-11
+      - refactor/products-catalog-hook-2026-11
   pull_request:
     branches:
       - main
@@ -43,6 +44,7 @@ on:
       - refactor/all-context-lifecycle-2026-11
       - refactor/frontend-structure-2026-11
       - refactor/products-catalog-components-2026-11
+      - refactor/products-catalog-hook-2026-11
 
 permissions:
   contents: read
