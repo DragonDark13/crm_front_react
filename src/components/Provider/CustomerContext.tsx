@@ -2,6 +2,7 @@ import React, {createContext, useState, useContext, useEffect, PropsWithChildren
 import {ICustomer, ICustomerDetailForCreate} from "../../utils/types";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
+import {useAuth} from '../context/AuthContext';
 
 interface CustomerContextProps {
     customers: ICustomer[];
@@ -13,6 +14,7 @@ interface CustomerContextProps {
 const CustomerContext = createContext<CustomerContextProps | undefined>(undefined);
 
 export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
+    const {authReady, isAuthenticated} = useAuth();
     const [customers, setCustomers] = useState<ICustomer[]>([]);
     const [loading, setLoading] = useState(true);
     const {showSnackbarMessage} = useSnackbarMessage();
@@ -67,13 +69,13 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
 
     useEffect(() => {
         isMountedRef.current = true;
-        void fetchGetAllCustomersFunc();
+        if (authReady && isAuthenticated) void fetchGetAllCustomersFunc();
 
         return () => {
             isMountedRef.current = false;
             requestIdRef.current += 1;
         };
-    }, [fetchGetAllCustomersFunc]);
+    }, [fetchGetAllCustomersFunc, authReady, isAuthenticated]);
 
     const contextValue = useMemo(() => ({
         customers,
