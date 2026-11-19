@@ -5,7 +5,13 @@ import {
     AreaChart, Area,
     LineChart, Line, LabelList,
 } from "recharts";
-import {axiosInstance} from "../../api/api.ts";
+import {
+    fetchDashboardStatistics,
+    MonthlyStatistics,
+    TopProductStatistics,
+    StockLevelStatistics,
+    CustomerActivityStatistics
+} from "../../api/_statisticsApi";
 
 const MONTH_NAMES = [
     "Січень", "Лютий", "Березень", "Квітень",
@@ -14,76 +20,50 @@ const MONTH_NAMES = [
 ];
 
 
-// Типи даних
-interface MonthlyData {
-    month: number;
-    total_sales?: number;
-    total_spent?: number;
-    total_quantity?: number;
-    profit?: number;
-    sales?: number;
-    expenses?: number;
-
-    [key: string]: any;
-}
-
-interface TopProduct {
-    product_id: number;
-    name: string;
-    total_sold: number;
-    total_sales: number;
-}
-
-interface StockLevel {
-    id: number;
-    name: string;
-    available_quantity: number;
-    total_quantity: number;
-}
-
-interface CustomerActivity {
-    day: string;
-    active_customers: number;
-}
-
-
 export default function Dashboard() {
-    const [monthlySales, setMonthlySales] = useState<MonthlyData[]>([]);
+    const [monthlySales, setMonthlySales] = useState<MonthlyStatistics[]>([]);
     const [monthlyPurchases, setMonthlyPurchases] = useState<MonthlyData[]>([]);
-    const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
-    const [stockLevels, setStockLevels] = useState<StockLevel[]>([]);
+    const [topProducts, setTopProducts] = useState<TopProductStatistics[]>([]);
+    const [stockLevels, setStockLevels] = useState<StockLevelStatistics[]>([]);
     const [profitExpenses, setProfitExpenses] = useState<MonthlyData[]>([]);
-    const [customerActivity, setCustomerActivity] = useState<CustomerActivity[]>([]);
+    const [customerActivity, setCustomerActivity] = useState<CustomerActivityStatistics[]>([]);
 
 
     useEffect(() => {
-        async function fetchData() {
-            const salesRes = await axiosInstance.get("/statistics/sales/monthly");
-            const purchasesRes = await axiosInstance.get("/statistics/purchases/monthly");
-            const topProductsRes = await axiosInstance.get("/statistics/top-products");
-            const stockRes = await axiosInstance.get("/statistics/stock");
-            const profitRes = await axiosInstance.get("/statistics/profit-expense");
-            const activityRes = await axiosInstance.get("/statistics/customer-activity");
+        const controller = new AbortController();
 
-            setMonthlySales((salesRes.data as MonthlyData[]).map(item => ({
-                ...item,
-                monthName: MONTH_NAMES[item.month - 1]
-            })));
-            setMonthlyPurchases((purchasesRes.data as MonthlyData[]).map(item => ({
-                ...item,
-                monthName: MONTH_NAMES[item.month - 1]
-            })));
-            setProfitExpenses((profitRes.data as MonthlyData[]).map(item => ({
-                ...item,
-                monthName: MONTH_NAMES[item.month - 1]
-            })));
+        const fetchData = async () => {
+            try {
+                const data = await fetchDashboardStatistics(controller.signal);
 
-            setTopProducts(topProductsRes.data);
-            setStockLevels(stockRes.data);
-            setCustomerActivity(activityRes.data);
-        }
+                if (controller.signal.aborted) return;
 
-        fetchData();
+                setMonthlySales(data.monthlySales.map(item => ({
+                    ...item,
+                    monthName: MONTH_NAMES[item.month - 1]
+                })));
+                setMonthlyPurchases(data.monthlyPurchases.map(item => ({
+                    ...item,
+                    monthName: MONTH_NAMES[item.month - 1]
+                })));
+                setProfitExpenses(data.profitExpenses.map(item => ({
+                    ...item,
+                    monthName: MONTH_NAMES[item.month - 1]
+                })));
+
+                setTopProducts(data.topProducts);
+                setStockLevels(data.stockLevels);
+                setCustomerActivity(data.customerActivity);
+            } catch (error) {
+                if (!controller.signal.aborted) {
+                    console.error("Error loading dashboard statistics:", error);
+                }
+            }
+        };
+
+        void fetchData();
+
+        return () => controller.abort();
     }, []);
 
     const adjustedProfitExpenses = profitExpenses.length === 1
