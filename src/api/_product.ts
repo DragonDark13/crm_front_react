@@ -1,7 +1,7 @@
 // Операції з продуктами
 import {AxiosResponse} from "axios";
 import {API_ENDPOINTS, deleteResource, fetchResource, fetchResponse, postResource, putResource} from "./api";
-import {ApiMessageResponse} from "./contracts";
+import {ApiMessageResponse, ProductMutationResponse} from "./contracts";
 import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
 
 export const deleteAllProducts = (): Promise<ApiMessageResponse> => {
@@ -13,12 +13,12 @@ export const fetchProducts = (): Promise<IProduct[]> => {
 };
 
 // Функція для додавання продукту
-export const addProduct = (newProduct: INewProduct): Promise<IProduct> => {
-    return postResource<IProduct>(API_ENDPOINTS.ADD_PRODUCT, newProduct);
+export const addProduct = (newProduct: INewProduct): Promise<ProductMutationResponse> => {
+    return postResource<ProductMutationResponse>(API_ENDPOINTS.ADD_PRODUCT, newProduct);
 };
 
-export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<IProduct> => {
-    return putResource<IProduct>(API_ENDPOINTS.PRODUCT(productId), editProduct);
+export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<ProductMutationResponse> => {
+    return putResource<ProductMutationResponse>(API_ENDPOINTS.PRODUCT(productId), editProduct);
 };
 
 export const deleteProduct = (productId: number): Promise<ApiMessageResponse> => {
