@@ -9,7 +9,7 @@ import {
 
 } from '@mui/material';
 import  {useState} from 'react';
-import {axiosInstance} from "../../../../api/api";
+import {addPackagingSupplier} from "../../../../api/_packagingMaterials";
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import CancelButton from "../../../Buttons/CancelButton";
 import {AddPackagingSupplierDialogProps} from "../../../../utils/types";
@@ -30,10 +30,7 @@ const AddPackagingSupplierDialog = ({
         setError("");
 
         try {
-            await axiosInstance.post("/add_new_packaging_suppliers", {
-                name,
-                contact_info: contactInfo,
-            });
+            await addPackagingSupplier(name, contactInfo);
             handleCloseAddSupplier(); // Закриваємо діалог після успішного додавання
         } catch (err: any) {
             setError(err.response?.data?.error || "Сталася помилка");
