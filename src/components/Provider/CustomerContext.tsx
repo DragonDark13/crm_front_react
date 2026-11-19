@@ -35,8 +35,8 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
     }, []);
 
     const createCustomerFunc = useCallback(async (newCustomerData: ICustomerDetailForCreate): Promise<void> => {
-        const newCustomer = await createCustomer(newCustomerData);
-        setCustomers(prevCustomers => [...prevCustomers, newCustomer]);
+        const response = await createCustomer(newCustomerData);
+        setCustomers(prevCustomers => [...prevCustomers, response.customer]);
         showSnackbarMessage('Customer created successfully!', 'success');
         const refreshed = await fetchGetAllCustomersFunc();
         if (!refreshed) {
