@@ -23,9 +23,18 @@ export const deletePackagingSupplier = (supplierPackagingId: number): Promise<Ap
     return deleteResource<ApiMessageResponse>(API_ENDPOINTS.DELETE_PACKAGING_SUPPLIER(supplierPackagingId));
 };
 
-export const fetchPackagingSuppliers = (signal?: AbortSignal): Promise<PackagingSupplierResponse[]> => {
+export const fetchPackagingSuppliers = async (signal?: AbortSignal): Promise<ISupplierFull[]> => {
     const config = signal ? {signal} : {};
-    return fetchResource<PackagingSupplierResponse[]>(API_ENDPOINTS.PACKAGING_SUPPLIERS, config);
+    const suppliers = await fetchResource<PackagingSupplierResponse[]>(API_ENDPOINTS.PACKAGING_SUPPLIERS, config);
+    return suppliers.map(supplier => ({
+        ...supplier,
+        contact_info: supplier.contact_info ?? '',
+        email: supplier.email ?? '',
+        phone_number: supplier.phone_number ?? '',
+        address: supplier.address ?? '',
+        is_active: supplier.is_active ?? true,
+        type: 'packaging'
+    }));
 };
 
 export const addPackagingSupplier = (name: string, contactInfo: string): Promise<PackagingSupplierResponse> => {
