@@ -19,14 +19,6 @@ import {
 } from "@mui/material";
 import FilterComponent from "../filters/FilterComponent/FilterComponent";
 import ResponsiveProductView from "../ResponsiveProductView/ResponsiveProductView";
-import AddProductModal from "../dialogs/productsDialogs/AddProductModal/AddProductModal";
-import EditProductModal from "../dialogs/productsDialogs/EditProductModal/EditProductModal";
-import ProductHistoryModal from "../dialogs/productsDialogs/ProductHistoryModal/ProductHistoryModal";
-import PurchaseProductModal from "../dialogs/productsDialogs/PurchaseProductModal/PurchaseProductModal";
-import SaleProductModal from "../dialogs/productsDialogs/SaleProductModal/SaleProductModal";
-import CreateNewCategoryModal from "../dialogs/CreateNewCategoryModal/CreateNewCategoryModal";
-import ConfirmDeleteModal from "../dialogs/ConfirmDeleteModal/ConfirmDeleteModal";
-import AddSupplierModal from "../dialogs/AddSupplierModal/AddSupplierModal";
 import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {addSupplier} from "../../api/_supplier";
@@ -34,12 +26,11 @@ import {addProduct, addPurchase, addSale, deleteProduct, updateProduct, runProdu
 import {addNewCategory} from "../../api/_categories";
 import {exportToExcel} from "../../api/api";
 import DeleteAllProductsDialog from "../dialogs/productsDialogs/DeleteAllProductsDialog/DeleteAllProductsDialog";
-import ProductInfoModal from "../dialogs/productsDialogs/ProductInfoModal";
-import ProductInventoryModal from "../dialogs/productsDialogs/ProductInventoryModal/ProductInventoryModal";
 import {useNewProduct} from "../../hooks/useNewProduct.ts";
 import {useCategories} from "../Provider/CategoryContext.tsx";
 import {useSuppliers} from "../Provider/SupplierContext.tsx";
 import {runCrudAction} from "../../utils/runCrudAction";
+import ProductsCatalogDialogs from "./ProductsCatalog/ProductsCatalogDialogs";
 
 
 export interface IProductsCatalogProps {
@@ -714,100 +705,37 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
             )}
 
 
-            {
-                modalState.openAdd &&
-                <AddProductModal
-                    isAuthenticated={isAuthenticated}
-                    handleRemoveCategory={handleRemoveCategory}
-                    setNewProduct={setNewProduct}
-                    newProduct={newProduct}
-                    openAdd={modalState.openAdd}
-                    handleAdd={handleAddProduct}
-                    handleCategoryChange={handleCategoryChange}
-                    handleCloseAdd={() => handleModalClose("openAdd")}
-                    selectedCategories={selectedCategories}/>
-            }
-
-            {(modalState.productInfoModal && infoProduct && !loadingState.isLoading) &&
-                <ProductInfoModal
-                    product={infoProduct}
-                    open={modalState.productInfoModal}
-                    onClose={() => handleModalClose("productInfoModal")}/>
-            }
-
-            {inventoryProduct && (
-                <ProductInventoryModal
-                    product={inventoryProduct}
-                    open={Boolean(inventoryProduct)}
-                    onClose={() => setInventoryProduct(null)}
-                    onSubmit={handleSubmitInventory}
-                />
-            )}
-
-            {(modalState.openEdit && editProduct && !loadingState.isLoading) &&
-                <EditProductModal
-                    isAuthenticated={isAuthenticated}
-                    openEdit={modalState.openEdit}
-                    handleCloseEdit={() => handleModalClose("openEdit")}
-                    editProduct={editProduct}
-                    setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
-
-
-            {(modalState.openHistory && productId && products !== undefined) && (
-                <ProductHistoryModal
-                    productName={products.find(p => p.id === productId)?.name ?? '—'}
-                    openHistory={modalState.openHistory}
-                    onClose={() => handleModalClose("openHistory")}
-                    productId={productId} // Передаємо productId
-                />
-            )}
-
-            {(modalState.openPurchase && purchaseDetails && editProduct?.name) &&
-                <PurchaseProductModal
-                    isAuthenticated={isAuthenticated}
-                    nameProduct={editProduct.name}
-                    openPurchase={modalState.openPurchase}
-                    handleClosePurchase={() => handleModalClose("openPurchase")}
-                    purchaseDetails={purchaseDetails}
-                    setPurchaseDetails={setPurchaseDetails}
-                    handleSubmitPurchase={handleSubmitPurchase}/>}
-
-
-            {
-                (modalState.openSale && saleData && editProduct) &&
-                <SaleProductModal
-                    isAuthenticated={isAuthenticated}
-                    nameProduct={editProduct.name}
-                    purchasePricePerItem={editProduct.purchase_price_per_item}
-                    quantityOnStock={editProduct.available_quantity}
-                    openSale={modalState.openSale}
-                    handleCloseSale={() => handleModalClose("openSale")}
-                    saleData={saleData}
-                    setSaleData={setSaleData}
-                    handleSale={handleSale}
-                />
-            }
-
-            {
-                modalState.openCategoryCreate &&
-                <CreateNewCategoryModal
-                    isAuthenticated={isAuthenticated}
-                    createNewCategory={createNewCategory}
-                    openCategoryCreateModal={modalState.openCategoryCreate}
-                    handleCloseCategoryModal={() => handleModalClose("openCategoryCreate")}
-                />
-            }
-
-            {selectedDeleteModalProductId !== null && <ConfirmDeleteModal openConfirmDeleteModal={modalState.openDelete}
-                                                                          handleCloseDeleteModal={handleCloseDeleteModal}
-                                                                          selectedDeleteModalProductId={selectedDeleteModalProductId}
-                                                                          handleDelete={handleDelete}/>}
-
-            <AddSupplierModal
+            <ProductsCatalogDialogs
                 isAuthenticated={isAuthenticated}
+                modalState={modalState}
+                handleModalClose={handleModalClose}
+                handleAddProduct={handleAddProduct}
+                handleCategoryChange={handleCategoryChange}
+                handleRemoveCategory={handleRemoveCategory}
+                newProduct={newProduct}
+                setNewProduct={setNewProduct}
+                selectedCategories={selectedCategories}
+                infoProduct={infoProduct}
+                inventoryProduct={inventoryProduct}
+                setInventoryProduct={setInventoryProduct}
+                isLoading={loadingState.isLoading}
+                handleSubmitInventory={handleSubmitInventory}
+                editProduct={editProduct}
+                setEditProduct={setEditProduct}
+                handleEditSave={handleEditSave}
+                productId={productId}
+                products={products}
+                purchaseDetails={purchaseDetails}
+                setPurchaseDetails={setPurchaseDetails}
+                handleSubmitPurchase={handleSubmitPurchase}
+                saleData={saleData}
+                setSaleData={setSaleData}
+                handleSale={handleSale}
+                createNewCategory={createNewCategory}
+                selectedDeleteModalProductId={selectedDeleteModalProductId}
+                handleCloseDeleteModal={handleCloseDeleteModal}
+                handleDelete={handleDelete}
                 handleAddSupplier={handleAddSupplier}
-                open={modalState.openAddSupplierOpen}
-                handleCloseAddSupplierModal={() => handleModalClose("openAddSupplierOpen")}
             />
 
             {/*<div style={{position: "absolute", top: 16, right: 16, display: "flex", alignItems: "center", gap: "10px"}}>*/}
