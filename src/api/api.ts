@@ -98,7 +98,7 @@ const RETRY_DELAY_MS = 300;
 const RETRYABLE_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
 
 const isRetryableGetError = (error: unknown): boolean => {
-    if (!axios.isAxiosError(error) || axios.isCancel(error)) {
+    if (!axios.isAxiosError(error) || error.code === 'ERR_CANCELED') {
         return false;
     }
 
@@ -142,7 +142,7 @@ const getWithRetry = async <T>(
                 throw error;
             }
 
-            await waitBeforeRetry(RETRY_DELAY_MS * (attempt + 1), config.signal);
+            await waitBeforeRetry(RETRY_DELAY_MS * (attempt + 1), config.signal as AbortSignal | undefined);
         }
     }
 };
