@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo} from 'react';
 import {fetchGetAllCategories} from "../../api/_categories";
 
 // Типізація категорій
@@ -38,8 +38,13 @@ export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:Props
     void fetchCategoriesFunc();
   }, [fetchCategoriesFunc]);
 
+  const contextValue = useMemo(() => ({
+    categories,
+    fetchCategoriesFunc
+  }), [categories, fetchCategoriesFunc]);
+
   return (
-    <CategoryContext.Provider value={{ categories, fetchCategoriesFunc }}>
+    <CategoryContext.Provider value={contextValue}>
       {children}
     </CategoryContext.Provider>
   );

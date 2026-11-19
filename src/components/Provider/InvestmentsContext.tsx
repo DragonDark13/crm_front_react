@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState, useEffect, ReactNode, useCallback} from "react";
+import React, {createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo} from "react";
 import {axiosInstance} from "../../api/api";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {INewInvestment, Investment} from "../../utils/types";
@@ -46,16 +46,16 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
         }
     }, [showSnackbarMessage]);
 
-    const resetNewInvestmentDialog = () => {
+    const resetNewInvestmentDialog = useCallback(() => {
         setNewInvestment({
             type_name: "",
             cost: 0,
             date: new Date().toISOString().slice(0, 10),
             supplier: ""
         });
-    };
+    }, []);
 
-    const handleAddInvestment = async () => {
+    const handleAddInvestment = useCallback(async () => {
         try {
             await createInvestment(newInvestment);
             await fetchInvestments();
@@ -65,9 +65,9 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
         } catch (error) {
             showSnackbarMessage("Помилка додавання інвестиції", "error");
         }
-    };
+    }, [newInvestment, fetchInvestments, resetNewInvestmentDialog, showSnackbarMessage]);
 
-    const handleDeleteInvestment = async (id: number) => {
+    const handleDeleteInvestment = useCallback(async (id: number) => {
         try {
             await deleteInvestmentById(id);
             // Після видалення можна оновити список:
@@ -76,14 +76,14 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
         } catch (error) {
             showSnackbarMessage("Помилка видалення інвестиції", "error");
         }
-    };
+    }, [fetchInvestments, showSnackbarMessage]);
 
-    const handleAddInvestmentClose = () => {
+    const handleAddInvestmentClose = useCallback(() => {
         resetNewInvestmentDialog();
         setAddInvestDialogOpen(false);
-    };
+    }, [resetNewInvestmentDialog]);
 
-    const handleDeleteAllOtherInvestment = async (handleClose:()=>void) => {
+    const handleDeleteAllOtherInvestment = useCallback(async (handleClose: () => void) => {
         try {
            const res = await deleteAllInvestments();
             await fetchInvestments();
@@ -94,25 +94,36 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
             showSnackbarMessage('Сталася помилка під час видалення.', 'error');
 
         }
-    };
+    }, [fetchInvestments, showSnackbarMessage]);
 
     useEffect(() => {
         void fetchInvestments();
     }, [fetchInvestments]);
 
+    const contextValue = useMemo(() => ({
+        investments,
+        newInvestment,
+        setNewInvestment,
+        addInvestDialogOpen,
+        setAddInvestDialogOpen,
+        fetchInvestments,
+        handleAddInvestment,
+        handleDeleteInvestment,
+        handleDeleteAllOtherInvestment,
+        handleAddInvestmentClose
+    }), [
+        investments,
+        newInvestment,
+        addInvestDialogOpen,
+        fetchInvestments,
+        handleAddInvestment,
+        handleDeleteInvestment,
+        handleDeleteAllOtherInvestment,
+        handleAddInvestmentClose
+    ]);
+
     return (
-        <InvestmentsContext.Provider value={{
-            investments,
-            newInvestment,
-            setNewInvestment,
-            addInvestDialogOpen,
-            setAddInvestDialogOpen,
-            fetchInvestments,
-            handleAddInvestment,
-            handleDeleteInvestment,
-            handleDeleteAllOtherInvestment,
-            handleAddInvestmentClose
-        }}>
+        <InvestmentsContext.Provider value={contextValue}>
             {children}
         </InvestmentsContext.Provider>
     );

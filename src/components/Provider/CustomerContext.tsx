@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo} from 'react';
 import {ICustomer, ICustomerDetailForCreate} from "../../utils/types";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {createCustomer, fetchGetAllCustomers} from "../../api/_customer";
@@ -34,7 +34,7 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
         }
     }, []);
 
-    const createCustomerFunc = async (newCustomerData: ICustomerDetailForCreate) => {
+    const createCustomerFunc = useCallback(async (newCustomerData: ICustomerDetailForCreate): Promise<void> => {
         const newCustomer = await createCustomer(newCustomerData);
         setCustomers(prevCustomers => [...prevCustomers, newCustomer]);
         showSnackbarMessage('Customer created successfully!', 'success');
@@ -42,14 +42,21 @@ export const CustomerProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
         if (!refreshed) {
             showSnackbarMessage('Customer was created, but the customer list could not be refreshed.', 'warning');
         }
-    };
+    }, [fetchGetAllCustomersFunc, showSnackbarMessage]);
 
     useEffect(() => {
         void fetchGetAllCustomersFunc();
     }, [fetchGetAllCustomersFunc]);
 
+    const contextValue = useMemo(() => ({
+        customers,
+        fetchGetAllCustomersFunc,
+        createCustomerFunc,
+        loading
+    }), [customers, fetchGetAllCustomersFunc, createCustomerFunc, loading]);
+
     return (
-        <CustomerContext.Provider value={{customers, fetchGetAllCustomersFunc, createCustomerFunc, loading}}>
+        <CustomerContext.Provider value={contextValue}>
             {children}
         </CustomerContext.Provider>
     );
