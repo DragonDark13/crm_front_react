@@ -59,7 +59,7 @@ export interface IProductPurchaseHistoryRecord {
     purchase_price_per_item: number;
     purchase_total_price: number;
     quantity_purchase: number;
-    supplier_id: number;
+    supplier_id: number | null;
     supplier: Pick<ISupplierFull, 'id' | 'name' | 'is_active'> | null;
 }
 
