@@ -41,6 +41,43 @@ export interface ProductMutationResponse {
     product_description: string;
 }
 
+export interface ProductHistoryResponse {
+    stock_history: Array<{
+        id: number;
+        product_id: number;
+        timestamp: string;
+        change_type: string;
+        change_amount: number;
+        quantity_before: number | null;
+        quantity_after: number | null;
+        reason: string | null;
+    }>;
+    purchase_history: Array<{
+        id: number;
+        product_id: number;
+        supplier_id: number | null;
+        purchase_price_per_item: number;
+        purchase_total_price: number;
+        purchase_date: string;
+        quantity_purchase: number;
+        supplier: { id: number; name: string; is_active: boolean } | null;
+    }>;
+    sale_history: Array<{
+        id: number;
+        product_id: number;
+        customer_id: number;
+        quantity_sold: number;
+        selling_price_per_item: number;
+        selling_total_price: number;
+        sale_date: string;
+        profit: number;
+        packaging_material_id: number | null;
+        packaging_quantity: number | null;
+        total_packaging_cost: number | null;
+        customer: { id: number; name: string };
+    }>;
+}
+
 export interface ProductInventoryResponse extends ApiMessageResponse {
     product_id: number;
     quantity_before: number;
