@@ -24,6 +24,23 @@ export interface CreateCategoryResponse extends ApiMessageResponse {
     };
 }
 
+export interface ProductMutationResponse {
+    id: number;
+    name: string;
+    supplier_id: number | null;
+    total_quantity: number;
+    available_quantity: number;
+    reserved_quantity: number;
+    sold_quantity: number;
+    purchase_total_price: number;
+    purchase_price_per_item: number;
+    selling_total_price: number;
+    selling_price_per_item: number;
+    created_date: string | null;
+    article: string;
+    product_description: string;
+}
+
 export interface PackagingMaterialResponse extends ApiMessageResponse {
     material: import("../utils/types").IMaterial;
 }
