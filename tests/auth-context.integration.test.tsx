@@ -20,7 +20,7 @@ const AuthHarness = () => {
             <span data-testid="roles">{roles.join(',')}</span>
             <span data-testid="authenticated">{String(isAuthenticated)}</span>
             <span data-testid="ready">{String(authReady)}</span>
-            <button onClick={() => void login('new-access-token')}>Login context</button>
+            <button onClick={() => void login('new-access-token').catch(() => undefined)}>Login context</button>
             <button onClick={() => void logout()}>Logout context</button>
         </div>
     );
