@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {AxiosError} from "axios";
 import {useSnackbarMessage} from "../components/Provider/SnackbarMessageContext";
 import {GiftSetPayload, IHandleAddNewGiftBox, ModalNames} from "../utils/types";
 import {useGiftSet} from "../components/Provider/GiftSetContext";
@@ -47,18 +46,15 @@ export const useGiftBoxModal = (
         };
 
         try {
-            await createNewGiftSet(payload);
+            const created = await createNewGiftSet(payload);
+            if (!created) return;
+
             close("addNewGiftBox");
             fetchProductsFunc();
             fetchPackagingOptions();
-            showSnackbarMessage("Gift box created successfully!", "success");
         } catch (error) {
-            const axiosError = error as AxiosError;
-            console.error('Error creating gift box:', axiosError);
-            showSnackbarMessage(
-                'Error creating gift box: ' + (axiosError.message || axiosError.message),
-                'error'
-            );
+            console.error('Error creating gift box:', error);
+            showSnackbarMessage('Помилка створення набору', 'error');
         }
     };
 

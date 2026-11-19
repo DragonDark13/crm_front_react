@@ -10,11 +10,11 @@ import {useSnackbarMessage} from "./SnackbarMessageContext"; // Assuming you hav
 interface GiftSetContextProps {
     giftSets: IGiftSet[];
     setGiftSets: React.Dispatch<React.SetStateAction<IGiftSet[]>>;
-    fetchGiftSetsData: () => void;
-    deleteGiftSet: (giftSetId: number) => void;
-    createNewGiftSet: (newGiftBox: GiftSetPayload) => void;
-    updateExistingGiftSet: (updatedGiftBox: IGiftUpdateItem) => void;
-    sellGiftSetData: (requestData: { gift_set_id: number; customer_id: number; sale_date: string | null; selling_price: number }) => void;
+    fetchGiftSetsData: () => Promise<boolean>;
+    deleteGiftSet: (giftSetId: number) => Promise<boolean>;
+    createNewGiftSet: (newGiftBox: GiftSetPayload) => Promise<boolean>;
+    updateExistingGiftSet: (updatedGiftBox: IGiftUpdateItem) => Promise<boolean>;
+    sellGiftSetData: (requestData: { gift_set_id: number; customer_id: number; sale_date: string | null; selling_price: number }) => Promise<boolean>;
 }
 
 const GiftSetContext = createContext<GiftSetContextProps | undefined>(undefined);
@@ -24,61 +24,68 @@ export const GiftSetProvider: React.FC<PropsWithChildren> = ({children}:PropsWit
     const {showSnackbarMessage} = useSnackbarMessage();
 
 
-    const fetchGiftSetsData = useCallback(() => {
-        fetchGiftSets()
-            .then(setGiftSets)
-            .catch((error) => {
-                console.error("Error fetching gift sets:", error);
-                showSnackbarMessage('Помилка отримання наборів', 'error');
-            });
+    const fetchGiftSetsData = useCallback(async (): Promise<boolean> => {
+        try {
+            const data = await fetchGiftSets();
+            setGiftSets(data);
+            return true;
+        } catch (error) {
+            console.error("Error fetching gift sets:", error);
+            showSnackbarMessage('Помилка отримання наборів', 'error');
+            return false;
+        }
     }, [showSnackbarMessage]);
 
-    const deleteGiftSet = useCallback((giftSetId: number) => {
-        removeGiftSet(giftSetId)
-            .then(() => {
-                setGiftSets(prevSets => prevSets.filter(giftSet => giftSet.id !== giftSetId));
-                showSnackbarMessage('Gift set removed successfully', 'success');
-            })
-            .catch((error) => {
-                console.error("Error deleting gift set:", error);
-                showSnackbarMessage('Помилка видалення набору', 'error');
-            });
+    const deleteGiftSet = useCallback(async (giftSetId: number): Promise<boolean> => {
+        try {
+            await removeGiftSet(giftSetId);
+            setGiftSets(prevSets => prevSets.filter(giftSet => giftSet.id !== giftSetId));
+            showSnackbarMessage('Gift set removed successfully', 'success');
+            return true;
+        } catch (error) {
+            console.error("Error deleting gift set:", error);
+            showSnackbarMessage('Помилка видалення набору', 'error');
+            return false;
+        }
     }, [showSnackbarMessage]);
 
-    const createNewGiftSet = useCallback((newGiftBox: GiftSetPayload) => {
-        createGiftBox(newGiftBox)
-            .then(() => {
-                fetchGiftSetsData(); // Refresh gift sets after creation
-                showSnackbarMessage('Gift set created successfully', 'success');
-            })
-            .catch((error) => {
-                console.error("Error creating gift box:", error);
-                showSnackbarMessage('Помилка створення набору', 'error');
-            });
+    const createNewGiftSet = useCallback(async (newGiftBox: GiftSetPayload): Promise<boolean> => {
+        try {
+            await createGiftBox(newGiftBox);
+            await fetchGiftSetsData();
+            showSnackbarMessage('Gift set created successfully', 'success');
+            return true;
+        } catch (error) {
+            console.error("Error creating gift box:", error);
+            showSnackbarMessage('Помилка створення набору', 'error');
+            return false;
+        }
     }, [fetchGiftSetsData, showSnackbarMessage]);
 
-    const updateExistingGiftSet = useCallback((updatedGiftBox: IGiftUpdateItem) => {
-        updateGiftSet(updatedGiftBox)
-            .then(() => {
-                fetchGiftSetsData(); // Refresh after updating
-                showSnackbarMessage('Gift set updated successfully', 'success');
-            })
-            .catch((error) => {
-                console.error("Error updating gift set:", error);
-                showSnackbarMessage('Помилка оновлення набору', 'error');
-            });
+    const updateExistingGiftSet = useCallback(async (updatedGiftBox: IGiftUpdateItem): Promise<boolean> => {
+        try {
+            await updateGiftSet(updatedGiftBox);
+            await fetchGiftSetsData();
+            showSnackbarMessage('Gift set updated successfully', 'success');
+            return true;
+        } catch (error) {
+            console.error("Error updating gift set:", error);
+            showSnackbarMessage('Помилка оновлення набору', 'error');
+            return false;
+        }
     }, [fetchGiftSetsData, showSnackbarMessage]);
 
-    const sellGiftSetData = useCallback((requestData: { gift_set_id: number; customer_id: number; sale_date: string | null; selling_price: number }) => {
-        sellGiftSet(requestData)
-            .then(() => {
-                fetchGiftSetsData(); // Refresh gift sets after selling
-                showSnackbarMessage('Gift set sold successfully', 'success');
-            })
-            .catch((error) => {
-                console.error("Error selling gift set:", error);
-                showSnackbarMessage('Помилка продажу набору', 'error');
-            });
+    const sellGiftSetData = useCallback(async (requestData: { gift_set_id: number; customer_id: number; sale_date: string | null; selling_price: number }): Promise<boolean> => {
+        try {
+            await sellGiftSet(requestData);
+            await fetchGiftSetsData();
+            showSnackbarMessage('Gift set sold successfully', 'success');
+            return true;
+        } catch (error) {
+            console.error("Error selling gift set:", error);
+            showSnackbarMessage('Помилка продажу набору', 'error');
+            return false;
+        }
     }, [fetchGiftSetsData, showSnackbarMessage]);
 
     const contextValue = useMemo(() => ({

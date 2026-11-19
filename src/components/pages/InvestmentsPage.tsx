@@ -23,7 +23,6 @@ import {INewInvestment, Investment} from "../../utils/types";
 import RenderHeaderCell from "../_elements/RenderHeaderCell";
 import ConfirmDeleteGiftDialog from "./GiftSetsPage/ConfirmDeleteGiftDialog";
 import AddButton from "../Buttons/AddButton";
-import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import {useInvestments} from "../Provider/InvestmentsContext";
 
 
@@ -37,7 +36,6 @@ const InvestmentsPage: React.FC = () => {
         handleAddInvestment,
         handleDeleteInvestment,
         handleAddInvestmentClose,
-        fetchInvestments
     } = useInvestments();
 
 
@@ -47,9 +45,6 @@ const InvestmentsPage: React.FC = () => {
     //     date: new Date().toISOString().slice(0, 10),
     //     supplier: ""
     // });
-    const {showSnackbarMessage} = useSnackbarMessage()
-
-
     // const [addInvestDialogOpen, setAdInvestDialogOpen] = useState(false);
 
     // const fetchInvestments = async () => {
@@ -95,13 +90,7 @@ const InvestmentsPage: React.FC = () => {
 
     const handleConfirmInvestmentDelete = () => {
         if (selectedInvestmentSetId !== null) {
-            handleDeleteInvestment(selectedInvestmentSetId).then(() => {
-                fetchInvestments();
-                showSnackbarMessage('Запис успішно видалено', 'success');
-            }).catch((error) => {
-                console.error("Error deleting gift set:", error);
-                showSnackbarMessage('Помилка видалення запису', 'error');
-            });
+            void handleDeleteInvestment(selectedInvestmentSetId);
         }
         setOpenConfirmInvestmentDialog(false);
     };

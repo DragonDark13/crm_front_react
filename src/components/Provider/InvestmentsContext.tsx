@@ -1,5 +1,4 @@
 import React, {createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo} from "react";
-import {axiosInstance} from "../../api/api";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {INewInvestment, Investment} from "../../utils/types";
 import {
@@ -17,7 +16,7 @@ interface InvestmentsContextType {
     setNewInvestment: React.Dispatch<React.SetStateAction<INewInvestment>>;
     addInvestDialogOpen: boolean;
     setAddInvestDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    fetchInvestments: () => Promise<void>;
+    fetchInvestments: (notifyError?: boolean) => Promise<boolean>;
     handleAddInvestment: () => Promise<void>;
     handleDeleteInvestment: (id: number) => Promise<void>;
     handleDeleteAllOtherInvestment: (handleClose: () => void) => Promise<void>;
@@ -37,12 +36,16 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const [addInvestDialogOpen, setAddInvestDialogOpen] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage();
 
-    const fetchInvestments = useCallback(async () => {
+    const fetchInvestments = useCallback(async (notifyError = true): Promise<boolean> => {
         try {
             const data = await getAllInvestments();
             setInvestments(data);
+            return true;
         } catch (error) {
-            showSnackbarMessage("Помилка завантаження інвестицій", "error");
+            if (notifyError) {
+                showSnackbarMessage("Помилка завантаження інвестицій", "error");
+            }
+            return false;
         }
     }, [showSnackbarMessage]);
 
@@ -58,10 +61,13 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const handleAddInvestment = useCallback(async () => {
         try {
             await createInvestment(newInvestment);
-            await fetchInvestments();
+            const refreshed = await fetchInvestments(false);
             setAddInvestDialogOpen(false);
             resetNewInvestmentDialog();
             showSnackbarMessage("Інвестицію додано", "success");
+            if (!refreshed) {
+                showSnackbarMessage("Інвестицію додано, але список не вдалося оновити.", "warning");
+            }
         } catch (error) {
             showSnackbarMessage("Помилка додавання інвестиції", "error");
         }
@@ -70,9 +76,11 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
     const handleDeleteInvestment = useCallback(async (id: number) => {
         try {
             await deleteInvestmentById(id);
-            // Після видалення можна оновити список:
-            await fetchInvestments();
+            const refreshed = await fetchInvestments(false);
             showSnackbarMessage("Інвестицію видалено", "success");
+            if (!refreshed) {
+                showSnackbarMessage("Запис видалено, але список не вдалося оновити.", "warning");
+            }
         } catch (error) {
             showSnackbarMessage("Помилка видалення інвестиції", "error");
         }
@@ -85,14 +93,16 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
 
     const handleDeleteAllOtherInvestment = useCallback(async (handleClose: () => void) => {
         try {
-           const res = await deleteAllInvestments();
-            await fetchInvestments();
+            await deleteAllInvestments();
+            const refreshed = await fetchInvestments(false);
             showSnackbarMessage('Всі записи успішно видалені', 'success');
+            if (!refreshed) {
+                showSnackbarMessage('Записи видалено, але список не вдалося оновити.', 'warning');
+            }
             handleClose();
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Помилка під час видалення:', error);
             showSnackbarMessage('Сталася помилка під час видалення.', 'error');
-
         }
     }, [fetchInvestments, showSnackbarMessage]);
 
