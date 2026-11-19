@@ -41,6 +41,17 @@ export interface ProductMutationResponse {
     product_description: string;
 }
 
+export interface ProductInventoryResponse extends ApiMessageResponse {
+    product_id: number;
+    quantity_before: number;
+    quantity_after: number;
+    change_amount: number;
+    deleted_gift_sets: number[];
+    available_quantity: number;
+    reserved_quantity: number;
+    stock_history: Record<string, unknown>;
+}
+
 export interface PackagingMaterialResponse extends ApiMessageResponse {
     material: import("../utils/types").IMaterial;
 }
