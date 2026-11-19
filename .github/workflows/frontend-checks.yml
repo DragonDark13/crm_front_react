@@ -13,6 +13,16 @@ on:
       - refactor/supplier-api-hooks-2026-11
       - refactor/effect-dependencies-audit-2026-11
       - perf/react-render-audit-2026-11
+      - refactor/context-provider-memoization-2026-11
+      - fix/context-api-request-flows-2026-11
+      - refactor/api-layer-race-retry-2026-11
+      - refactor/api-service-coverage-2026-11
+      - refactor/api-contract-types-2026-11
+      - refactor/customer-provider-request-lifecycle-2026-11
+      - refactor/all-context-lifecycle-2026-11
+      - refactor/frontend-structure-2026-11
+      - refactor/products-catalog-components-2026-11
+      - refactor/products-catalog-hook-2026-11
   pull_request:
     branches:
       - main
@@ -24,6 +34,17 @@ on:
       - refactor/gift-set-modal-types-2026-11
       - refactor/supplier-api-hooks-2026-11
       - refactor/effect-dependencies-audit-2026-11
+      - perf/react-render-audit-2026-11
+      - refactor/context-provider-memoization-2026-11
+      - perf/bundle-minification-lazy-pages-2026-11
+      - fix/context-api-request-flows-2026-11
+      - refactor/api-layer-race-retry-2026-11
+      - refactor/api-service-coverage-2026-11
+      - refactor/customer-provider-request-lifecycle-2026-11
+      - refactor/all-context-lifecycle-2026-11
+      - refactor/frontend-structure-2026-11
+      - refactor/products-catalog-components-2026-11
+      - refactor/products-catalog-hook-2026-11
 
 permissions:
   contents: read

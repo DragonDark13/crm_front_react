@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
-import axios from 'axios';
-import {axiosInstance} from "../../../api/api";
 import {useInvestments} from "../../Provider/InvestmentsContext";
 
 const DeleteAllInvestmentsDialog: React.FC = () => {

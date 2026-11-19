@@ -94,7 +94,7 @@ const CombinedHistoryTable = ({productHistory}: CombinedHistoryTableProps) => {
                                                 : record.sale_date
                                         ).toLocaleString()}
                                     </TableCell>                                    <TableCell size={"small"}>{record.type === 'sale' ? 'Продаж' : 'Закупка'}</TableCell>
-                                    <TableCell size={"small"}>{record.type === 'sale' ? record.customer.name : record.supplier.name}</TableCell>
+                                    <TableCell size={"small"}>{record.type === 'sale' ? record.customer.name : record.supplier?.name ?? '—'}</TableCell>
                                     <TableCell size={"small"}>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_price_per_item}</TableCell>
                                     <TableCell size={"small"}>{record.type === 'sale' ? record.quantity_sold : record.quantity_purchase}</TableCell>
                                     <TableCell size={"small"}>{record.type === 'sale' ? record.selling_price_per_item : record.purchase_total_price}</TableCell>

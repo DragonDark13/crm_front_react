@@ -16,7 +16,7 @@ import {useCategories} from "../Provider/CategoryContext";
 import {useSuppliers} from "../Provider/SupplierContext";
 import {useSnackbarMessage} from "../Provider/SnackbarMessageContext";
 import AddNewCustomerDialog from "../dialogs/CustomersDialogs/AddNewCustomerDialog/AddNewCustomerDialog";
-import axios, {AxiosError} from "axios";
+import {AxiosError} from "axios";
 import {useCustomers} from "../Provider/CustomerContext";
 import {useAuth} from "../context/AuthContext";
 import AddNewPackagingModal from "../dialogs/packagingModal/AddNewPackagingModal/AddNewPackagingModal";
@@ -30,7 +30,6 @@ import {usePackaging} from "../Provider/PackagingContext";
 import {useNewProduct} from "../../hooks/useNewProduct";
 import AddInvestmentDialog from "../dialogs/AddInvestmentDialog/AddInvestmentDialog";
 import {useInvestments} from "../Provider/InvestmentsContext";
-import {axiosInstance} from "../../api/api.ts";
 
 //TODO Додати опцію Зберігти і додати ще
 
@@ -221,21 +220,15 @@ const AddButtonWithMenu = () => {
         };
 
         try {
-            await createNewGiftSet(payload)
+            const created = await createNewGiftSet(payload);
+            if (!created) return;
+
             handleModalClose("addNewGiftBox");
-
-            fetchProductsFunc()
+            fetchProductsFunc();
             fetchPackagingOptions();
-
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                showSnackbarMessage(
-                    'Error creating customer: ' + (error.response?.data?.error ?? 'Unknown error'),
-                    'error'
-                );
-            } else {
-                showSnackbarMessage('Unknown error', 'error');
-            }
+            console.error('Unexpected error creating gift set:', error);
+            showSnackbarMessage('Помилка створення набору', 'error');
         }
 
     };

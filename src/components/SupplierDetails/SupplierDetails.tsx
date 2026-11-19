@@ -8,7 +8,7 @@ interface SupplierDetailsProps {
 
 const SupplierDetails: React.FC<SupplierDetailsProps> = ({supplierId}) => {
     const [purchaseHistory, setPurchaseHistory] = useState<IProductSupplierPurchaseHistoryRecord[]>([]);
-    const [products, setProducts] = useState<IProduct[]>([]);
+    const [products, setProducts] = useState<Array<Pick<IProduct, 'id' | 'name'>>>([]);
 
     useEffect(() => {
         let isActive = true;

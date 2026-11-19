@@ -1,8 +1,9 @@
-import {ICustomer, ICustomerDetailForCreate, ICustomerDetails, INewGiftCustomerDetails} from "../utils/types";
+import {ICustomer, ICustomerDetailForCreate, ICustomerDetails} from "../utils/types";
+import {CreateCustomerResponse} from "./contracts";
 import {API_ENDPOINTS, deleteResource, fetchResource, postResource, putResource} from "./api";
 
-export const createCustomer = (customerData: ICustomerDetailForCreate): Promise<ICustomer> => {
-    return postResource<ICustomer>(API_ENDPOINTS.CREATED_CUSTOMER, customerData);
+export const createCustomer = (customerData: ICustomerDetailForCreate): Promise<CreateCustomerResponse> => {
+    return postResource<CreateCustomerResponse>(API_ENDPOINTS.CREATED_CUSTOMER, customerData);
 };
 
 export const fetchGetAllCustomers = (): Promise<ICustomer[]> => {
@@ -13,8 +14,8 @@ export const fetchCustomerDetails = (customerId: number): Promise<ICustomerDetai
     return fetchResource<ICustomerDetails>(API_ENDPOINTS.CUSTOMER_DETAILS(customerId));
 };
 
-export const updateCustomerData = (customerData: ICustomerDetails): Promise<void> => {
-    return putResource<void>(`/update_customers/${customerData.id}`, customerData);
+export const updateCustomerData = (customerData: ICustomerDetails): Promise<ICustomerDetails> => {
+    return putResource<ICustomerDetails>(`/update_customers/${customerData.id}`, customerData);
 };
 
 export const deleteCustomerData = (customerId: number): Promise<void> => {

@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import axios from 'axios';
 import {
     Table,
     TableBody,
@@ -24,7 +23,7 @@ import {
     Paper,
     Typography, DialogContent, DialogActions,
 } from '@mui/material';
-import {axiosInstance} from "../../../api/api";
+import {fetchSalesHistory} from "../../../api/_salesApi";
 import {ShoppingBag, Inventory, CardGiftcard, Info, ExpandMore, Luggage} from "@mui/icons-material";
 import SaleGiftSetDetails from "./SaleGiftSetDetails";
 import SaleProductDetails from "./SaleProductDetails";
@@ -103,12 +102,17 @@ const SalesHistoryTable: React.FC = () => {
     const [selectedSale, setSelectedSale] = useState<SaleItemInfo | null>(null);
 
     useEffect(() => {
-        axiosInstance
-            .get('/get_all_sales_history')
-            .then((response) => {
-                setSalesData(response.data);
-            })
-            .catch((error) => console.error('Error loading sales data:', error));
+        const controller = new AbortController();
+
+        fetchSalesHistory<SaleItemInfo[]>(controller.signal)
+            .then(setSalesData)
+            .catch((error) => {
+                if (!controller.signal.aborted) {
+                    console.error('Error loading sales data:', error);
+                }
+            });
+
+        return () => controller.abort();
     }, []);
 
     const handleRequestSort = (property: string) => {

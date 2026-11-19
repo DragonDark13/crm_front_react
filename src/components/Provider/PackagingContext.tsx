@@ -1,14 +1,11 @@
 // PackagingContext.js
-import {createContext, useContext, useEffect, useState, useCallback} from 'react';
+import {createContext, useContext, useEffect, useState, useCallback, useMemo, useRef, PropsWithChildren} from 'react';
 import {IMaterial} from "../../utils/types";
 import {fetchListPackagingMaterials} from "../../api/_packagingMaterials";
-import { PropsWithChildren } from 'react';
-
 
 interface IPackagingContextProps {
     packagingMaterials: IMaterial[];
     fetchPackagingOptions: () => Promise<void>;
-
     loading: boolean;
     error: string | null;
     // addPackaging: (newPackaging: any) => void;
@@ -33,24 +30,46 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
     const [packagingMaterials, setPackagingMaterials] = useState<IMaterial[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | string>(null);
+    const requestIdRef = useRef(0);
+    const isMountedRef = useRef(true);
 
     const fetchPackagingOptions = useCallback(async (): Promise<void> => {
+        if (!isMountedRef.current) return;
+
+        const requestId = ++requestIdRef.current;
         setLoading(true);
         setError(null);
+
         try {
             const materials = await fetchListPackagingMaterials();
+
+            if (!isMountedRef.current || requestId !== requestIdRef.current) {
+                return;
+            }
+
             setPackagingMaterials(materials);
-        } catch (err) {
+        } catch {
+            if (!isMountedRef.current || requestId !== requestIdRef.current) {
+                return;
+            }
+
             setError('Не вдалося завантажити пакувальні матеріали');
         } finally {
-            setLoading(false);
+            if (isMountedRef.current && requestId === requestIdRef.current) {
+                setLoading(false);
+            }
         }
     }, []);
 
     useEffect(() => {
+        isMountedRef.current = true;
         void fetchPackagingOptions();
-    }, [fetchPackagingOptions]);
 
+        return () => {
+            isMountedRef.current = false;
+            requestIdRef.current += 1;
+        };
+    }, [fetchPackagingOptions]);
 
     // TODO addPackaging
     // const addPackaging = async (newPackaging) => {
@@ -86,15 +105,15 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
 //         }
 //     };
 
+    const contextValue = useMemo(() => ({
+        packagingMaterials,
+        fetchPackagingOptions,
+        loading,
+        error,
+    }), [packagingMaterials, fetchPackagingOptions, loading, error]);
+
     return (
-        <PackagingContext.Provider
-            value={{
-                packagingMaterials,
-                fetchPackagingOptions,
-                loading,
-                error,
-            }}
-        >
+        <PackagingContext.Provider value={contextValue}>
             {children}
         </PackagingContext.Provider>
     );

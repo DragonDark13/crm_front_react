@@ -1,35 +1,40 @@
 // Операції з продуктами
-import {API_ENDPOINTS, axiosInstance, handleError, postResource, fetchResource} from "./api";
-import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
 import {AxiosResponse} from "axios";
+import {API_ENDPOINTS, deleteResource, fetchResource, fetchResponse, postResource, putResource} from "./api";
+import {ApiMessageResponse, ProductHistoryResponse, ProductInventoryResponse, ProductMutationResponse} from "./contracts";
+import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
+
+export const deleteAllProducts = (): Promise<ApiMessageResponse> => {
+    return deleteResource<ApiMessageResponse>(API_ENDPOINTS.DELETE_ALL_PRODUCTS);
+};
 
 export const fetchProducts = (): Promise<IProduct[]> => {
     return fetchResource<IProduct[]>(API_ENDPOINTS.PRODUCTS);
 };
 
 // Функція для додавання продукту
-export const addProduct = (newProduct: INewProduct) => {
-    return axiosInstance.post('/add_new_product', newProduct).catch(handleError);
+export const addProduct = (newProduct: INewProduct): Promise<ProductMutationResponse> => {
+    return postResource<ProductMutationResponse>(API_ENDPOINTS.ADD_PRODUCT, newProduct);
 };
 
-export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<AxiosResponse> => {
-    return axiosInstance.put(API_ENDPOINTS.PRODUCT(productId), editProduct).catch(handleError);
+export const updateProduct = (productId: number, editProduct: IEditProduct): Promise<ProductMutationResponse> => {
+    return putResource<ProductMutationResponse>(API_ENDPOINTS.PRODUCT(productId), editProduct);
 };
 
-export const deleteProduct = (productId: number): Promise<AxiosResponse> => {
-    return axiosInstance.delete(API_ENDPOINTS.PRODUCT(productId)).catch(handleError);
+export const deleteProduct = (productId: number): Promise<ApiMessageResponse> => {
+    return deleteResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT(productId));
 };
 
-export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<void> => {
-    return postResource<void>(API_ENDPOINTS.PRODUCT_PURCHASE(productId), purchaseData);
+export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<ApiMessageResponse> => {
+    return postResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT_PURCHASE(productId), purchaseData);
 };
 
-export const addSale = (productId: number, saleData: ISaleData): Promise<void> => {
-    return postResource<void>(API_ENDPOINTS.PRODUCT_SALE(productId), saleData);
+export const addSale = (productId: number, saleData: ISaleData): Promise<ApiMessageResponse> => {
+    return postResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT_SALE(productId), saleData);
 };
 
-export const fetchProductHistory = (productId: number) => {
-    return axiosInstance.get(`/product/${productId}/history`).catch(handleError);
+export const fetchProductHistory = (productId: number): Promise<AxiosResponse<ProductHistoryResponse>> => {
+    return fetchResponse<ProductHistoryResponse>(`/product/${productId}/history`);
 };
 
 export interface IProductInventoryData {
@@ -37,9 +42,6 @@ export interface IProductInventoryData {
     reason?: string;
 }
 
-export const runProductInventory = (productId: number, data: IProductInventoryData) => {
-    const token = localStorage.getItem('token');
-    return axiosInstance.post(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data, {
-        headers: token ? {'Authorization': `Bearer ${token}`} : {}
-    }).catch(handleError);
+export const runProductInventory = (productId: number, data: IProductInventoryData): Promise<ProductInventoryResponse> => {
+    return postResource<ProductInventoryResponse>(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data);
 };

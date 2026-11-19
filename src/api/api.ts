@@ -1,5 +1,7 @@
-import axios, {AxiosHeaders} from 'axios';
+import axios, {AxiosHeaders, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
+import {ApiErrorResponse} from "./contracts";
+
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
     return window.location.hostname === 'localhost'
@@ -7,7 +9,7 @@ const getBaseURL = (): string => {
         : 'https://aleksandrforupwork.pythonanywhere.com/api/';
 };
 
-// Створення екземпляра axios з базовою конфігурацією
+// Створення єдиного екземпляра axios з базовою конфігурацією
 export const axiosInstance = axios.create({
     baseURL: getBaseURL(),
     headers: {
@@ -15,21 +17,19 @@ export const axiosInstance = axios.create({
     },
 });
 
-
 // Інтерсептор для автоматичного додавання JWT до запитів
 axiosInstance.interceptors.request.use(config => {
     const isLoginRequest = config.url?.split('?')[0].endsWith('/login');
 
+    config.headers = AxiosHeaders.from(config.headers);
+
     if (isLoginRequest) {
         // Авторизація має залишатися доступною без попереднього токена.
-        config.headers = AxiosHeaders.from(config.headers);
         config.headers.delete('Authorization');
         return config;
     }
 
     const token = localStorage.getItem('token');
-
-    config.headers = AxiosHeaders.from(config.headers);
 
     if (token) {
         config.headers.set('Authorization', `Bearer ${token}`);
@@ -40,16 +40,24 @@ axiosInstance.interceptors.request.use(config => {
     return config;
 });
 
-// Інтерсептор для обробки помилок
+// Інтерсептор не перетворює помилки: їх нормалізація виконується в API helpers.
 axiosInstance.interceptors.response.use(
     response => response,
     error => Promise.reject(error)
 );
+
 // Константи для API-ендпоінтів
 export const API_ENDPOINTS = {
     LOGIN: '/login',
     LOGOUT: '/logout',
     PRODUCTS: '/get_all_products',
+    ADD_PRODUCT: '/add_new_product',
+    DELETE_ALL_PRODUCTS: '/delete_all_products',
+    DELETE_ALL_MATERIALS: '/delete_all_materials',
+    PACKAGING_SUPPLIERS: '/get_all_packaging_suppliers',
+    ADD_PACKAGING_SUPPLIER: '/add_new_packaging_suppliers',
+    UPDATE_PACKAGING_STATUS: '/update_packaging_status',
+    PURCHASE_CURRENT_PACKAGING: '/purchase_current_packaging',
     CATEGORIES: '/categories/get_all_categories',
     ADD_NEW_CATEGORIES: '/add_new_category',
     ADD_SUPPLIERS: '/create_supplier',
@@ -67,7 +75,7 @@ export const API_ENDPOINTS = {
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
     PRODUCT_INVENTORY: (id: number) => `/product/${id}/inventory`,
     PRODUCT: (id: number) => `/product/${id}`,
-    GET_ALL_PACKAGING_MATERIALS: '/packaging/get_all_packaging_materials',  // New endpoint for packaging materials
+    GET_ALL_PACKAGING_MATERIALS: '/packaging/get_all_packaging_materials',
     CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`,
     CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY: (id: number) => `/packaging-supplier/${id}/purchase-history`,
     ADD_NEW_PACKAGING_MATERIAL: '/packaging_materials/purchase',
@@ -79,20 +87,84 @@ export const API_ENDPOINTS = {
     DELETE_HISTORY: ({
                          productId, historyType, historyId
                      }: IonDeleteHistoryRecord) => `/delete-history/${productId}/${historyType}/${historyId}`,
-    // Додані шляхи для інвестицій
     GET_ALL_INVESTMENTS: '/investments/get_all_investments',
     CREATE_NEW_INVESTMENT: '/create_new_investments',
     DELETE_INVESTMENT: (id: number) => `/delete_investments/${id}`,
     DELETE_ALL_INVESTMENTS: '/delete_all_investments',
-    GET_ALL_PURCHASE_HISTORY: '/get_all_purchase_history'
-
+    GET_ALL_PURCHASE_HISTORY: '/get_all_purchase_history',
+    SALES_HISTORY: '/get_all_sales_history',
+    DASHBOARD_MONTHLY_SALES: '/statistics/sales/monthly',
+    DASHBOARD_MONTHLY_PURCHASES: '/statistics/purchases/monthly',
+    DASHBOARD_TOP_PRODUCTS: '/statistics/top-products',
+    DASHBOARD_STOCK: '/statistics/stock',
+    DASHBOARD_PROFIT_EXPENSE: '/statistics/profit-expense',
+    DASHBOARD_CUSTOMER_ACTIVITY: '/statistics/customer-activity'
 };
 
-// Уніфікована обробка помилок
+const MAX_GET_RETRIES = 2;
+const RETRY_DELAY_MS = 300;
+const RETRYABLE_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
+
+const isRetryableGetError = (error: unknown): boolean => {
+    if (!axios.isAxiosError(error) || error.code === 'ERR_CANCELED') {
+        return false;
+    }
+
+    return !error.response || RETRYABLE_STATUSES.has(error.response.status);
+};
+
+const waitBeforeRetry = (delay: number, signal?: AbortSignal): Promise<void> => {
+    if (signal?.aborted) {
+        return Promise.reject(new axios.CanceledError('Request canceled'));
+    }
+
+    return new Promise((resolve, reject) => {
+        const timeoutId = window.setTimeout(() => {
+            signal?.removeEventListener('abort', handleAbort);
+            resolve();
+        }, delay);
+
+        const handleAbort = () => {
+            window.clearTimeout(timeoutId);
+            signal?.removeEventListener('abort', handleAbort);
+            reject(new axios.CanceledError('Request canceled'));
+        };
+
+        signal?.addEventListener('abort', handleAbort, {once: true});
+    });
+};
+
+const getWithRetry = async <T>(
+    endpoint: string,
+    config: AxiosRequestConfig = {}
+) => {
+    for (let attempt = 0; ; attempt += 1) {
+        try {
+            return await axiosInstance.get<T>(endpoint, config);
+        } catch (error) {
+            if (
+                attempt >= MAX_GET_RETRIES
+                || config.signal?.aborted
+                || !isRetryableGetError(error)
+            ) {
+                throw error;
+            }
+
+            await waitBeforeRetry(RETRY_DELAY_MS * (attempt + 1), config.signal as AbortSignal | undefined);
+        }
+    }
+};
+
+// Уніфікована обробка повідомлень про помилки
 export const getApiErrorMessage = (error: unknown, fallback = 'Unknown error'): string => {
-    if (axios.isAxiosError<{ error?: string; message?: string }>(error)) {
+    if (axios.isCancel(error)) {
+        return 'Запит скасовано';
+    }
+
+    if (axios.isAxiosError<ApiErrorResponse>(error)) {
         return error.response?.data?.error
             || error.response?.data?.message
+            || error.response?.data?.details
             || error.message
             || fallback;
     }
@@ -108,24 +180,54 @@ export const handleError = (error: unknown): never => {
     throw new Error(getApiErrorMessage(error));
 };
 
-// Загальна функція для GET-запитів
-export const fetchResource = <T>(endpoint: string): Promise<T> => {
-    return axiosInstance.get(endpoint).then(response => response.data).catch(handleError);
+// Загальна функція для GET-запитів.
+// Повторюються лише тимчасові помилки GET; мутації автоматично не повторюються.
+export const fetchResponse = async <T = unknown>(
+    endpoint: string,
+    config: AxiosRequestConfig = {}
+): Promise<AxiosResponse<T>> => {
+    try {
+        return await getWithRetry<T>(endpoint, config);
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+export const fetchResource = async <T>(
+    endpoint: string,
+    config: AxiosRequestConfig = {}
+): Promise<T> => {
+    try {
+        const response = await getWithRetry<T>(endpoint, config);
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
 };
 
 // Загальна функція для POST-запитів
-export const postResource = <T>(endpoint: string, data: unknown): Promise<T> => {
-    return axiosInstance.post(endpoint, data).then(response => response.data).catch(handleError);
+export const postResource = <T>(
+    endpoint: string,
+    data: unknown,
+    config: AxiosRequestConfig = {}
+): Promise<T> => {
+    return axiosInstance.post<T>(endpoint, data, config).then(response => response.data).catch(handleError);
 };
 
-export const putResource = <T>(endpoint: string, data: unknown): Promise<T> => {
-    return axiosInstance.put(endpoint, data).then(response => response.data).catch(handleError);
+export const putResource = <T>(
+    endpoint: string,
+    data: unknown,
+    config: AxiosRequestConfig = {}
+): Promise<T> => {
+    return axiosInstance.put<T>(endpoint, data, config).then(response => response.data).catch(handleError);
 };
 
-export const deleteResource = <T>(endpoint: string): Promise<T> => {
-    return axiosInstance.delete(endpoint).then(response => response.data).catch(handleError);
+export const deleteResource = <T>(
+    endpoint: string,
+    config: AxiosRequestConfig = {}
+): Promise<T> => {
+    return axiosInstance.delete<T>(endpoint, config).then(response => response.data).catch(handleError);
 };
-
 
 export const exportToExcel = async (productIds: number[]) => {
     try {
@@ -133,18 +235,17 @@ export const exportToExcel = async (productIds: number[]) => {
             "/export-products-excel",
             {product_ids: productIds},
             {
-                responseType: "blob", // Вказати тип для файлів
+                responseType: "blob",
             }
         );
 
-        // Створення посилання для завантаження файлу
-        const timestamp = new Date().toLocaleDateString().replace(/[-:.]/g, "_"); // Створення унікального timestamp
-        const filename = `Products_${timestamp}.xlsx`; // Формування імені файлу
+        const timestamp = new Date().toLocaleDateString().replace(/[-:.]/g, "_");
+        const filename = `Products_${timestamp}.xlsx`;
 
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", filename); // Ім'я файлу змінене на унікальне
+        link.setAttribute("download", filename);
         document.body.appendChild(link);
         link.click();
         link.remove();

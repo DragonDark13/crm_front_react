@@ -153,7 +153,7 @@ export interface IProductSupplierPurchaseHistoryRecord {
 }
 
 export interface IPackagingSupplierPurchaseHistoryRecord {
-    material: string;
+    material: string | null;
     purchase_date: string;
     purchase_price_per_unit: number;
     purchase_total_price: number;
@@ -309,8 +309,8 @@ export interface IHandleAddNewGiftBox {
     name: string,
     description: string,
     price: number,
-    selectedProducts: any[],
-    selectedPackaging: any[],
+    selectedProducts: Array<{ item_id: number; quantity: number }>;
+    selectedPackaging: Array<{ item_id: number; quantity: number }>;
 }
 
 export interface IProductForGiftSet {

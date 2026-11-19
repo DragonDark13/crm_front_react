@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo} from 'react';
+import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo, useRef} from 'react';
 import {ISupplierFull, ISupplierType} from "../../utils/types";
 import {fetchGetAllSuppliers, updateSupplier} from "../../api/_supplier";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
@@ -25,17 +25,32 @@ const SupplierContext = createContext<SupplierContextProps | undefined>(undefine
 // Створення Провайдера
 export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
-    const {showSnackbarMessage} = useSnackbarMessage()
+    const {showSnackbarMessage} = useSnackbarMessage();
+    const requestIdRef = useRef(0);
+    const isMountedRef = useRef(true);
 
     const fetchSuppliersFunc = useCallback(async (): Promise<boolean> => {
+        if (!isMountedRef.current) return false;
+
+        const requestId = ++requestIdRef.current;
+
         try {
             const data = await fetchGetAllSuppliers();
+
+            if (!isMountedRef.current || requestId !== requestIdRef.current) {
+                return false;
+            }
+
             if (Array.isArray(data)) {
                 setSuppliers(data);
                 return true;
             }
             throw new Error('Fetched data is not an array');
         } catch (error) {
+            if (!isMountedRef.current || requestId !== requestIdRef.current) {
+                return false;
+            }
+
             console.error('Error fetching suppliers', error);
             return false;
         }
@@ -46,6 +61,8 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
         currentData: ISupplierFull,
         type: ISupplierType
     ) => {
+        if (!isMountedRef.current) return;
+
         const updatedData = {
             ...currentData,
             is_active: !currentData.is_active,
@@ -60,20 +77,37 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
             },
             fetchSuppliersFunc,
             {
-                onSuccess: () => showSnackbarMessage(
-                    updatedData.is_active ? 'Постачальника активовано' : 'Постачальника вимкнено',
-                    'success'
-                ),
-                onError: () => showSnackbarMessage('Помилка зміни статусу постачальника', 'error'),
-                onRefreshError: () => showSnackbarMessage('Статус постачальника змінено, але список не вдалося оновити.', 'warning')
+                onSuccess: () => {
+                    if (isMountedRef.current) {
+                        showSnackbarMessage(
+                            updatedData.is_active ? 'Постачальника активовано' : 'Постачальника вимкнено',
+                            'success'
+                        );
+                    }
+                },
+                onError: () => {
+                    if (isMountedRef.current) {
+                        showSnackbarMessage('Помилка зміни статусу постачальника', 'error');
+                    }
+                },
+                onRefreshError: () => {
+                    if (isMountedRef.current) {
+                        showSnackbarMessage('Статус постачальника змінено, але список не вдалося оновити.', 'warning');
+                    }
+                }
             }
         );
     }, [fetchSuppliersFunc, showSnackbarMessage]);
 
     useEffect(() => {
+        isMountedRef.current = true;
         void fetchSuppliersFunc();
-    }, [fetchSuppliersFunc]);
 
+        return () => {
+            isMountedRef.current = false;
+            requestIdRef.current += 1;
+        };
+    }, [fetchSuppliersFunc]);
 
     const contextValue = useMemo(
         () => ({suppliers, fetchSuppliersFunc, handleToggleSupplierActive}),

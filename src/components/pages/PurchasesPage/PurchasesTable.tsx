@@ -22,7 +22,6 @@ import {
     Button,
     Grid, Slider, Collapse, Tooltip
 } from '@mui/material';
-import {axiosInstance} from "../../../api/api";
 import clsx from "clsx";
 import {ICategory} from "../../../utils/types";
 import {useCategories} from "../../Provider/CategoryContext";
@@ -40,7 +39,7 @@ export interface IPurchasesTable {
     categories: number[];
     type: string,
     name: string;
-    supplier_id: number;
+    supplier_id: number | null;
     supplier_name: string;
     quantity: number;
     price_per_item: number;
@@ -92,8 +91,9 @@ const PurchasesTable: React.FC = () => {
             // Перетворюємо потрібні поля в числа
             const formattedData =data.map((item: IPurchaseTableResponseResponse) => ({
                 ...item,
-                price_per_item: parseFloat(item.price_per_item),
-                total_price: parseFloat(item.total_price),
+                price_per_item: item.price_per_item === null ? 0 : Number(item.price_per_item),
+                total_price: Number(item.total_price),
+                quantity: item.quantity ?? 0,
             }));
 
             setPurchaseHistory(formattedData);
