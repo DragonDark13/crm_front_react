@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
-import axios from 'axios';
-import {axiosInstance} from "../../../../api/api";
+import {deleteAllProducts} from "../../../../api/_product";
 
 const DeleteAllProductsDialog: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -11,7 +10,7 @@ const DeleteAllProductsDialog: React.FC = () => {
 
     const handleDelete = async () => {
         try {
-            await axiosInstance.delete('/delete_all_products'); // Запит на бекенд
+            await deleteAllProducts();
             alert('Усі товари та пов’язані записи успішно видалено.');
             handleClose();
         } catch (error) {
