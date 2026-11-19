@@ -25,11 +25,11 @@ export const deleteProduct = (productId: number): Promise<ApiMessageResponse> =>
     return deleteResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT(productId));
 };
 
-export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<void> => {
+export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<ApiMessageResponse> => {
     return postResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT_PURCHASE(productId), purchaseData);
 };
 
-export const addSale = (productId: number, saleData: ISaleData): Promise<void> => {
+export const addSale = (productId: number, saleData: ISaleData): Promise<ApiMessageResponse> => {
     return postResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT_SALE(productId), saleData);
 };
 
