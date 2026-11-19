@@ -33,10 +33,13 @@ const ProductHarness = () => {
 };
 
 const CustomerHarness = () => {
-    const { customers, createCustomerFunc } = useCustomers();
+    const { customers, createCustomerFunc, fetchGetAllCustomersFunc } = useCustomers();
 
     return (
         <>
+            <button onClick={() => void fetchGetAllCustomersFunc()}>
+                Refresh customers
+            </button>
             <button onClick={() => void createCustomerFunc({
                 name: 'New customer',
                 email: 'new@example.com',
@@ -46,6 +49,7 @@ const CustomerHarness = () => {
                 Create customer
             </button>
             <span>{customers.length}</span>
+            <span data-testid="customer-ids">{customers.map(customer => customer.id).join(',')}</span>
         </>
     );
 };
@@ -107,14 +111,54 @@ describe('CRUD provider refresh behavior', () => {
         await waitFor(() => expect(screen.getByTestId('product-ids').textContent).toBe('2'));
     });
 
+
+    it('keeps the newest customer response when requests finish out of order', async () => {
+        let resolveOlderRequest!: (customers: ICustomer[]) => void;
+        let resolveNewerRequest!: (customers: ICustomer[]) => void;
+        const olderRequest = new Promise<ICustomer[]>(resolve => {
+            resolveOlderRequest = resolve;
+        });
+        const newerRequest = new Promise<ICustomer[]>(resolve => {
+            resolveNewerRequest = resolve;
+        });
+
+        vi.mocked(fetchGetAllCustomers)
+            .mockResolvedValueOnce([])
+            .mockReturnValueOnce(olderRequest)
+            .mockReturnValueOnce(newerRequest);
+
+        render(
+            <SnackbarMessageProvider>
+                <CustomerProvider>
+                    <CustomerHarness />
+                </CustomerProvider>
+            </SnackbarMessageProvider>
+        );
+
+        await waitFor(() => expect(fetchGetAllCustomers).toHaveBeenCalledTimes(1));
+        fireEvent.click(screen.getByRole('button', { name: 'Refresh customers' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Refresh customers' }));
+
+        await waitFor(() => expect(fetchGetAllCustomers).toHaveBeenCalledTimes(3));
+
+        resolveNewerRequest([{ id: 2, name: 'Newer customer' } as ICustomer]);
+        await waitFor(() => expect(screen.getByTestId('customer-ids').textContent).toBe('2'));
+
+        resolveOlderRequest([{ id: 1, name: 'Older customer' } as ICustomer]);
+        await waitFor(() => expect(screen.getByTestId('customer-ids').textContent).toBe('2'));
+    });
+
     it('shows a refresh warning after the customer was successfully created but GET failed', async () => {
         vi.mocked(fetchGetAllCustomers)
             .mockResolvedValueOnce([])
             .mockRejectedValueOnce(new Error('GET failed'));
         vi.mocked(createCustomer).mockResolvedValueOnce({
-            id: 1,
-            name: 'New customer'
-        } as ICustomer);
+            message: 'Customer created',
+            customer: {
+                id: 1,
+                name: 'New customer'
+            } as ICustomer
+        });
 
         render(
             <SnackbarMessageProvider>
