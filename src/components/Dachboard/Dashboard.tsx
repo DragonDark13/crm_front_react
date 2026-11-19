@@ -22,10 +22,10 @@ const MONTH_NAMES = [
 
 export default function Dashboard() {
     const [monthlySales, setMonthlySales] = useState<MonthlyStatistics[]>([]);
-    const [monthlyPurchases, setMonthlyPurchases] = useState<MonthlyData[]>([]);
+    const [monthlyPurchases, setMonthlyPurchases] = useState<MonthlyStatistics[]>([]);
     const [topProducts, setTopProducts] = useState<TopProductStatistics[]>([]);
     const [stockLevels, setStockLevels] = useState<StockLevelStatistics[]>([]);
-    const [profitExpenses, setProfitExpenses] = useState<MonthlyData[]>([]);
+    const [profitExpenses, setProfitExpenses] = useState<MonthlyStatistics[]>([]);
     const [customerActivity, setCustomerActivity] = useState<CustomerActivityStatistics[]>([]);
 
 
