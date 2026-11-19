@@ -47,7 +47,7 @@ function App() {
 
     const {products} = useProducts();
 
-    const {isAuthenticated, logout} = useAuth();
+    const {isAuthenticated, roles, logout} = useAuth();
     const {showSnackbarMessage} = useSnackbarMessage()
     const lowQuantityProducts = useMemo(
         () => products.filter(product => product.available_quantity < 5),
@@ -259,7 +259,7 @@ function App() {
                                     setSearchTerm={setSearchTerm}
                                     searchTerm={searchTerm}
                                     products={products}
-                                    isAuthenticated={isAuthenticated}
+                                    isAuthenticated={roles.includes('manager')}
                                     showSnackbarMessage={showSnackbarMessage}
                                     lowQuantityProducts={lowQuantityProducts}
                                     modalState={modalState}
