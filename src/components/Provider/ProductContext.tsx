@@ -1,6 +1,7 @@
 import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo, useRef} from 'react';
 import {IProduct} from "../../utils/types";
 import {fetchProducts} from "../../api/_product";
+import {useAuth} from '../context/AuthContext';
 
 // Типізація для контексту
 interface ProductContextProps {
@@ -14,6 +15,7 @@ const ProductContext = createContext<ProductContextProps | undefined>(undefined)
 
 // Створення Провайдера
 export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
+  const {authReady, isAuthenticated} = useAuth();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loadingState, setLoadingState] = useState<{ isLoading: boolean, error: string | null }>({
     isLoading: true,
@@ -54,13 +56,13 @@ export const ProductProvider: React.FC<PropsWithChildren> = ({ children }:PropsW
 
   useEffect(() => {
     isMountedRef.current = true;
-    void fetchProductsFunc();
+    if (authReady && isAuthenticated) void fetchProductsFunc();
 
     return () => {
       isMountedRef.current = false;
       requestIdRef.current += 1;
     };
-  }, [fetchProductsFunc]);
+  }, [fetchProductsFunc, authReady, isAuthenticated]);
 
   const contextValue = useMemo(
     () => ({ products, fetchProductsFunc, loadingState }),

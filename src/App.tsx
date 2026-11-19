@@ -47,7 +47,7 @@ function App() {
 
     const {products} = useProducts();
 
-    const {isAuthenticated, logout} = useAuth();
+    const {isAuthenticated, roles, logout} = useAuth();
     const {showSnackbarMessage} = useSnackbarMessage()
     const lowQuantityProducts = useMemo(
         () => products.filter(product => product.available_quantity < 5),
@@ -240,9 +240,11 @@ function App() {
     }, [lowQuantityProducts, handleModalOpen, handleModalClose]);
 
     const handleLogout = async () => {
-
-        logout(); // Clear token from context and localStorage
-
+        try {
+            await logout();
+        } catch (error) {
+            console.error('Logout request failed', error);
+        }
     };
 
 
@@ -257,7 +259,7 @@ function App() {
                                     setSearchTerm={setSearchTerm}
                                     searchTerm={searchTerm}
                                     products={products}
-                                    isAuthenticated={isAuthenticated}
+                                    isAuthenticated={roles.includes('manager')}
                                     showSnackbarMessage={showSnackbarMessage}
                                     lowQuantityProducts={lowQuantityProducts}
                                     modalState={modalState}
@@ -357,22 +359,19 @@ function App() {
                             <Route path="/crm_front_react/login" element={<Login/>}/>
                             <Route
                                 path="/crm_front_react/dashboard"
-                                element={
-                                    <ProtectedRoute element={<Dashboard/>}/>
-                                }
+                                element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}
                             />
-                            <Route path="/crm_front_react/" element={productsCatalogElement}/>
-                            <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
-                            <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
-                            <Route path="/crm_front_react/sales" element={<Sales/>}/>
-                            <Route path="/crm_front_react/products" element={productsCatalogElement}/>
+                            <Route path="/crm_front_react/" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={productsCatalogElement}/>}/>
+                            <Route path="/crm_front_react/gift_sets" element={<ProtectedRoute allowedRoles={['manager']} element={<GiftSetsPage/>}/>}/>
+                            <Route path="/crm_front_react/clients" element={<ProtectedRoute allowedRoles={['manager']} element={<ClientsManagement/>}/>}/>
+                            <Route path="/crm_front_react/sales" element={<ProtectedRoute allowedRoles={['manager']} element={<Sales/>}/>}/>
+                            <Route path="/crm_front_react/products" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={productsCatalogElement}/>}/>
 
-                            <Route path="/crm_front_react/purchases" element={<Purchases/>}/>
-                            <Route path="/crm_front_react/analytics" element={<Dashboard/>}/>
-                            <Route path="/crm_front_react/packaging" element={<PackagingMaterialList/>}/>
-                            <Route path="/crm_front_react/other-investments" element={<InvestmentsPage/>}/>
-                            <Route path="/crm_front_react/suppliers"
-                                   element={<SupplierPage/>}/>
+                            <Route path="/crm_front_react/purchases" element={<ProtectedRoute allowedRoles={['manager']} element={<Purchases/>}/>}/>
+                            <Route path="/crm_front_react/analytics" element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}/>
+                            <Route path="/crm_front_react/packaging" element={<ProtectedRoute allowedRoles={['manager']} element={<PackagingMaterialList/>}/>}/>
+                            <Route path="/crm_front_react/other-investments" element={<ProtectedRoute allowedRoles={['manager']} element={<InvestmentsPage/>}/>}/>
+                            <Route path="/crm_front_react/suppliers" element={<ProtectedRoute allowedRoles={['manager']} element={<SupplierPage/>}/>}/>
 
                         </Routes>
                     </Suspense>
