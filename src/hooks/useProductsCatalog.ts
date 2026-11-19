@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {useProducts} from "../../Provider/ProductContext";
-import {useCategories} from "../../Provider/CategoryContext";
-import {useSuppliers} from "../../Provider/SupplierContext";
+import {useProducts} from "../components/Provider/ProductContext";
+import {useCategories} from "../components/Provider/CategoryContext";
+import {useSuppliers} from "../components/Provider/SupplierContext";
 import {
     IEditProduct,
     INewProduct,
@@ -10,14 +10,14 @@ import {
     IPurchaseData,
     ISaleData,
     ModalNames
-} from "../../../utils/types";
-import {createEmptyProduct, formatDate} from "../../../utils/function";
-import {addSupplier} from "../../../api/_supplier";
-import {addProduct, addPurchase, addSale, deleteProduct, updateProduct, runProductInventory} from "../../../api/_product";
-import {addNewCategory} from "../../../api/_categories";
-import {exportToExcel} from "../../../api/api";
-import {useNewProduct} from "../../../hooks/useNewProduct";
-import {runCrudAction} from "../../../utils/runCrudAction";
+} from "../utils/types";
+import {createEmptyProduct, formatDate} from "../utils/function";
+import {addSupplier} from "../api/_supplier";
+import {addProduct, addPurchase, addSale, deleteProduct, updateProduct, runProductInventory} from "../api/_product";
+import {addNewCategory} from "../api/_categories";
+import {exportToExcel} from "../api/api";
+import {useNewProduct} from "./useNewProduct";
+import {runCrudAction} from "../utils/runCrudAction";
 
 interface IUseProductsCatalogParams {
     products: IProduct[];
