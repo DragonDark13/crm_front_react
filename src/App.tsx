@@ -249,6 +249,40 @@ function App() {
     const navigate = useNavigate();
 
 
+    const productsCatalogElement = (
+        <ProductsCatalog
+                                    onRowRef={(el, productId) => {
+                                        tableRowRefs.current[productId] = el;
+                                    }}
+                                    setSearchTerm={setSearchTerm}
+                                    searchTerm={searchTerm}
+                                    products={products}
+                                    isAuthenticated={isAuthenticated}
+                                    showSnackbarMessage={showSnackbarMessage}
+                                    lowQuantityProducts={lowQuantityProducts}
+                                    modalState={modalState}
+                                    setModalState={setModalState}
+                                    order={order}
+                                    setOrder={setOrder}
+                                    itemsPerPage={itemsPerPage}
+                                    setItemsPerPage={setItemsPerPage}
+                                    currentPage={currentPage}
+                                    setCurrentPage={setCurrentPage}
+                                    sortProducts={sortProducts}
+                                    filters={filters}
+                                    setFilters={setFilters}
+                                    orderBy={orderBy}
+                                    setOrderBy={setOrderBy}
+                                    selectedLowProductId={selectedLowProductId}
+                                    setSelectedLowProductId={setSelectedLowProductId}
+                                    filteredAndSearchedProducts={filteredAndSearchedProducts}
+                                    getComparator={getComparator}
+                                    getFieldValue={getFieldValue}
+                                    setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
+                                    resetFilters={resetFilters}
+                                />
+    );
+
     return (
         <React.Fragment>
             <CssBaseline/>
@@ -327,74 +361,11 @@ function App() {
                                     <ProtectedRoute element={<Dashboard/>}/>
                                 }
                             />
-                            <Route path="/crm_front_react/" element={
-                                <ProductsCatalog
-                                    onRowRef={(el, productId) => {
-                                        tableRowRefs.current[productId] = el;
-                                    }}
-                                    setSearchTerm={setSearchTerm}
-                                    searchTerm={searchTerm}
-                                    products={products}
-                                    isAuthenticated={isAuthenticated}
-                                    showSnackbarMessage={showSnackbarMessage}
-                                    lowQuantityProducts={lowQuantityProducts}
-                                    modalState={modalState}
-                                    setModalState={setModalState}
-                                    order={order}
-                                    setOrder={setOrder}
-                                    itemsPerPage={itemsPerPage}
-                                    setItemsPerPage={setItemsPerPage}
-                                    currentPage={currentPage}
-                                    setCurrentPage={setCurrentPage}
-                                    sortProducts={sortProducts}
-                                    filters={filters}
-                                    setFilters={setFilters}
-                                    orderBy={orderBy}
-                                    setOrderBy={setOrderBy}
-                                    selectedLowProductId={selectedLowProductId}
-                                    setSelectedLowProductId={setSelectedLowProductId}
-                                    filteredAndSearchedProducts={filteredAndSearchedProducts}
-                                    getComparator={getComparator}
-                                    getFieldValue={getFieldValue}
-                                    setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
-                                    resetFilters={resetFilters}
-                                />
-                            }/>
+                            <Route path="/crm_front_react/" element={productsCatalogElement}/>
                             <Route path="/crm_front_react/gift_sets" element={<GiftSetsPage/>}/>
                             <Route path="/crm_front_react/clients" element={<ClientsManagement/>}/>
                             <Route path="/crm_front_react/sales" element={<Sales/>}/>
-                            <Route path="/crm_front_react/products" element={
-                                <ProductsCatalog
-                                    onRowRef={(el, productId) => {
-                                        tableRowRefs.current[productId] = el;
-                                    }}
-                                    searchTerm={searchTerm}
-                                    setSearchTerm={setSearchTerm}
-                                    products={products}
-                                    isAuthenticated={isAuthenticated}
-                                    showSnackbarMessage={showSnackbarMessage}
-                                    lowQuantityProducts={lowQuantityProducts}
-                                    modalState={modalState}
-                                    setModalState={setModalState}
-                                    order={order}
-                                    setOrder={setOrder}
-                                    itemsPerPage={itemsPerPage}
-                                    setItemsPerPage={setItemsPerPage}
-                                    currentPage={currentPage}
-                                    setCurrentPage={setCurrentPage}
-                                    sortProducts={sortProducts}
-                                    filters={filters}
-                                    setFilters={setFilters}
-                                    orderBy={orderBy}
-                                    setOrderBy={setOrderBy}
-                                    selectedLowProductId={selectedLowProductId}
-                                    setSelectedLowProductId={setSelectedLowProductId}
-                                    filteredAndSearchedProducts={filteredAndSearchedProducts}
-                                    getComparator={getComparator}
-                                    getFieldValue={getFieldValue}
-                                    setFilteredAndSearchedProducts={setFilteredAndSearchedProducts}
-                                    resetFilters={resetFilters}
-                                />
+                            <Route path="/crm_front_react/products" element={productsCatalogElement}/>
 
                             }/>
 
