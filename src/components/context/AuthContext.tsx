@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }).catch(() => {
       if (localStorage.getItem('token') === storedToken) {
         clearSession();
+        setAuthReady(true);
       }
     }).finally(() => {
       if (localStorage.getItem('token') === storedToken) {
