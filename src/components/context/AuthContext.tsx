@@ -42,7 +42,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         clearSession();
       }
     }).finally(() => {
-      setAuthReady(true);
+      if (localStorage.getItem('token') === storedToken) {
+        setAuthReady(true);
+      }
     });
   }, [clearSession]);
 
@@ -55,11 +57,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const response = await axiosInstance.get('/me', {
         headers: { Authorization: `Bearer ${newToken}` },
       });
+      if (localStorage.getItem('token') !== newToken) return;
       setRoles(Array.isArray(response.data.roles) ? response.data.roles : []);
       setAuthReady(true);
     } catch (error) {
-      clearSession();
-      setAuthReady(true);
+      if (localStorage.getItem('token') === newToken) {
+        clearSession();
+        setAuthReady(true);
+      }
       throw error;
     }
   }, [clearSession]);
