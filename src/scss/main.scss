@@ -250,3 +250,70 @@ body {
     max-width: min(400px, 92vw);
   }
 }
+
+
+/* Consistent page framing and data-table controls. */
+.crm-page {
+  width: 100%;
+  min-width: 0;
+}
+
+.crm-page-heading {
+  margin-bottom: 24px;
+}
+
+.crm-page-title {
+  margin-bottom: 6px !important;
+}
+
+.crm-page-description {
+  color: var(--crm-muted);
+  font-size: 0.94rem;
+}
+
+.crm-page--compact {
+  padding-top: 4px;
+}
+
+.MuiTablePagination-root {
+  color: var(--crm-muted);
+}
+
+.MuiTablePagination-toolbar {
+  min-height: 52px !important;
+  padding-left: 12px !important;
+  padding-right: 8px !important;
+}
+
+.MuiTablePagination-selectLabel,
+.MuiTablePagination-displayedRows {
+  font-size: 0.82rem;
+}
+
+.MuiTablePagination-select {
+  border-radius: 7px;
+}
+
+.MuiTableBody-root .MuiTableRow-root {
+  transition: background-color 140ms ease;
+}
+
+.MuiTableCell-root {
+  vertical-align: middle;
+}
+
+@media (max-width: 700px) {
+  .crm-page-heading {
+    margin-bottom: 18px;
+  }
+
+  .crm-page-title {
+    font-size: 1.65rem !important;
+  }
+
+  .MuiTablePagination-toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 8px !important;
+  }
+}
