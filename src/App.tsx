@@ -292,7 +292,7 @@ function App() {
                 {/* Бічна панель */}
                 <Sidebar/>
 
-                <Box sx={{flex: 1, marginLeft: 'calc(80px)', padding: 3, paddingBottom: 6}}>
+                <Box className="crm-app-content" sx={{flex: 1, marginLeft: 'calc(80px)', padding: 3, paddingBottom: 6}}>
 
                     <div style={{
                         position: "absolute",

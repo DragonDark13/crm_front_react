@@ -4,9 +4,11 @@ import {Typography} from "@mui/material";
 
 const Sales = () => {
     return (
-        <div>
-            <Typography marginBlockEnd={1} variant={"h4"}>Продажі</Typography>
-            <Typography marginBottom={4}>Перегляд і керування продажами</Typography>
+        <div className="crm-page">
+            <div className="crm-page-heading">
+                <Typography className="crm-page-title" marginBlockEnd={1} variant={"h4"}>Продажі</Typography>
+                <Typography className="crm-page-description" marginBottom={4}>Перегляд і керування продажами</Typography>
+            </div>
             <SalesHistoryTable/>
         </div>
     );

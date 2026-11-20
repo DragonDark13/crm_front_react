@@ -38,6 +38,7 @@ export const Sidebar: React.FC = () => {
 
     return (
         <Box
+            className="crm-sidebar"
             sx={{
                 width: 80, // Ширина сайдбару
                 height: 'auto',

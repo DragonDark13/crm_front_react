@@ -3,7 +3,9 @@ import PurchasesTable from "./PurchasesTable";
 
 const Purchases = () => {
     return (
+        <div className="crm-page crm-page--compact">
             <PurchasesTable/>
+        </div>
     );
 };
 
