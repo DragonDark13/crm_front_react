@@ -1,18 +1,36 @@
+:root {
+  --crm-bg: #f4f6fa;
+  --crm-surface: #ffffff;
+  --crm-text: #202b3c;
+  --crm-muted: #718096;
+  --crm-border: #e5eaf1;
+  --crm-primary: #3157a4;
+  --crm-primary-soft: #edf2fc;
+  --crm-radius: 14px;
+  --crm-shadow: 0 4px 18px rgba(25, 42, 70, 0.06);
+}
+
 #root {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  color: var(--crm-text);
+}
+
+body {
+  background: var(--crm-bg);
+  color: var(--crm-text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .low-quantity {
-  color: red;
+  color: #c2413b;
   text-decoration: underline;
 }
 
 .selected-row {
-  background-color: rgba(0, 123, 255, 0.1); /* Підсвічування */
-  border-left: 0 solid #007bff; /* Лінія збоку для виділення */
+  background-color: rgba(49, 87, 164, 0.09);
+  border-left: 0 solid var(--crm-primary);
 }
-
 
 .MuiDialogContent-root > .MuiFormControl-root {
   margin-top: 8px;
@@ -20,6 +38,7 @@
 
 .filter_container {
   max-width: 400px;
+  width: 100%;
 }
 
 .MuiMenu-paper.MuiPopover-paper {
@@ -31,7 +50,6 @@
   overflow: hidden;
 }
 
-
 .MuiMenuItem-root .MuiTypography-root {
   max-width: 300px;
   overflow: hidden;
@@ -40,25 +58,185 @@
 }
 
 .MuiPopover-paper.MuiMenu-paper .MuiMenuItem-root.Mui-selected {
-  background-color: rgba(25, 118, 210, 0.5);
+  background-color: var(--crm-primary-soft);
 }
 
-.MuiTableHead-root *, .MuiTableHead-root .MuiTypography-root {
-  font-weight: bold;
+.MuiTableHead-root *,
+.MuiTableHead-root .MuiTypography-root {
+  font-weight: 700;
 }
 
 .MuiButton-sizeMedium.MuiButtonBase-root.MuiButton-root {
   padding-bottom: 7px;
-  padding-top:  7px;
+  padding-top: 7px;
 }
 
 .sale_form__customer_field.MuiFormLabel-root:not(.MuiInputLabel-shrink),
-.sale_form__packaging_field.MuiFormLabel-root:not(.MuiInputLabel-shrink)
-{
+.sale_form__packaging_field.MuiFormLabel-root:not(.MuiInputLabel-shrink) {
   top: -7px;
 }
 
-.contact_info{
+.contact_info {
   max-width: 120px;
   overflow: hidden;
+}
+
+/* Global visual layer: keeps the existing MUI components and their behavior. */
+.MuiPaper-root {
+  border: 1px solid var(--crm-border);
+  border-radius: var(--crm-radius) !important;
+  box-shadow: var(--crm-shadow) !important;
+  background-image: none !important;
+}
+
+.MuiCard-root {
+  overflow: hidden;
+}
+
+.MuiTypography-h4,
+.MuiTypography-h5 {
+  color: var(--crm-text);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
+.MuiTypography-h6 {
+  color: var(--crm-text);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.MuiButton-root {
+  border-radius: 9px;
+  font-weight: 650;
+  text-transform: none;
+  box-shadow: none;
+}
+
+.MuiButton-contained {
+  box-shadow: 0 3px 8px rgba(49, 87, 164, 0.16);
+}
+
+.MuiButton-outlined {
+  border-color: #d7dfeb;
+}
+
+.MuiIconButton-root {
+  border-radius: 10px;
+  transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.MuiIconButton-root:hover {
+  background-color: var(--crm-primary-soft);
+  color: var(--crm-primary);
+}
+
+.MuiOutlinedInput-root,
+.MuiInputBase-root {
+  border-radius: 9px;
+}
+
+.MuiOutlinedInput-notchedOutline {
+  border-color: #dce3ed;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #aebbd0;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-width: 1px;
+  border-color: var(--crm-primary);
+}
+
+.MuiTableContainer-root {
+  border-radius: 12px;
+  border: 1px solid var(--crm-border);
+}
+
+.MuiTableHead-root {
+  background: #f7f9fc;
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+  color: #58677d;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--crm-border);
+  white-space: nowrap;
+}
+
+.MuiTableBody-root .MuiTableCell-root {
+  border-bottom-color: #edf0f5;
+}
+
+.MuiTableBody-root .MuiTableRow-root:last-child .MuiTableCell-root {
+  border-bottom: 0;
+}
+
+.MuiTableBody-root .MuiTableRow-root:hover {
+  background-color: #f8faff;
+}
+
+.MuiDialog-paper {
+  border-radius: 16px !important;
+}
+
+.MuiDrawer-paper {
+  border-radius: 0 !important;
+}
+
+.crm-sidebar {
+  z-index: 1200;
+  width: 72px !important;
+  padding: 12px 8px !important;
+  gap: 10px !important;
+  border: 1px solid var(--crm-border);
+  border-left: 0;
+  border-radius: 0 18px 18px 0;
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 8px 0 28px rgba(25, 42, 70, 0.07) !important;
+  backdrop-filter: blur(12px);
+}
+
+.crm-sidebar .MuiIconButton-root {
+  width: 44px;
+  height: 44px;
+  color: #64748b;
+}
+
+.crm-sidebar .MuiIconButton-root.MuiIconButton-colorPrimary {
+  color: var(--crm-primary);
+  background: var(--crm-primary-soft);
+}
+
+@media (max-width: 700px) {
+  .crm-sidebar {
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    height: 62px !important;
+    padding: 6px 8px !important;
+    flex-direction: row !important;
+    justify-content: space-around;
+    border-radius: 16px 16px 0 0;
+    border: 1px solid var(--crm-border);
+    border-bottom: 0;
+    overflow-x: auto;
+  }
+
+  .crm-sidebar .MuiIconButton-root {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .filter_container {
+    max-width: min(400px, 92vw);
+  }
 }
