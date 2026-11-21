@@ -94,10 +94,14 @@ const FinancialJournalPage: React.FC = () => {
                     <Typography variant="h6">{formatAmount(totals.expense)}</Typography>
                 </Paper>
                 <Paper sx={{p: 2, minWidth: 190}}>
-                    <Typography color="text.secondary" variant="body2">Баланс операцій</Typography>
+                    <Typography color="text.secondary" variant="body2">Різниця надходжень і витрат</Typography>
                     <Typography variant="h6">{formatAmount(totals.income - totals.expense)}</Typography>
                 </Paper>
             </div>
+
+            <Alert severity="info" sx={{mb: 2}}>
+                Надходження відображають повну вартість продажів, а не підтверджені платежі. Грошові повернення не враховуються окремо, оскільки в історії повернень не зберігається сума.
+            </Alert>
 
             <FormControl size="small" sx={{minWidth: 220, mb: 2}}>
                 <InputLabel id="financial-journal-filter-label">Тип операцій</InputLabel>
