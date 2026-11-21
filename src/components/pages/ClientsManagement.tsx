@@ -4,9 +4,11 @@ import {Box, Typography} from "@mui/material";
 
 const ClientsManagement = () => {
     return (
-        <div>
-            <Typography marginBlockEnd={3} variant={"h4"}>Управління клієнтами</Typography>
-            <Typography marginBottom={4}>Інформація про клієнтів.</Typography>
+        <div className="crm-page">
+            <div className="crm-page-heading">
+                <Typography className="crm-page-title" marginBlockEnd={1} variant={"h4"}>Управління клієнтами</Typography>
+                <Typography className="crm-page-description" marginBottom={4}>Інформація про клієнтів.</Typography>
+            </div>
             <CustomerPage/>
         </div>
     );
