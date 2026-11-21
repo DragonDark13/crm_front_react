@@ -182,7 +182,23 @@ body {
 }
 
 .MuiTableBody-root .MuiTableRow-root:hover {
-  background-color: #f8faff;
+  background-color: #e8efff;
+}
+
+.MuiTableBody-root .MuiTableRow-root.low-quantity-row {
+  background-color: #fff0f0;
+}
+
+.MuiTableBody-root .MuiTableRow-root.low-quantity-row:hover {
+  background-color: #ffdada;
+}
+
+.MuiTableBody-root .MuiTableRow-root.selected-row {
+  background-color: #e7efff;
+}
+
+.MuiTableBody-root .MuiTableRow-root.selected-row:hover {
+  background-color: #d7e5ff;
 }
 
 .MuiDialog-paper {
