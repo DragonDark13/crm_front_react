@@ -6,7 +6,6 @@ import {
 import {IconButton, Tooltip} from '@mui/material';
 import {IProduct} from "../../utils/types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { red } from '@mui/material/colors';
 
 
 export interface IProductActions {
@@ -223,7 +222,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                   ref={(el) => {
                                                       onRowRef?.(el, product.id);
                                                   }}
-                                                  sx={lowQuantity ? { backgroundColor: red[200] } : undefined}
+                                                  
                                                   className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                             <TableCell size={"small"} sx={{display: "none"}}>
                                                 {product.id}
