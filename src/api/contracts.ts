@@ -76,6 +76,18 @@ export interface ProductHistoryResponse {
         total_packaging_cost: number | null;
         customer: { id: number; name: string };
     }>;
+    audit_history: Array<{
+        id: number;
+        product_id: number;
+        changed_by_id: number | null;
+        changed_by_username: string;
+        action: string;
+        field_name: string;
+        old_value: string | null;
+        new_value: string | null;
+        reason: string | null;
+        changed_at: string;
+    }>;
 }
 
 export interface ProductInventoryResponse extends ApiMessageResponse {
