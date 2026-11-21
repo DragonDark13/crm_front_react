@@ -163,29 +163,29 @@ const GiftSetSaleModal: React.FC<IGiftSetSaleModalProps> = ({
                     {giftSet.products.map((product, index) => (
                         <Grid container key={index} sx={{mb: 1}}>
                             <Grid item xs={5}>{product.name}</Grid>
-                            <Grid item xs={3}>{product.price} UAH</Grid>
+                            <Grid item xs={3}>{product.price} грн</Grid>
                             <Grid item xs={1}>{product.quantity} шт</Grid>
-                            <Grid item xs={3}>Total: {(product.price * product.quantity).toFixed(2)} UAH</Grid>
+                            <Grid item xs={3}>Total: {(product.price * product.quantity).toFixed(2)} грн</Grid>
                         </Grid>
                     ))}
 
                     {giftSet.packagings.map((packaging, index) => (
                         <Grid container key={index} sx={{mb: 1}}>
                             <Grid item xs={5}>{packaging.name}</Grid>
-                            <Grid item xs={3}>{packaging.price} UAH</Grid>
+                            <Grid item xs={3}>{packaging.price} грн</Grid>
                             <Grid item xs={1}>{packaging.quantity} шт</Grid>
-                            <Grid item xs={3}>Total: {(packaging.price * packaging.quantity).toFixed(2)} UAH</Grid>
+                            <Grid item xs={3}>Total: {(packaging.price * packaging.quantity).toFixed(2)} грн</Grid>
                         </Grid>
                     ))}
 
                     <Divider sx={{my: 2}}/>
 
                     <Typography variant="h6">
-                        Собівартість: {calculateTotalCost().toFixed(2)} UAH
+                        Собівартість: {calculateTotalCost().toFixed(2)} грн
                     </Typography>
 
                     <Typography variant="h6" sx={{mt: 1}}>
-                        Вигода: {(sellingPrice - calculateTotalCost()).toFixed(2)} UAH
+                        Вигода: {(sellingPrice - calculateTotalCost()).toFixed(2)} грн
                     </Typography>
                     <Grid container alignItems={"center"} spacing={2}>
                         <Grid item xs={12} md={3}>
