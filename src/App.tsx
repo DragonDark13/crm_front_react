@@ -30,7 +30,7 @@ const Sales = lazy(() => import("./components/pages/Sales/Sales"));
 const GiftSetsPage = lazy(() => import("./components/pages/GiftSetsPage/GiftSetsPage"));
 const Login = lazy(() => import("./components/Login/Login"));
 
-import {Route, Routes, useNavigate} from 'react-router-dom';
+import {Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -360,7 +360,7 @@ function App() {
                             <Route path="/crm_front_react/login" element={<Login/>}/>
                             <Route
                                 path="/crm_front_react/dashboard"
-                                element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}
+                                element={<Navigate to="/crm_front_react/analytics" replace />}
                             />
                             <Route path="/crm_front_react/" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={<HomePage/>}/>}/>
                             <Route path="/crm_front_react/gift_sets" element={<ProtectedRoute allowedRoles={['manager']} element={<GiftSetsPage/>}/>}/>
