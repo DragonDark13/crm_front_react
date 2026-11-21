@@ -167,14 +167,14 @@ const PackagingSection = ({
                                     <Typography
                                         variant={"subtitle2"}>
                                         <strong>Cost per item: </strong>
-                                        {costPerItem} UAH
+                                        {costPerItem} грн
                                     </Typography>
                                 </div>
                                 <div>
                                     <Typography
                                         variant={"subtitle2"}>
                                         <strong>Total cost: </strong>
-                                        {totalCost.toFixed(2)} UAH
+                                        {totalCost.toFixed(2)} грн
                                     </Typography>
                                 </div>
                             </Grid>
