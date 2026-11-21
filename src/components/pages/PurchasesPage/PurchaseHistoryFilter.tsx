@@ -131,7 +131,7 @@ const PurchaseHistoryFilter: React.FC<PurchaseHistoryFilterProps> = ({
                     <InputLabel>Тип</InputLabel>
                     <Select label="Тип" value={typeFilter} onChange={handleTypeFilterChange}>
                         <MenuItem value="">Всі типи</MenuItem>
-                        <MenuItem value="Other Investment">Інші інвестиції</MenuItem>
+                        <MenuItem value="Other Investment">Інші витрати</MenuItem>
                         <MenuItem value="Packaging">Упаковка</MenuItem>
                         <MenuItem value="Product">Продукт</MenuItem>
                     </Select>
