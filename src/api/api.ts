@@ -94,6 +94,8 @@ export const API_ENDPOINTS = {
     GET_ALL_PURCHASE_HISTORY: '/get_all_purchase_history',
     SALES_HISTORY: '/get_all_sales_history',
     FINANCIAL_JOURNAL: '/financial-journal',
+    CUSTOMER_RETURNS: '/returns',
+    CREATE_CUSTOMER_RETURN: (saleId: number) => `/sales/${saleId}/returns`,
     DASHBOARD_MONTHLY_SALES: '/statistics/sales/monthly',
     DASHBOARD_MONTHLY_PURCHASES: '/statistics/purchases/monthly',
     DASHBOARD_TOP_PRODUCTS: '/statistics/top-products',
