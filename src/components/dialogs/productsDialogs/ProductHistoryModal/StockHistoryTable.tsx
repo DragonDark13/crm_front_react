@@ -29,7 +29,7 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
                             <TableRow key={record.id}>
                                 <TableCell size={"small"}>{new Date(record.timestamp!).toLocaleString()}</TableCell>
                                 <TableCell size={"small"}>
-                                    {record.change_type === "inventory" ? "Інвентаризація" : record.change_type}
+                                    {record.change_type === "inventory" ? "Інвентаризація" : record.change_type === "return" ? "Повернення від клієнта" : record.change_type}
                                 </TableCell>
                                 <TableCell size={"small"}>{record.quantity_before ?? "—"}</TableCell>
                                 <TableCell size={"small"}>{record.quantity_after ?? "—"}</TableCell>

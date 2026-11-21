@@ -195,3 +195,25 @@ export interface GiftSetCreateResponse extends ApiMessageResponse {
 export interface LoginResponse extends ApiMessageResponse {
     token: string;
 }
+
+
+export interface CustomerReturn {
+    id: number;
+    sale_id: number | null;
+    product_id: number | null;
+    product_name: string;
+    customer_id: number | null;
+    customer_name: string;
+    quantity_returned: number;
+    return_amount: number;
+    return_reason: string | null;
+    return_date: string | null;
+    returned_by_username: string | null;
+}
+
+export interface CreateCustomerReturnResponse {
+    message: string;
+    return: CustomerReturn;
+    available_quantity: number;
+    remaining_return_quantity: number;
+}

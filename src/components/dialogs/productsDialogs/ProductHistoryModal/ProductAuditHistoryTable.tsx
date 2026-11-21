@@ -28,6 +28,8 @@ interface ProductAuditHistoryTableProps {
 
 const fieldLabels: Record<string, string> = {
     available_quantity: "Доступний залишок",
+    sold_quantity: "Продана кількість",
+    selling_total_price: "Загальна сума продажів",
     purchase_price_per_item: "Закупівельна ціна",
     selling_price_per_item: "Ціна продажу",
 };
@@ -38,6 +40,7 @@ const actionLabels: Record<string, string> = {
     inventory: "Інвентаризація",
     purchase: "Закупівля",
     sale: "Продаж",
+    return: "Повернення від клієнта",
 };
 
 const formatValue = (field: string, value: string | null) => {
