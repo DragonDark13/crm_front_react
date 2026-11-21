@@ -93,6 +93,7 @@ export const API_ENDPOINTS = {
     DELETE_ALL_INVESTMENTS: '/delete_all_investments',
     GET_ALL_PURCHASE_HISTORY: '/get_all_purchase_history',
     SALES_HISTORY: '/get_all_sales_history',
+    FINANCIAL_JOURNAL: '/financial-journal',
     DASHBOARD_MONTHLY_SALES: '/statistics/sales/monthly',
     DASHBOARD_MONTHLY_PURCHASES: '/statistics/purchases/monthly',
     DASHBOARD_TOP_PRODUCTS: '/statistics/top-products',
