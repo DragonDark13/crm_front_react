@@ -79,7 +79,7 @@ export default function Dashboard() {
   : customerActivity;
 
     return (
-        <Box sx={{flex: 1, marginLeft: '80px', padding: 3}}>
+        <Box sx={{flex: 1, marginLeft: 0, padding: 0}}>
             <Typography variant="h4" gutterBottom>Dashboard Statistics</Typography>
 
             <Grid container spacing={3}>
