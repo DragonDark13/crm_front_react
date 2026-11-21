@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import {fetchSalesHistory} from "../../api/_salesApi";
 import {createCustomerReturn, fetchCustomerReturns} from "../../api/_returns";
+import {getApiErrorMessage} from "../../api/api";
 import {CustomerReturn} from "../../api/contracts";
 
 
@@ -87,8 +88,12 @@ const CustomerReturnsPage: React.FC = () => {
     const remainingQuantity = selectedSale
         ? selectedSale.quantity_sold - (returnedBySale[selectedSale.sale_id] || 0)
         : 0;
-    const estimatedRefund = selectedSale && selectedSale.quantity_sold > 0
-        ? Number(selectedSale.total_price) * quantity / selectedSale.quantity_sold
+    const alreadyRefundedAmount = selectedSale
+        ? returns.filter(item => item.sale_id === selectedSale.sale_id)
+            .reduce((total, item) => total + item.return_amount, 0)
+        : 0;
+    const estimatedRefund = selectedSale && remainingQuantity > 0
+        ? (Number(selectedSale.total_price) - alreadyRefundedAmount) * quantity / remainingQuantity
         : 0;
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -106,7 +111,7 @@ const CustomerReturnsPage: React.FC = () => {
             setReason("");
             await loadData();
         } catch (requestError) {
-            setError(requestError instanceof Error ? requestError.message : "Не вдалося зареєструвати повернення.");
+            setError(getApiErrorMessage(requestError, "Не вдалося зареєструвати повернення."));
         } finally {
             setSubmitting(false);
         }
