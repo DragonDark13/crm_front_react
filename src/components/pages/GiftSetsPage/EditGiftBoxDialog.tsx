@@ -146,8 +146,8 @@ const EditGiftBoxDialog = ({
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Typography variant="body1" style={{marginTop: 20}}>Загальна
-                            вартість: {calculateTotalCost().toFixed(2)} UAH</Typography>
-                        <Typography variant="body1">Прибуток: {calculateProfit().toFixed(2)} UAH</Typography>
+                            вартість: {calculateTotalCost().toFixed(2)} грн</Typography>
+                        <Typography variant="body1">Прибуток: {calculateProfit().toFixed(2)} грн</Typography>
                     </Grid>
                 </Grid>
 
