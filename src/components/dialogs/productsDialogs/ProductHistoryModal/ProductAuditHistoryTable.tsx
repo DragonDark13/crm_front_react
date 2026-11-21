@@ -33,6 +33,7 @@ const fieldLabels: Record<string, string> = {
 };
 
 const actionLabels: Record<string, string> = {
+    create: "Створення товару",
     manual_edit: "Редагування товару",
     inventory: "Інвентаризація",
     purchase: "Закупівля",
