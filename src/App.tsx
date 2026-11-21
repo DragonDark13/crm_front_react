@@ -19,6 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import './scss/main.scss';
 
 const Dashboard = lazy(() => import("./components/Dachboard/Dashboard"));
+const HomePage = lazy(() => import("./components/pages/HomePage"));
 const ProductsCatalog = lazy(() => import("./components/pages/ProductsCatalog"));
 const ClientsManagement = lazy(() => import("./components/pages/ClientsManagement"));
 const Purchases = lazy(() => import("./components/pages/PurchasesPage/Purchases"));
@@ -361,7 +362,7 @@ function App() {
                                 path="/crm_front_react/dashboard"
                                 element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}
                             />
-                            <Route path="/crm_front_react/" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={productsCatalogElement}/>}/>
+                            <Route path="/crm_front_react/" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={<HomePage/>}/>}/>
                             <Route path="/crm_front_react/gift_sets" element={<ProtectedRoute allowedRoles={['manager']} element={<GiftSetsPage/>}/>}/>
                             <Route path="/crm_front_react/clients" element={<ProtectedRoute allowedRoles={['manager']} element={<ClientsManagement/>}/>}/>
                             <Route path="/crm_front_react/sales" element={<ProtectedRoute allowedRoles={['manager']} element={<Sales/>}/>}/>
