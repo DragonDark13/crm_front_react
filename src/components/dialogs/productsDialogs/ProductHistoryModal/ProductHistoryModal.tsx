@@ -150,7 +150,6 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                     stock: response.data.stock_history,
                     purchase: response.data.purchase_history,
                     sales: response.data.sale_history,
-                audit: response.data.audit_history || [],
                     audit: response.data.audit_history || [],
                 });
             })
