@@ -7,6 +7,7 @@ import {
     deleteInvestmentById,
     deleteAllInvestments,
 } from '../../api/_investmentsApi.ts';
+import {useAuth} from '../context/AuthContext';
 
 // Типи
 interface InvestmentsContextType {
@@ -25,6 +26,7 @@ interface InvestmentsContextType {
 const InvestmentsContext = createContext<InvestmentsContextType | undefined>(undefined);
 
 export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children}) => {
+    const {authReady, isAuthenticated} = useAuth();
     const [investments, setInvestments] = useState<Investment[]>([]);
     const [newInvestment, setNewInvestment] = useState<INewInvestment>({
         type_name: "",
@@ -151,14 +153,16 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
         isMountedRef.current = true;
         const controller = new AbortController();
 
-        void fetchInvestments(true, controller.signal);
+        if (authReady && isAuthenticated) {
+            void fetchInvestments(true, controller.signal);
+        }
 
         return () => {
             isMountedRef.current = false;
             controller.abort();
             fetchRequestId.current += 1;
         };
-    }, [fetchInvestments]);
+    }, [fetchInvestments, authReady, isAuthenticated]);
 
     const contextValue = useMemo(() => ({
         investments,

@@ -56,6 +56,10 @@ vi.mock('../src/api/_investmentsApi', () => ({
     deleteAllInvestments: vi.fn()
 }));
 
+vi.mock('../src/components/context/AuthContext', () => ({
+    useAuth: () => ({ authReady: true, isAuthenticated: true })
+}));
+
 const deferred = <T,>() => {
     let resolve!: (value: T) => void;
     const promise = new Promise<T>(res => {

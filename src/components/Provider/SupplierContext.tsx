@@ -4,6 +4,7 @@ import {fetchGetAllSuppliers, updateSupplier} from "../../api/_supplier";
 import {useSnackbarMessage} from "./SnackbarMessageContext";
 import {updatePackagingSupplier} from "../../api/_packagingMaterials";
 import {runCrudAction} from "../../utils/runCrudAction";
+import {useAuth} from '../context/AuthContext';
 
 // Типізація постачальників
 // interface ISupplier {
@@ -24,6 +25,7 @@ const SupplierContext = createContext<SupplierContextProps | undefined>(undefine
 
 // Створення Провайдера
 export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWithChildren) => {
+    const {authReady, isAuthenticated} = useAuth();
     const [suppliers, setSuppliers] = useState<ISupplierFull[]>([]);
     const {showSnackbarMessage} = useSnackbarMessage();
     const requestIdRef = useRef(0);
@@ -101,13 +103,13 @@ export const SupplierProvider: React.FC<PropsWithChildren> = ({children}:PropsWi
 
     useEffect(() => {
         isMountedRef.current = true;
-        void fetchSuppliersFunc();
+        if (authReady && isAuthenticated) void fetchSuppliersFunc();
 
         return () => {
             isMountedRef.current = false;
             requestIdRef.current += 1;
         };
-    }, [fetchSuppliersFunc]);
+    }, [fetchSuppliersFunc, authReady, isAuthenticated]);
 
     const contextValue = useMemo(
         () => ({suppliers, fetchSuppliersFunc, handleToggleSupplierActive}),

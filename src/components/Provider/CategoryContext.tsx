@@ -1,5 +1,6 @@
 import React, {createContext, useState, useContext, useEffect, PropsWithChildren, useCallback, useMemo, useRef} from 'react';
 import {fetchGetAllCategories} from "../../api/_categories";
+import {useAuth} from '../context/AuthContext';
 
 // Типізація категорій
 interface ICategory {
@@ -18,6 +19,7 @@ const CategoryContext = createContext<CategoryContextProps | undefined>(undefine
 
 // Створення Провайдера
 export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:PropsWithChildren) => {
+  const {authReady, isAuthenticated} = useAuth();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const requestIdRef = useRef(0);
   const isMountedRef = useRef(true);
@@ -51,13 +53,13 @@ export const CategoryProvider: React.FC<PropsWithChildren> = ({ children }:Props
 
   useEffect(() => {
     isMountedRef.current = true;
-    void fetchCategoriesFunc();
+    if (authReady && isAuthenticated) void fetchCategoriesFunc();
 
     return () => {
       isMountedRef.current = false;
       requestIdRef.current += 1;
     };
-  }, [fetchCategoriesFunc]);
+  }, [fetchCategoriesFunc, authReady, isAuthenticated]);
 
   const contextValue = useMemo(() => ({
     categories,

@@ -2,6 +2,7 @@
 import {createContext, useContext, useEffect, useState, useCallback, useMemo, useRef, PropsWithChildren} from 'react';
 import {IMaterial} from "../../utils/types";
 import {fetchListPackagingMaterials} from "../../api/_packagingMaterials";
+import {useAuth} from '../context/AuthContext';
 
 interface IPackagingContextProps {
     packagingMaterials: IMaterial[];
@@ -27,6 +28,7 @@ export const usePackaging = () => {
 };
 
 export const PackagingProvider = ({ children }: PropsWithChildren) => {
+    const {authReady, isAuthenticated} = useAuth();
     const [packagingMaterials, setPackagingMaterials] = useState<IMaterial[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<null | string>(null);
@@ -63,13 +65,13 @@ export const PackagingProvider = ({ children }: PropsWithChildren) => {
 
     useEffect(() => {
         isMountedRef.current = true;
-        void fetchPackagingOptions();
+        if (authReady && isAuthenticated) void fetchPackagingOptions();
 
         return () => {
             isMountedRef.current = false;
             requestIdRef.current += 1;
         };
-    }, [fetchPackagingOptions]);
+    }, [fetchPackagingOptions, authReady, isAuthenticated]);
 
     // TODO addPackaging
     // const addPackaging = async (newPackaging) => {
