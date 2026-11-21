@@ -20,6 +20,7 @@ import StockHistoryTable from "./StockHistoryTable";
 import PurchaseHistoryTable from "./PurchaseHistoryTable";
 import SalesHistoryTable from "./SalesHistoryTable";
 import CombinedHistoryTable from "./CombinedHistoryTable";
+import ProductAuditHistoryTable from "./ProductAuditHistoryTable";
 import {onDeleteHistoryRecord} from "../../../../api/_history";
 import {fetchProductHistory} from "../../../../api/_product";
 import {useAuth} from "../../../context/AuthContext";
@@ -102,6 +103,7 @@ export interface IProductHistory {
     stock: IStockHistoryRecord[];
     purchase: IProductPurchaseHistoryRecord[];
     sales: IProductSaleHistoryRecord[];
+    audit: Array<{id: number; product_id: number; changed_by_id: number | null; changed_by_username: string; action: string; field_name: string; old_value: string | null; new_value: string | null; reason: string | null; changed_at: string}>;
 }
 
 interface IProductHistoryModal {
@@ -126,7 +128,7 @@ const TabPanel: React.FC<TabPanelProps> = ({value, index, children}) => {
 };
 
 const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IProductHistoryModal) => {
-    const [productHistory, setProductHistory] = useState<IProductHistory>({stock: [], purchase: [], sales: []});
+    const [productHistory, setProductHistory] = useState<IProductHistory>({stock: [], purchase: [], sales: [], audit: []});
     const [tabIndex, setTabIndex] = useState<number>(0);
     const [selectedView, setSelectedView] = useState<number>(0);
     const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -148,6 +150,8 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                     stock: response.data.stock_history,
                     purchase: response.data.purchase_history,
                     sales: response.data.sale_history,
+                audit: response.data.audit_history || [],
+                    audit: response.data.audit_history || [],
                 });
             })
             .catch(error => {
@@ -249,35 +253,39 @@ const ProductHistoryModal = ({productId, openHistory, onClose, productName}: IPr
                         fullWidth
                         displayEmpty
                     >
-                        <MenuItem value={0}>Історія змін</MenuItem>
-                        <MenuItem value={1}>Історія закупівель</MenuItem>
-                        <MenuItem value={2}>Історія продажів</MenuItem>
-                        <MenuItem value={3}>Закупівель && Продажів</MenuItem>
+                        <MenuItem value={0}>Аудит змін</MenuItem>
+                        <MenuItem value={1}>Рух залишку</MenuItem>
+                        <MenuItem value={2}>Історія закупівель</MenuItem>
+                        <MenuItem value={3}>Історія продажів</MenuItem>
+                        <MenuItem value={4}>Закупівлі та продажі</MenuItem>
                     </Select>
                 ) : (
                     <Tabs value={tabIndex} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
-                        <Tab label="Історія змін"/>
+                        <Tab label="Аудит змін"/>
+                        <Tab label="Рух залишку"/>
                         <Tab label="Історія закупівель"/>
                         <Tab label="Історія продажів"/>
-                        <Tab label="Закупівель && Продажів"/>
+                        <Tab label="Закупівлі та продажі"/>
                     </Tabs>
                 )}
                 <div style={{marginTop: 16}}>
                     {(isMobile ? selectedView : tabIndex) === 0 &&
-                    <StockHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
+                    <ProductAuditHistoryTable records={productHistory.audit}/>}
                     {(isMobile ? selectedView : tabIndex) === 1 &&
+                    <StockHistoryTable sortByDate={sortByDate} productHistory={productHistory}/>}
+                    {(isMobile ? selectedView : tabIndex) === 2 &&
                     <PurchaseHistoryTable
                         refreshHistory={refreshProductHistory}
                         isAuthenticated={isAuthenticated}
                         onDeleteHistoryRecord={onDeleteHistoryRecord} sortByDate={sortByDate}
                         productHistory={productHistory}/>}
-                    {(isMobile ? selectedView : tabIndex) === 2 &&
+                    {(isMobile ? selectedView : tabIndex) === 3 &&
                     <SalesHistoryTable
                         refreshHistory={refreshProductHistory}
                         isAuthenticated={isAuthenticated} onDeleteHistoryRecord={onDeleteHistoryRecord}
                         sortByDate={sortByDate}
                         productHistory={productHistory}/>}
-                    {(isMobile ? selectedView : tabIndex) === 3 &&
+                    {(isMobile ? selectedView : tabIndex) === 4 &&
                     <CombinedHistoryTable productHistory={productHistory}/>}
                 </div>
             </DialogContent>
