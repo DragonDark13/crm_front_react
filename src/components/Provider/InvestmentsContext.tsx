@@ -62,7 +62,7 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
             }
 
             if (notifyError) {
-                showSnackbarMessage("Помилка завантаження інвестицій", "error");
+                showSnackbarMessage("Помилка завантаження витрат", "error");
             }
             return false;
         }
@@ -89,13 +89,13 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
 
             setAddInvestDialogOpen(false);
             resetNewInvestmentDialog();
-            showSnackbarMessage("Інвестицію додано", "success");
+            showSnackbarMessage("Витрату додано", "success");
             if (!refreshed) {
-                showSnackbarMessage("Інвестицію додано, але список не вдалося оновити.", "warning");
+                showSnackbarMessage("Витрату додано, але список не вдалося оновити.", "warning");
             }
         } catch {
             if (isMountedRef.current) {
-                showSnackbarMessage("Помилка додавання інвестиції", "error");
+                showSnackbarMessage("Помилка додавання витрати", "error");
             }
         }
     }, [newInvestment, fetchInvestments, resetNewInvestmentDialog, showSnackbarMessage]);
@@ -110,13 +110,13 @@ export const InvestmentsProvider: React.FC<{ children: ReactNode }> = ({children
             const refreshed = await fetchInvestments(false);
             if (!isMountedRef.current) return;
 
-            showSnackbarMessage("Інвестицію видалено", "success");
+            showSnackbarMessage("Витрату видалено", "success");
             if (!refreshed) {
                 showSnackbarMessage("Запис видалено, але список не вдалося оновити.", "warning");
             }
         } catch {
             if (isMountedRef.current) {
-                showSnackbarMessage("Помилка видалення інвестиції", "error");
+                showSnackbarMessage("Помилка видалення витрати", "error");
             }
         }
     }, [fetchInvestments, showSnackbarMessage]);
