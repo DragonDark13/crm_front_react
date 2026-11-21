@@ -223,7 +223,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                   ref={(el) => {
                                                       onRowRef?.(el, product.id);
                                                   }}
-                                                  sx={{  backgroundColor: lowQuantity ? red[200] : 'inherit'}}
+                                                  sx={lowQuantity ? { backgroundColor: red[200] } : undefined}
                                                   className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                             <TableCell size={"small"} sx={{display: "none"}}>
                                                 {product.id}
