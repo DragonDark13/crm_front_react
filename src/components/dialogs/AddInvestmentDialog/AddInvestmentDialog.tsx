@@ -30,7 +30,7 @@ const AddInvestmentDialog: React.FC<AddInvestmentDialogProps> = ({
             maxWidth="sm"
             open={open}
             handleClose={onClose}
-            title="Додати інвестицію"
+            title="Додати витрату"
         >
             <DialogContent>
                 <ProductNameField label={'Назва'} value={newInvestment.type_name} onChange={(e) =>

@@ -97,14 +97,14 @@ const InvestmentsPage: React.FC = () => {
 
     return (
         <div>
-            <h2>Інші вкладення</h2>
+            <h2>Інші витрати</h2>
             {isAuthenticated && <Grid container>
                 <Grid item>
                     <DeleteAllInvestmentsDialog/>
                 </Grid>
             </Grid>}
 
-            <AddButton onClick={() => setAddInvestDialogOpen(true)} text={'Додати інвестицію'}/>
+            <AddButton onClick={() => setAddInvestDialogOpen(true)} text={'Додати витрату'}/>
 
             <AddInvestmentDialog
                 isAuthenticated={isAuthenticated}

@@ -19,17 +19,19 @@ import CloseIcon from '@mui/icons-material/Close';
 import './scss/main.scss';
 
 const Dashboard = lazy(() => import("./components/Dachboard/Dashboard"));
+const HomePage = lazy(() => import("./components/pages/HomePage"));
 const ProductsCatalog = lazy(() => import("./components/pages/ProductsCatalog"));
 const ClientsManagement = lazy(() => import("./components/pages/ClientsManagement"));
 const Purchases = lazy(() => import("./components/pages/PurchasesPage/Purchases"));
 const PackagingMaterialList = lazy(() => import("./components/pages/PackagingMaterial/PackagingMaterialList"));
 const InvestmentsPage = lazy(() => import("./components/pages/InvestmentsPage"));
+const FinancialJournalPage = lazy(() => import("./components/pages/FinancialJournalPage"));
 const SupplierPage = lazy(() => import("./components/pages/SupplierPage/SupplierPage"));
 const Sales = lazy(() => import("./components/pages/Sales/Sales"));
 const GiftSetsPage = lazy(() => import("./components/pages/GiftSetsPage/GiftSetsPage"));
 const Login = lazy(() => import("./components/Login/Login"));
 
-import {Route, Routes, useNavigate} from 'react-router-dom';
+import {Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -359,15 +361,16 @@ function App() {
                             <Route path="/crm_front_react/login" element={<Login/>}/>
                             <Route
                                 path="/crm_front_react/dashboard"
-                                element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}
+                                element={<Navigate to="/crm_front_react/analytics" replace />}
                             />
-                            <Route path="/crm_front_react/" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={productsCatalogElement}/>}/>
+                            <Route path="/crm_front_react/" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={<HomePage/>}/>}/>
                             <Route path="/crm_front_react/gift_sets" element={<ProtectedRoute allowedRoles={['manager']} element={<GiftSetsPage/>}/>}/>
                             <Route path="/crm_front_react/clients" element={<ProtectedRoute allowedRoles={['manager']} element={<ClientsManagement/>}/>}/>
                             <Route path="/crm_front_react/sales" element={<ProtectedRoute allowedRoles={['manager']} element={<Sales/>}/>}/>
                             <Route path="/crm_front_react/products" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={productsCatalogElement}/>}/>
 
                             <Route path="/crm_front_react/purchases" element={<ProtectedRoute allowedRoles={['manager']} element={<Purchases/>}/>}/>
+                            <Route path="/crm_front_react/financial-journal" element={<ProtectedRoute allowedRoles={['manager']} element={<FinancialJournalPage/>}/>}/>
                             <Route path="/crm_front_react/analytics" element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}/>
                             <Route path="/crm_front_react/packaging" element={<ProtectedRoute allowedRoles={['manager']} element={<PackagingMaterialList/>}/>}/>
                             <Route path="/crm_front_react/other-investments" element={<ProtectedRoute allowedRoles={['manager']} element={<InvestmentsPage/>}/>}/>
