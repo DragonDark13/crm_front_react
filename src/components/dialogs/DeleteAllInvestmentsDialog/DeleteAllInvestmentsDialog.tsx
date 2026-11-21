@@ -14,14 +14,14 @@ const DeleteAllInvestmentsDialog: React.FC = () => {
     return (
         <div>
             <Button variant="contained" color="error" onClick={handleClickOpen}>
-                Видалити всі інвестиції
+                Видалити всі витрати
             </Button>
 
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Підтвердження видалення</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Ви впевнені, що хочете видалити **усі інвестиції**? Цю дію неможливо скасувати!
+                        Ви впевнені, що хочете видалити **усі витрати**? Цю дію неможливо скасувати!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

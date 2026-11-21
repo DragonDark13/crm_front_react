@@ -32,7 +32,7 @@ export const Sidebar: React.FC = () => {
         {title: "Історія закупівель", path: "/crm_front_react/purchases", icon: <Receipt fontSize={iconFontSize} />},
         {title: "Аналітика та звіти", path: "/crm_front_react/analytics", icon: <BarChart fontSize={iconFontSize} />},
         {title: "Пакування", path: "/crm_front_react/packaging", icon: <Luggage fontSize={iconFontSize} />},
-        {title: "Інші вкладення", path: "/crm_front_react/other-investments", icon: <AttachMoney fontSize={iconFontSize} />},
+        {title: "Інші витрати", path: "/crm_front_react/other-investments", icon: <AttachMoney fontSize={iconFontSize} />},
         {title: "Управління постачальниками", path: "/crm_front_react/suppliers", icon: <Business fontSize={iconFontSize} />}
     ];
 

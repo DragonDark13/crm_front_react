@@ -27,7 +27,7 @@ const PurchasesTableTypeProductCell = ({type}: IPurchasesTableTypeProductCell) =
                 </Tooltip>
                 }
                 {type === "other investment" &&
-                <Tooltip title="Інші вкладення">
+                <Tooltip title="Інші витрати">
                     <AttachMoney fontSize="small"/>
                 </Tooltip>
                 }
