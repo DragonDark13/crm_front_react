@@ -70,7 +70,7 @@ const AddProductModal = ({
         const newErrors = {
             name: newProduct.name.trim().length < 10 ? 'Name must be at least 10 characters long' : '',
             supplier: newProduct.supplier_id === '' ? 'Supplier is required' : '',
-            available_quantity: newProduct.available_quantity < 0 ? 'Quantity must be greater than or equal to 0' : '',
+            available_quantity: newProduct.available_quantity <= 0 ? 'Quantity must be greater than 0' : '',
             price_per_item: newProduct.purchase_price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
         };
         setErrors(newErrors);
@@ -95,10 +95,10 @@ const AddProductModal = ({
     };
 
     const decrementQuantity = () => {
-        if (newProduct.available_quantity > 0) {
+        if (newProduct.available_quantity > 1) {
             setNewProduct({
                 ...newProduct,
-                available_quantity: newProduct.available_quantity = 0
+                available_quantity: newProduct.available_quantity - 1
             });
         }
     };
@@ -111,7 +111,7 @@ const AddProductModal = ({
     }, [newProduct.available_quantity, newProduct.purchase_price_per_item, setNewProduct]);
 
     const isAddButtonDisabled = newProduct.name.trim().length < 10 ||
-        !newProduct.supplier_id || newProduct.available_quantity < 0;
+        !newProduct.supplier_id || newProduct.available_quantity <= 0;
 
     useEffect(() => {
         if (newProduct.purchase_price_per_item && newProduct.selling_price_per_item) {
@@ -242,11 +242,7 @@ const AddProductModal = ({
                                     value = value.replace(/[^0-9]/g, '');
 
 
-                                    if (value.startsWith('0')) {
-                                        value = value.replace(/^0+/, ''); // Видаляє всі ведучі нулі
-                                        setNewProduct({...newProduct, available_quantity: Number(value)});
-                                    }
-                                    if (/^\d+$/.test(value)) {  // Перевіряємо, чи значення складається тільки з цифр
+                                    if (/^\d+$/.test(value) && Number(value) > 0) {
                                         setNewProduct({...newProduct, available_quantity: Number(value)});
                                     }
                                 }}
@@ -266,7 +262,7 @@ const AddProductModal = ({
 
                         <Grid item xs={12} sm={6} md={3}>
                             <DateFieldCustom
-                                value={newProduct.created_date} label="Дата створення"
+                                value={newProduct.created_date} label="Дата початкової закупки"
                                 onChange={(e) => setNewProduct({
                                     ...newProduct,
                                     created_date: e.target.value
