@@ -96,10 +96,27 @@ function App() {
     }, []);
 
     const getComparator = useCallback((order: 'asc' | 'desc', orderBy: keyof IProduct) => {
-        return order === 'desc'
-            ? (a: IProduct, b: IProduct) => (getFieldValue(b, orderBy) < getFieldValue(a, orderBy) ? -1 : 1)
-            : (a: IProduct, b: IProduct) => (getFieldValue(a, orderBy) < getFieldValue(b, orderBy) ? -1 : 1);
-    }, [getFieldValue]);
+        return (a: IProduct, b: IProduct) => {
+            const getValue = (product: IProduct): string | number => {
+                if (orderBy === 'supplier') {
+                    return product.supplier?.name ?? '';
+                }
+
+                return (product[orderBy] as string | number | null | undefined) ?? '';
+            };
+
+            const aValue = getValue(a);
+            const bValue = getValue(b);
+            const comparison = typeof aValue === 'number' && typeof bValue === 'number'
+                ? aValue - bValue
+                : String(aValue).localeCompare(String(bValue), 'uk', {
+                    numeric: true,
+                    sensitivity: 'base'
+                });
+
+            return order === 'desc' ? -comparison : comparison;
+        };
+    }, []);
 
     const handleModalOpen = useCallback((modal: ModalNames) => {
         setModalState(prevState => ({...prevState, [modal]: true}));
