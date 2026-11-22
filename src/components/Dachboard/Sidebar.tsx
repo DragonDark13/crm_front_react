@@ -9,7 +9,8 @@ import {
     Receipt,
     Luggage,
     AttachMoney,
-    Business
+    Business,
+    AssignmentReturn
 } from '@mui/icons-material';
 import {Link, useLocation} from 'react-router-dom';
 import AddButtonWithMenu from "../MainMenu/AddButtonWithMenu";
@@ -31,6 +32,7 @@ export const Sidebar: React.FC = () => {
         {title: "ГіфтБокси", path: "/crm_front_react/gift_sets", icon: <CardGiftcard fontSize={iconFontSize} />},
         {title: "Історія закупівель", path: "/crm_front_react/purchases", icon: <Receipt fontSize={iconFontSize} />},
         {title: "Фінансові операції", path: "/crm_front_react/financial-journal", icon: <AttachMoney fontSize={iconFontSize} />},
+        {title: "Повернення", path: "/crm_front_react/returns", icon: <AssignmentReturn fontSize={iconFontSize} />},
         {title: "Аналітика та звіти", path: "/crm_front_react/analytics", icon: <BarChart fontSize={iconFontSize} />},
         {title: "Пакування", path: "/crm_front_react/packaging", icon: <Luggage fontSize={iconFontSize} />},
         {title: "Інші витрати", path: "/crm_front_react/other-investments", icon: <AttachMoney fontSize={iconFontSize} />},
