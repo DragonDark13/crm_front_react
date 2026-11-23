@@ -80,7 +80,7 @@ describe('ProductInventoryModal', () => {
         fireEvent.change(quantityInput(), {target: {value: ''}});
 
         expect(quantityInput().value).toBe('');
-        expect(submitButton()).toBeDisabled();
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
         expect(onSubmit).not.toHaveBeenCalled();
     });
 
