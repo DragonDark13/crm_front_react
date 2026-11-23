@@ -8,6 +8,7 @@ import {
     Box,
     Button,
     CircularProgress,
+    Chip,
     Drawer, Grid,
     IconButton,
     Snackbar,
@@ -150,13 +151,34 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
                 <div>{loadingState.error}</div> // Відображення помилки
             ) : (
                 <Box sx={{paddingTop: 1}}>
-                    <Typography marginBlockEnd={3} variant={"h4"}>Список товарів</Typography>
-                    <Grid container justifyContent={"space-between"}>
+                    <Box sx={{mb: 2}}>
+                        <Typography variant={"h4"} gutterBottom>Каталог товарів</Typography>
+                        <Typography color="text.secondary" variant="body2">
+                            Знайди товар за назвою, артикулом або відфільтруй за категорією та постачальником.
+                        </Typography>
+                    </Box>
+                    <Grid container alignItems="center" spacing={1} sx={{mb: 1}}>
                         <Grid item>
                             <Button
                                 startIcon={<FilterListIcon/>}
                                 variant={"outlined"}
-                                onClick={() => handleModalOpen("openDrawer")}>Фільтр</Button>
+                                onClick={() => handleModalOpen("openDrawer")}>Фільтри</Button>
+                        </Grid>
+                        {(filters.categories.length + filters.suppliers.length) > 0 && (
+                            <Grid item>
+                                <Chip
+                                    size="small"
+                                    color="primary"
+                                    variant="outlined"
+                                    label={`Активних фільтрів: ${filters.categories.length + filters.suppliers.length}`}
+                                />
+                            </Grid>
+                        )}
+                        <Grid item xs />
+                        <Grid item>
+                            <Typography variant="body2" color="text.secondary">
+                                Показано {filteredAndSearchedProducts.length} із {products.length} товарів
+                            </Typography>
                         </Grid>
                         {isAuthenticated && <Grid item>
                             <DeleteAllProductsDialog/>
