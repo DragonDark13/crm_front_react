@@ -65,7 +65,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
         }
     };
 
-    const isValidQuantity = /^\\d+$/.test(actualQuantity)
+    const isValidQuantity = /^\d+$/.test(actualQuantity)
         && Number.isSafeInteger(Number(actualQuantity))
         && Number(actualQuantity) >= 0;
     const isValidReason = reasonType !== "Інше" || otherReason.trim() !== "";
