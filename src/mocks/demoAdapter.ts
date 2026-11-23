@@ -284,6 +284,8 @@ const adapter: AxiosAdapter = async config => {
         data = database.purchases;
     } else if (method === 'get' && path === '/get_all_sales_history') {
         data = database.sales;
+    } else if (method === 'get' && path === '/orders') {
+        data = (database.orders || []).map(order => ({...order, available_transitions: demoOrderTransitions[String(order.status)] || []}));
     } else if (method === 'get' && path === '/get_all_gift_set_sales_history') {
         data = database.giftSetSales || [];
     } else if (method === 'get' && path === '/returns') {
@@ -1147,6 +1149,83 @@ const adapter: AxiosAdapter = async config => {
         if (!products.length) return response(config, {error: 'No matching products found'}, 404);
         const workbook = new Blob([buildProductExportXml(products)], {type: 'application/vnd.ms-excel'});
         return response(config, workbook, 200, 'application/vnd.ms-excel');
+
+    } else if (method === 'patch' && /^\\/orders\\/\\d+\\/status$/.test(path)) {
+        const order = (database.orders || []).find(item => Number(item.id) === id);
+        const transitions: Record<string, string[]> = {
+            new: ['confirmed', 'cancelled'],
+            confirmed: ['awaiting_payment', 'cancelled'],
+            awaiting_payment: ['paid', 'cancelled'],
+            paid: ['shipped'],
+            shipped: ['completed'],
+            completed: [],
+            cancelled: []
+        };
+        const nextStatus = String(body.status || '');
+        if (!order) return response(config, {error: 'Замовлення не знайдено'}, 404);
+        const currentStatus = String(order.status || 'new');
+        if (!(transitions[currentStatus] || []).includes(nextStatus)) {
+            return response(config, {error: 'Недозволений перехід статусу'}, 409);
+        }
+        const items = Array.isArray(order.items) ? order.items as Record<string, unknown>[] : [];
+        if (nextStatus === 'confirmed') {
+            for (const item of items) {
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id));
+                if (!product || Number(product.available_quantity || 0) < Number(item.quantity || 0)) {
+                    return response(config, {error: 'Недостатньо товару для резервування'}, 409);
+                }
+            }
+            items.forEach(item => {
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id))!;
+                product.available_quantity = Number(product.available_quantity || 0) - Number(item.quantity || 0);
+                product.reserved_quantity = Number(product.reserved_quantity || 0) + Number(item.quantity || 0);
+            });
+        } else if (nextStatus === 'cancelled' && ['confirmed', 'awaiting_payment'].includes(currentStatus)) {
+            items.forEach(item => {
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id));
+                if (product) {
+                    product.available_quantity = Number(product.available_quantity || 0) + Number(item.quantity || 0);
+                    product.reserved_quantity = Math.max(0, Number(product.reserved_quantity || 0) - Number(item.quantity || 0));
+                }
+            });
+        } else if (nextStatus === 'completed') {
+            const customer = database.customers.find(value => Number(value.id) === Number(order.customer_id));
+            for (const item of items) {
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id));
+                if (!product || Number(product.reserved_quantity || 0) < Number(item.quantity || 0)) {
+                    return response(config, {error: 'Резерв товару не відповідає замовленню'}, 409);
+                }
+            }
+            items.forEach(item => {
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id))!;
+                const quantity = Number(item.quantity || 0);
+                const lineTotal = Number(item.line_total || 0);
+                product.reserved_quantity = Number(product.reserved_quantity || 0) - quantity;
+                product.sold_quantity = Number(product.sold_quantity || 0) + quantity;
+                product.selling_quantity = Number(product.selling_quantity || 0) + quantity;
+                product.selling_total_price = Number(product.selling_total_price || 0) + lineTotal;
+                database.sales.push({
+                    id: nextId(database.sales), product_id: product.id, product_name: product.name,
+                    customer_id: customer?.id ?? null, customer_name: customer?.name ?? String(order.customer_name || ''),
+                    quantity_sold: quantity, selling_price_per_item: Number(item.unit_price || 0),
+                    selling_total_price: lineTotal, sale_date: new Date().toISOString(),
+                    profit: (Number(item.unit_price || 0) - Number(product.purchase_price_per_item || 0)) * quantity
+                });
+            });
+        }
+        const labels: Record<string, string> = {
+            new: 'Нове', confirmed: 'Підтверджене', awaiting_payment: 'Очікує оплати',
+            paid: 'Оплачене', shipped: 'Відправлене', completed: 'Виконане', cancelled: 'Скасоване'
+        };
+        const history = Array.isArray(order.status_history) ? order.status_history as Record<string, unknown>[] : [];
+        history.push({id: nextId(history), from_status: currentStatus, to_status: nextStatus, changed_at: new Date().toISOString(), changed_by_username: 'demo.manager', note: null});
+        order.status = nextStatus;
+        order.status_label = labels[nextStatus] || nextStatus;
+        order.status_history = history;
+        order.available_transitions = transitions[nextStatus] || [];
+        order.updated_at = new Date().toISOString();
+        persist();
+        data = {message: 'Статус замовлення оновлено', order};
     } else {
         data = {error: `Невідомий endpoint: ${method.toUpperCase()} ${path}`};
         status = 404;
