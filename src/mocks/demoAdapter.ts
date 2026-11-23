@@ -8,13 +8,67 @@ const readDatabase = (): DemoDatabase => {
         if (!stored) return createInitialDemoDatabase();
 
         const parsed = JSON.parse(stored) as Partial<DemoDatabase>;
+        const defaults = createInitialDemoDatabase();
+        const products = Array.isArray(parsed.products) ? parsed.products : defaults.products;
+        const packagingMaterials = Array.isArray(parsed.packagingMaterials) ? parsed.packagingMaterials : defaults.packagingMaterials;
+        const purchases = (Array.isArray(parsed.purchases) ? parsed.purchases : defaults.purchases).map(item => {
+            if (item.product_id === undefined && item.type === 'Product') {
+                const matches = products.filter(product => product.name === item.name);
+                if (matches.length === 1) return {...item, product_id: matches[0].id};
+            }
+            if (item.material_id === undefined && item.type === 'Packaging') {
+                const matches = packagingMaterials.filter(material => material.name === item.name);
+                if (matches.length === 1) return {...item, material_id: matches[0].id};
+            }
+            return item;
+        });
+        const sales = Array.isArray(parsed.sales) ? parsed.sales : defaults.sales;
+        const returns = Array.isArray(parsed.returns) ? parsed.returns : defaults.returns;
+        const productStockHistory = Array.isArray(parsed.productStockHistory)
+            ? parsed.productStockHistory
+            : [
+                ...purchases.filter(item => item.type === 'Product' && Number(item.product_id) > 0).map((item, index) => ({
+                    id: index + 1, product_id: Number(item.product_id), timestamp: `${item.date} 09:00:00`,
+                    change_type: 'purchase', change_amount: Number(item.quantity || 0),
+                    quantity_before: null, quantity_after: null, reason: 'Міграція демонстраційної історії'
+                })),
+                ...sales.map((item, index) => ({
+                    id: purchases.length + index + 1, product_id: Number(item.product_id),
+                    timestamp: `${item.sale_date} 12:00:00`, change_type: 'sale',
+                    change_amount: -Number(item.quantity_sold || 0), quantity_before: null,
+                    quantity_after: null, reason: null
+                })),
+                ...returns.map((item, index) => ({
+                    id: purchases.length + sales.length + index + 1, product_id: Number(item.product_id),
+                    timestamp: String(item.return_date), change_type: 'return',
+                    change_amount: Number(item.quantity_returned || 0), quantity_before: null,
+                    quantity_after: null, reason: String(item.return_reason || '')
+                }))
+            ];
+        const packagingStockHistory = Array.isArray(parsed.packagingStockHistory)
+            ? parsed.packagingStockHistory
+            : purchases.filter(item => item.type === 'Packaging' && Number(item.material_id) > 0).map((item, index) => ({
+                id: index + 1, material_id: Number(item.material_id), change_amount: Number(item.quantity || 0),
+                change_type: 'purchase', timestamp: `${item.date} 09:00:00`
+            }));
         return {
-            ...createInitialDemoDatabase(),
+            ...defaults,
             ...parsed,
-            productStockHistory: Array.isArray(parsed.productStockHistory) ? parsed.productStockHistory : [],
+            products,
+            packagingMaterials,
+            purchases,
+            sales,
+            returns,
+            productStockHistory,
             productAuditHistory: Array.isArray(parsed.productAuditHistory) ? parsed.productAuditHistory : [],
-            packagingStockHistory: Array.isArray(parsed.packagingStockHistory) ? parsed.packagingStockHistory : [],
-            packagingSalesHistory: Array.isArray(parsed.packagingSalesHistory) ? parsed.packagingSalesHistory : []
+            packagingStockHistory,
+            packagingSalesHistory: Array.isArray(parsed.packagingSalesHistory)
+                ? parsed.packagingSalesHistory
+                : sales.filter(item => Number(item.packaging_material_id) > 0).map((item, index) => ({
+                    id: index + 1, sale_id: Number(item.id), packaging_material_id: Number(item.packaging_material_id),
+                    packaging_quantity: Number(item.packaging_quantity || 0),
+                    total_packaging_cost: Number(item.total_packaging_cost || 0), sale_date: String(item.sale_date)
+                }))
         };
     } catch {
         return createInitialDemoDatabase();
@@ -253,10 +307,7 @@ const adapter: AxiosAdapter = async config => {
                 .filter(item => Number(item.product_id) === id)
                 .map(item => ({...item})),
             purchase_history: database.purchases
-                .filter(item => item.type === 'Product' && (
-                    Number(item.product_id) === id
-                    || (item.product_id === undefined && item.name === product.name)
-                ))
+                .filter(item => item.type === 'Product' && Number(item.product_id) === id)
                 .map(item => {
                     const supplier = database.suppliers.find(value => value.id === Number(item.supplier_id));
                     return {
@@ -329,10 +380,43 @@ const adapter: AxiosAdapter = async config => {
         data = makeProductResponse(product);
     } else if (method === 'put' && path.startsWith('/product/')) {
         const index = database.products.findIndex(item => item.id === id);
-        if (index >= 0) database.products[index] = {...database.products[index], ...body, supplier: database.suppliers.find(item => item.id === Number(body.supplier_id)) || null};
-        persist(); data = makeProductResponse(database.products[index] || {});
+        if (index < 0) return response(config, {error: 'Product not found'}, 404);
+        const product = database.products[index];
+        const previousAvailable = Number(product.available_quantity || 0);
+        const previousPurchasePrice = Number(product.purchase_price_per_item || 0);
+        const previousSellingPrice = Number(product.selling_price_per_item || 0);
+        database.products[index] = {
+            ...product,
+            ...body,
+            supplier: body.supplier_id === undefined
+                ? product.supplier
+                : database.suppliers.find(item => item.id === Number(body.supplier_id)) || null
+        };
+        const updated = database.products[index];
+        if (Number(updated.available_quantity || 0) !== previousAvailable) {
+            addProductStockHistory(id, 'manual_edit', Number(updated.available_quantity || 0) - previousAvailable, previousAvailable, Number(updated.available_quantity || 0));
+            addProductAuditHistory(id, 'manual_edit', 'available_quantity', previousAvailable, updated.available_quantity);
+        }
+        if (Number(updated.purchase_price_per_item || 0) !== previousPurchasePrice) {
+            addProductAuditHistory(id, 'manual_edit', 'purchase_price_per_item', previousPurchasePrice, updated.purchase_price_per_item);
+        }
+        if (Number(updated.selling_price_per_item || 0) !== previousSellingPrice) {
+            addProductAuditHistory(id, 'manual_edit', 'selling_price_per_item', previousSellingPrice, updated.selling_price_per_item);
+        }
+        persist();
+        data = makeProductResponse(updated);
     } else if (method === 'delete' && path.startsWith('/product/')) {
-        database.products = database.products.filter(item => item.id !== id); persist();
+        const product = database.products.find(item => item.id === id);
+        if (!product) return response(config, {error: 'Product not found'}, 404);
+        const hasHistory = database.productStockHistory.some(item => Number(item.product_id) === id)
+            || database.productAuditHistory.some(item => Number(item.product_id) === id)
+            || database.purchases.some(item => Number(item.product_id) === id)
+            || database.sales.some(item => Number(item.product_id) === id)
+            || database.returns.some(item => Number(item.product_id) === id)
+            || database.giftSets.some(giftSet => (giftSet.products as Record<string, unknown>[] || []).some(item => Number(item.product_id) === id));
+        if (hasHistory) return response(config, {error: 'Товар має історичні записи або використовується у наборі й не може бути видалений'}, 409);
+        database.products = database.products.filter(item => item.id !== id);
+        persist();
     } else if (method === 'post' && path === '/create_supplier') {
         const supplier = {...body, id: nextId(database.suppliers), is_active: true, type: 'product'};
         database.suppliers.push(supplier); persist(); data = {message: 'Постачальника додано', supplier_id: supplier.id};
@@ -354,10 +438,7 @@ const adapter: AxiosAdapter = async config => {
         data = {
             packaging_material_id: id,
             purchase_history: database.purchases
-                .filter(item => item.type === 'Packaging' && (
-                    Number(item.material_id) === id
-                    || (item.material_id === undefined && item.name === material.name)
-                ))
+                .filter(item => item.type === 'Packaging' && Number(item.material_id) === id)
                 .map(item => ({
                     id: item.id,
                     material_id: id,
@@ -387,9 +468,21 @@ const adapter: AxiosAdapter = async config => {
         database.packagingSuppliers = database.packagingSuppliers.filter(item => item.id !== id);
         database.suppliers = database.suppliers.filter(item => !(item.id === id && item.type === 'packaging')); persist();
     } else if (method === 'delete' && path === '/delete_all_materials') {
-        database.packagingMaterials = []; persist();
+        database.packagingMaterials = [];
+        database.packagingStockHistory = [];
+        database.packagingSalesHistory = [];
+        database.purchases = database.purchases.filter(item => item.type !== 'Packaging');
+        persist();
     } else if (method === 'delete' && path === '/delete_all_products') {
-        database.products = []; persist();
+        const hasHistory = database.productStockHistory.length > 0
+            || database.productAuditHistory.length > 0
+            || database.purchases.some(item => item.type === 'Product')
+            || database.sales.length > 0
+            || database.returns.length > 0
+            || database.giftSets.some(giftSet => (giftSet.products as Record<string, unknown>[] || []).length > 0);
+        if (hasHistory) return response(config, {error: 'Товари не можна масово видалити, поки існують історичні записи або посилання на набори'}, 409);
+        database.products = [];
+        persist();
     } else if (method === 'post' && path === '/update_packaging_status') {
         const material = database.packagingMaterials.find(item => item.id === Number(body.material_id));
         const quantityUsed = Number(body.quantity_used);
