@@ -2,11 +2,11 @@ import {
     TextField,
     Button,
     DialogActions,
-    DialogContent, Grid, Typography,
+    DialogContent, Grid, Typography, Accordion, AccordionSummary, AccordionDetails,
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import React, {useCallback, useState, useEffect} from "react";
-import SupplierSelect from "../../../FormComponents/SupplierSelect";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import QuantityField from "../../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../../utils/function";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
@@ -46,11 +46,11 @@ const PurchaseProductModal = ({
     // Функція валідації полів
     const validateFields = useCallback(() => {
         const newErrors = {
-            quantity: purchaseDetails.quantity <= 0 ? 'Quantity must be greater than 0' : '',
-            price_per_item: purchaseDetails.purchase_price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
-            total_price: purchaseDetails.purchase_total_price <= 0 ? 'Total price must be greater than 0' : '',
-            supplier: purchaseDetails.supplier_id === '' ? 'Supplier is required' : '',
-            purchase_date: purchaseDetails.purchase_date === '' ? 'Purchase date is required' : ''
+            quantity: purchaseDetails.quantity <= 0 ? 'Вкажи кількість більше нуля' : '',
+            price_per_item: purchaseDetails.purchase_price_per_item <= 0 ? 'Ціна за одиницю має бути більшою за нуль' : '',
+            total_price: purchaseDetails.purchase_total_price <= 0 ? 'Загальна сума має бути більшою за нуль' : '',
+            supplier: purchaseDetails.supplier_id === '' ? 'Для товару не вказано постачальника' : '',
+            purchase_date: purchaseDetails.purchase_date === '' ? 'Вкажи дату закупівлі' : ''
         };
         setErrors(newErrors);
 
@@ -117,7 +117,7 @@ const PurchaseProductModal = ({
                         {(currentSupplier && !currentSupplier.is_active )&&
                         <Typography color={"error"}>Ви не можете придбати цей товар- постачальник не
                             активний</Typography>}
-                        <Typography>Назва товару:
+                        <Typography>Товар:
                             <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
                                 {nameProduct}
                             </Typography>
@@ -126,22 +126,23 @@ const PurchaseProductModal = ({
                     </Grid>
                 </Grid>
 
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={8}>
-                        <SupplierSelect disabled={true}
-                                        suppliers={suppliers}
-                                        value={purchaseDetails.supplier_id}
-                                        onChange={(e) => setPurchaseDetails({
-                                            ...purchaseDetails,
-                                            supplier_id: Number(e.target.value)
-                                        })}/>
-
-
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
+                <Typography variant="body2" color="text.secondary" sx={{mb: 1}}>
+                    Постачальник: <strong>{currentSupplier?.name ?? 'Не вказано'}</strong>
+                </Typography>
+                <Accordion
+                    disableGutters
+                    elevation={0}
+                    sx={{mb: 2, border: 1, borderColor: 'divider', '&:before': {display: 'none'}}}
+                >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                        <Typography fontWeight="medium">
+                            Додаткові параметри · дата закупівлі: {purchaseDetails.purchase_date}
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
                         <TextField
-                            size={"small"}
-                            label="Purchase Date"
+                            size="small"
+                            label="Дата закупівлі"
                             type="date"
                             value={purchaseDetails.purchase_date}
                             onChange={(e) => setPurchaseDetails({...purchaseDetails, purchase_date: e.target.value})}
@@ -150,10 +151,11 @@ const PurchaseProductModal = ({
                             error={!!errors.purchase_date}
                             helperText={errors.purchase_date}
                         />
-
-
-                    </Grid>
-                </Grid>
+                    </AccordionDetails>
+                </Accordion>
+                <Typography variant="caption" color="text.secondary" sx={{display: 'block', mt: 1}}>
+                    Загальна сума автоматично розраховується як кількість × ціна за одиницю.
+                </Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
 
@@ -176,13 +178,15 @@ const PurchaseProductModal = ({
                                 }
                             }}
 helperText={errors.quantity}
-                            error={errors.quantity!==undefined}
+                            error={!!errors.quantity}
                         />
 
 
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <PriceField label={'Ціна за 1шт'} value={purchaseDetails.purchase_price_per_item}
+                        <PriceField label={'Ціна закупівлі за 1 шт, грн'} value={purchaseDetails.purchase_price_per_item}
+                                    error={!!errors.price_per_item}
+                                    helperText={errors.price_per_item}
                                     onChange={(e) => setPurchaseDetails({
                                         ...purchaseDetails,
                                         purchase_price_per_item: Number(e.target.value)
@@ -204,7 +208,7 @@ helperText={errors.quantity}
                         {/*/>*/}
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                        <TotalPriceField value={purchaseDetails.purchase_total_price}/>
+                        <TotalPriceField value={purchaseDetails.purchase_total_price} label="Загальна сума закупівлі, грн"/>
                     </Grid>
 
                 </Grid>
@@ -215,7 +219,7 @@ helperText={errors.quantity}
 
                 <Button variant="contained" color="primary" disabled={!isAuthenticated || currentSupplier && !currentSupplier.is_active}
                         onClick={handleSubmit}>
-                    Підтвердити
+                    Зберегти закупівлю
                 </Button>
             </DialogActions>
         </CustomDialog>

@@ -3,6 +3,15 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper}
 import {IStockHistoryRecord, IProductHistory, ProductHistoryRecord} from "./ProductHistoryModal";
 import RenderHeaderCell from "../../../_elements/RenderHeaderCell";
 
+const changeTypeLabels: Record<string, string> = {
+    create: "Початковий залишок",
+    purchase: "Закупівля",
+    sale: "Продаж",
+    manual_edit: "Ручне коригування",
+    inventory: "Інвентаризація",
+    return: "Повернення від клієнта",
+};
+
 
 interface StockHistoryTableProps {
     productHistory: IProductHistory;
@@ -29,7 +38,7 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
                             <TableRow key={record.id}>
                                 <TableCell size={"small"}>{new Date(record.timestamp!).toLocaleString()}</TableCell>
                                 <TableCell size={"small"}>
-                                    {record.change_type === "inventory" ? "Інвентаризація" : record.change_type === "return" ? "Повернення від клієнта" : record.change_type}
+                                    {changeTypeLabels[record.change_type] || record.change_type}
                                 </TableCell>
                                 <TableCell size={"small"}>{record.quantity_before ?? "—"}</TableCell>
                                 <TableCell size={"small"}>{record.quantity_after ?? "—"}</TableCell>

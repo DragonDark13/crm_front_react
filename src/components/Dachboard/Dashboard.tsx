@@ -80,7 +80,7 @@ export default function Dashboard() {
 
     return (
         <Box sx={{flex: 1, marginLeft: 0, padding: 0}}>
-            <Typography variant="h4" gutterBottom>Dashboard Statistics</Typography>
+            <Typography className="crm-page-title" component="h1" variant="h4" gutterBottom>Dashboard Statistics</Typography>
 
             <Grid container spacing={3}>
                 {/* Продажі по місяцях */}

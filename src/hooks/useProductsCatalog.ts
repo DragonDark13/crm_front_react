@@ -557,9 +557,16 @@ export const useProductsCatalog = ({
     //     }
     // };
 
-    const handleExportToExcel = () => {
+    const handleExportToExcel = async () => {
         const productIds = filteredAndSearchedProducts.map(product => product.id);
-        exportToExcel(productIds);
+
+        try {
+            await exportToExcel(productIds);
+            showSnackbarMessage('Експорт товарів успішно сформовано', 'success');
+        } catch (error) {
+            console.error('Помилка експорту товарів:', error);
+            showSnackbarMessage('Не вдалося експортувати товари', 'error');
+        }
     };
 
     const {

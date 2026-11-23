@@ -67,11 +67,19 @@ const PackagingMaterialList: React.FC = () => {
                 quantity: -sale.packaging_quantity, // Від'ємне значення для продажу
             }));
 
-            const stockMapped = history.stock_history.map(stock => ({
-                date: stock.timestamp,
-                description: `Новий тип пакування (ID:${stock.material_id}) на складі у кількості: ${stock.change_amount}`,
-                quantity: stock.change_amount,
-            }));
+            const stockChangeLabels: Record<string, string> = {
+                used: 'Використання пакування',
+                inventory: 'Коригування залишку',
+                reserve: 'Резервування',
+                release: 'Повернення резерву',
+            };
+            const stockMapped = history.stock_history
+                .filter(stock => !['purchase', 'sale'].includes(stock.change_type))
+                .map(stock => ({
+                    date: stock.timestamp,
+                    description: `${stockChangeLabels[stock.change_type] || stock.change_type} (ID: ${stock.material_id})`,
+                    quantity: stock.change_amount,
+                }));
 
             // Об'єднання всіх подій, сортування за датою
             return [...purchaseMapped, ...salesMapped, ...stockMapped].sort(
@@ -220,7 +228,7 @@ const PackagingMaterialList: React.FC = () => {
 
         return (
             <React.Fragment>
-                <Typography marginBlockEnd={3} variant={"h4"}>Список пакувальних матеріалів</Typography>
+                <Typography className="crm-page-title" component="h1" marginBlockEnd={3} variant={"h4"}>Список пакувальних матеріалів</Typography>
                 {isAuthenticated && <Grid container>
                     <Grid item>
                         <DeleteAllMaterialsDialog/>

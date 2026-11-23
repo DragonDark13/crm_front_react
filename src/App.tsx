@@ -4,7 +4,7 @@ import {
     Box,
     Drawer,
     Grid,
-    IconButton, Badge, CssBaseline
+    IconButton, Badge, CssBaseline, Alert
 } from '@mui/material';
 
 
@@ -18,7 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import './scss/main.scss';
 
-const Dashboard = lazy(() => import("./components/Dachboard/Dashboard"));
+const ReportsAnalytics = lazy(() => import("./components/pages/ReportsAnalytics"));
 const HomePage = lazy(() => import("./components/pages/HomePage"));
 const ProductsCatalog = lazy(() => import("./components/pages/ProductsCatalog"));
 const ClientsManagement = lazy(() => import("./components/pages/ClientsManagement"));
@@ -30,8 +30,10 @@ const ProductPurchaseImportPage = lazy(() => import("./components/pages/ProductP
 const CustomerReturnsPage = lazy(() => import("./components/pages/CustomerReturnsPage"));
 const SupplierPage = lazy(() => import("./components/pages/SupplierPage/SupplierPage"));
 const Sales = lazy(() => import("./components/pages/Sales/Sales"));
+const OrdersPage = lazy(() => import("./components/pages/OrdersPage"));
 const GiftSetsPage = lazy(() => import("./components/pages/GiftSetsPage/GiftSetsPage"));
 const Login = lazy(() => import("./components/Login/Login"));
+const DatabaseSettingsPage = lazy(() => import("./components/pages/DatabaseSettingsPage"));
 
 import {Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
@@ -314,6 +316,11 @@ function App() {
                 <Sidebar/>
 
                 <Box className="crm-app-content" sx={{flex: 1, marginLeft: 'calc(80px)', padding: 3, paddingBottom: 6}}>
+                    {import.meta.env.VITE_DEMO_MODE === 'true' && (
+                        <Alert severity="info" sx={{mb: 2}}>
+                            Демонстраційний режим — усі дані тестові та зберігаються лише у цьому браузері.
+                        </Alert>
+                    )}
 
                     <div style={{
                         position: "absolute",
@@ -386,16 +393,18 @@ function App() {
                             <Route path="/crm_front_react/gift_sets" element={<ProtectedRoute allowedRoles={['manager']} element={<GiftSetsPage/>}/>}/>
                             <Route path="/crm_front_react/clients" element={<ProtectedRoute allowedRoles={['manager']} element={<ClientsManagement/>}/>}/>
                             <Route path="/crm_front_react/sales" element={<ProtectedRoute allowedRoles={['manager']} element={<Sales/>}/>}/>
+                            <Route path="/crm_front_react/orders" element={<ProtectedRoute allowedRoles={["manager"]} element={<OrdersPage/>}/>}/>
                             <Route path="/crm_front_react/products" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={productsCatalogElement}/>}/>
 
                             <Route path="/crm_front_react/purchases" element={<ProtectedRoute allowedRoles={['manager']} element={<Purchases/>}/>}/>
                             <Route path="/crm_front_react/financial-journal" element={<ProtectedRoute allowedRoles={['manager']} element={<FinancialJournalPage/>}/>}/>
                             <Route path="/crm_front_react/import-purchases" element={<ProtectedRoute allowedRoles={['manager']} element={<ProductPurchaseImportPage/>}/>}/>
                             <Route path="/crm_front_react/returns" element={<ProtectedRoute allowedRoles={['manager']} element={<CustomerReturnsPage/>}/>}/>
-                            <Route path="/crm_front_react/analytics" element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}/>
+                            <Route path="/crm_front_react/analytics" element={<ProtectedRoute allowedRoles={['manager']} element={<ReportsAnalytics/>}/>}/>
                             <Route path="/crm_front_react/packaging" element={<ProtectedRoute allowedRoles={['manager']} element={<PackagingMaterialList/>}/>}/>
                             <Route path="/crm_front_react/other-investments" element={<ProtectedRoute allowedRoles={['manager']} element={<InvestmentsPage/>}/>}/>
                             <Route path="/crm_front_react/suppliers" element={<ProtectedRoute allowedRoles={['manager']} element={<SupplierPage/>}/>}/>
+                            <Route path="/crm_front_react/database-settings" element={<ProtectedRoute allowedRoles={['manager']} element={<DatabaseSettingsPage/>}/>}/>
 
                         </Routes>
                     </Suspense>

@@ -257,7 +257,7 @@ const PurchasesTable: React.FC = () => {
 
     return (
         <div>
-            <Typography marginBlockEnd={3} variant={"h4"}>Історія Закупівель</Typography>
+            <Typography className="crm-page-title" component="h1" marginBlockEnd={3} variant={"h4"}>Історія Закупівель</Typography>
 
             <Button
                 startIcon={filtersOpen ? <FilterListOffIcon/> : <FilterListIcon/>}

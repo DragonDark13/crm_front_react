@@ -76,6 +76,7 @@ export interface SaleItemInfo {
     categories: { id: number; name: string }[];  // Категорії товарів
     supplier: ISupplierFull;  // Постачальник
     customer: { id: number; name: string };  // Інформація про покупця
+    customer_name?: string;
     quantity_sold: number;  // Кількість проданого
     unit_price: string;  // Ціна за одиницю
     total_price: string;  // Загальна ціна продажу
@@ -166,7 +167,7 @@ const SalesHistoryTable: React.FC = () => {
                 productOrGiftSetName.toLowerCase().includes(searchProduct.toLowerCase()) && // Фільтрація за продуктом або набором
                 sale.sale_date.includes(searchDate) &&
                 (categoryFilters.length > 0
-                    ? sale.categories.some(category => categoryFilters.includes(category.name))
+                    ? (sale.categories || []).some(category => categoryFilters.includes(category.name))
                     : true) &&
                 (startDate && endDate
                     ? new Date(sale.sale_date) >= new Date(startDate) && new Date(sale.sale_date) <= new Date(endDate)
@@ -271,19 +272,19 @@ const SalesHistoryTable: React.FC = () => {
                                             size={"small"}>
                                              <Typography
                                                 className={clsx("supplier_name")}
-                                                title={sale.type === "product_with_packaging" && sale.packaging_details.length > 0
+                                                title={sale.type === "product_with_packaging" && sale.packaging_details?.length > 0
                                             ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}`
                                             : sale.product_name}
                                                 sx={{
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap'
                                                 }}>
-                                            {sale.type === "product_with_packaging" && sale.packaging_details.length > 0
+                                            {sale.type === "product_with_packaging" && sale.packaging_details?.length > 0
                                             ? `${sale.product_name} + ${sale.packaging_details[0].packaging_name}`
                                             : sale.product_name}
                                              </Typography>
                                         </TableCell>
-                                        <TableCell>{sale.customer.name}</TableCell>
+                                        <TableCell>{sale.customer?.name || sale.customer_name || 'Невідомо'}</TableCell>
                                         <TableCell size={"small"}>{sale.total_price}</TableCell>
                                         <TableCell size={"small"}>{sale.cost_price}</TableCell>
                                         <TableCell size={"small"}>{sale.profit}</TableCell>

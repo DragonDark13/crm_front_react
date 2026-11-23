@@ -36,8 +36,8 @@ export default function HomePage() {
         <Box className="crm-page" sx={{display: "flex", flexDirection: "column", gap: 3}}>
             <Box sx={{display: "flex", justifyContent: "space-between", alignItems: {xs: "flex-start", sm: "center"}, flexWrap: "wrap", gap: 2}}>
                 <Box>
-                    <Typography variant="h4" fontWeight={700} gutterBottom>Огляд складу</Typography>
-                    <Typography color="text.secondary">Стан товарних запасів та операційні показники магазину</Typography>
+                    <Typography className="crm-page-title" component="h1" variant="h4" fontWeight={700} gutterBottom>Огляд складу</Typography>
+                    <Typography className="crm-page-description" color="text.secondary">Стан товарних запасів та операційні показники магазину</Typography>
                 </Box>
                 <Button variant="outlined" onClick={() => void fetchProductsFunc()} disabled={loadingState.isLoading}>Оновити дані</Button>
             </Box>
@@ -96,12 +96,12 @@ export default function HomePage() {
                         <Grid item xs={12} lg={4}>
                             <Paper elevation={0} sx={{p: 2.5, border: "1px solid #e7eaf0", borderRadius: 2, height: "100%"}}>
                                 <Typography variant="h6" fontWeight={700} gutterBottom>Швидкий перехід</Typography>
-                                <Typography variant="body2" color="text.secondary" sx={{mb: 2}}>Основні складські операції</Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{mb: 2}}>Обери товар у каталозі, щоб оформити продаж або закупівлю</Typography>
                                 <Box sx={{display: "flex", flexDirection: "column", gap: 1.25}}>
-                                    <Button component={Link} to="/crm_front_react/products" variant="contained" startIcon={<Inventory2/>} fullWidth>Каталог товарів</Button>
+                                    <Button component={Link} to="/crm_front_react/products" variant="contained" startIcon={<Inventory2/>} fullWidth>Знайти товар · продаж або закупівля</Button>
+                                    <Button component={Link} to="/crm_front_react/sales" variant="outlined" startIcon={<ShoppingCart/>} fullWidth>Історія продажів</Button>
                                     <Button component={Link} to="/crm_front_react/purchases" variant="outlined" startIcon={<AddBox/>} fullWidth>Історія закупівель</Button>
                                     <Button component={Link} to="/crm_front_react/suppliers" variant="outlined" startIcon={<LocalShipping/>} fullWidth>Постачальники</Button>
-                                    <Button component={Link} to="/crm_front_react/packaging" variant="outlined" startIcon={<Inventory2/>} fullWidth>Пакувальні матеріали</Button>
                                 </Box>
                             </Paper>
                         </Grid>

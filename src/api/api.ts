@@ -1,6 +1,7 @@
 import axios, {AxiosHeaders, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 import {ApiErrorResponse} from "./contracts";
+import demoAdapter from '../mocks/demoAdapter';
 
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
@@ -15,6 +16,7 @@ export const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    adapter: import.meta.env.VITE_DEMO_MODE === 'true' ? demoAdapter : undefined,
 });
 
 // Інтерсептор для автоматичного додавання JWT до запитів
@@ -50,6 +52,7 @@ axiosInstance.interceptors.response.use(
 export const API_ENDPOINTS = {
     LOGIN: '/login',
     LOGOUT: '/logout',
+    RESET_DATABASE: '/reset-database',
     PRODUCTS: '/get_all_products/',
     ADD_PRODUCT: '/add_new_product',
     DELETE_ALL_PRODUCTS: '/delete_all_products',
@@ -101,7 +104,10 @@ export const API_ENDPOINTS = {
     DASHBOARD_TOP_PRODUCTS: '/statistics/top-products',
     DASHBOARD_STOCK: '/statistics/stock',
     DASHBOARD_PROFIT_EXPENSE: '/statistics/profit-expense',
-    DASHBOARD_CUSTOMER_ACTIVITY: '/statistics/customer-activity'
+    DASHBOARD_CUSTOMER_ACTIVITY: '/statistics/customer-activity',
+    ANALYTICS_OVERVIEW: '/statistics/overview',
+    ORDERS: '/orders',
+    ORDER_STATUS: (id: number) => `/orders/${id}/status`
 };
 
 const MAX_GET_RETRIES = 2;
@@ -243,9 +249,11 @@ export const exportToExcel = async (productIds: number[]) => {
         );
 
         const timestamp = new Date().toLocaleDateString().replace(/[-:.]/g, "_");
-        const filename = `Products_${timestamp}.xlsx`;
+        const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
+        const filename = `Products_${timestamp}.${isDemoMode ? 'xls' : 'xlsx'}`;
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const blob = response.data instanceof Blob ? response.data : new Blob([response.data]);
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", filename);
@@ -254,5 +262,6 @@ export const exportToExcel = async (productIds: number[]) => {
         link.remove();
     } catch (error) {
         console.error("Помилка експорту:", error);
+        throw error;
     }
 };

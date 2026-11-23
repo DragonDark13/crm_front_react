@@ -26,7 +26,7 @@ const GiftSetsPage = () => {
 
     return (
         <div>
-            <Typography marginBlockEnd={3} variant={"h4"}>Подарункові бокси</Typography>
+            <Typography className="crm-page-title" component="h1" marginBlockEnd={3} variant={"h4"}>Подарункові бокси</Typography>
 
             {/*<CreateGiftBox/>*/}
             <AddButton onClick={() => handleModalOpen('addNewGiftBox')} text={'Створити подарунковий набір'}/>

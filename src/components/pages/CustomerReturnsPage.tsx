@@ -121,10 +121,10 @@ const CustomerReturnsPage: React.FC = () => {
 
     return (
         <div>
-            <Typography variant="h5" component="h1" gutterBottom>
+            <Typography className="crm-page-title" variant="h5" component="h1" gutterBottom>
                 Контроль повернень
             </Typography>
-            <Typography color="text.secondary" sx={{mb: 2}}>
+            <Typography className="crm-page-description" color="text.secondary" sx={{mb: 2}}>
                 Реєстрація повернень товарів за початковим продажем. Початкові записи продажів не видаляються.
             </Typography>
 

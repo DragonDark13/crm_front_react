@@ -102,7 +102,7 @@ const ProductPurchaseImportPage = () => {
         <Box maxWidth={900} mx="auto">
             <Stack spacing={3}>
                 <Box>
-                    <Typography variant="h4" component="h1" gutterBottom>
+                    <Typography className="crm-page-title" variant="h4" component="h1" gutterBottom>
                         Імпорт закупівель
                     </Typography>
                     <Typography color="text.secondary">
