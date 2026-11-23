@@ -1160,7 +1160,7 @@ const adapter: AxiosAdapter = async config => {
         const workbook = new Blob([buildProductExportXml(products)], {type: 'application/vnd.ms-excel'});
         return response(config, workbook, 200, 'application/vnd.ms-excel');
 
-    } else if (method === 'patch' && /^\\/orders\\/\\d+\\/status$/.test(path)) {
+    } else if (method === 'patch' && path.startsWith('/orders/') && path.endsWith('/status')) {
         const order = (database.orders || []).find(item => Number(item.id) === id);
         const transitions: Record<string, string[]> = {
             new: ['confirmed', 'cancelled'],
