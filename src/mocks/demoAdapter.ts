@@ -248,6 +248,16 @@ const makeProductResponse = (product: Record<string, unknown>) => ({
     product_description: product.product_description
 });
 
+const demoOrderTransitions: Record<string, string[]> = {
+    new: ['confirmed', 'cancelled'],
+    confirmed: ['awaiting_payment', 'cancelled'],
+    awaiting_payment: ['paid', 'cancelled'],
+    paid: ['shipped'],
+    shipped: ['completed'],
+    completed: [],
+    cancelled: []
+};
+
 const adapter: AxiosAdapter = async config => {
     const method = (config.method || 'get').toLowerCase();
     const url = (config.url || '').split('?')[0].replace(/^https?:\/\/[^/]+/, '');
