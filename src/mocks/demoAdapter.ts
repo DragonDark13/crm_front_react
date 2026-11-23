@@ -311,6 +311,7 @@ const adapter: AxiosAdapter = async config => {
         const purchases = database.purchases.filter(item => inPeriod(item.date));
         const investments = database.investments.filter(item => inPeriod(item.date));
         const salesById = new Map(sales.map(item => [Number(item.id), item]));
+        const allSalesById = new Map(database.sales.map(item => [Number(item.id), item]));
         const months = new Map<string, {
             month: string; product_sales: number; gift_set_sales: number; returns: number;
             product_gross_profit: number; purchase_expenses: number; other_expenses: number;
@@ -358,24 +359,24 @@ const adapter: AxiosAdapter = async config => {
             monthFor(sale.sold_at).gift_set_sales += amount;
         });
         returns.forEach(returnRecord => {
+            const sourceSale = allSalesById.get(Number(returnRecord.sale_id));
             const amount = Number(returnRecord.return_amount
-                ?? (Number(salesById.get(Number(returnRecord.sale_id))?.selling_price_per_item || 0) * Number(returnRecord.quantity_returned || 0)));
+                ?? (Number(sourceSale?.selling_price_per_item || 0) * Number(returnRecord.quantity_returned || 0)));
             const quantity = Number(returnRecord.quantity_returned || 0);
             refunds += amount;
             returnedQuantity += quantity;
             monthFor(returnRecord.return_date).returns += amount;
-            const sale = salesById.get(Number(returnRecord.sale_id));
-            if (sale) {
-                const productId = Number(sale.product_id);
-                const item = top.get(productId);
-                if (item) {
-                    const saleQuantity = Number(sale.quantity_sold || 0);
-                    const productMargin = Number(sale.profit || 0) + Number(sale.total_packaging_cost || 0);
-                    const returnedMargin = saleQuantity > 0 ? productMargin * quantity / saleQuantity : 0;
+            const sale = sourceSale;
+            if (sale && Number(sale.quantity_sold || 0) > 0) {
+                const saleQuantity = Number(sale.quantity_sold || 0);
+                const productMargin = Number(sale.profit || 0) + Number(sale.total_packaging_cost || 0);
+                const returnedMargin = productMargin * quantity / saleQuantity;
+                monthFor(returnRecord.return_date).product_gross_profit -= returnedMargin;
+                const item = top.get(Number(sale.product_id));
+                if (item && salesById.has(Number(sale.id))) {
                     item.returned_quantity += quantity;
                     item.refunds += amount;
                     item.gross_profit -= returnedMargin;
-                    monthFor(returnRecord.return_date).product_gross_profit -= returnedMargin;
                 }
             }
         });
