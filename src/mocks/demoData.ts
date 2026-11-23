@@ -11,6 +11,10 @@ export interface DemoDatabase {
     sales: Record<string, unknown>[];
     returns: Record<string, unknown>[];
     giftSetSales: Record<string, unknown>[];
+    productStockHistory: Record<string, unknown>[];
+    productAuditHistory: Record<string, unknown>[];
+    packagingStockHistory: Record<string, unknown>[];
+    packagingSalesHistory: Record<string, unknown>[];
 }
 
 export const DEMO_STORAGE_KEY = 'crm_demo_database_v1';
@@ -31,7 +35,7 @@ export const createInitialDemoDatabase = (): DemoDatabase => {
         {id: 4, name: 'Блокнот «Подорожі»', available_quantity: 16, reserved_quantity: 1, total_quantity: 20, sold_quantity: 3, purchase_total_price: 1400, purchase_price_per_item: 70, selling_total_price: 330, selling_price_per_item: 110, selling_quantity: 3, article: 'NTB-004', product_description: 'Блокнот у твердій обкладинці', category_ids: [1], supplier: suppliers[0], created_date: '2026-10-21'},
         {id: 5, name: 'Декоративна дерев’яна зірка', available_quantity: 0, reserved_quantity: 0, total_quantity: 10, sold_quantity: 10, purchase_total_price: 900, purchase_price_per_item: 90, selling_total_price: 1500, selling_price_per_item: 150, selling_quantity: 10, article: 'DEC-005', product_description: 'Дерев’яний декор для інтер’єру', category_ids: [2], supplier: suppliers[1], created_date: '2026-07-04'}
     ];
-    return {
+    const database: DemoDatabase = {
         products,
         suppliers,
         categories,
@@ -54,18 +58,120 @@ export const createInitialDemoDatabase = (): DemoDatabase => {
             {id: 2, is_sold: false, name: 'Лісова історія', description: 'Чашка та блокнот', total_price: 220, gift_selling_price: 420, products: [{product_id: 3, name: products[2].name, quantity: 1, price: 150}, {product_id: 4, name: products[3].name, quantity: 1, price: 70}], packagings: []}
         ],
         purchases: [
-            {id: 1, name: products[0].name, type: 'Product', date: '2026-10-02', categories: [2,3], quantity: 30, price_per_item: 60, total_price: 1800, supplier_id: 1, supplier_name: 'ТОВ «Світ подарунків»', supplier_is_active: true},
-            {id: 2, name: products[2].name, type: 'Product', date: '2026-08-11', categories: [2], quantity: 15, price_per_item: 150, total_price: 2250, supplier_id: 2, supplier_name: 'Майстерня декору', supplier_is_active: true},
-            {id: 3, name: 'Коробка мала', type: 'Packaging', date: '2026-09-01', categories: [4], quantity: 50, price_per_item: 18, total_price: 900, supplier_id: 3, supplier_name: 'ПакСервіс', supplier_is_active: true}
+            {id: 1, product_id: 1, name: products[0].name, type: 'Product', date: '2026-10-02', categories: [2,3], quantity: 30, price_per_item: 60, total_price: 1800, supplier_id: 1, supplier_name: 'ТОВ «Світ подарунків»', supplier_is_active: true},
+            {id: 2, product_id: 3, name: products[2].name, type: 'Product', date: '2026-08-11', categories: [2], quantity: 15, price_per_item: 150, total_price: 2250, supplier_id: 2, supplier_name: 'Майстерня декору', supplier_is_active: true},
+            {id: 3, material_id: 1, name: 'Коробка мала', type: 'Packaging', date: '2026-09-01', categories: [4], quantity: 50, price_per_item: 18, total_price: 900, supplier_id: 3, supplier_name: 'ПакСервіс', supplier_is_active: true}
         ],
         sales: [
-            {id: 1, product_id: 1, product_name: products[0].name, customer_id: 1, customer_name: 'Анна Коваленко', quantity_sold: 2, selling_price_per_item: 130, selling_total_price: 260, sale_date: '2026-11-04', profit: 140},
+            {id: 1, product_id: 1, product_name: products[0].name, packaging_material_id: 1, packaging_quantity: 2, total_packaging_cost: 36, customer_id: 1, customer_name: 'Анна Коваленко', quantity_sold: 2, selling_price_per_item: 130, selling_total_price: 260, sale_date: '2026-11-04', profit: 140},
             {id: 2, product_id: 2, product_name: products[1].name, customer_id: 2, customer_name: 'Максим Петренко', quantity_sold: 3, selling_price_per_item: 120, selling_total_price: 360, sale_date: '2026-11-10', profit: 210},
-            {id: 3, product_id: 3, product_name: products[2].name, customer_id: 3, customer_name: 'Ірина Мельник', quantity_sold: 1, selling_price_per_item: 250, selling_total_price: 250, sale_date: '2026-11-16', profit: 100}
+            {id: 3, product_id: 3, product_name: products[2].name, packaging_material_id: 1, packaging_quantity: 1, total_packaging_cost: 18, customer_id: 3, customer_name: 'Ірина Мельник', quantity_sold: 1, selling_price_per_item: 250, selling_total_price: 250, sale_date: '2026-11-16', profit: 100}
         ],
         returns: [
             {id: 1, sale_id: 2, product_id: 2, product_name: products[1].name, customer_id: 2, customer_name: 'Максим Петренко', quantity_returned: 1, return_amount: 120, return_reason: 'Не підійшов дизайн', return_date: '2026-11-12', returned_by_username: 'demo.manager'}
         ],
-        giftSetSales: []
+        giftSetSales: [],
+        productStockHistory: [],
+        productAuditHistory: [],
+        packagingStockHistory: [],
+        packagingSalesHistory: []
     };
+
+    let productStockHistoryId = 1;
+    database.productStockHistory = [
+        ...database.purchases.filter(item => item.type === 'Product' && Number(item.product_id) > 0).map(item => ({
+            id: productStockHistoryId++,
+            product_id: Number(item.product_id),
+            timestamp: `${item.date} 09:00:00`,
+            change_type: 'purchase',
+            change_amount: Number(item.quantity || 0),
+            quantity_before: null,
+            quantity_after: null,
+            reason: 'Початкові демонстраційні дані'
+        })),
+        ...database.sales.map(item => ({
+            id: productStockHistoryId++,
+            product_id: Number(item.product_id),
+            timestamp: `${item.sale_date} 12:00:00`,
+            change_type: 'sale',
+            change_amount: -Number(item.quantity_sold || 0),
+            quantity_before: null,
+            quantity_after: null,
+            reason: null
+        })),
+        ...database.returns.map(item => ({
+            id: productStockHistoryId++,
+            product_id: Number(item.product_id),
+            timestamp: String(item.return_date),
+            change_type: 'return',
+            change_amount: Number(item.quantity_returned || 0),
+            quantity_before: null,
+            quantity_after: null,
+            reason: String(item.return_reason || '')
+        }))
+    ];
+
+    let productAuditHistoryId = 1;
+    database.productAuditHistory = [
+        ...database.purchases.filter(item => item.type === 'Product' && Number(item.product_id) > 0).map(item => ({
+            id: productAuditHistoryId++,
+            product_id: Number(item.product_id),
+            changed_by_id: null,
+            changed_by_username: 'demo.manager',
+            action: 'purchase',
+            field_name: 'available_quantity',
+            old_value: null,
+            new_value: String(item.quantity || 0),
+            reason: 'Початкові демонстраційні дані',
+            changed_at: `${item.date} 09:00:00`
+        })),
+        ...database.sales.map(item => ({
+            id: productAuditHistoryId++,
+            product_id: Number(item.product_id),
+            changed_by_id: null,
+            changed_by_username: 'demo.manager',
+            action: 'sale',
+            field_name: 'sold_quantity',
+            old_value: null,
+            new_value: String(item.quantity_sold || 0),
+            reason: null,
+            changed_at: `${item.sale_date} 12:00:00`
+        })),
+        ...database.returns.map(item => ({
+            id: productAuditHistoryId++,
+            product_id: Number(item.product_id),
+            changed_by_id: null,
+            changed_by_username: 'demo.manager',
+            action: 'return',
+            field_name: 'available_quantity',
+            old_value: null,
+            new_value: String(item.quantity_returned || 0),
+            reason: String(item.return_reason || ''),
+            changed_at: String(item.return_date)
+        }))
+    ];
+
+    let packagingStockHistoryId = 1;
+    database.packagingStockHistory = database.purchases
+        .filter(item => item.type === 'Packaging' && Number(item.material_id) > 0)
+        .map(item => ({
+            id: packagingStockHistoryId++,
+            material_id: Number(item.material_id),
+            change_amount: Number(item.quantity || 0),
+            change_type: 'purchase',
+            timestamp: `${item.date} 09:00:00`
+        }));
+
+    database.packagingSalesHistory = database.sales
+        .filter(item => Number(item.packaging_material_id) > 0)
+        .map((item, index) => ({
+            id: index + 1,
+            sale_id: Number(item.id),
+            packaging_material_id: Number(item.packaging_material_id),
+            packaging_quantity: Number(item.packaging_quantity || 0),
+            total_packaging_cost: Number(item.total_packaging_cost || 0),
+            sale_date: String(item.sale_date)
+        }));
+
+    return database;
 };
