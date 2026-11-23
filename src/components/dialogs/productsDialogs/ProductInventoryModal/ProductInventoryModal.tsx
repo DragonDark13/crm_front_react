@@ -78,11 +78,12 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     const isValidQuantity = /^\d+$/.test(actualQuantity)
         && Number.isSafeInteger(Number(actualQuantity))
         && Number(actualQuantity) >= 0;
+    const hasQuantityChanges = isValidQuantity && Number(actualQuantity) !== physicalQuantity;
     const isValidReason = reasonType !== "Інше" || otherReason.trim() !== "";
     const isValidInventoryDate = /^\d{4}-\d{2}-\d{2}$/.test(inventoryDate);
 
     const handleSubmit = async () => {
-        if (!isValidQuantity || !isValidReason || !isValidInventoryDate || isSubmittingRef.current) return;
+        if (!isValidQuantity || !hasQuantityChanges || !isValidReason || !isValidInventoryDate || isSubmittingRef.current) return;
 
         const quantity = Number(actualQuantity);
         const inventoryReason = [
@@ -190,7 +191,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                 <Button
                     variant="contained"
                     onClick={handleSubmit}
-                    disabled={!isValidQuantity || !isValidReason || !isValidInventoryDate || isSubmitting}
+                    disabled={!isValidQuantity || !hasQuantityChanges || !isValidReason || !isValidInventoryDate || isSubmitting}
                 >
                     Провести інвентаризацію
                 </Button>
