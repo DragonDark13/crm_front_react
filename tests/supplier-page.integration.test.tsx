@@ -202,7 +202,7 @@ describe('SupplierPage integration', () => {
         fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
 
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledWith(12, 'product'));
-        expect(screen.queryByText('Підтвердження видалення')).toBeNull();
+        expect(screen.queryByRole('dialog')).toBeNull();
         expect(mocks.showSnackbarMessage).toHaveBeenCalledWith('Наявні пов’язані закупівлі.', 'warning');
     });
 

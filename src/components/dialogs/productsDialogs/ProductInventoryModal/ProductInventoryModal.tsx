@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {
     Button,
     DialogActions,
@@ -36,6 +36,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     const [otherReason, setOtherReason] = useState("");
     const [reason, setReason] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const isSubmittingRef = useRef(false);
 
     useEffect(() => {
         if (open) {
@@ -47,44 +48,48 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     }, [open, physicalQuantity]);
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const value = event.target.value.replace(/[^0-9]/g, "").replace(/^0+/, "");
-        setActualQuantity(value === "" ? "0" : value);
+        setActualQuantity(event.target.value);
     };
 
     const incrementQuantity = () => {
-        if (Number(actualQuantity) < Number.MAX_SAFE_INTEGER) {
-            setActualQuantity(String(Number(actualQuantity) + 1));
+        const quantity = Number(actualQuantity);
+        if (Number.isSafeInteger(quantity) && quantity < Number.MAX_SAFE_INTEGER) {
+            setActualQuantity(String(quantity + 1));
         }
     };
 
     const decrementQuantity = () => {
-        if (Number(actualQuantity) > 0) {
-            setActualQuantity(String(Number(actualQuantity) - 1));
+        const quantity = Number(actualQuantity);
+        if (Number.isSafeInteger(quantity) && quantity > 0) {
+            setActualQuantity(String(quantity - 1));
         }
     };
 
-    const handleSubmit = async () => {
-        const quantity = Number(actualQuantity);
-        if (!Number.isInteger(quantity) || quantity < 0) return;
-        if (reasonType === "Інше" && !otherReason.trim()) return;
+    const isValidQuantity = /^\d+$/.test(actualQuantity)
+        && Number.isSafeInteger(Number(actualQuantity))
+        && Number(actualQuantity) >= 0;
+    const isValidReason = reasonType !== "Інше" || otherReason.trim() !== "";
 
+    const handleSubmit = async () => {
+        if (!isValidQuantity || !isValidReason || isSubmittingRef.current) return;
+
+        const quantity = Number(actualQuantity);
         const inventoryReason = [
             reasonType === "Інше" ? `Інше: ${otherReason.trim()}` : reasonType,
             reason.trim()
         ].filter(Boolean).join(" — ");
 
+        isSubmittingRef.current = true;
         setIsSubmitting(true);
         try {
             await onSubmit(quantity, inventoryReason);
+        } catch {
+            // API errors are reported by the parent action handler; keep the form available for retry.
         } finally {
+            isSubmittingRef.current = false;
             setIsSubmitting(false);
         }
     };
-
-    const isValidQuantity = actualQuantity.trim() !== ""
-        && Number.isInteger(Number(actualQuantity))
-        && Number(actualQuantity) >= 0;
-    const isValidReason = reasonType !== "Інше" || otherReason.trim() !== "";
 
     return (
         <CustomDialog title="Інвентаризація товару" open={open} handleClose={isSubmitting ? () => undefined : onClose} fullWidth maxWidth="sm">
@@ -106,7 +111,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                 </Typography>
                 <QuantityField
                     label="Фактична кількість (усі фізичні одиниці)"
-                    value={Number(actualQuantity)}
+                    value={actualQuantity}
                     onChange={handleQuantityChange}
                     onIncrement={incrementQuantity}
                     onDecrement={decrementQuantity}
