@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {
     Button,
-    Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
     TextField,
     Typography
 } from "@mui/material";
 import {IProduct} from "../../../../utils/types";
+import CustomDialog from "../../CustomDialog/CustomDialog";
 
 interface ProductInventoryModalProps {
     product: IProduct;
@@ -53,8 +52,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
         && Number(actualQuantity) >= 0;
 
     return (
-        <Dialog open={open} onClose={isSubmitting ? undefined : onClose} fullWidth maxWidth="sm">
-            <DialogTitle>Інвентаризація товару</DialogTitle>
+        <CustomDialog title="Інвентаризація товару" open={open} handleClose={isSubmitting ? () => undefined : onClose} fullWidth maxWidth="sm">
             <DialogContent>
                 <Typography variant="subtitle1" fontWeight="bold" sx={{mt: 1}}>
                     {product.name}
@@ -110,7 +108,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                     Провести інвентаризацію
                 </Button>
             </DialogActions>
-        </Dialog>
+        </CustomDialog>
     );
 };
 
