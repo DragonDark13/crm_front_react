@@ -121,6 +121,8 @@ describe('Demo API history and export', () => {
             .rejects.toMatchObject({response: {status: 409}});
         await expect(axiosInstance.delete('/delete_all_products', demoConfig))
             .rejects.toMatchObject({response: {status: 409}});
+        await expect(axiosInstance.delete('/delete_all_materials', demoConfig))
+            .rejects.toMatchObject({response: {status: 409}});
     });
 
     it('returns 404 for unsupported endpoints instead of a false success', async () => {
