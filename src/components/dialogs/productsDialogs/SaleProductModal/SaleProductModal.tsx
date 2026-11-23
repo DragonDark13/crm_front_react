@@ -1,6 +1,7 @@
 import {
     TextField,
     Button,
+    useMediaQuery,
     DialogContent,
     DialogActions,
     Grid,
@@ -52,6 +53,7 @@ const SaleProductModal = ({
                               isAuthenticated
                           }: ISaleProductModal) => {
 
+    const isMobile = useMediaQuery("(max-width:700px)");
     const {customers, fetchGetAllCustomersFunc, createCustomerFunc} = useCustomers();
     const {packagingMaterials, fetchPackagingOptions} = usePackaging();
     const [expanded, setExpanded] = useState(false);
@@ -236,6 +238,7 @@ const SaleProductModal = ({
                 handleClose={handleCloseSale}
                 title={`Продаж '${nameProduct}' x ${saleData.quantity}шт`}
                 maxWidth="md"
+                fullScreen={isMobile}
             >
                 <React.Fragment>
                     <DialogContent>
@@ -254,7 +257,7 @@ const SaleProductModal = ({
                             </Grid>
                         </Grid>
                         <Grid container alignItems={"end"} spacing={2}>
-                            <Grid item xs={12} sm={6} md={4} lg={4}>
+                            <Grid item xs={9} sm={6} md={4} lg={4}>
                                 <Autocomplete
                                     disabled={quantityOnStock < 1}
                                     options={customers}
@@ -276,7 +279,7 @@ const SaleProductModal = ({
                                     )}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={2}>
+                            <Grid item xs={3} sm={2}>
                                 <AddButton disabled={quantityOnStock < 1}
                                            onClick={() => setOpenAddNewCustomerDialog(true)}/>
                             </Grid>
@@ -436,13 +439,31 @@ const SaleProductModal = ({
                             </Grid>
                         </Grid>
                     </DialogContent>
-                    <DialogActions>
+                    <DialogActions sx={isMobile ? {
+                        position: "sticky",
+                        bottom: 0,
+                        zIndex: 1,
+                        justifyContent: "space-between",
+                        gap: 1,
+                        px: 2,
+                        py: 1.5,
+                        pb: "calc(12px + env(safe-area-inset-bottom))",
+                        backgroundColor: "background.paper",
+                        borderTop: 1,
+                        borderColor: "divider",
+                    } : undefined}>
                         {/*<Button variant="contained" onClick={handleCloseSale} color="error">*/}
                         {/*    Відміна*/}
                         {/*</Button>*/}
+                        {isMobile && (
+                            <Typography fontWeight="bold" sx={{whiteSpace: "nowrap"}}>
+                                {totalSalePrice.toFixed(2)} грн
+                            </Typography>
+                        )}
                         <CancelButton onClick={handleCloseSale}/>
                         <Button
                             variant="contained"
+                            fullWidth={isMobile}
                             onClick={handleSaleSubmit}
                             disabled={isSubmitDisabled() || !isAuthenticated || quantityOnStock < 1} // Додаємо
                             // перевірку для активності
