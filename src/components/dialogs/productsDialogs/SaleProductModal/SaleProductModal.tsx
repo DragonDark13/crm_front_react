@@ -5,9 +5,7 @@ import {
     DialogActions,
     Grid,
     Typography,
-    Select,
-    MenuItem,
-    InputLabel, FormControl, Collapse, Paper, Divider
+    Collapse, Paper, Divider, Autocomplete, Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
@@ -34,11 +32,12 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {createCustomer, fetchGetAllCustomers} from "../../../../api/_customer";
-import CustomerSelect from "../../../FormComponents/CustomerSelect";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddButton from "../../../Buttons/AddButton";
 import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import PackagingSelector from "./PackagingSelector";
 import {useTheme} from "@mui/material/styles";
+import {Box} from "@mui/material";
 import CancelButton from "../../../Buttons/CancelButton";
 //TODO check create customer
 //TODO choise added customer create interface
@@ -245,10 +244,10 @@ const SaleProductModal = ({
                     <DialogContent>
                         <Grid container>
                             <Grid item xs={12}>
-                                <Typography>Товар:
-                                    <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
-                                        {nameProduct}
-                                    </Typography>
+                                <Typography variant="body2" color="text.secondary">Товар для продажу</Typography>
+                                <Typography fontWeight="bold" variant="subtitle1">
+                                    {nameProduct}
+                                </Typography>
                                     {quantityOnStock < 1 &&
                                     <Typography color={"error"}> Товару немає в наявнсті на складі</Typography>}
                                 </Typography>
@@ -259,30 +258,30 @@ const SaleProductModal = ({
                         </Grid>
                         <Grid container alignItems={"end"} spacing={2}>
                             <Grid item xs={12} sm={6} md={4} lg={4}>
-                                <CustomerSelect
+                                <Autocomplete
                                     disabled={quantityOnStock < 1}
-                                    customers={customers}
-                                    value={saleData.customer}
-                                    onChange={(e) => {
-                                        const selectedCustomer = Number(e.target.value);
-                                        handleChangeCustomer(selectedCustomer)
+                                    options={customers}
+                                    value={customers.find(customer => customer.id === saleData.customer) ?? null}
+                                    getOptionLabel={(customer) => customer.name}
+                                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                                    onChange={(_, customer) => {
+                                        setSaleData({...saleData, customer: customer?.id ?? ""});
                                     }}
-                                    error={errors.customer!==''}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            size="small"
+                                            label="Покупець"
+                                            placeholder="Почни вводити ім’я покупця"
+                                            error={!!errors.customer}
+                                            helperText={errors.customer || "Знайди покупця у списку або додай нового кнопкою +"}
+                                        />
+                                    )}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <AddButton disabled={quantityOnStock < 1}
                                            onClick={() => setOpenAddNewCustomerDialog(true)}/>
-                            </Grid>
-                            <Grid item xs={12} sm={4} md={3}>
-                                <DateFieldCustom
-                                    disabled={quantityOnStock < 1}
-                                    label="Дата продажу"
-                                    value={saleData.sale_date}
-                                    onChange={(e) => handleChangeSaleDate(e.target.value)}
-                                    error={!!errors.sale_date}
-                                    helperText={errors.sale_date}
-                                />
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
                                 <TextField
@@ -326,29 +325,77 @@ const SaleProductModal = ({
                             <Grid item xs={12} sm={6} md={12} mb={2}>
                                 <Divider sx={{opacity: 1, borderColor: theme.palette.grey[500], marginBottom: 1}}/>
 
-                                {/* Кнопка для додавання пакування */}
-                                {!showPackaging && <Grid item xs={12}>
+                                {!showPackaging && (
                                     <Button
                                         disabled={quantityOnStock < 1}
-                                        variant={"contained"} endIcon={<AddIcon/>} onClick={togglePackaging}
-                                        color="secondary">
-                                        {showPackaging ? 'Приховати пакування' : 'Додати пакування'}
+                                        variant="outlined"
+                                        startIcon={<AddIcon/>}
+                                        onClick={togglePackaging}
+                                    >
+                                        Додати пакування
                                     </Button>
-                                </Grid>}
-
-                                {/* Поля для пакування, які з'являються після натискання кнопки */}
+                                )}
                                 {showPackaging && (
                                     <PackagingSelector
                                         saleData={saleData}
                                         setSaleData={setSaleData}
                                         packagingMaterials={packagingMaterials}
                                         removePackage={removePackage}
-                                    />)}
+                                    />
+                                )}
                             </Grid>
 
 
                         </Grid>
-                        <Grid container spacing={3}>
+                        <Accordion
+                            disableGutters
+                            elevation={0}
+                            sx={{mt: 2, border: 1, borderColor: 'divider', '&:before': {display: 'none'}}}
+                        >
+                            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                    <Typography fontWeight="medium">Додаткові параметри</Typography>
+                                    <Typography variant="caption" color="text.secondary">
+                                        Дата продажу: {saleData.sale_date} · пакування за потреби
+                                    </Typography>
+                                </Box>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Grid container spacing={2} alignItems="center">
+                                    <Grid item xs={12} sm={5}>
+                                        <DateFieldCustom
+                                            disabled={quantityOnStock < 1}
+                                            label="Дата продажу"
+                                            value={saleData.sale_date}
+                                            onChange={(e) => handleChangeSaleDate(e.target.value)}
+                                            error={!!errors.sale_date}
+                                            helperText={errors.sale_date}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        {!showPackaging && (
+                                            <Button
+                                                disabled={quantityOnStock < 1}
+                                                variant="outlined"
+                                                startIcon={<AddIcon/>}
+                                                onClick={togglePackaging}
+                                            >
+                                                Додати пакування
+                                            </Button>
+                                        )}
+                                        {showPackaging && (
+                                            <PackagingSelector
+                                                saleData={saleData}
+                                                setSaleData={setSaleData}
+                                                packagingMaterials={packagingMaterials}
+                                                removePackage={removePackage}
+                                            />
+                                        )}
+                                    </Grid>
+                                </Grid>
+                            </AccordionDetails>
+                        </Accordion>
+                        <Grid container spacing={3} sx={{mt: 1}}>
                             {/* Загальна Чиста Вигода */}
                             <Grid item xs={12} sm={6}>
                                 <Paper sx={{padding: 2, backgroundColor: '#dfdfdf'}}>
