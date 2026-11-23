@@ -100,7 +100,7 @@ describe('ProductInventoryModal', () => {
         chooseReason('Інше');
 
         expect(screen.getByRole('textbox', {name: 'Опиши, що сталося'})).toBeTruthy();
-        expect(submitButton()).toBeDisabled();
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
         expect(onSubmit).not.toHaveBeenCalled();
 
         fireEvent.change(screen.getByRole('textbox', {name: 'Опиши, що сталося'}), {
@@ -130,7 +130,7 @@ describe('ProductInventoryModal', () => {
         fireEvent.click(submitButton());
 
         expect(onSubmit).toHaveBeenCalledOnce();
-        expect(submitButton()).toBeDisabled();
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
 
         resolveSubmit();
         await waitFor(() => expect(submitButton()).toBeEnabled());
