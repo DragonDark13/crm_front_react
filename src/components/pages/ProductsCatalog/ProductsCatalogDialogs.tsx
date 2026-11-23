@@ -33,7 +33,7 @@ interface IProductsCatalogDialogsProps {
     inventoryProduct: IProduct | null;
     setInventoryProduct: React.Dispatch<React.SetStateAction<IProduct | null>>;
     isLoading: boolean;
-    handleSubmitInventory: (actualQuantity: number, reason: string) => Promise<void>;
+    handleSubmitInventory: (actualQuantity: number, reason: string, inventoryDate: string) => Promise<void>;
     editProduct: IEditProduct | null;
     setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct | null>>;
     handleEditSave: () => Promise<void>;

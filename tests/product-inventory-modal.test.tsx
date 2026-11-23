@@ -29,6 +29,7 @@ const quantityInput = () => screen.getByRole('textbox', {
 }) as HTMLInputElement;
 
 const submitButton = () => screen.getByRole('button', {name: 'Провести інвентаризацію'});
+const inventoryDateInput = () => screen.getByLabelText(/Дата звірки/) as HTMLInputElement;
 const chooseReason = (reason: string) => {
     fireEvent.mouseDown(screen.getByRole('combobox', {name: 'Що сталося з товаром?'}));
     fireEvent.click(screen.getByRole('option', {name: reason}));
@@ -37,6 +38,30 @@ const chooseReason = (reason: string) => {
 afterEach(() => cleanup());
 
 describe('ProductInventoryModal', () => {
+    it('defaults the reconciliation date to the current local date', () => {
+        renderModal();
+        const today = new Date();
+        const expectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+        expect(inventoryDateInput().value).toBe(expectedDate);
+    });
+
+    it('submits the selected reconciliation date', () => {
+        const onSubmit = renderModal();
+        fireEvent.change(inventoryDateInput(), {target: {value: '2026-11-20'}});
+        fireEvent.click(submitButton());
+
+        expect(onSubmit).toHaveBeenCalledWith(12, 'Невідомо', '2026-11-20');
+    });
+
+    it('requires a reconciliation date', () => {
+        const onSubmit = renderModal();
+        fireEvent.change(inventoryDateInput(), {target: {value: ''}});
+
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
+        expect(onSubmit).not.toHaveBeenCalled();
+    });
+
     it('increments and decrements the physical quantity', () => {
         renderModal();
 
@@ -60,7 +85,7 @@ describe('ProductInventoryModal', () => {
         fireEvent.change(quantityInput(), {target: {value: '125'}});
         fireEvent.click(submitButton());
 
-        expect(onSubmit).toHaveBeenCalledWith(125, 'Невідомо');
+        expect(onSubmit).toHaveBeenCalledWith(125, 'Невідомо', expect.any(String));
     });
 
     it.each(['-5', '1.5', '12abc', '9007199254740992'])(
@@ -91,7 +116,7 @@ describe('ProductInventoryModal', () => {
             chooseReason(reason);
             fireEvent.click(submitButton());
 
-            expect(onSubmit).toHaveBeenCalledWith(12, reason);
+            expect(onSubmit).toHaveBeenCalledWith(12, reason, expect.any(String));
         }
     );
 
@@ -117,7 +142,7 @@ describe('ProductInventoryModal', () => {
         });
         fireEvent.click(submitButton());
 
-        expect(onSubmit).toHaveBeenCalledWith(12, 'Інше: Пошкоджено');
+        expect(onSubmit).toHaveBeenCalledWith(12, 'Інше: Пошкоджено', expect.any(String));
     });
 
     it('sends the selected reason together with the additional note', () => {
@@ -127,7 +152,7 @@ describe('ProductInventoryModal', () => {
         });
         fireEvent.click(submitButton());
 
-        expect(onSubmit).toHaveBeenCalledWith(12, 'Невідомо — Перевірено під час перерахунку');
+        expect(onSubmit).toHaveBeenCalledWith(12, 'Невідомо — Перевірено під час перерахунку', expect.any(String));
     });
 
     it('prevents repeated submissions while the first request is pending', async () => {

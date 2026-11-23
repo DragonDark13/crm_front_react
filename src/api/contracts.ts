@@ -46,6 +46,7 @@ export interface ProductHistoryResponse {
         id: number;
         product_id: number;
         timestamp: string;
+        inventory_date: string | null;
         change_type: string;
         change_amount: number;
         quantity_before: number | null;

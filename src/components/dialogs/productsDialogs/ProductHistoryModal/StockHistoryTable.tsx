@@ -24,7 +24,8 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
             <Table>
                 <TableHead>
                     <TableRow>
-                        <RenderHeaderCell>Дата</RenderHeaderCell>
+                        <RenderHeaderCell>Дата проведення</RenderHeaderCell>
+                        <RenderHeaderCell>Дата звірки</RenderHeaderCell>
                         <RenderHeaderCell>Тип зміни</RenderHeaderCell>
                         <RenderHeaderCell>Було</RenderHeaderCell>
                         <RenderHeaderCell>Стало</RenderHeaderCell>
@@ -37,6 +38,7 @@ const StockHistoryTable: React.FC<StockHistoryTableProps> = ({productHistory, so
                         sortByDate(productHistory.stock, 'timestamp').map((record) => (
                             <TableRow key={record.id}>
                                 <TableCell size={"small"}>{new Date(record.timestamp!).toLocaleString()}</TableCell>
+                                <TableCell size={"small"}>{record.inventory_date ? new Date(`${record.inventory_date}T00:00:00`).toLocaleDateString() : "—"}</TableCell>
                                 <TableCell size={"small"}>
                                     {changeTypeLabels[record.change_type] || record.change_type}
                                 </TableCell>

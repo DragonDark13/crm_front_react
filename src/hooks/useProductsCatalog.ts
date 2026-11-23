@@ -408,13 +408,14 @@ export const useProductsCatalog = ({
         setInventoryProduct(product);
     };
 
-    const handleSubmitInventory = async (actualQuantity: number, reason: string) => {
+    const handleSubmitInventory = async (actualQuantity: number, reason: string, inventoryDate: string) => {
         if (!inventoryProduct) return;
 
         await runCrudAction(
             () => runProductInventory(inventoryProduct.id, {
                 actual_quantity: actualQuantity,
-                reason
+                reason,
+                inventory_date: inventoryDate
             }),
             fetchProductsFunc,
             {
