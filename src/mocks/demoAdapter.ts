@@ -5,7 +5,17 @@ import {createInitialDemoDatabase, DEMO_STORAGE_KEY, type DemoDatabase} from './
 const readDatabase = (): DemoDatabase => {
     try {
         const stored = localStorage.getItem(DEMO_STORAGE_KEY);
-        return stored ? JSON.parse(stored) as DemoDatabase : createInitialDemoDatabase();
+        if (!stored) return createInitialDemoDatabase();
+
+        const parsed = JSON.parse(stored) as Partial<DemoDatabase>;
+        return {
+            ...createInitialDemoDatabase(),
+            ...parsed,
+            productStockHistory: Array.isArray(parsed.productStockHistory) ? parsed.productStockHistory : [],
+            productAuditHistory: Array.isArray(parsed.productAuditHistory) ? parsed.productAuditHistory : [],
+            packagingStockHistory: Array.isArray(parsed.packagingStockHistory) ? parsed.packagingStockHistory : [],
+            packagingSalesHistory: Array.isArray(parsed.packagingSalesHistory) ? parsed.packagingSalesHistory : []
+        };
     } catch {
         return createInitialDemoDatabase();
     }
@@ -20,13 +30,116 @@ const persist = () => {
 const nextId = (items: Record<string, unknown>[]) =>
     Math.max(0, ...items.map(item => Number(item.id) || 0)) + 1;
 
-const response = (config: InternalAxiosRequestConfig, data: unknown, status = 200): AxiosResponse => ({
+const response = (
+    config: InternalAxiosRequestConfig,
+    data: unknown,
+    status = 200,
+    contentType = 'application/json'
+): AxiosResponse => ({
     data,
     status,
     statusText: status >= 400 ? 'Error' : 'OK',
-    headers: new AxiosHeaders({'content-type': 'application/json'}),
+    headers: new AxiosHeaders({'content-type': contentType}),
     config
 });
+
+const currentTimestamp = () => new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+const addProductStockHistory = (
+    productId: number,
+    changeType: string,
+    changeAmount: number,
+    quantityBefore: number | null,
+    quantityAfter: number | null,
+    reason: string | null = null
+) => {
+    database.productStockHistory.push({
+        id: nextId(database.productStockHistory),
+        product_id: productId,
+        timestamp: currentTimestamp(),
+        change_type: changeType,
+        change_amount: changeAmount,
+        quantity_before: quantityBefore,
+        quantity_after: quantityAfter,
+        reason
+    });
+};
+
+const addProductAuditHistory = (
+    productId: number,
+    action: string,
+    fieldName: string,
+    oldValue: unknown,
+    newValue: unknown,
+    reason: string | null = null
+) => {
+    database.productAuditHistory.push({
+        id: nextId(database.productAuditHistory),
+        product_id: productId,
+        changed_by_id: null,
+        changed_by_username: 'demo.manager',
+        action,
+        field_name: fieldName,
+        old_value: oldValue === null || oldValue === undefined ? null : String(oldValue),
+        new_value: newValue === null || newValue === undefined ? null : String(newValue),
+        reason,
+        changed_at: currentTimestamp()
+    });
+};
+
+const addPackagingStockHistory = (materialId: number, changeAmount: number, changeType: string) => {
+    database.packagingStockHistory.push({
+        id: nextId(database.packagingStockHistory),
+        material_id: materialId,
+        change_amount: changeAmount,
+        change_type: changeType,
+        timestamp: currentTimestamp()
+    });
+};
+
+const escapeXml = (value: unknown) => String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+
+const buildProductExportXml = (products: Record<string, unknown>[]) => {
+    const headers = [
+        'Назва товару', 'Постачальник', 'Категорії', 'Загальна кількість',
+        'Доступна кількість', 'Продана кількість', 'Ціна закупівлі за одиницю',
+        'Ціна продажу за одиницю', 'Дата створення'
+    ];
+    const rows = products.map(product => {
+        const supplier = product.supplier as Record<string, unknown> | null;
+        const categoryIds = Array.isArray(product.category_ids) ? product.category_ids as number[] : [];
+        const categories = database.categories
+            .filter(category => categoryIds.includes(Number(category.id)))
+            .map(category => category.name)
+            .join(', ');
+        return [
+            product.name,
+            supplier?.name || 'Н/Д',
+            categories,
+            product.total_quantity,
+            product.available_quantity,
+            product.sold_quantity,
+            product.purchase_price_per_item,
+            product.selling_price_per_item,
+            String(product.created_date || '').slice(0, 10)
+        ];
+    });
+    const rowXml = (values: unknown[]) => `<Row>${values.map(value => {
+        const numeric = typeof value === 'number' && Number.isFinite(value);
+        return `<Cell><Data ss:Type="${numeric ? 'Number' : 'String'}">${escapeXml(value)}</Data></Cell>`;
+    }).join('')}</Row>`;
+
+    return `<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Worksheet ss:Name="Products"><Table>${rowXml(headers)}${rows.map(rowXml).join('')}</Table></Worksheet>
+</Workbook>`;
+};
 
 const makeProductResponse = (product: Record<string, unknown>) => ({
     id: product.id,
@@ -52,7 +165,8 @@ const adapter: AxiosAdapter = async config => {
     const body = typeof config.data === 'string' ? JSON.parse(config.data || '{}') as Record<string, unknown> : (config.data || {}) as Record<string, unknown>;
     const idMatch = path.match(/\/(\d+)(?:\/|$)/);
     const id = idMatch ? Number(idMatch[1]) : 0;
-    let data: unknown = {message: 'Демо-операцію виконано'};
+    let data: unknown;
+    let status = 200;
 
     if (method === 'get' && path === '/me') {
         data = {roles: ['manager'], username: 'demo.manager'};
@@ -125,15 +239,59 @@ const adapter: AxiosAdapter = async config => {
                 const purchase = purchases.find(item => item.year === year && item.month === month);
                 return {year, month, sales: sale?.amount || 0, profit: database.sales.filter(item => String(item.sale_date).startsWith(key)).reduce((sum, item) => sum + Number(item.profit || 0), 0), expenses: (purchase?.amount || 0) + database.investments.filter(item => String(item.date).startsWith(key)).reduce((sum, item) => sum + Number(item.cost || 0), 0)};
             });
-        } else data = Array.from({length: 7}, (_, index) => ({day: new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10), active_customers: new Set(database.sales.filter(sale => sale.sale_date === new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10)).map(sale => sale.customer_id)).size}));
+        } else if (path === '/statistics/customer-activity') {
+            data = Array.from({length: 7}, (_, index) => ({day: new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10), active_customers: new Set(database.sales.filter(sale => sale.sale_date === new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10)).map(sale => sale.customer_id)).size}));
+        } else {
+            data = {error: 'Невідомий endpoint статистики'};
+            status = 404;
+        }
     } else if (method === 'get' && path.startsWith('/product/') && path.endsWith('/history')) {
         const product = database.products.find(item => item.id === id);
-        data = product ? {
-            stock_history: [],
-            purchase_history: database.purchases.filter(item => item.type === 'Product' && item.name === product.name).map(item => ({id: item.id, product_id: id, supplier_id: item.supplier_id ?? null, purchase_price_per_item: Number(item.price_per_item || 0), purchase_total_price: Number(item.total_price || 0), purchase_date: item.date, quantity_purchase: Number(item.quantity || 0), supplier: {id: item.supplier_id, name: item.supplier_name, is_active: item.supplier_is_active !== false}})),
-            sale_history: database.sales.filter(item => item.product_id === id).map(item => ({id: item.id, product_id: id, customer_id: item.customer_id, quantity_sold: item.quantity_sold, selling_price_per_item: item.selling_price_per_item, selling_total_price: item.selling_total_price, sale_date: item.sale_date, profit: item.profit || 0, packaging_material_id: null, packaging_quantity: null, total_packaging_cost: null, customer: {id: item.customer_id, name: item.customer_name}})),
-            audit_history: []
-        } : {stock_history: [], purchase_history: [], sale_history: [], audit_history: []};
+        if (!product) return response(config, {error: 'Product not found'}, 404);
+        data = {
+            stock_history: database.productStockHistory
+                .filter(item => Number(item.product_id) === id)
+                .map(item => ({...item})),
+            purchase_history: database.purchases
+                .filter(item => item.type === 'Product' && (
+                    Number(item.product_id) === id
+                    || (item.product_id === undefined && item.name === product.name)
+                ))
+                .map(item => {
+                    const supplier = database.suppliers.find(value => value.id === Number(item.supplier_id));
+                    return {
+                        id: item.id,
+                        product_id: id,
+                        supplier_id: item.supplier_id ?? null,
+                        purchase_price_per_item: Number(item.price_per_item || 0),
+                        purchase_total_price: Number(item.total_price || 0),
+                        purchase_date: item.date,
+                        quantity_purchase: Number(item.quantity || 0),
+                        supplier: supplier ? {id: supplier.id, name: supplier.name, is_active: supplier.is_active !== false} : null
+                    };
+                }),
+            sale_history: database.sales.filter(item => Number(item.product_id) === id).map(item => {
+                const customer = database.customers.find(value => value.id === Number(item.customer_id));
+                return {
+                    id: item.id,
+                    product_id: id,
+                    customer_id: item.customer_id,
+                    quantity_sold: item.quantity_sold,
+                    selling_price_per_item: item.selling_price_per_item,
+                    selling_total_price: item.selling_total_price,
+                    sale_date: item.sale_date,
+                    profit: item.profit || 0,
+                    packaging_material_id: item.packaging_material_id ?? null,
+                    packaging_quantity: item.packaging_quantity ?? null,
+                    total_packaging_cost: item.total_packaging_cost ?? null,
+                    customer: customer ? {id: customer.id, name: customer.name} : {id: Number(item.customer_id) || 0, name: String(item.customer_name || 'Гість')}
+                };
+            }),
+            audit_history: database.productAuditHistory
+                .filter(item => Number(item.product_id) === id)
+                .sort((a, b) => String(b.changed_at).localeCompare(String(a.changed_at)))
+                .map(item => ({...item}))
+        };
     } else if (method === 'get' && path.startsWith('/product/')) {
         data = database.products.find(item => item.id === id) || {};
     } else if (method === 'get' && path.startsWith('/customers_details/')) {
@@ -146,8 +304,29 @@ const adapter: AxiosAdapter = async config => {
         const supplier = database.suppliers.find(item => item.id === id);
         data = {supplier: supplier?.name || '', products: database.products.filter(item => (item.supplier as Record<string, unknown> | null)?.id === id).map(item => ({id: item.id, name: item.name}))};
     } else if (method === 'post' && path === '/add_new_product') {
-        const product = {...body, id: nextId(database.products), supplier: database.suppliers.find(item => item.id === Number(body.supplier_id)) || null, available_quantity: body.available_quantity ?? body.total_quantity ?? 0, reserved_quantity: 0, sold_quantity: 0};
-        database.products.push(product); persist(); data = makeProductResponse(product);
+        const supplier = database.suppliers.find(item => item.id === Number(body.supplier_id)) || null;
+        const quantity = Number(body.available_quantity ?? body.total_quantity ?? 0);
+        const product = {...body, id: nextId(database.products), supplier, available_quantity: quantity, total_quantity: quantity, reserved_quantity: 0, sold_quantity: 0};
+        database.products.push(product);
+        const purchase = {
+            id: nextId(database.purchases),
+            product_id: product.id,
+            name: product.name,
+            type: 'Product',
+            date: String(body.created_date || new Date().toISOString().slice(0, 10)),
+            categories: Array.isArray(body.category_ids) ? body.category_ids : [],
+            quantity,
+            price_per_item: Number(body.purchase_price_per_item || 0),
+            total_price: Number(body.purchase_total_price || 0),
+            supplier_id: supplier?.id ?? null,
+            supplier_name: supplier?.name || '',
+            supplier_is_active: supplier?.is_active !== false
+        };
+        database.purchases.push(purchase);
+        addProductStockHistory(Number(product.id), 'create', quantity, 0, quantity);
+        addProductAuditHistory(Number(product.id), 'create', 'available_quantity', null, quantity);
+        persist();
+        data = makeProductResponse(product);
     } else if (method === 'put' && path.startsWith('/product/')) {
         const index = database.products.findIndex(item => item.id === id);
         if (index >= 0) database.products[index] = {...database.products[index], ...body, supplier: database.suppliers.find(item => item.id === Number(body.supplier_id)) || null};
@@ -171,11 +350,29 @@ const adapter: AxiosAdapter = async config => {
         const category = {id: nextId(database.categories), name: String(body.name || '')}; database.categories.push(category); persist(); data = {message: 'Категорію додано', category};
     } else if (method === 'get' && path.startsWith('/materials/') && path.endsWith('/history')) {
         const material = database.packagingMaterials.find(item => item.id === id);
+        if (!material) return response(config, {error: 'Packaging material not found'}, 404);
         data = {
             packaging_material_id: id,
-            purchase_history: database.purchases.filter(item => item.type === 'Packaging' && item.name === material?.name).map(item => ({id: item.id, material_id: id, supplier_id: item.supplier_id, quantity_purchased: item.quantity, purchase_price_per_unit: item.price_per_item, purchase_total_price: item.total_price, purchase_date: item.date})),
-            sales_history: [],
-            stock_history: []
+            purchase_history: database.purchases
+                .filter(item => item.type === 'Packaging' && (
+                    Number(item.material_id) === id
+                    || (item.material_id === undefined && item.name === material.name)
+                ))
+                .map(item => ({
+                    id: item.id,
+                    material_id: id,
+                    supplier_id: item.supplier_id ?? null,
+                    quantity_purchased: Number(item.quantity || 0),
+                    purchase_price_per_unit: Number(item.price_per_item || 0),
+                    purchase_total_price: Number(item.total_price || 0),
+                    purchase_date: item.date
+                })),
+            sales_history: database.packagingSalesHistory
+                .filter(item => Number(item.packaging_material_id) === id)
+                .map(item => ({...item})),
+            stock_history: database.packagingStockHistory
+                .filter(item => Number(item.material_id) === id)
+                .map(item => ({...item}))
         };
     } else if (method === 'get' && path.startsWith('/packaging-supplier/') && path.endsWith('/purchase-history')) {
         const supplier = database.packagingSuppliers.find(item => item.id === id);
@@ -195,21 +392,58 @@ const adapter: AxiosAdapter = async config => {
         database.products = []; persist();
     } else if (method === 'post' && path === '/update_packaging_status') {
         const material = database.packagingMaterials.find(item => item.id === Number(body.material_id));
-        if (material) material.available_quantity = Math.max(0, Number(material.available_quantity) - Number(body.quantity_used || 0));
-        persist(); data = {message: 'Залишок пакування оновлено', material};
+        const quantityUsed = Number(body.quantity_used);
+        if (!material) return response(config, {error: 'Packaging material not found'}, 404);
+        if (!Number.isFinite(quantityUsed) || quantityUsed <= 0) return response(config, {error: 'Quantity used must be greater than zero'}, 400);
+        if (Number(material.available_quantity) < quantityUsed) return response(config, {error: 'Insufficient quantity available'}, 400);
+        material.available_quantity = Number(material.available_quantity) - quantityUsed;
+        material.available_stock_cost = Number(material.available_stock_cost || 0) - quantityUsed * Number(material.purchase_price_per_unit || 0);
+        if (material.available_quantity === 0) material.status = 'used';
+        addPackagingStockHistory(Number(material.id), -quantityUsed, 'used');
+        persist();
+        data = {message: 'Залишок пакування оновлено', material};
     } else if (method === 'post' && path === '/purchase_current_packaging') {
         const material = database.packagingMaterials.find(item => item.id === Number(body.material_id));
-        if (material) {
-            material.available_quantity = Number(material.available_quantity) + Number(body.quantity || 0);
-            material.total_quantity = Number(material.total_quantity) + Number(body.quantity || 0);
-            material.total_purchase_cost = Number(material.total_purchase_cost) + Number(body.total_purchase_cost || 0);
-        }
-        persist(); data = {message: 'Пакування закуплено', material};
+        if (!material) return response(config, {error: 'Packaging material not found'}, 404);
+        const quantity = Number(body.quantity || 0);
+        const totalCost = Number(body.total_purchase_cost || 0);
+        material.available_quantity = Number(material.available_quantity) + quantity;
+        material.total_quantity = Number(material.total_quantity) + quantity;
+        material.total_purchase_cost = Number(material.total_purchase_cost) + totalCost;
+        material.available_stock_cost = Number(material.available_stock_cost || 0) + totalCost;
+        material.purchase_price_per_unit = Number(body.purchase_price_per_unit || material.purchase_price_per_unit || 0);
+        const supplier = database.packagingSuppliers.find(item => item.id === Number(body.supplier_id));
+        const purchase = {
+            id: nextId(database.purchases),
+            material_id: material.id,
+            name: material.name,
+            type: 'Packaging',
+            date: String(body.purchase_date || new Date().toISOString().slice(0, 10)),
+            quantity,
+            price_per_item: Number(body.purchase_price_per_unit || 0),
+            total_price: totalCost,
+            supplier_id: body.supplier_id ?? material.packaging_material_supplier_id ?? null,
+            supplier_name: supplier?.name || material.supplier?.name || '',
+            supplier_is_active: supplier?.is_active !== false
+        };
+        database.purchases.push(purchase);
+        addPackagingStockHistory(Number(material.id), quantity, 'purchase');
+        persist();
+        data = {message: 'Пакування закуплено', material};
     } else if (method === 'post' && path.startsWith('/product/') && path.endsWith('/inventory')) {
         const product = database.products.find(item => item.id === id);
-        const before = Number(product?.available_quantity || 0);
-        if (product) { product.available_quantity = Number(body.actual_quantity || 0); product.total_quantity = Number(product.total_quantity || 0) + Number(body.actual_quantity || 0) - before; }
-        persist(); data = {message: 'Інвентаризацію виконано', product_id: id, quantity_before: before, quantity_after: Number(body.actual_quantity || 0), change_amount: Number(body.actual_quantity || 0) - before, deleted_gift_sets: [], available_quantity: Number(body.actual_quantity || 0), reserved_quantity: 0, stock_history: {}};
+        if (!product) return response(config, {error: 'Product not found'}, 404);
+        const actualQuantity = Number(body.actual_quantity);
+        if (!Number.isInteger(actualQuantity) || actualQuantity < 0) return response(config, {error: 'actual_quantity must be a non-negative integer'}, 400);
+        const before = Number(product.available_quantity || 0);
+        product.available_quantity = actualQuantity;
+        product.total_quantity = Number(product.total_quantity || 0) + actualQuantity - before;
+        const changeAmount = actualQuantity - before;
+        addProductStockHistory(id, 'inventory', changeAmount, before, actualQuantity, String(body.reason || '') || null);
+        addProductAuditHistory(id, 'inventory', 'available_quantity', before, actualQuantity, String(body.reason || '') || null);
+        const stockHistory = database.productStockHistory[database.productStockHistory.length - 1];
+        persist();
+        data = {message: 'Інвентаризацію виконано', product_id: id, quantity_before: before, quantity_after: actualQuantity, change_amount: changeAmount, deleted_gift_sets: [], available_quantity: actualQuantity, reserved_quantity: Number(product.reserved_quantity || 0), stock_history: stockHistory};
     } else if (method === 'delete' && path.startsWith('/delete-history/')) {
         data = {message: 'Демо-запис історії видалено'};
     } else if (method === 'post' && path === '/reset-database') {
@@ -296,17 +530,103 @@ const adapter: AxiosAdapter = async config => {
         database.giftSets = database.giftSets.filter(item => item.id !== id); persist();
     } else if (method === 'post' && path.startsWith('/product/') && path.endsWith('/purchase')) {
         const product = database.products.find(item => item.id === id);
-        if (product) { product.available_quantity = Number(product.available_quantity) + Number(body.quantity || 0); product.total_quantity = Number(product.total_quantity) + Number(body.quantity || 0); }
+        if (!product) return response(config, {error: 'Product not found'}, 404);
+        const quantity = Number(body.quantity || 0);
+        const pricePerItem = Number(body.purchase_price_per_item || 0);
+        const totalPrice = Number(body.purchase_total_price || 0);
+        if (!Number.isInteger(quantity) || quantity <= 0 || pricePerItem <= 0 || totalPrice <= 0) return response(config, {error: 'Invalid purchase quantity or price'}, 400);
+        const before = Number(product.available_quantity || 0);
+        product.available_quantity = before + quantity;
+        product.total_quantity = Number(product.total_quantity || 0) + quantity;
+        product.purchase_total_price = Number(product.purchase_total_price || 0) + totalPrice;
+        product.purchase_price_per_item = pricePerItem;
+        const supplier = database.suppliers.find(item => item.id === Number(body.supplier_id));
+        if (supplier) product.supplier = supplier;
+        database.purchases.push({
+            id: nextId(database.purchases),
+            product_id: id,
+            name: product.name,
+            type: 'Product',
+            date: String(body.purchase_date || new Date().toISOString().slice(0, 10)),
+            categories: product.category_ids || [],
+            quantity,
+            price_per_item: pricePerItem,
+            total_price: totalPrice,
+            supplier_id: supplier?.id ?? null,
+            supplier_name: supplier?.name || '',
+            supplier_is_active: supplier?.is_active !== false
+        });
+        addProductStockHistory(id, 'purchase', quantity, before, product.available_quantity);
+        addProductAuditHistory(id, 'purchase', 'available_quantity', before, product.available_quantity);
+        addProductAuditHistory(id, 'purchase', 'purchase_price_per_item', null, pricePerItem);
         persist();
+        data = {message: 'Purchase recorded successfully'};
     } else if (method === 'post' && path.startsWith('/product/') && path.endsWith('/sale')) {
         const product = database.products.find(item => item.id === id);
         const quantity = Number(body.quantity || 0);
-        if (product) { product.available_quantity = Math.max(0, Number(product.available_quantity) - quantity); product.sold_quantity = Number(product.sold_quantity) + quantity; }
-        const sale = {id: nextId(database.sales), product_id: id, product_name: product?.name || '', customer_id: Number(body.customer) || null, customer_name: database.customers.find(item => item.id === Number(body.customer))?.name || 'Гість', quantity_sold: quantity, selling_price_per_item: Number(body.selling_price_per_item || 0), selling_total_price: Number(body.selling_total_price || 0), sale_date: String(body.sale_date || new Date().toISOString().slice(0, 10)), profit: 0};
-        database.sales.push(sale); persist();
+        const customer = database.customers.find(item => item.id === Number(body.customer));
+        const packagingId = Number(body.packaging_id) || null;
+        const packagingQuantity = Number(body.packaging_quantity || 0);
+        const material = packagingId ? database.packagingMaterials.find(item => item.id === packagingId) : null;
+        if (!product) return response(config, {error: 'Product not found'}, 404);
+        if (!Number.isInteger(quantity) || quantity <= 0) return response(config, {error: 'Quantity sold must be greater than zero'}, 400);
+        if (Number(product.available_quantity) < quantity) return response(config, {error: 'Not enough quantity in stock'}, 400);
+        if (!customer) return response(config, {error: 'Customer not found'}, 404);
+        if (packagingId && !material) return response(config, {error: 'Packaging material not found'}, 404);
+        if (material && Number(material.available_quantity) < packagingQuantity) return response(config, {error: 'Not enough packaging material available'}, 400);
+
+        const before = Number(product.available_quantity || 0);
+        const pricePerItem = Number(body.selling_price_per_item || 0);
+        const totalPrice = Number(body.selling_total_price || 0);
+        const totalPackagingCost = Number(body.total_packaging_cost || 0);
+        product.available_quantity = before - quantity;
+        product.sold_quantity = Number(product.sold_quantity || 0) + quantity;
+        product.selling_quantity = Number(product.selling_quantity || 0) + quantity;
+        product.selling_total_price = Number(product.selling_total_price || 0) + totalPrice;
+        product.selling_price_per_item = pricePerItem;
+        if (material) {
+            material.available_quantity = Number(material.available_quantity) - packagingQuantity;
+            material.available_stock_cost = Number(material.available_stock_cost || 0) - totalPackagingCost;
+            addPackagingStockHistory(Number(material.id), -packagingQuantity, 'sale');
+        }
+        const sale = {
+            id: nextId(database.sales),
+            product_id: id,
+            product_name: product.name,
+            customer_id: customer.id,
+            customer_name: customer.name,
+            quantity_sold: quantity,
+            selling_price_per_item: pricePerItem,
+            selling_total_price: totalPrice,
+            sale_date: String(body.sale_date || new Date().toISOString().slice(0, 10)),
+            profit: (pricePerItem - Number(product.purchase_price_per_item || 0)) * quantity - totalPackagingCost,
+            packaging_material_id: packagingId,
+            packaging_quantity: packagingQuantity,
+            total_packaging_cost: totalPackagingCost
+        };
+        database.sales.push(sale);
+        if (material && packagingId) {
+            database.packagingSalesHistory.push({
+                id: nextId(database.packagingSalesHistory),
+                sale_id: sale.id,
+                packaging_material_id: packagingId,
+                packaging_quantity: packagingQuantity,
+                total_packaging_cost: totalPackagingCost,
+                sale_date: sale.sale_date
+            });
+        }
+        addProductStockHistory(id, 'sale', -quantity, before, product.available_quantity);
+        addProductAuditHistory(id, 'sale', 'available_quantity', before, product.available_quantity);
+        addProductAuditHistory(id, 'sale', 'sold_quantity', Number(product.sold_quantity) - quantity, product.sold_quantity);
+        persist();
     } else if (method === 'post' && path === '/packaging_materials/purchase') {
-        const material = {id: nextId(database.packagingMaterials), name: body.name, available_quantity: Number(body.quantity_purchased), total_quantity: Number(body.quantity_purchased), reorder_level: 5, packaging_material_supplier_id: Number(body.supplier_id), purchase_price_per_unit: Number(body.purchase_price_per_unit), total_purchase_cost: Number(body.total_purchase_cost), available_stock_cost: Number(body.total_purchase_cost), created_date: new Date().toISOString().slice(0, 10), supplier: database.packagingSuppliers[0]};
-        database.packagingMaterials.push(material); persist();
+        const quantity = Number(body.quantity_purchased || 0);
+        const material = {id: nextId(database.packagingMaterials), name: body.name, available_quantity: quantity, total_quantity: quantity, reorder_level: 5, packaging_material_supplier_id: Number(body.supplier_id), purchase_price_per_unit: Number(body.purchase_price_per_unit), total_purchase_cost: Number(body.total_purchase_cost), available_stock_cost: Number(body.total_purchase_cost), created_date: new Date().toISOString().slice(0, 10), supplier: database.packagingSuppliers.find(item => item.id === Number(body.supplier_id)) || null};
+        database.packagingMaterials.push(material);
+        const purchase = {id: nextId(database.purchases), material_id: material.id, name: material.name, type: 'Packaging', date: material.created_date, quantity, price_per_item: Number(body.purchase_price_per_unit), total_price: Number(body.total_purchase_cost), supplier_id: material.packaging_material_supplier_id, supplier_name: material.supplier?.name || '', supplier_is_active: material.supplier?.is_active !== false};
+        database.purchases.push(purchase);
+        addPackagingStockHistory(Number(material.id), quantity, 'purchase');
+        persist();
     } else if (method === 'post' && path.startsWith('/sell_gift_set/')) {
         const giftSet = database.giftSets.find(item => item.id === id && item.is_sold !== true);
         const customer = database.customers.find(item => item.id === Number(body.customer_id));
@@ -341,16 +661,30 @@ const adapter: AxiosAdapter = async config => {
             const remainingAmount = Number(sale.selling_total_price || 0) - refunded;
             const returnAmount = Number((quantity === remaining ? remainingAmount : remainingAmount * quantity / remaining).toFixed(2));
             const returned = {id: nextId(database.returns), sale_id: id, product_id: product.id, product_name: product.name, customer_id: sale.customer_id, customer_name: sale.customer_name, quantity_returned: quantity, return_amount: returnAmount, return_reason: String(body.reason || '').trim() || null, return_date: new Date().toISOString(), returned_by_username: 'demo.manager'};
-            product.available_quantity = Number(product.available_quantity || 0) + quantity;
+            const before = Number(product.available_quantity || 0);
+            product.available_quantity = before + quantity;
             product.sold_quantity = Math.max(0, Number(product.sold_quantity || 0) - quantity);
             product.selling_quantity = Math.max(0, Number(product.selling_quantity || 0) - quantity);
             product.selling_total_price = Math.max(0, Number(product.selling_total_price || 0) - returnAmount);
-            database.returns.push(returned); persist();
+            database.returns.push(returned);
+            addProductStockHistory(Number(product.id), 'return', quantity, before, product.available_quantity, returned.return_reason);
+            addProductAuditHistory(Number(product.id), 'return', 'available_quantity', before, product.available_quantity, returned.return_reason);
+            persist();
             data = {message: 'Customer return recorded successfully', return: returned, available_quantity: product.available_quantity, remaining_return_quantity: remaining - quantity};
         }
+    } else if (method === 'post' && path === '/export-products-excel') {
+        const requestedIds = Array.isArray(body.product_ids) ? body.product_ids.map(Number) : [];
+        if (!requestedIds.length) return response(config, {error: 'No product IDs provided'}, 400);
+        const products = database.products.filter(product => requestedIds.includes(Number(product.id)));
+        if (!products.length) return response(config, {error: 'No matching products found'}, 404);
+        const workbook = new Blob([buildProductExportXml(products)], {type: 'application/vnd.ms-excel'});
+        return response(config, workbook, 200, 'application/vnd.ms-excel');
+    } else {
+        data = {error: `Невідомий endpoint: ${method.toUpperCase()} ${path}`};
+        status = 404;
     }
 
-    return response(config, data);
+    return response(config, data, status);
 };
 
 export default adapter;
