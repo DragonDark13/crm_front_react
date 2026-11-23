@@ -246,9 +246,11 @@ export const exportToExcel = async (productIds: number[]) => {
         );
 
         const timestamp = new Date().toLocaleDateString().replace(/[-:.]/g, "_");
-        const filename = `Products_${timestamp}.xlsx`;
+        const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true';
+        const filename = `Products_${timestamp}.${isDemoMode ? 'xls' : 'xlsx'}`;
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const blob = response.data instanceof Blob ? response.data : new Blob([response.data]);
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", filename);
@@ -257,5 +259,6 @@ export const exportToExcel = async (productIds: number[]) => {
         link.remove();
     } catch (error) {
         console.error("Помилка експорту:", error);
+        throw error;
     }
 };
