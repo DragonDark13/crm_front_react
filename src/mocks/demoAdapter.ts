@@ -436,6 +436,65 @@ const adapter: AxiosAdapter = async config => {
             restock,
             profit_scope_note: 'Валовий прибуток охоплює звичайні товарні продажі. Виручка гіфтбоксів включена в продажі, але їхній прибуток не розраховується, оскільки історія не зберігає собівартість компонентів на момент продажу.'
         };
+    } else if (method === 'get' && path.startsWith('/statistics/')) {
+        // Keep the existing dashboard endpoints working in demo mode.
+        const grouped = (records: Record<string, unknown>[], dateField: string) => {
+            const totals = new Map<string, {year: number; month: number; amount: number; quantity: number}>();
+            records.forEach(record => {
+                const date = String(record[dateField] || '');
+                const [yearText, monthText] = date.split('-');
+                const year = Number(yearText);
+                const month = Number(monthText);
+                if (!year || !month) return;
+                const key = `${year}-${month}`;
+                const current = totals.get(key) || {year, month, amount: 0, quantity: 0};
+                current.amount += Number(record.total_price ?? record.selling_total_price ?? 0);
+                current.quantity += Number(record.quantity ?? record.quantity_sold ?? 0);
+                totals.set(key, current);
+            });
+            return [...totals.values()].sort((a, b) => a.year - b.year || a.month - b.month);
+        };
+        if (path === '/statistics/sales/monthly') {
+            data = grouped(database.sales, 'sale_date').map(item => ({
+                year: item.year, month: item.month, total_sales: item.amount, total_quantity: item.quantity,
+                total_profit: database.sales.filter(sale => String(sale.sale_date).startsWith(`${item.year}-${String(item.month).padStart(2, '0')}`)).reduce((sum, sale) => sum + Number(sale.profit || 0), 0)
+            }));
+        } else if (path === '/statistics/purchases/monthly') {
+            data = grouped(database.purchases.filter(item => item.type === 'Product'), 'date').map(item => ({
+                year: item.year, month: item.month, total_spent: item.amount, total_quantity: item.quantity,
+                avg_price: item.quantity ? item.amount / item.quantity : 0
+            }));
+        } else if (path.endsWith('/top-products')) {
+            data = database.products.slice(0, 5).map(product => ({
+                product_id: product.id, name: product.name, total_sold: product.sold_quantity, total_sales: product.selling_total_price
+            }));
+        } else if (path.endsWith('/stock')) {
+            data = database.products.map(product => ({
+                id: product.id, name: product.name, available_quantity: product.available_quantity, total_quantity: product.total_quantity
+            }));
+        } else if (path.endsWith('/profit-expense')) {
+            const sales = grouped(database.sales, 'sale_date');
+            const purchases = grouped(database.purchases.filter(item => item.type === 'Product'), 'date');
+            const keys = new Set([...sales, ...purchases].map(item => `${item.year}-${item.month}`));
+            data = [...keys].sort().map(key => {
+                const [year, month] = key.split('-').map(Number);
+                const sale = sales.find(item => item.year === year && item.month === month);
+                const purchase = purchases.find(item => item.year === year && item.month === month);
+                return {
+                    year, month, sales: sale?.amount || 0,
+                    profit: database.sales.filter(item => String(item.sale_date).startsWith(key)).reduce((sum, item) => sum + Number(item.profit || 0), 0),
+                    expenses: (purchase?.amount || 0) + database.investments.filter(item => String(item.date).startsWith(key)).reduce((sum, item) => sum + Number(item.cost || 0), 0)
+                };
+            });
+        } else if (path === '/statistics/customer-activity') {
+            data = Array.from({length: 7}, (_, index) => ({
+                day: new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10),
+                active_customers: new Set(database.sales.filter(sale => sale.sale_date === new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10)).map(sale => sale.customer_id)).size
+            }));
+        } else {
+            data = {error: 'Невідомий endpoint статистики'};
+            status = 404;
+        }
     } else if (method === 'get' && path.startsWith('/product/') && path.endsWith('/history')) {
         const product = database.products.find(item => item.id === id);
         if (!product) return response(config, {error: 'Product not found'}, 404);
