@@ -228,7 +228,7 @@ const PackagingMaterialList: React.FC = () => {
 
         return (
             <React.Fragment>
-                <Typography marginBlockEnd={3} variant={"h4"}>Список пакувальних матеріалів</Typography>
+                <Typography className="crm-page-title" component="h1" marginBlockEnd={3} variant={"h4"}>Список пакувальних матеріалів</Typography>
                 {isAuthenticated && <Grid container>
                     <Grid item>
                         <DeleteAllMaterialsDialog/>

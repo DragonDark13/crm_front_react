@@ -152,8 +152,8 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
             ) : (
                 <Box sx={{paddingTop: 1}}>
                     <Box sx={{mb: 2}}>
-                        <Typography variant={"h4"} gutterBottom>Каталог товарів</Typography>
-                        <Typography color="text.secondary" variant="body2">
+                        <Typography className="crm-page-title" component="h1" variant={"h4"} gutterBottom>Каталог товарів</Typography>
+                        <Typography className="crm-page-description" color="text.secondary" variant="body2">
                             Знайди товар за назвою, артикулом або відфільтруй за категорією та постачальником.
                         </Typography>
                     </Box>

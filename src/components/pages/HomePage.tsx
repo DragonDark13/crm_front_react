@@ -36,8 +36,8 @@ export default function HomePage() {
         <Box className="crm-page" sx={{display: "flex", flexDirection: "column", gap: 3}}>
             <Box sx={{display: "flex", justifyContent: "space-between", alignItems: {xs: "flex-start", sm: "center"}, flexWrap: "wrap", gap: 2}}>
                 <Box>
-                    <Typography variant="h4" fontWeight={700} gutterBottom>Огляд складу</Typography>
-                    <Typography color="text.secondary">Стан товарних запасів та операційні показники магазину</Typography>
+                    <Typography className="crm-page-title" component="h1" variant="h4" fontWeight={700} gutterBottom>Огляд складу</Typography>
+                    <Typography className="crm-page-description" color="text.secondary">Стан товарних запасів та операційні показники магазину</Typography>
                 </Box>
                 <Button variant="outlined" onClick={() => void fetchProductsFunc()} disabled={loadingState.isLoading}>Оновити дані</Button>
             </Box>

@@ -48,7 +48,7 @@ const DatabaseSettingsPage: React.FC = () => {
 
     return (
         <Box sx={{maxWidth: 760, mx: 'auto', mt: 4}}>
-            <Typography variant="h4" gutterBottom>
+            <Typography className="crm-page-title" component="h1" variant="h4" gutterBottom>
                 Налаштування бази даних
             </Typography>
             <Alert severity="warning" sx={{mb: 3}}>

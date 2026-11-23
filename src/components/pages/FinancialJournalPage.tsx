@@ -80,7 +80,7 @@ const FinancialJournalPage: React.FC = () => {
 
     return (
         <div>
-            <Typography variant="h5" component="h1" gutterBottom>
+            <Typography className="crm-page-title" variant="h5" component="h1" gutterBottom>
                 Журнал фінансових операцій
             </Typography>
 

@@ -97,7 +97,7 @@ const InvestmentsPage: React.FC = () => {
 
     return (
         <div>
-            <h2>Інші витрати</h2>
+            <h2 className="crm-page-title">Інші витрати</h2>
             {isAuthenticated && <Grid container>
                 <Grid item>
                     <DeleteAllInvestmentsDialog/>
