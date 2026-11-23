@@ -524,10 +524,12 @@ const adapter: AxiosAdapter = async config => {
         database.suppliers = database.suppliers.filter(item => !(item.id === id && item.type === 'packaging'));
         persist();
     } else if (method === 'delete' && path === '/delete_all_materials') {
+        const hasPackagingHistory = database.packagingStockHistory.length > 0
+            || database.packagingSalesHistory.length > 0
+            || database.purchases.some(item => item.type === 'Packaging')
+            || database.giftSets.some(giftSet => (giftSet.packagings as Record<string, unknown>[] || []).length > 0);
+        if (hasPackagingHistory) return response(config, {error: 'Пакування не можна масово видалити, поки існують історичні записи або посилання на набори'}, 409);
         database.packagingMaterials = [];
-        database.packagingStockHistory = [];
-        database.packagingSalesHistory = [];
-        database.purchases = database.purchases.filter(item => item.type !== 'Packaging');
         persist();
     } else if (method === 'delete' && path === '/delete_all_products') {
         const hasHistory = database.productStockHistory.length > 0
