@@ -276,3 +276,45 @@ export interface AnalyticsOverviewResponse {
     restock: AnalyticsRestockItem[];
     profit_scope_note: string;
 }
+
+export type OrderStatus =
+    | "new"
+    | "confirmed"
+    | "awaiting_payment"
+    | "paid"
+    | "shipped"
+    | "completed"
+    | "cancelled";
+
+export interface OrderRecord {
+    id: number;
+    customer_id: number | null;
+    customer_name: string;
+    customer_phone: string | null;
+    customer_email: string | null;
+    delivery_address: string | null;
+    status: OrderStatus;
+    status_label: string;
+    total_amount: number;
+    notes: string | null;
+    created_at: string | null;
+    updated_at: string | null;
+    items: Array<{
+        id: number;
+        product_id: number;
+        product_name: string;
+        article: string | null;
+        quantity: number;
+        unit_price: number;
+        line_total: number;
+    }>;
+    status_history: Array<{
+        id: number;
+        from_status: OrderStatus | null;
+        to_status: OrderStatus;
+        changed_at: string | null;
+        changed_by_username: string | null;
+        note: string | null;
+    }>;
+    available_transitions: OrderStatus[];
+}
