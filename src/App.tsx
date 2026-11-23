@@ -32,6 +32,7 @@ const SupplierPage = lazy(() => import("./components/pages/SupplierPage/Supplier
 const Sales = lazy(() => import("./components/pages/Sales/Sales"));
 const GiftSetsPage = lazy(() => import("./components/pages/GiftSetsPage/GiftSetsPage"));
 const Login = lazy(() => import("./components/Login/Login"));
+const DatabaseSettingsPage = lazy(() => import("./components/pages/DatabaseSettingsPage"));
 
 import {Navigate, Route, Routes, useNavigate} from 'react-router-dom';
 import {Sidebar} from "./components/Dachboard/Sidebar";
@@ -396,6 +397,7 @@ function App() {
                             <Route path="/crm_front_react/packaging" element={<ProtectedRoute allowedRoles={['manager']} element={<PackagingMaterialList/>}/>}/>
                             <Route path="/crm_front_react/other-investments" element={<ProtectedRoute allowedRoles={['manager']} element={<InvestmentsPage/>}/>}/>
                             <Route path="/crm_front_react/suppliers" element={<ProtectedRoute allowedRoles={['manager']} element={<SupplierPage/>}/>}/>
+                            <Route path="/crm_front_react/database-settings" element={<ProtectedRoute allowedRoles={['manager']} element={<DatabaseSettingsPage/>}/>}/>
 
                         </Routes>
                     </Suspense>
