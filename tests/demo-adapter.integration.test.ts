@@ -71,6 +71,39 @@ describe('Demo API history and export', () => {
         ]));
     });
 
+    it('does not partially reserve stock when gift set creation fails', async () => {
+        await expect(axiosInstance.post('/create_gift_set', {
+            name: 'Invalid demo set',
+            description: '',
+            gift_selling_price: 100,
+            items: [
+                {item_type: 'product', item_id: 1, quantity: 1},
+                {item_type: 'packaging', item_id: 1, quantity: 1000}
+            ]
+        }, demoConfig)).rejects.toMatchObject({response: {status: 400}});
+
+        const response = await axiosInstance.get('/product/1', demoConfig);
+        expect(response.data.available_quantity).toBe(24);
+        expect(response.data.reserved_quantity).toBe(2);
+    });
+
+    it('does not release existing reservations when gift set update validation fails', async () => {
+        const created = await axiosInstance.post('/create_gift_set', {
+            name: 'Temporary demo set',
+            description: '',
+            gift_selling_price: 100,
+            items: [{item_type: 'product', item_id: 1, quantity: 1}]
+        }, demoConfig);
+
+        await expect(axiosInstance.put(`/update_gift_set/${created.data.id}`, {
+            items: [{type: 'product', product_id: 1, quantity: 1000}]
+        }, demoConfig)).rejects.toMatchObject({response: {status: 400}});
+
+        const response = await axiosInstance.get('/product/1', demoConfig);
+        expect(response.data.available_quantity).toBe(23);
+        expect(response.data.reserved_quantity).toBe(3);
+    });
+
     it('returns an Excel-compatible workbook blob for product export', async () => {
         const response = await axiosInstance.post('/export-products-excel', {
             product_ids: [1, 2]
