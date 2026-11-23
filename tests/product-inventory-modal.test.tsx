@@ -29,7 +29,7 @@ const quantityInput = () => screen.getByRole('textbox', {
 }) as HTMLInputElement;
 
 const submitButton = () => screen.getByRole('button', {name: 'Провести інвентаризацію'});
-const inventoryDateInput = () => screen.getByLabelText('Дата звірки') as HTMLInputElement;
+const inventoryDateInput = () => screen.getByLabelText(/Дата звірки/) as HTMLInputElement;
 const chooseReason = (reason: string) => {
     fireEvent.mouseDown(screen.getByRole('combobox', {name: 'Що сталося з товаром?'}));
     fireEvent.click(screen.getByRole('option', {name: reason}));
