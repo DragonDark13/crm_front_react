@@ -468,3 +468,28 @@ body {
     padding: 8px 10px;
   }
 }
+
+
+/* Mobile order management: use readable order cards instead of a compressed table. */
+.orders-mobile-list {
+  display: none;
+}
+
+.orders-mobile-list .MuiCard-root {
+  width: 100%;
+  min-width: 0;
+}
+
+.orders-mobile-list .MuiFormControl-root {
+  min-width: 0;
+}
+
+@media (max-width: 700px) {
+  .orders-desktop-table {
+    display: none;
+  }
+
+  .orders-mobile-list {
+    display: block;
+  }
+}
