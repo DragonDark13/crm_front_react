@@ -568,21 +568,40 @@ const adapter: AxiosAdapter = async config => {
         database.investments = []; persist();
     } else if (method === 'post' && path === '/create_gift_set') {
         const items = Array.isArray(body.items) ? body.items as Record<string, unknown>[] : [];
+        const requirements = new Map<string, {type: 'product' | 'packaging'; id: number; quantity: number}>();
+        for (const item of items) {
+            const type = item.item_type;
+            const itemId = Number(item.item_id);
+            const quantity = Number(item.quantity ?? 1);
+            if ((type !== 'product' && type !== 'packaging') || !Number.isInteger(itemId) || itemId <= 0 || !Number.isInteger(quantity) || quantity <= 0) {
+                return response(config, {error: 'Некоректний склад подарункового набору'}, 400);
+            }
+            const key = `${type}:${itemId}`;
+            const current = requirements.get(key);
+            requirements.set(key, {type, id: itemId, quantity: (current?.quantity || 0) + quantity});
+        }
+        for (const requirement of requirements.values()) {
+            const resource = requirement.type === 'product'
+                ? database.products.find(value => Number(value.id) === requirement.id)
+                : database.packagingMaterials.find(value => Number(value.id) === requirement.id);
+            if (!resource || Number(resource.available_quantity) < requirement.quantity) {
+                return response(config, {error: requirement.type === 'product' ? 'Товар відсутній або недостатній залишок' : 'Пакування відсутнє або недостатній залишок'}, 400);
+            }
+        }
+
         let totalPrice = 0;
         const products: Record<string, unknown>[] = [];
         const packagings: Record<string, unknown>[] = [];
         for (const item of items) {
-            const quantity = Number(item.quantity || 1);
+            const quantity = Number(item.quantity ?? 1);
             if (item.item_type === 'product') {
-                const product = database.products.find(value => value.id === Number(item.item_id));
-                if (!product || Number(product.available_quantity) < quantity) return response(config, {error: 'Товар відсутній або недостатній залишок'}, 400);
+                const product = database.products.find(value => Number(value.id) === Number(item.item_id))!;
                 product.available_quantity = Number(product.available_quantity) - quantity;
                 product.reserved_quantity = Number(product.reserved_quantity || 0) + quantity;
                 totalPrice += Number(product.purchase_price_per_item || 0) * quantity;
                 products.push({product_id: product.id, name: product.name, quantity, price: product.purchase_price_per_item});
-            } else if (item.item_type === 'packaging') {
-                const material = database.packagingMaterials.find(value => value.id === Number(item.item_id));
-                if (!material || Number(material.available_quantity) < quantity) return response(config, {error: 'Пакування відсутнє або недостатній залишок'}, 400);
+            } else {
+                const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.item_id))!;
                 material.available_quantity = Number(material.available_quantity) - quantity;
                 material.reserved_quantity = Number(material.reserved_quantity || 0) + quantity;
                 totalPrice += Number(material.purchase_price_per_unit || 0) * quantity;
@@ -590,45 +609,83 @@ const adapter: AxiosAdapter = async config => {
             }
         }
         const giftSet = {id: nextId(database.giftSets), name: body.name, description: body.description, gift_selling_price: Number(body.gift_selling_price || 0), total_price: totalPrice, products, packagings, is_sold: false};
-        database.giftSets.push(giftSet); persist(); data = {message: 'Gift set created successfully', id: giftSet.id};
+        database.giftSets.push(giftSet);
+        persist();
+        data = {message: 'Gift set created successfully', id: giftSet.id};
     } else if (method === 'put' && path.startsWith('/update_gift_set/')) {
         const giftSet = database.giftSets.find(item => item.id === id);
         if (!giftSet) return response(config, {error: 'Gift set not found'}, 404);
         if (giftSet.is_sold === true) return response(config, {error: 'Sold gift sets cannot be edited'}, 409);
-        if (giftSet) {
-            for (const item of (giftSet.products as Record<string, unknown>[] || [])) {
-                const product = database.products.find(value => value.id === Number(item.product_id));
-                if (product) { product.available_quantity = Number(product.available_quantity) + Number(item.quantity || 0); product.reserved_quantity = Math.max(0, Number(product.reserved_quantity || 0) - Number(item.quantity || 0)); }
+
+        const previousProducts = giftSet.products as Record<string, unknown>[] || [];
+        const previousPackagings = giftSet.packagings as Record<string, unknown>[] || [];
+        const releasedProducts = new Map<number, number>();
+        const releasedPackagings = new Map<number, number>();
+        previousProducts.forEach(item => releasedProducts.set(Number(item.product_id), (releasedProducts.get(Number(item.product_id)) || 0) + Number(item.quantity || 0)));
+        previousPackagings.forEach(item => releasedPackagings.set(Number(item.packaging_id), (releasedPackagings.get(Number(item.packaging_id)) || 0) + Number(item.quantity || 0)));
+
+        const items = Array.isArray(body.items) ? body.items as Record<string, unknown>[] : [];
+        const requirements = new Map<string, {type: 'product' | 'packaging'; id: number; quantity: number}>();
+        for (const item of items) {
+            const type = item.type;
+            const itemId = Number(type === 'product' ? item.product_id : item.packaging_id);
+            const quantity = Number(item.quantity ?? 1);
+            if ((type !== 'product' && type !== 'packaging') || !Number.isInteger(itemId) || itemId <= 0 || !Number.isInteger(quantity) || quantity <= 0) {
+                return response(config, {error: 'Некоректний склад подарункового набору'}, 400);
             }
-            for (const item of (giftSet.packagings as Record<string, unknown>[] || [])) {
-                const material = database.packagingMaterials.find(value => value.id === Number(item.packaging_id));
-                if (material) { material.available_quantity = Number(material.available_quantity) + Number(item.quantity || 0); material.reserved_quantity = Math.max(0, Number(material.reserved_quantity || 0) - Number(item.quantity || 0)); }
-            }
-            const items = Array.isArray(body.items) ? body.items as Record<string, unknown>[] : [];
-            const products: Record<string, unknown>[] = [];
-            const packagings: Record<string, unknown>[] = [];
-            let totalPrice = 0;
-            for (const item of items) {
-                const quantity = Number(item.quantity || 1);
-                if (item.type === 'product') {
-                    const product = database.products.find(value => value.id === Number(item.product_id));
-                    if (!product || Number(product.available_quantity) < quantity) return response(config, {error: 'Товар відсутній або недостатній залишок'}, 400);
-                    product.available_quantity = Number(product.available_quantity) - quantity;
-                    product.reserved_quantity = Number(product.reserved_quantity || 0) + quantity;
-                    totalPrice += Number(item.price ?? product.purchase_price_per_item ?? 0) * quantity;
-                    products.push({product_id: product.id, name: product.name, quantity, price: item.price ?? product.purchase_price_per_item});
-                } else if (item.type === 'packaging') {
-                    const material = database.packagingMaterials.find(value => value.id === Number(item.packaging_id));
-                    if (!material || Number(material.available_quantity) < quantity) return response(config, {error: 'Пакування відсутнє або недостатній залишок'}, 400);
-                    material.available_quantity = Number(material.available_quantity) - quantity;
-                    material.reserved_quantity = Number(material.reserved_quantity || 0) + quantity;
-                    totalPrice += Number(material.purchase_price_per_unit || 0) * quantity;
-                    packagings.push({packaging_id: material.id, name: material.name, quantity, price: material.purchase_price_per_unit});
-                }
-            }
-            Object.assign(giftSet, {name: body.name ?? giftSet.name, description: body.description ?? giftSet.description, gift_selling_price: body.gift_selling_price ?? giftSet.gift_selling_price, products, packagings, total_price: totalPrice});
+            const key = `${type}:${itemId}`;
+            const current = requirements.get(key);
+            requirements.set(key, {type, id: itemId, quantity: (current?.quantity || 0) + quantity});
         }
-        persist(); data = {message: 'Gift set updated successfully', id};
+        for (const requirement of requirements.values()) {
+            const resource = requirement.type === 'product'
+                ? database.products.find(value => Number(value.id) === requirement.id)
+                : database.packagingMaterials.find(value => Number(value.id) === requirement.id);
+            const released = requirement.type === 'product'
+                ? releasedProducts.get(requirement.id) || 0
+                : releasedPackagings.get(requirement.id) || 0;
+            if (!resource || Number(resource.available_quantity) + released < requirement.quantity) {
+                return response(config, {error: requirement.type === 'product' ? 'Товар відсутній або недостатній залишок' : 'Пакування відсутнє або недостатній залишок'}, 400);
+            }
+        }
+
+        previousProducts.forEach(item => {
+            const product = database.products.find(value => Number(value.id) === Number(item.product_id));
+            if (product) {
+                product.available_quantity = Number(product.available_quantity) + Number(item.quantity || 0);
+                product.reserved_quantity = Math.max(0, Number(product.reserved_quantity || 0) - Number(item.quantity || 0));
+            }
+        });
+        previousPackagings.forEach(item => {
+            const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.packaging_id));
+            if (material) {
+                material.available_quantity = Number(material.available_quantity) + Number(item.quantity || 0);
+                material.reserved_quantity = Math.max(0, Number(material.reserved_quantity || 0) - Number(item.quantity || 0));
+            }
+        });
+
+        const products: Record<string, unknown>[] = [];
+        const packagings: Record<string, unknown>[] = [];
+        let totalPrice = 0;
+        for (const item of items) {
+            const quantity = Number(item.quantity ?? 1);
+            if (item.type === 'product') {
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id))!;
+                product.available_quantity = Number(product.available_quantity) - quantity;
+                product.reserved_quantity = Number(product.reserved_quantity || 0) + quantity;
+                totalPrice += Number(item.price ?? product.purchase_price_per_item ?? 0) * quantity;
+                products.push({product_id: product.id, name: product.name, quantity, price: item.price ?? product.purchase_price_per_item});
+            } else {
+                const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.packaging_id))!;
+                material.available_quantity = Number(material.available_quantity) - quantity;
+                material.reserved_quantity = Number(material.reserved_quantity || 0) + quantity;
+                totalPrice += Number(material.purchase_price_per_unit || 0) * quantity;
+                packagings.push({packaging_id: material.id, name: material.name, quantity, price: material.purchase_price_per_unit});
+            }
+        }
+        Object.assign(giftSet, {name: body.name ?? giftSet.name, description: body.description ?? giftSet.description, gift_selling_price: body.gift_selling_price ?? giftSet.gift_selling_price, products, packagings, total_price: totalPrice});
+        persist();
+        data = {message: 'Gift set updated successfully', id};
     } else if (method === 'delete' && path.startsWith('/remove_gift_set/')) {
         const giftSet = database.giftSets.find(item => item.id === id);
         if (!giftSet) return response(config, {error: 'Gift set not found'}, 404);
@@ -751,13 +808,27 @@ const adapter: AxiosAdapter = async config => {
         if (giftSet && customer) {
             const products = giftSet.products as Record<string, unknown>[] || [];
             const packagings = giftSet.packagings as Record<string, unknown>[] || [];
+            for (const item of products) {
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id));
+                if (!product || Number(product.reserved_quantity || 0) < Number(item.quantity || 0)) {
+                    return response(config, {error: 'Резерв товару не відповідає складу набору'}, 409);
+                }
+            }
+            for (const item of packagings) {
+                const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.packaging_id));
+                if (!material || Number(material.reserved_quantity || 0) < Number(item.quantity || 0)) {
+                    return response(config, {error: 'Резерв пакування не відповідає складу набору'}, 409);
+                }
+            }
             products.forEach(item => {
-                const product = database.products.find(value => value.id === Number(item.product_id));
-                if (product) { product.reserved_quantity = Math.max(0, Number(product.reserved_quantity || 0) - Number(item.quantity || 0)); product.sold_quantity = Number(product.sold_quantity || 0) + Number(item.quantity || 0); }
+                const product = database.products.find(value => Number(value.id) === Number(item.product_id))!;
+                product.reserved_quantity = Number(product.reserved_quantity || 0) - Number(item.quantity || 0);
+                product.sold_quantity = Number(product.sold_quantity || 0) + Number(item.quantity || 0);
             });
             packagings.forEach(item => {
-                const material = database.packagingMaterials.find(value => value.id === Number(item.packaging_id));
-                if (material) { material.reserved_quantity = Math.max(0, Number(material.reserved_quantity || 0) - Number(item.quantity || 0)); material.sold_quantity = Number(material.sold_quantity || 0) + Number(item.quantity || 0); }
+                const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.packaging_id))!;
+                material.reserved_quantity = Number(material.reserved_quantity || 0) - Number(item.quantity || 0);
+                material.sold_quantity = Number(material.sold_quantity || 0) + Number(item.quantity || 0);
             });
             giftSet.is_sold = true;
             const sale = {id: nextId(database.giftSetSales || []), gift_set_id: id, sold_at: new Date().toISOString(), sold_price: Number(body.selling_price || 0), quantity: 1, customer_name: customer.name, customer_id: customer.id, products, packagings};
