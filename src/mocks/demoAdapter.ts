@@ -344,16 +344,21 @@ const adapter: AxiosAdapter = async config => {
                 .map(item => ({...item}))
         };
     } else if (method === 'get' && path.startsWith('/product/')) {
-        data = database.products.find(item => item.id === id) || {};
+        const product = database.products.find(item => item.id === id);
+        if (!product) return response(config, {error: 'Product not found'}, 404);
+        data = product;
     } else if (method === 'get' && path.startsWith('/customers_details/')) {
         const customer = database.customers.find(item => item.id === id);
-        data = {...customer, sales: database.sales.filter(item => item.customer_id === id)};
+        if (!customer) return response(config, {error: 'Customer not found'}, 404);
+        data = {...customer, sales: database.sales.filter(item => Number(item.customer_id) === id)};
     } else if (method === 'get' && path.startsWith('/supplier/') && path.endsWith('/purchase-history')) {
         const supplier = database.suppliers.find(item => item.id === id);
-        data = {supplier: supplier?.name || '', purchase_history: database.purchases.filter(item => item.supplier_id === id), products: database.products.filter(item => (item.supplier as Record<string, unknown> | null)?.id === id)};
+        if (!supplier) return response(config, {error: 'Supplier not found'}, 404);
+        data = {supplier: supplier.name, purchase_history: database.purchases.filter(item => Number(item.supplier_id) === id), products: database.products.filter(item => (item.supplier as Record<string, unknown> | null)?.id === id)};
     } else if (method === 'get' && path.startsWith('/supplier/') && path.endsWith('/products')) {
         const supplier = database.suppliers.find(item => item.id === id);
-        data = {supplier: supplier?.name || '', products: database.products.filter(item => (item.supplier as Record<string, unknown> | null)?.id === id).map(item => ({id: item.id, name: item.name}))};
+        if (!supplier) return response(config, {error: 'Supplier not found'}, 404);
+        data = {supplier: supplier.name, products: database.products.filter(item => (item.supplier as Record<string, unknown> | null)?.id === id).map(item => ({id: item.id, name: item.name}))};
     } else if (method === 'post' && path === '/add_new_product') {
         const supplier = database.suppliers.find(item => item.id === Number(body.supplier_id)) || null;
         const quantity = Number(body.available_quantity ?? body.total_quantity ?? 0);
@@ -427,9 +432,16 @@ const adapter: AxiosAdapter = async config => {
     } else if (method === 'post' && path === '/customer_create') {
         const customer = {...body, id: nextId(database.customers)}; database.customers.push(customer); persist(); data = {message: 'Клієнта додано', customer};
     } else if (method === 'put' && path.startsWith('/update_customers/')) {
-        database.customers = database.customers.map(item => item.id === id ? {...item, ...body} : item); persist(); data = database.customers.find(item => item.id === id);
+        const customerIndex = database.customers.findIndex(item => item.id === id);
+        if (customerIndex < 0) return response(config, {error: 'Customer not found'}, 404);
+        database.customers[customerIndex] = {...database.customers[customerIndex], ...body};
+        persist();
+        data = database.customers[customerIndex];
     } else if (method === 'delete' && path.startsWith('/delete_customers/')) {
-        database.customers = database.customers.filter(item => item.id !== id); persist();
+        if (!database.customers.some(item => item.id === id)) return response(config, {error: 'Customer not found'}, 404);
+        if (database.sales.some(item => Number(item.customer_id) === id)) return response(config, {error: 'Customer has sales history and cannot be deleted'}, 409);
+        database.customers = database.customers.filter(item => item.id !== id);
+        persist();
     } else if (method === 'post' && path === '/add_new_category') {
         const category = {id: nextId(database.categories), name: String(body.name || '')}; database.categories.push(category); persist(); data = {message: 'Категорію додано', category};
     } else if (method === 'get' && path.startsWith('/materials/') && path.endsWith('/history')) {
@@ -462,11 +474,16 @@ const adapter: AxiosAdapter = async config => {
         const supplier = {...body, id: nextId(database.packagingSuppliers), is_active: true};
         database.packagingSuppliers.push(supplier); database.suppliers.push({...supplier, type: 'packaging'}); persist(); data = supplier;
     } else if (method === 'put' && path.startsWith('/packaging_supplier_edit/')) {
+        if (!database.packagingSuppliers.some(item => item.id === id)) return response(config, {error: 'Packaging supplier not found'}, 404);
         database.packagingSuppliers = database.packagingSuppliers.map(item => item.id === id ? {...item, ...body} : item);
-        database.suppliers = database.suppliers.map(item => item.id === id && item.type === 'packaging' ? {...item, ...body} : item); persist();
+        database.suppliers = database.suppliers.map(item => item.id === id && item.type === 'packaging' ? {...item, ...body} : item);
+        persist();
     } else if (method === 'delete' && path.startsWith('/delete_packaging_supplier/')) {
+        if (!database.packagingSuppliers.some(item => item.id === id)) return response(config, {error: 'Packaging supplier not found'}, 404);
+        if (database.packagingMaterials.some(item => Number(item.packaging_material_supplier_id) === id)) return response(config, {error: 'Supplier is linked to packaging materials'}, 409);
         database.packagingSuppliers = database.packagingSuppliers.filter(item => item.id !== id);
-        database.suppliers = database.suppliers.filter(item => !(item.id === id && item.type === 'packaging')); persist();
+        database.suppliers = database.suppliers.filter(item => !(item.id === id && item.type === 'packaging'));
+        persist();
     } else if (method === 'delete' && path === '/delete_all_materials') {
         database.packagingMaterials = [];
         database.packagingStockHistory = [];
@@ -538,7 +555,9 @@ const adapter: AxiosAdapter = async config => {
         persist();
         data = {message: 'Інвентаризацію виконано', product_id: id, quantity_before: before, quantity_after: actualQuantity, change_amount: changeAmount, deleted_gift_sets: [], available_quantity: actualQuantity, reserved_quantity: Number(product.reserved_quantity || 0), stock_history: stockHistory};
     } else if (method === 'delete' && path.startsWith('/delete-history/')) {
-        data = {message: 'Демо-запис історії видалено'};
+        return response(config, {
+            error: 'Видалення історичних записів у демо-режимі вимкнено, щоб зберегти цілісність історії'
+        }, 409);
     } else if (method === 'post' && path === '/reset-database') {
         database = createInitialDemoDatabase(); persist(); data = {message: 'Демо-дані відновлено'};
     } else if (method === 'post' && path === '/create_new_investments') {
@@ -574,6 +593,8 @@ const adapter: AxiosAdapter = async config => {
         database.giftSets.push(giftSet); persist(); data = {message: 'Gift set created successfully', id: giftSet.id};
     } else if (method === 'put' && path.startsWith('/update_gift_set/')) {
         const giftSet = database.giftSets.find(item => item.id === id);
+        if (!giftSet) return response(config, {error: 'Gift set not found'}, 404);
+        if (giftSet.is_sold === true) return response(config, {error: 'Sold gift sets cannot be edited'}, 409);
         if (giftSet) {
             for (const item of (giftSet.products as Record<string, unknown>[] || [])) {
                 const product = database.products.find(value => value.id === Number(item.product_id));
@@ -610,6 +631,8 @@ const adapter: AxiosAdapter = async config => {
         persist(); data = {message: 'Gift set updated successfully', id};
     } else if (method === 'delete' && path.startsWith('/remove_gift_set/')) {
         const giftSet = database.giftSets.find(item => item.id === id);
+        if (!giftSet) return response(config, {error: 'Gift set not found'}, 404);
+        if (giftSet.is_sold === true) return response(config, {error: 'Sold gift sets cannot be removed'}, 409);
         if (giftSet) {
             for (const item of (giftSet.products as Record<string, unknown>[] || [])) {
                 const product = database.products.find(value => value.id === Number(item.product_id));
@@ -723,6 +746,8 @@ const adapter: AxiosAdapter = async config => {
     } else if (method === 'post' && path.startsWith('/sell_gift_set/')) {
         const giftSet = database.giftSets.find(item => item.id === id && item.is_sold !== true);
         const customer = database.customers.find(item => item.id === Number(body.customer_id));
+        if (!giftSet) return response(config, {error: 'Gift set not found or already sold'}, 404);
+        if (!customer) return response(config, {error: 'Customer not found'}, 404);
         if (giftSet && customer) {
             const products = giftSet.products as Record<string, unknown>[] || [];
             const packagings = giftSet.packagings as Record<string, unknown>[] || [];
@@ -738,7 +763,7 @@ const adapter: AxiosAdapter = async config => {
             const sale = {id: nextId(database.giftSetSales || []), gift_set_id: id, sold_at: new Date().toISOString(), sold_price: Number(body.selling_price || 0), quantity: 1, customer_name: customer.name, customer_id: customer.id, products, packagings};
             database.giftSetSales = [...(database.giftSetSales || []), sale];
             persist(); data = {message: 'Gift set sold successfully', sales_record: sale};
-        } else data = {error: 'Gift set or customer not found'};
+        } else return response(config, {error: 'Gift set or customer not found'}, 404);
     } else if (method === 'post' && path.startsWith('/sales/') && path.endsWith('/returns')) {
         const sale = database.sales.find(item => item.id === id);
         const product = sale ? database.products.find(item => item.id === sale.product_id) : undefined;
