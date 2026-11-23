@@ -279,12 +279,20 @@ body {
 }
 
 .crm-page-title {
+  display: block;
   margin-bottom: 6px !important;
+  color: var(--crm-text);
+  font-size: 1.75rem !important;
+  font-weight: 750 !important;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
 }
 
 .crm-page-description {
+  display: block;
   color: var(--crm-muted);
   font-size: 0.94rem;
+  line-height: 1.5;
 }
 
 .crm-page--compact {
@@ -323,10 +331,6 @@ body {
     margin-bottom: 18px;
   }
 
-  .crm-page-title {
-    font-size: 1.65rem !important;
-  }
-
   .MuiTablePagination-toolbar {
     flex-wrap: wrap;
     justify-content: center;
@@ -335,24 +339,7 @@ body {
 }
 
 
-/* Stage 3: consistent page titles, semantic statuses and responsive data tables. */
-.crm-page-title {
-  display: block;
-  margin-bottom: 6px !important;
-  color: var(--crm-text);
-  font-size: 1.75rem !important;
-  font-weight: 750 !important;
-  line-height: 1.25;
-  letter-spacing: -0.035em;
-}
-
-.crm-page-description {
-  display: block;
-  margin-bottom: 24px;
-  color: var(--crm-muted);
-  font-size: 0.94rem;
-  line-height: 1.5;
-}
+/* Stage 3: semantic statuses, consistent controls and responsive data tables. */
 
 .MuiButton-root {
   min-height: 36px;
@@ -414,7 +401,6 @@ body {
   }
 
   .crm-page-description {
-    margin-bottom: 18px;
     font-size: 0.9rem;
   }
 
