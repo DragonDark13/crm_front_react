@@ -42,6 +42,7 @@ export const Sidebar: React.FC = () => {
             icon: <ShoppingCart fontSize={iconFontSize}/>,
             items: [
                 {title: "Управління клієнтами", path: "/crm_front_react/clients", icon: <People fontSize={iconFontSize}/>},
+                {title: "Замовлення", path: "/crm_front_react/orders", icon: <ShoppingCart fontSize={iconFontSize}/>},
                 {title: "Історія продажів", path: "/crm_front_react/sales", icon: <ShoppingCart fontSize={iconFontSize}/>},
                 {title: "Повернення", path: "/crm_front_react/returns", icon: <AssignmentReturn fontSize={iconFontSize}/>}
             ]
