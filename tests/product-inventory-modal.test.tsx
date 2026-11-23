@@ -133,7 +133,7 @@ describe('ProductInventoryModal', () => {
         expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
 
         resolveSubmit();
-        await waitFor(() => expect(submitButton()).toBeEnabled());
+        await waitFor(() => expect((submitButton() as HTMLButtonElement).disabled).toBe(false));
     });
 
     it('keeps entered data and allows retry after the submit request fails', async () => {
@@ -148,7 +148,7 @@ describe('ProductInventoryModal', () => {
         });
         fireEvent.click(submitButton());
 
-        await waitFor(() => expect(submitButton()).toBeEnabled());
+        await waitFor(() => expect((submitButton() as HTMLButtonElement).disabled).toBe(false));
         expect(quantityInput().value).toBe('18');
         expect((screen.getByRole('textbox', {name: 'Додаткова примітка'}) as HTMLInputElement).value)
             .toBe('Повторна перевірка');
