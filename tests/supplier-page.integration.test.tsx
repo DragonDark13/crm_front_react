@@ -64,6 +64,12 @@ const supplier = {
     type: 'product' as const
 };
 
+const getSupplierRow = (name: string) => {
+    const supplierName = screen.getAllByText(name).find(element => element.closest('tr'));
+    expect(supplierName).toBeTruthy();
+    return supplierName!.closest('tr') as HTMLElement;
+};
+
 const renderSupplierPage = (isAuthenticated = true, supplierList = [supplier]) => {
     vi.mocked(useSuppliers).mockReturnValue({
         suppliers: supplierList,
@@ -142,7 +148,7 @@ describe('SupplierPage integration', () => {
         mocks.updateSupplier.mockResolvedValueOnce({ status: 200 });
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[0]);
         const dialog = screen.getByRole('dialog');
         fireEvent.change(within(dialog).getByRole('textbox', { name: 'Назва постачальника' }), {
@@ -162,7 +168,7 @@ describe('SupplierPage integration', () => {
         mocks.updateSupplier.mockRejectedValueOnce(new Error('HTTP 500: update failed'));
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[0]);
         const dialog = screen.getByRole('dialog');
         fireEvent.change(within(dialog).getByRole('textbox', { name: 'Назва постачальника' }), {
@@ -187,7 +193,7 @@ describe('SupplierPage integration', () => {
         });
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
 
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledWith(12, 'product'));
@@ -199,7 +205,7 @@ describe('SupplierPage integration', () => {
         mocks.deleteSupplier.mockResolvedValueOnce(undefined);
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledOnce());
         const dialog = screen.getByRole('dialog');
@@ -215,7 +221,7 @@ describe('SupplierPage integration', () => {
         mocks.deleteSupplier.mockRejectedValueOnce(new Error('HTTP 403: forbidden'));
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledOnce());
         const dialog = screen.getByRole('dialog');
@@ -233,7 +239,7 @@ describe('SupplierPage integration', () => {
     it('loads and renders the supplier purchase history', async () => {
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[1]);
 
         await waitFor(() => expect(mocks.fetchGetSupplierPurchaseHistory).toHaveBeenCalledWith(12));
@@ -243,7 +249,7 @@ describe('SupplierPage integration', () => {
     it('delegates supplier activation to the provider with the selected supplier type', () => {
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[2]);
 
         expect(mocks.handleToggleSupplierActive).toHaveBeenCalledWith(12, supplier, 'product');
@@ -252,11 +258,11 @@ describe('SupplierPage integration', () => {
         const packagingSupplier = {...supplier, type: 'packaging' as const, name: 'Packaging supplier'};
         renderSupplierPage(true, [supplier, packagingSupplier]);
 
-        const productRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const productRow = getSupplierRow(supplier.name);
         fireEvent.click(within(productRow).getAllByRole('button')[1]);
         expect(await screen.findByText('product:12:Test product')).toBeTruthy();
 
-        const packagingRow = screen.getByText(packagingSupplier.name).closest('tr') as HTMLElement;
+        const packagingRow = getSupplierRow(packagingSupplier.name);
         fireEvent.click(within(packagingRow).getAllByRole('button')[1]);
         expect(await screen.findByText('packaging:12:Packaging history')).toBeTruthy();
         expect(mocks.fetchGetPackagingSupplierPurchaseHistory).toHaveBeenCalledWith(12);
@@ -277,8 +283,8 @@ describe('SupplierPage integration', () => {
         const secondSupplier = {...supplier, id: 14, name: 'Second supplier'};
         renderSupplierPage(true, [supplier, secondSupplier]);
 
-        const firstRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
-        const secondRow = screen.getByText(secondSupplier.name).closest('tr') as HTMLElement;
+        const firstRow = getSupplierRow(supplier.name);
+        const secondRow = getSupplierRow(secondSupplier.name);
         fireEvent.click(within(firstRow).getAllByRole('button')[1]);
         fireEvent.click(within(secondRow).getAllByRole('button')[1]);
 
@@ -298,7 +304,7 @@ describe('SupplierPage integration', () => {
         mocks.fetchGetSupplierPurchaseHistory.mockReturnValueOnce(pendingRequest);
         renderSupplierPage();
 
-        const supplierRow = screen.getByText(supplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[1]);
         expect(screen.getByText('Завантаження історії постачальника...')).toBeTruthy();
 
@@ -338,7 +344,7 @@ describe('SupplierPage integration', () => {
         mocks.deletePackagingSupplier.mockResolvedValueOnce(undefined);
         renderSupplierPage(true, [packagingSupplier]);
 
-        const supplierRow = screen.getByText(packagingSupplier.name).closest('tr') as HTMLElement;
+        const supplierRow = getSupplierRow(packagingSupplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[3]);
         await waitFor(() => expect(mocks.canDeleteSupplier).toHaveBeenCalledWith(12, 'packaging'));
 
