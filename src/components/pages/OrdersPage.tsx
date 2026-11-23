@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {
-    Alert, Box, Chip, FormControl, InputLabel, MenuItem, Paper, Select,
+    Alert, Box, FormControl, InputLabel, MenuItem, Paper, Select,
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
 } from "@mui/material";
 import {fetchOrders, updateOrderStatus} from "../../api/_ordersApi";
