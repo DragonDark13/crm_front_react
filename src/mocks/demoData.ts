@@ -29,11 +29,11 @@ export const createInitialDemoDatabase = (): DemoDatabase => {
         {id: 1, name: 'Аксесуари'}, {id: 2, name: 'Декор'}, {id: 3, name: 'Подарунки'}, {id: 4, name: 'Пакування'}
     ];
     const products = [
-        {id: 1, name: 'Свічка ароматична «Лаванда»', available_quantity: 24, reserved_quantity: 2, total_quantity: 30, sold_quantity: 4, purchase_total_price: 1800, purchase_price_per_item: 60, selling_total_price: 520, selling_price_per_item: 130, selling_quantity: 4, article: 'CND-001', product_description: 'Ароматична свічка у скляній баночці', category_ids: [2,3], supplier: suppliers[0], created_date: '2026-10-02'},
-        {id: 2, name: 'Набір листівок «Україна»', available_quantity: 8, reserved_quantity: 0, total_quantity: 20, sold_quantity: 12, purchase_total_price: 1000, purchase_price_per_item: 50, selling_total_price: 1440, selling_price_per_item: 120, selling_quantity: 12, article: 'CRD-002', product_description: 'Набір із шести ілюстрованих листівок', category_ids: [1,3], supplier: suppliers[1], created_date: '2026-09-18'},
-        {id: 3, name: 'Керамічна чашка «Ліс»', available_quantity: 3, reserved_quantity: 1, total_quantity: 15, sold_quantity: 12, purchase_total_price: 2250, purchase_price_per_item: 150, selling_total_price: 3000, selling_price_per_item: 250, selling_quantity: 12, article: 'MUG-003', product_description: 'Керамічна чашка ручної роботи', category_ids: [2], supplier: suppliers[1], created_date: '2026-08-11'},
-        {id: 4, name: 'Блокнот «Подорожі»', available_quantity: 16, reserved_quantity: 1, total_quantity: 20, sold_quantity: 3, purchase_total_price: 1400, purchase_price_per_item: 70, selling_total_price: 330, selling_price_per_item: 110, selling_quantity: 3, article: 'NTB-004', product_description: 'Блокнот у твердій обкладинці', category_ids: [1], supplier: suppliers[0], created_date: '2026-10-21'},
-        {id: 5, name: 'Декоративна дерев’яна зірка', available_quantity: 0, reserved_quantity: 0, total_quantity: 10, sold_quantity: 10, purchase_total_price: 900, purchase_price_per_item: 90, selling_total_price: 1500, selling_price_per_item: 150, selling_quantity: 10, article: 'DEC-005', product_description: 'Дерев’яний декор для інтер’єру', category_ids: [2], supplier: suppliers[1], created_date: '2026-07-04'}
+        {id: 1, name: 'Свічка ароматична «Лаванда»', available_quantity: 24, reserved_quantity: 2, total_quantity: 30, reorder_level: 5, sold_quantity: 4, purchase_total_price: 1800, purchase_price_per_item: 60, selling_total_price: 520, selling_price_per_item: 130, selling_quantity: 4, article: 'CND-001', product_description: 'Ароматична свічка у скляній баночці', category_ids: [2,3], supplier: suppliers[0], created_date: '2026-10-02'},
+        {id: 2, name: 'Набір листівок «Україна»', available_quantity: 8, reserved_quantity: 0, total_quantity: 20, reorder_level: 10, sold_quantity: 12, purchase_total_price: 1000, purchase_price_per_item: 50, selling_total_price: 1440, selling_price_per_item: 120, selling_quantity: 12, article: 'CRD-002', product_description: 'Набір із шести ілюстрованих листівок', category_ids: [1,3], supplier: suppliers[1], created_date: '2026-09-18'},
+        {id: 3, name: 'Керамічна чашка «Ліс»', available_quantity: 3, reserved_quantity: 1, total_quantity: 15, reorder_level: 5, sold_quantity: 12, purchase_total_price: 2250, purchase_price_per_item: 150, selling_total_price: 3000, selling_price_per_item: 250, selling_quantity: 12, article: 'MUG-003', product_description: 'Керамічна чашка ручної роботи', category_ids: [2], supplier: suppliers[1], created_date: '2026-08-11'},
+        {id: 4, name: 'Блокнот «Подорожі»', available_quantity: 16, reserved_quantity: 1, total_quantity: 20, reorder_level: 5, sold_quantity: 3, purchase_total_price: 1400, purchase_price_per_item: 70, selling_total_price: 330, selling_price_per_item: 110, selling_quantity: 3, article: 'NTB-004', product_description: 'Блокнот у твердій обкладинці', category_ids: [1], supplier: suppliers[0], created_date: '2026-10-21'},
+        {id: 5, name: 'Декоративна дерев’яна зірка', available_quantity: 0, reserved_quantity: 0, total_quantity: 10, reorder_level: 5, sold_quantity: 10, purchase_total_price: 900, purchase_price_per_item: 90, selling_total_price: 1500, selling_price_per_item: 150, selling_quantity: 10, article: 'DEC-005', product_description: 'Дерев’яний декор для інтер’єру', category_ids: [2], supplier: suppliers[1], created_date: '2026-07-04'}
     ];
     const database: DemoDatabase = {
         products,
@@ -70,7 +70,9 @@ export const createInitialDemoDatabase = (): DemoDatabase => {
         returns: [
             {id: 1, sale_id: 2, product_id: 2, product_name: products[1].name, customer_id: 2, customer_name: 'Максим Петренко', quantity_returned: 1, return_amount: 120, return_reason: 'Не підійшов дизайн', return_date: '2026-11-12', returned_by_username: 'demo.manager'}
         ],
-        giftSetSales: [],
+        giftSetSales: [
+            {id: 1, gift_set_id: 1, sold_at: '2026-11-20T12:00:00', sold_price: 290, quantity: 1, customer_id: 1, customer_name: 'Анна Коваленко'}
+        ],
         productStockHistory: [],
         productAuditHistory: [],
         packagingStockHistory: [],
