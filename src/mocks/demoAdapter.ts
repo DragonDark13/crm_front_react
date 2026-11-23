@@ -404,7 +404,7 @@ const adapter: AxiosAdapter = async config => {
         const purchase = {
             id: nextId(database.purchases),
             product_id: product.id,
-            name: String(product.name || ''),
+            name: String(body.name || ''),
             type: 'Product',
             date: String(body.created_date || new Date().toISOString().slice(0, 10)),
             categories: Array.isArray(body.category_ids) ? body.category_ids : [],
