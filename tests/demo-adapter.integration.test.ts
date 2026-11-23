@@ -71,6 +71,31 @@ describe('Demo API history and export', () => {
         ]));
     });
 
+    it('releases linked gift set reservations atomically during inventory', async () => {
+        const result = await axiosInstance.post('/product/1/inventory', {
+            actual_quantity: 10,
+            reason: 'Перевірка залишку'
+        }, demoConfig);
+
+        const product = await axiosInstance.get('/product/1', demoConfig);
+        const packaging = await axiosInstance.get('/packaging/get_all_packaging_materials', demoConfig);
+        const giftSets = await axiosInstance.get('/get_all_gift_sets', demoConfig);
+        const history = await axiosInstance.get('/product/1/history', demoConfig);
+
+        expect(result.data).toMatchObject({
+            quantity_before: 26,
+            quantity_after: 10,
+            change_amount: -16,
+            deleted_gift_sets: [1],
+            reserved_quantity: 0
+        });
+        expect(product.data.available_quantity).toBe(10);
+        expect(packaging.data[0].available_quantity).toBe(43);
+        expect(packaging.data[0].reserved_quantity).toBe(0);
+        expect(giftSets.data.map((item: {id: number}) => item.id)).toEqual([2]);
+        expect(history.data.stock_history[0]).toMatchObject({change_type: 'inventory', change_amount: -16});
+    });
+
     it('sells a seeded gift set using its existing product and packaging reservations', async () => {
         const sale = await axiosInstance.post('/sell_gift_set/1', {
             customer_id: 1,
