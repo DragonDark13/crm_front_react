@@ -45,6 +45,28 @@ const readDatabase = (): DemoDatabase => {
                     quantity_after: null, reason: String(item.return_reason || '')
                 }))
             ];
+        const productAuditHistory = Array.isArray(parsed.productAuditHistory)
+            ? parsed.productAuditHistory
+            : [
+                ...purchases.filter(item => item.type === 'Product' && Number(item.product_id) > 0).map((item, index) => ({
+                    id: index + 1, product_id: Number(item.product_id), changed_by_id: null,
+                    changed_by_username: 'demo.manager', action: 'purchase', field_name: 'available_quantity',
+                    old_value: null, new_value: String(item.quantity || 0),
+                    reason: 'Міграція демонстраційної історії', changed_at: `${item.date} 09:00:00`
+                })),
+                ...sales.map((item, index) => ({
+                    id: purchases.length + index + 1, product_id: Number(item.product_id), changed_by_id: null,
+                    changed_by_username: 'demo.manager', action: 'sale', field_name: 'sold_quantity',
+                    old_value: null, new_value: String(item.quantity_sold || 0), reason: null,
+                    changed_at: `${item.sale_date} 12:00:00`
+                })),
+                ...returns.map((item, index) => ({
+                    id: purchases.length + sales.length + index + 1, product_id: Number(item.product_id), changed_by_id: null,
+                    changed_by_username: 'demo.manager', action: 'return', field_name: 'available_quantity',
+                    old_value: null, new_value: String(item.quantity_returned || 0),
+                    reason: String(item.return_reason || ''), changed_at: String(item.return_date)
+                }))
+            ];
         const packagingStockHistory = Array.isArray(parsed.packagingStockHistory)
             ? parsed.packagingStockHistory
             : purchases.filter(item => item.type === 'Packaging' && Number(item.material_id) > 0).map((item, index) => ({
@@ -60,7 +82,7 @@ const readDatabase = (): DemoDatabase => {
             sales,
             returns,
             productStockHistory,
-            productAuditHistory: Array.isArray(parsed.productAuditHistory) ? parsed.productAuditHistory : [],
+            productAuditHistory,
             packagingStockHistory,
             packagingSalesHistory: Array.isArray(parsed.packagingSalesHistory)
                 ? parsed.packagingSalesHistory
@@ -319,6 +341,7 @@ const adapter: AxiosAdapter = async config => {
         data = {
             stock_history: database.productStockHistory
                 .filter(item => Number(item.product_id) === id)
+                .sort((a, b) => String(b.timestamp).localeCompare(String(a.timestamp)))
                 .map(item => ({...item})),
             purchase_history: database.purchases
                 .filter(item => item.type === 'Product' && Number(item.product_id) === id)
@@ -479,6 +502,7 @@ const adapter: AxiosAdapter = async config => {
                 .map(item => ({...item})),
             stock_history: database.packagingStockHistory
                 .filter(item => Number(item.material_id) === id)
+                .sort((a, b) => String(b.timestamp).localeCompare(String(a.timestamp)))
                 .map(item => ({...item}))
         };
     } else if (method === 'get' && path.startsWith('/packaging-supplier/') && path.endsWith('/purchase-history')) {
