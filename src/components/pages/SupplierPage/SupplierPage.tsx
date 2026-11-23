@@ -17,7 +17,7 @@ import {
     Typography,
     Tooltip,
     Grid,
-    TablePagination
+    TablePagination, Card, CardContent, Stack, Divider, Chip, Box
 } from '@mui/material';
 import {Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
 import BlockIcon from '@mui/icons-material/Block';
@@ -279,7 +279,51 @@ const SupplierPage: React.FC = () => {
                 rowsPerPageOptions={[5, 10, 25, 50]}
             />
 
+
+            <div className="mobile-card-list">
+                {paginatedSuppliers.map((supplier) => {
+                    const isHistoryOpen = openHistory?.id === supplier.id && openHistory.type === supplier.type;
+                    return (
+                        <Card key={`mobile-${supplier.type}-${supplier.id}`} variant="outlined">
+                            <CardContent>
+                                <Stack spacing={1}>
+                                    <Stack direction="row" alignItems="flex-start" justifyContent="space-between" gap={1}>
+                                        <Box sx={{minWidth: 0}}>
+                                            <Typography variant="subtitle1" fontWeight={700}>{supplier.name}</Typography>
+                                            <Typography variant="caption" color="text.secondary">{supplier.type}</Typography>
+                                        </Box>
+                                        <Chip size="small" color={supplier.is_active ? "success" : "default"} label={supplier.is_active ? "Активний" : "Неактивний"} />
+                                    </Stack>
+                                    <Divider />
+                                    <Typography variant="body2">Контакт: {supplier.contact_info || 'Не вказано'}</Typography>
+                                    <Typography variant="body2">Email: {supplier.email || 'Не вказано'}</Typography>
+                                    <Typography variant="body2">Телефон: {supplier.phone_number || 'Не вказано'}</Typography>
+                                    <Typography variant="body2">Адреса: {supplier.address || 'Не вказано'}</Typography>
+                                    <Stack direction="row" justifyContent="flex-end">
+                                        <Tooltip title="Редагувати"><IconButton color="primary" onClick={() => handleOpenSupplierEdit(supplier)}><EditIcon fontSize="small"/></IconButton></Tooltip>
+                                        <Tooltip title="Історія постачальника"><IconButton color="info" onClick={() => toggleHistory(supplier.id, supplier.type)}><HistoryIcon fontSize="small"/></IconButton></Tooltip>
+                                        <Tooltip title={supplier.is_active ? 'Відключити постачальника' : 'Увімкнути постачальника'}>
+                                            <IconButton color={supplier.is_active ? 'warning' : 'success'} onClick={() => handleToggleSupplierActive(supplier.id, supplier, supplier.type)}>
+                                                {supplier.is_active ? <BlockIcon fontSize="small"/> : <CheckCircleIcon fontSize="small"/>}
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Видалити постачальника"><span><IconButton disabled={!isAuthenticated} color="error" onClick={() => handleDeleteSupplier(supplier.id, supplier.type)}><DeleteIcon fontSize="small"/></IconButton></span></Tooltip>
+                                    </Stack>
+                                    {isHistoryOpen && (
+                                        <Collapse in={isHistoryOpen} timeout="auto" unmountOnExit>
+                                            {isHistoryLoading ? <Typography>Завантаження історії постачальника...</Typography> :
+                                                historyError ? <Typography color="error">Не вдалося завантажити історію постачальника.</Typography> :
+                                                <SupplierPurchaseHistoryTable type={openHistory.type} supplierId={openHistory.id} suppliers={suppliers} purchaseHistory={purchaseHistory}/>}
+                                        </Collapse>
+                                    )}
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </div>
             {/* Таблиця постачальників */}
+            <div className="desktop-data-table">
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -426,6 +470,7 @@ const SupplierPage: React.FC = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            </div>
             <TablePagination
                 component="div"
                 count={suppliers.length}
