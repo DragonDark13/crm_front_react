@@ -40,6 +40,7 @@ export const fetchProductHistory = (productId: number): Promise<AxiosResponse<Pr
 export interface IProductInventoryData {
     actual_quantity: number;
     reason?: string;
+    inventory_date: string;
 }
 
 export const runProductInventory = (productId: number, data: IProductInventoryData): Promise<ProductInventoryResponse> => {
