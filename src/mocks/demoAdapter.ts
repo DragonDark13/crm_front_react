@@ -333,9 +333,9 @@ const adapter: AxiosAdapter = async config => {
         const previousReturns = database.returns.filter(item => item.sale_id === id);
         const alreadyReturned = previousReturns.reduce((sum, item) => sum + Number(item.quantity_returned || 0), 0);
         const remaining = Number(sale?.quantity_sold || 0) - alreadyReturned;
-        if (!sale || !product) data = {error: 'Продаж або товар не знайдено'};
-        else if (!Number.isInteger(quantity) || quantity <= 0) data = {error: 'Кількість повернення має бути додатним цілим числом'};
-        else if (quantity > remaining) data = {error: `Перевищено залишок для повернення (${remaining})`};
+        if (!sale || !product) return response(config, {error: 'Sale or product not found'}, 404);
+        if (!Number.isInteger(quantity) || quantity <= 0) return response(config, {error: 'Quantity must be a positive integer'}, 400);
+        if (quantity > remaining) return response(config, {error: `Return quantity exceeds the remaining quantity (${remaining})`}, 409);
         else {
             const refunded = previousReturns.reduce((sum, item) => sum + Number(item.return_amount || 0), 0);
             const remainingAmount = Number(sale.selling_total_price || 0) - refunded;
