@@ -81,13 +81,13 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = ({
     return (
         <React.Fragment>
             <Grid container alignItems={"center"} justifyContent={"flex-end"}>
-                <Grid item xs={12} md={6} sx={{marginTop: 1}}>
+                <Grid item xs={12} md={6} sx={{marginTop: 1, order: {xs: 2, md: 1}}}>
                     <AddButton onClick={() => setOpenAddProductModal(true)}
                                text={'Додати товар'} title={'Додати новий товар'}/>
 
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} sx={{order: {xs: 1, md: 2}}}>
                     <TextField
                         size={"small"}
                         label="Пошук товару" placeholder="Назва або артикул"
