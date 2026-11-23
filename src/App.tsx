@@ -30,6 +30,7 @@ const ProductPurchaseImportPage = lazy(() => import("./components/pages/ProductP
 const CustomerReturnsPage = lazy(() => import("./components/pages/CustomerReturnsPage"));
 const SupplierPage = lazy(() => import("./components/pages/SupplierPage/SupplierPage"));
 const Sales = lazy(() => import("./components/pages/Sales/Sales"));
+const OrdersPage = lazy(() => import("./components/pages/OrdersPage"));
 const GiftSetsPage = lazy(() => import("./components/pages/GiftSetsPage/GiftSetsPage"));
 const Login = lazy(() => import("./components/Login/Login"));
 const DatabaseSettingsPage = lazy(() => import("./components/pages/DatabaseSettingsPage"));
@@ -392,6 +393,7 @@ function App() {
                             <Route path="/crm_front_react/gift_sets" element={<ProtectedRoute allowedRoles={['manager']} element={<GiftSetsPage/>}/>}/>
                             <Route path="/crm_front_react/clients" element={<ProtectedRoute allowedRoles={['manager']} element={<ClientsManagement/>}/>}/>
                             <Route path="/crm_front_react/sales" element={<ProtectedRoute allowedRoles={['manager']} element={<Sales/>}/>}/>
+                            <Route path="/crm_front_react/orders" element={<ProtectedRoute allowedRoles={["manager"]} element={<OrdersPage/>}/>}/>
                             <Route path="/crm_front_react/products" element={<ProtectedRoute allowedRoles={['guest', 'manager']} element={productsCatalogElement}/>}/>
 
                             <Route path="/crm_front_react/purchases" element={<ProtectedRoute allowedRoles={['manager']} element={<Purchases/>}/>}/>
