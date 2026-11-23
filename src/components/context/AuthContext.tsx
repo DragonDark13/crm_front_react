@@ -24,6 +24,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   useEffect(() => {
+    if (import.meta.env.VITE_DEMO_MODE === 'true') {
+      const demoToken = 'github-pages-demo-token';
+      localStorage.setItem('token', demoToken);
+      setToken(demoToken);
+      setRoles(['manager']);
+      setAuthReady(true);
+      return;
+    }
+
     const storedToken = localStorage.getItem('token');
 
     if (!storedToken) {
