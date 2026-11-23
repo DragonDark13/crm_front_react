@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
 import {
     Box,
+    Divider,
     IconButton,
     ListItemIcon,
     ListItemText,
     MenuItem,
     Popover,
-    Tooltip
+    Tooltip,
+    Typography,
+    ButtonBase
 } from '@mui/material';
 import {
     Home,
@@ -20,7 +23,8 @@ import {
     Business,
     AssignmentReturn,
     CloudUpload,
-    SettingsBackupRestore
+    SettingsBackupRestore,
+    MoreHoriz
 } from '@mui/icons-material';
 import {Link, useLocation} from 'react-router-dom';
 import AddButtonWithMenu from "../MainMenu/AddButtonWithMenu";
@@ -32,6 +36,7 @@ export const Sidebar: React.FC = () => {
     const {roles} = useAuth();
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [openGroup, setOpenGroup] = useState<string | null>(null);
+    const [mobileMoreAnchor, setMobileMoreAnchor] = useState<HTMLElement | null>(null);
 
     const iconFontSize = 'small';
     const isActive = (path: string) => location.pathname === path;
@@ -106,6 +111,24 @@ export const Sidebar: React.FC = () => {
     };
 
     const selectedGroup = menuGroups.find(group => group.title === openGroup);
+    const mobileSecondaryItems = menuGroups.flatMap(group => group.items)
+        .filter(item => ![
+            "/crm_front_react/orders",
+            "/crm_front_react/products"
+        ].includes(item.path));
+
+    const mobileNavItem = (title: string, path: string, icon: React.ReactNode) => (
+        <ButtonBase
+            className={`crm-mobile-nav-item${isActive(path) ? ' is-active' : ''}`}
+            component={Link}
+            to={path}
+            aria-label={title}
+            aria-current={isActive(path) ? 'page' : undefined}
+        >
+            {icon}
+            <Typography component="span">{title}</Typography>
+        </ButtonBase>
+    );
 
     return (
         <Box
@@ -126,70 +149,106 @@ export const Sidebar: React.FC = () => {
                 gap: 2,
             }}
         >
-            <Tooltip title="Головна" placement="right">
-                <IconButton
-                    size={iconFontSize}
-                    color={isActive("/crm_front_react/") ? "primary" : "inherit"}
-                    component={Link}
-                    to="/crm_front_react/"
-                >
-                    <Home fontSize={iconFontSize}/>
-                </IconButton>
-            </Tooltip>
-
-            {menuGroups.map(group => {
-                const groupIsActive = group.items.some(item => isActive(item.path));
-
-                return (
-                    <Tooltip key={group.title} title={group.title} placement="right">
-                        <IconButton
-                            size={iconFontSize}
-                            color={groupIsActive ? "primary" : "inherit"}
-                            onClick={(event) => handleGroupClick(event, group.title)}
-                            aria-label={group.title}
-                            aria-haspopup="menu"
-                            aria-expanded={openGroup === group.title}
-                        >
-                            {group.icon}
-                        </IconButton>
-                    </Tooltip>
-                );
-            })}
-
-            <Popover
-                open={Boolean(anchorEl && selectedGroup)}
-                anchorEl={anchorEl}
-                onClose={handleMenuClose}
-                anchorOrigin={{
-                    vertical: 'center',
-                    horizontal: 'right',
-                }}
-                transformOrigin={{
-                    vertical: 'center',
-                    horizontal: 'left',
-                }}
-                PaperProps={{
-                    sx: {
-                        minWidth: 230,
-                        py: 1,
-                    }
-                }}
-            >
-                {selectedGroup?.items.map(item => (
-                    <MenuItem
-                        key={item.path}
+            <Box className="crm-sidebar-desktop">
+                <Tooltip title="Головна" placement="right">
+                    <IconButton
+                        size={iconFontSize}
+                        color={isActive("/crm_front_react/") ? "primary" : "inherit"}
                         component={Link}
-                        to={item.path}
-                        selected={isActive(item.path)}
-                        onClick={handleMenuClose}
+                        to="/crm_front_react/"
                     >
-                        <ListItemIcon>{item.icon}</ListItemIcon>
-                        <ListItemText>{item.title}</ListItemText>
-                    </MenuItem>
-                ))}
-            </Popover>
+                        <Home fontSize={iconFontSize}/>
+                    </IconButton>
+                </Tooltip>
 
-            <AddButtonWithMenu/>
+                {menuGroups.map(group => {
+                    const groupIsActive = group.items.some(item => isActive(item.path));
+
+                    return (
+                        <Tooltip key={group.title} title={group.title} placement="right">
+                            <IconButton
+                                size={iconFontSize}
+                                color={groupIsActive ? "primary" : "inherit"}
+                                onClick={(event) => handleGroupClick(event, group.title)}
+                                aria-label={group.title}
+                                aria-haspopup="menu"
+                                aria-expanded={openGroup === group.title}
+                            >
+                                {group.icon}
+                            </IconButton>
+                        </Tooltip>
+                    );
+                })}
+
+                <Popover
+                    open={Boolean(anchorEl && selectedGroup)}
+                    anchorEl={anchorEl}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{vertical: 'center', horizontal: 'right'}}
+                    transformOrigin={{vertical: 'center', horizontal: 'left'}}
+                    PaperProps={{sx: {minWidth: 230, py: 1}}}
+                >
+                    {selectedGroup?.items.map(item => (
+                        <MenuItem
+                            key={item.path}
+                            component={Link}
+                            to={item.path}
+                            selected={isActive(item.path)}
+                            onClick={handleMenuClose}
+                        >
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText>{item.title}</ListItemText>
+                        </MenuItem>
+                    ))}
+                </Popover>
+
+                <AddButtonWithMenu/>
+            </Box>
+
+            <Box className="crm-mobile-nav">
+                {mobileNavItem("Головна", "/crm_front_react/", <Home/>)}
+                {mobileNavItem("Каталог", "/crm_front_react/products", <Store/>)}
+                {roles.includes('manager') && mobileNavItem("Замовлення", "/crm_front_react/orders", <Receipt/>)}
+                {roles.includes('manager') && mobileNavItem("Продажі", "/crm_front_react/sales", <ShoppingCart/>)}
+                <ButtonBase
+                    className={`crm-mobile-nav-item${mobileMoreAnchor ? ' is-active' : ''}`}
+                    onClick={(event) => setMobileMoreAnchor(event.currentTarget)}
+                    aria-label="Ще розділи"
+                    aria-haspopup="menu"
+                    aria-expanded={Boolean(mobileMoreAnchor)}
+                >
+                    <MoreHoriz/>
+                    <Typography component="span">Ще</Typography>
+                </ButtonBase>
+                <Popover
+                    open={Boolean(mobileMoreAnchor)}
+                    anchorEl={mobileMoreAnchor}
+                    onClose={() => setMobileMoreAnchor(null)}
+                    anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                    transformOrigin={{vertical: 'bottom', horizontal: 'center'}}
+                    PaperProps={{sx: {width: 'min(320px, 92vw)', maxHeight: '70vh', overflowY: 'auto', p: 1}}}
+                >
+                    <Typography variant="subtitle2" sx={{px: 1, py: 1, fontWeight: 700}}>
+                        Додаткові розділи
+                    </Typography>
+                    <Box sx={{px: 1, pb: 1}}>
+                        <AddButtonWithMenu/>
+                    </Box>
+                    <Divider/>
+                    {mobileSecondaryItems.map(item => (
+                        <MenuItem
+                            key={item.path}
+                            component={Link}
+                            to={item.path}
+                            selected={isActive(item.path)}
+                            onClick={() => setMobileMoreAnchor(null)}
+                        >
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText>{item.title}</ListItemText>
+                        </MenuItem>
+                    ))}
+                </Popover>
+            </Box>
         </Box>
     );
 };
