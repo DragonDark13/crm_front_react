@@ -81,6 +81,15 @@ describe('Demo API history and export', () => {
         expect(response.data.size).toBeGreaterThan(0);
     });
 
+    it('does not silently delete historical records in demo mode', async () => {
+        await expect(axiosInstance.delete('/delete-history/1/purchase/1', demoConfig))
+            .rejects.toMatchObject({response: {status: 409}});
+        await expect(axiosInstance.delete('/product/1', demoConfig))
+            .rejects.toMatchObject({response: {status: 409}});
+        await expect(axiosInstance.delete('/delete_all_products', demoConfig))
+            .rejects.toMatchObject({response: {status: 409}});
+    });
+
     it('returns 404 for unsupported endpoints instead of a false success', async () => {
         await expect(axiosInstance.get('/unknown-demo-endpoint', demoConfig))
             .rejects.toMatchObject({response: {status: 404}});
