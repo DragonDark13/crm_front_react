@@ -105,7 +105,9 @@ export const API_ENDPOINTS = {
     DASHBOARD_STOCK: '/statistics/stock',
     DASHBOARD_PROFIT_EXPENSE: '/statistics/profit-expense',
     DASHBOARD_CUSTOMER_ACTIVITY: '/statistics/customer-activity',
-    ANALYTICS_OVERVIEW: '/statistics/overview'
+    ANALYTICS_OVERVIEW: '/statistics/overview',
+    ORDERS: '/orders',
+    ORDER_STATUS: (id: number) => `/orders/${id}/status`
 };
 
 const MAX_GET_RETRIES = 2;
