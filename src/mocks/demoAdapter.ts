@@ -483,7 +483,8 @@ const adapter: AxiosAdapter = async config => {
         };
     } else if (method === 'get' && path.startsWith('/packaging-supplier/') && path.endsWith('/purchase-history')) {
         const supplier = database.packagingSuppliers.find(item => item.id === id);
-        data = {supplier, purchase_history: database.purchases.filter(item => item.type === 'Packaging' && item.supplier_id === id).map(item => ({material: item.name, quantity_purchased: item.quantity, purchase_date: item.date, purchase_price_per_unit: item.price_per_item, purchase_total_price: item.total_price})), materials: database.packagingMaterials.filter(item => item.packaging_material_supplier_id === id).map(item => ({id: item.id, name: item.name}))};
+        if (!supplier) return response(config, {error: 'Packaging supplier not found'}, 404);
+        data = {supplier, purchase_history: database.purchases.filter(item => item.type === 'Packaging' && Number(item.supplier_id) === id).map(item => ({material: item.name, quantity_purchased: item.quantity, purchase_date: item.date, purchase_price_per_unit: item.price_per_item, purchase_total_price: item.total_price})), materials: database.packagingMaterials.filter(item => Number(item.packaging_material_supplier_id) === id).map(item => ({id: item.id, name: item.name}))};
     } else if (method === 'post' && path === '/add_new_packaging_suppliers') {
         const supplier = {...body, id: nextId(database.packagingSuppliers), is_active: true};
         database.packagingSuppliers.push(supplier); database.suppliers.push({...supplier, type: 'packaging'}); persist(); data = supplier;
@@ -639,6 +640,18 @@ const adapter: AxiosAdapter = async config => {
         previousPackagings.forEach(item => releasedPackagings.set(Number(item.packaging_id), (releasedPackagings.get(Number(item.packaging_id)) || 0) + Number(item.quantity || 0)));
 
         const items = Array.isArray(body.items) ? body.items as Record<string, unknown>[] : [];
+        for (const item of previousProducts) {
+            const product = database.products.find(value => Number(value.id) === Number(item.product_id));
+            if (!product || Number(product.reserved_quantity || 0) < Number(item.quantity || 0)) {
+                return response(config, {error: 'Поточний резерв товару не відповідає складу набору'}, 409);
+            }
+        }
+        for (const item of previousPackagings) {
+            const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.packaging_id));
+            if (!material || Number(material.reserved_quantity || 0) < Number(item.quantity || 0)) {
+                return response(config, {error: 'Поточний резерв пакування не відповідає складу набору'}, 409);
+            }
+        }
         const requirements = new Map<string, {type: 'product' | 'packaging'; id: number; quantity: number}>();
         for (const item of items) {
             const type = item.type;
@@ -704,12 +717,26 @@ const adapter: AxiosAdapter = async config => {
         const giftSet = database.giftSets.find(item => item.id === id);
         if (!giftSet) return response(config, {error: 'Gift set not found'}, 404);
         if (giftSet.is_sold === true) return response(config, {error: 'Sold gift sets cannot be removed'}, 409);
+        const giftProducts = giftSet.products as Record<string, unknown>[] || [];
+        const giftPackagings = giftSet.packagings as Record<string, unknown>[] || [];
+        for (const item of giftProducts) {
+            const product = database.products.find(value => Number(value.id) === Number(item.product_id));
+            if (!product || Number(product.reserved_quantity || 0) < Number(item.quantity || 0)) {
+                return response(config, {error: 'Резерв товару не відповідає складу набору'}, 409);
+            }
+        }
+        for (const item of giftPackagings) {
+            const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.packaging_id));
+            if (!material || Number(material.reserved_quantity || 0) < Number(item.quantity || 0)) {
+                return response(config, {error: 'Резерв пакування не відповідає складу набору'}, 409);
+            }
+        }
         if (giftSet) {
-            for (const item of (giftSet.products as Record<string, unknown>[] || [])) {
+            for (const item of giftProducts) {
                 const product = database.products.find(value => value.id === Number(item.product_id));
                 if (product) { product.available_quantity = Number(product.available_quantity) + Number(item.quantity || 0); product.reserved_quantity = Math.max(0, Number(product.reserved_quantity || 0) - Number(item.quantity || 0)); }
             }
-            for (const item of (giftSet.packagings as Record<string, unknown>[] || [])) {
+            for (const item of giftPackagings) {
                 const material = database.packagingMaterials.find(value => value.id === Number(item.packaging_id));
                 if (material) { material.available_quantity = Number(material.available_quantity) + Number(item.quantity || 0); material.reserved_quantity = Math.max(0, Number(material.reserved_quantity || 0) - Number(item.quantity || 0)); }
             }
