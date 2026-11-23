@@ -248,9 +248,9 @@ const SaleProductModal = ({
                                 <Typography fontWeight="bold" variant="subtitle1">
                                     {nameProduct}
                                 </Typography>
-                                    {quantityOnStock < 1 &&
-                                    <Typography color={"error"}> Товару немає в наявнсті на складі</Typography>}
-                                </Typography>
+                                {quantityOnStock < 1 && (
+                                    <Typography color="error">Товару немає в наявності на складі</Typography>
+                                )}
                                 <Typography variant="body2" color="text.secondary" sx={{mt: 0.5, mb: 1.5}}>
                                     Доступно для продажу: {quantityOnStock} шт.
                                 </Typography>
@@ -265,7 +265,7 @@ const SaleProductModal = ({
                                     getOptionLabel={(customer) => customer.name}
                                     isOptionEqualToValue={(option, value) => option.id === value.id}
                                     onChange={(_, customer) => {
-                                        setSaleData({...saleData, customer: customer?.id ?? ""});
+                                        handleChangeCustomer(customer?.id ?? NaN);
                                     }}
                                     renderInput={(params) => (
                                         <TextField
@@ -322,28 +322,7 @@ const SaleProductModal = ({
                             </Grid>
 
 
-                            <Grid item xs={12} sm={6} md={12} mb={2}>
-                                <Divider sx={{opacity: 1, borderColor: theme.palette.grey[500], marginBottom: 1}}/>
 
-                                {!showPackaging && (
-                                    <Button
-                                        disabled={quantityOnStock < 1}
-                                        variant="outlined"
-                                        startIcon={<AddIcon/>}
-                                        onClick={togglePackaging}
-                                    >
-                                        Додати пакування
-                                    </Button>
-                                )}
-                                {showPackaging && (
-                                    <PackagingSelector
-                                        saleData={saleData}
-                                        setSaleData={setSaleData}
-                                        packagingMaterials={packagingMaterials}
-                                        removePackage={removePackage}
-                                    />
-                                )}
-                            </Grid>
 
 
                         </Grid>
