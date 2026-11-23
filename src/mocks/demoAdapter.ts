@@ -1,5 +1,5 @@
 import type {AxiosAdapter, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
-import {AxiosHeaders} from 'axios';
+import {AxiosError, AxiosHeaders} from 'axios';
 import {createInitialDemoDatabase, DEMO_STORAGE_KEY, type DemoDatabase} from './demoData';
 
 const readDatabase = (): DemoDatabase => {
@@ -89,13 +89,27 @@ const response = (
     data: unknown,
     status = 200,
     contentType = 'application/json'
-): AxiosResponse => ({
-    data,
-    status,
-    statusText: status >= 400 ? 'Error' : 'OK',
-    headers: new AxiosHeaders({'content-type': contentType}),
-    config
-});
+): AxiosResponse | Promise<never> => {
+    const result: AxiosResponse = {
+        data,
+        status,
+        statusText: status >= 400 ? 'Error' : 'OK',
+        headers: new AxiosHeaders({'content-type': contentType}),
+        config
+    };
+
+    if (status >= 400) {
+        return Promise.reject(new AxiosError(
+            `Request failed with status code ${status}`,
+            undefined,
+            config,
+            undefined,
+            result
+        ));
+    }
+
+    return result;
+};
 
 const currentTimestamp = () => new Date().toISOString().slice(0, 19).replace('T', ' ');
 
