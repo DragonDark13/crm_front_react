@@ -11,7 +11,7 @@ import {
     TableHead,
     TableRow,
     TableSortLabel,
-    Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog, Box, TablePagination
+    Paper, Typography, Grid, Button, DialogActions, DialogTitle, DialogContent, Dialog, Box, TablePagination, Card, CardContent, Stack, Divider
 } from '@mui/material';
 import {
     IMaterial,
@@ -296,7 +296,31 @@ const PackagingMaterialList: React.FC = () => {
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
+
+                <div className="mobile-card-list">
+                    {currentMaterials.length ? currentMaterials.map((material) => (
+                        <Card key={`mobile-${material.id}`} variant="outlined">
+                            <CardContent>
+                                <Stack spacing={1}>
+                                    <Typography variant="subtitle1" fontWeight={700}>{material.name}</Typography>
+                                    <Typography variant="body2" color={!material.supplier.is_active ? 'text.disabled' : 'text.secondary'}>Постачальник: {material.supplier.name}</Typography>
+                                    <Divider />
+                                    <Typography variant="body2">Собівартість: {material.purchase_price_per_unit} грн</Typography>
+                                    <Typography variant="body2">Кількість: {material.available_quantity} / {material.total_quantity}</Typography>
+                                    <Typography variant="body2">Сума закупівель: {material.total_purchase_cost} грн</Typography>
+                                    <Typography variant="caption" color="text.secondary">Створено: {new Date(material.created_date).toLocaleDateString()}</Typography>
+                                    <Stack direction="row" justifyContent="flex-end">
+                                        <Tooltip title="Закупити"><IconButton color="primary" onClick={() => handleOpenDialog(material)}><ShoppingCartIcon fontSize="small"/></IconButton></Tooltip>
+                                        <Tooltip title="Позначити як використане"><IconButton color="primary" onClick={() => handleOpenDialogUpdate(material)}><Update fontSize="small"/></IconButton></Tooltip>
+                                        <Tooltip title="Історія"><IconButton color="secondary" onClick={() => handleOpenHistoryDialog(material)}><HistoryIcon fontSize="small"/></IconButton></Tooltip>
+                                    </Stack>
+                                </Stack>
+                            </CardContent>
+                        </Card>
+                    )) : <Typography color="text.secondary">Пакувальних матеріалів не знайдено</Typography>}
+                </div>
                 {/* IMaterial List Table */}
+                <div className="desktop-data-table">
                 <TableContainer component={Paper} style={{marginTop: '20px'}}>
                     <Table>
                         <TableHead>
@@ -439,6 +463,7 @@ const PackagingMaterialList: React.FC = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                </div>
 
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
