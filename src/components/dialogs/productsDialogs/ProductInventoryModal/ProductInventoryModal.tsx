@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import {IProduct} from "../../../../utils/types";
 import CustomDialog from "../../CustomDialog/CustomDialog";
+import QuantityField from "../../../FormComponents/QuantityField";
 
 interface ProductInventoryModalProps {
     product: IProduct;
@@ -44,6 +45,23 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
             setReason("");
         }
     }, [open, physicalQuantity]);
+
+    const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const value = event.target.value.replace(/[^0-9]/g, "").replace(/^0+/, "");
+        setActualQuantity(value === "" ? "0" : value);
+    };
+
+    const incrementQuantity = () => {
+        if (Number(actualQuantity) < 1000) {
+            setActualQuantity(String(Number(actualQuantity) + 1));
+        }
+    };
+
+    const decrementQuantity = () => {
+        if (Number(actualQuantity) > 0) {
+            setActualQuantity(String(Number(actualQuantity) - 1));
+        }
+    };
 
     const handleSubmit = async () => {
         const quantity = Number(actualQuantity);
@@ -86,14 +104,13 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                 <Typography>
                     Облікова фізична кількість: <strong>{physicalQuantity}</strong>
                 </Typography>
-                <TextField
-                    autoFocus
-                    fullWidth
-                    type="number"
+                <QuantityField
                     label="Фактична кількість (усі фізичні одиниці)"
-                    value={actualQuantity}
-                    onChange={(event) => setActualQuantity(event.target.value)}
-                    inputProps={{min: 0, step: 1}}
+                    value={Number(actualQuantity)}
+                    onChange={handleQuantityChange}
+                    onIncrement={incrementQuantity}
+                    onDecrement={decrementQuantity}
+                    min={0}
                     sx={{mt: 2}}
                 />
                 <Typography sx={{mt: 1}}>
