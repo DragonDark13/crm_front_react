@@ -79,7 +79,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
         && Number.isSafeInteger(Number(actualQuantity))
         && Number(actualQuantity) >= 0;
     const isValidReason = reasonType !== "Інше" || otherReason.trim() !== "";
-    const isValidInventoryDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(inventoryDate);
+    const isValidInventoryDate = /^\d{4}-\d{2}-\d{2}$/.test(inventoryDate);
 
     const handleSubmit = async () => {
         if (!isValidQuantity || !isValidReason || !isValidInventoryDate || isSubmittingRef.current) return;
