@@ -217,3 +217,62 @@ export interface CreateCustomerReturnResponse {
     available_quantity: number;
     remaining_return_quantity: number;
 }
+
+
+export interface AnalyticsOverviewSummary {
+    product_sales: number;
+    gift_set_sales: number;
+    gross_sales: number;
+    returns: number;
+    net_sales: number;
+    product_gross_profit: number;
+    sold_quantity: number;
+    returned_quantity: number;
+    purchase_expenses: number;
+    other_expenses: number;
+    total_expenses: number;
+    restock_count: number;
+}
+
+export interface AnalyticsMonthlyStatistics {
+    month: string;
+    product_sales: number;
+    gift_set_sales: number;
+    gross_sales: number;
+    returns: number;
+    net_sales: number;
+    product_gross_profit: number;
+    purchase_expenses: number;
+    other_expenses: number;
+    total_expenses: number;
+}
+
+export interface AnalyticsTopProduct {
+    product_id: number;
+    name: string;
+    sold_quantity: number;
+    returned_quantity: number;
+    net_quantity: number;
+    sales: number;
+    refunds: number;
+    net_sales: number;
+    gross_profit: number;
+}
+
+export interface AnalyticsRestockItem {
+    id: number;
+    name: string;
+    type: "product" | "packaging";
+    available_quantity: number;
+    reorder_level: number;
+    unit: string;
+}
+
+export interface AnalyticsOverviewResponse {
+    period: {start_date: string; end_date: string};
+    summary: AnalyticsOverviewSummary;
+    monthly: AnalyticsMonthlyStatistics[];
+    top_products: AnalyticsTopProduct[];
+    restock: AnalyticsRestockItem[];
+    profit_scope_note: string;
+}

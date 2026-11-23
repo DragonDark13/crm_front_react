@@ -296,7 +296,148 @@ const adapter: AxiosAdapter = async config => {
             ...database.returns.map(item => ({id: `customer-return-${item.id}`, source_id: item.id, date: item.return_date, direction: 'expense', type: 'Повернення клієнту', description: item.product_name, counterparty: item.customer_name || '', amount: Number(item.return_amount || 0)})),
             ...(database.giftSetSales || []).map(item => ({id: `gift-set-sale-${item.id}`, source_id: item.id, date: item.sold_at, direction: 'income', type: 'Продаж гіфтбоксу', description: database.giftSets.find(gift => gift.id === item.gift_set_id)?.name || 'Гіфтбокс', counterparty: item.customer_name || '', amount: Number(item.sold_price || 0)}))
         ].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    } else if (method === 'get' && path === '/statistics/overview') {
+        const params = config.params as Record<string, unknown> | undefined;
+        const today = new Date().toISOString().slice(0, 10);
+        const startDate = String(params?.start_date || `${today.slice(0, 7)}-01`);
+        const endDate = String(params?.end_date || today);
+        const inPeriod = (value: unknown) => {
+            const date = String(value || '').slice(0, 10);
+            return date >= startDate && date <= endDate;
+        };
+        const sales = database.sales.filter(item => inPeriod(item.sale_date));
+        const giftSetSales = (database.giftSetSales || []).filter(item => inPeriod(item.sold_at));
+        const returns = database.returns.filter(item => inPeriod(item.return_date));
+        const purchases = database.purchases.filter(item => inPeriod(item.date));
+        const investments = database.investments.filter(item => inPeriod(item.date));
+        const salesById = new Map(sales.map(item => [Number(item.id), item]));
+        const allSalesById = new Map(database.sales.map(item => [Number(item.id), item]));
+        const months = new Map<string, {
+            month: string; product_sales: number; gift_set_sales: number; returns: number;
+            product_gross_profit: number; purchase_expenses: number; other_expenses: number;
+        }>();
+        const monthFor = (value: unknown) => {
+            const month = String(value || '').slice(0, 7);
+            const current = months.get(month) || {
+                month, product_sales: 0, gift_set_sales: 0, returns: 0,
+                product_gross_profit: 0, purchase_expenses: 0, other_expenses: 0
+            };
+            months.set(month, current);
+            return current;
+        };
+        const top = new Map<number, {
+            product_id: number; name: string; sold_quantity: number; returned_quantity: number;
+            sales: number; refunds: number; gross_profit: number;
+        }>();
+        let productSales = 0;
+        let giftSetRevenue = 0;
+        let refunds = 0;
+        let soldQuantity = 0;
+        let returnedQuantity = 0;
+        sales.forEach(sale => {
+            const amount = Number(sale.selling_total_price || 0);
+            const quantity = Number(sale.quantity_sold || 0);
+            const productId = Number(sale.product_id);
+            const product = database.products.find(item => Number(item.id) === productId);
+            productSales += amount;
+            soldQuantity += quantity;
+            const month = monthFor(sale.sale_date);
+            month.product_sales += amount;
+            month.product_gross_profit += Number(sale.profit || 0);
+            const item = top.get(productId) || {
+                product_id: productId, name: String(sale.product_name || product?.name || 'Товар'),
+                sold_quantity: 0, returned_quantity: 0, sales: 0, refunds: 0, gross_profit: 0
+            };
+            item.sold_quantity += quantity;
+            item.sales += amount;
+            item.gross_profit += Number(sale.profit || 0);
+            top.set(productId, item);
+        });
+        giftSetSales.forEach(sale => {
+            const amount = Number(sale.sold_price || 0);
+            giftSetRevenue += amount;
+            monthFor(sale.sold_at).gift_set_sales += amount;
+        });
+        returns.forEach(returnRecord => {
+            const sourceSale = allSalesById.get(Number(returnRecord.sale_id));
+            const amount = Number(returnRecord.return_amount
+                ?? (Number(sourceSale?.selling_price_per_item || 0) * Number(returnRecord.quantity_returned || 0)));
+            const quantity = Number(returnRecord.quantity_returned || 0);
+            refunds += amount;
+            returnedQuantity += quantity;
+            monthFor(returnRecord.return_date).returns += amount;
+            const sale = sourceSale;
+            if (sale && Number(sale.quantity_sold || 0) > 0) {
+                const saleQuantity = Number(sale.quantity_sold || 0);
+                const productMargin = Number(sale.profit || 0) + Number(sale.total_packaging_cost || 0);
+                const returnedMargin = productMargin * quantity / saleQuantity;
+                monthFor(returnRecord.return_date).product_gross_profit -= returnedMargin;
+                const item = top.get(Number(sale.product_id));
+                if (item && salesById.has(Number(sale.id))) {
+                    item.returned_quantity += quantity;
+                    item.refunds += amount;
+                    item.gross_profit -= returnedMargin;
+                }
+            }
+        });
+        let purchaseExpenses = 0;
+        purchases.forEach(purchase => {
+            const amount = Number(purchase.total_price || 0);
+            purchaseExpenses += amount;
+            monthFor(purchase.date).purchase_expenses += amount;
+        });
+        let otherExpenses = 0;
+        investments.forEach(expense => {
+            const amount = Number(expense.cost || 0);
+            otherExpenses += amount;
+            monthFor(expense.date).other_expenses += amount;
+        });
+        const monthly = [...months.values()].sort((a, b) => a.month.localeCompare(b.month)).map(item => ({
+            ...item,
+            gross_sales: item.product_sales + item.gift_set_sales,
+            net_sales: item.product_sales + item.gift_set_sales - item.returns,
+            total_expenses: item.purchase_expenses + item.other_expenses
+        }));
+        const restock = [
+            ...database.products.filter(item => Number(item.reorder_level || 0) > 0 && Number(item.available_quantity || 0) <= Number(item.reorder_level || 0)).map(item => ({
+                id: Number(item.id), name: String(item.name), type: 'product',
+                available_quantity: Number(item.available_quantity || 0),
+                reorder_level: Number(item.reorder_level || 0), unit: String(item.unit_of_measure || 'од.')
+            })),
+            ...database.packagingMaterials.filter(item => Number(item.reorder_level || 0) > 0 && Number(item.available_quantity || 0) <= Number(item.reorder_level || 0)).map(item => ({
+                id: Number(item.id), name: String(item.name), type: 'packaging',
+                available_quantity: Number(item.available_quantity || 0),
+                reorder_level: Number(item.reorder_level || 0), unit: 'од.'
+            }))
+        ].sort((a, b) => a.available_quantity / a.reorder_level - b.available_quantity / b.reorder_level);
+        const topProducts = [...top.values()].map(item => ({
+            ...item,
+            net_quantity: item.sold_quantity - item.returned_quantity,
+            net_sales: item.sales - item.refunds
+        })).sort((a, b) => b.net_quantity - a.net_quantity || b.net_sales - a.net_sales).slice(0, 10);
+        data = {
+            period: {start_date: startDate, end_date: endDate},
+            summary: {
+                product_sales: productSales,
+                gift_set_sales: giftSetRevenue,
+                gross_sales: productSales + giftSetRevenue,
+                returns: refunds,
+                net_sales: productSales + giftSetRevenue - refunds,
+                product_gross_profit: monthly.reduce((sum, item) => sum + item.product_gross_profit, 0),
+                sold_quantity: soldQuantity,
+                returned_quantity: returnedQuantity,
+                purchase_expenses: purchaseExpenses,
+                other_expenses: otherExpenses,
+                total_expenses: purchaseExpenses + otherExpenses,
+                restock_count: restock.length
+            },
+            monthly,
+            top_products: topProducts,
+            restock,
+            profit_scope_note: 'Валовий прибуток охоплює звичайні товарні продажі. Виручка гіфтбоксів включена в продажі, але їхній прибуток не розраховується, оскільки історія не зберігає собівартість компонентів на момент продажу.'
+        };
     } else if (method === 'get' && path.startsWith('/statistics/')) {
+        // Keep the existing dashboard endpoints working in demo mode.
         const grouped = (records: Record<string, unknown>[], dateField: string) => {
             const totals = new Map<string, {year: number; month: number; amount: number; quantity: number}>();
             records.forEach(record => {
@@ -314,12 +455,24 @@ const adapter: AxiosAdapter = async config => {
             return [...totals.values()].sort((a, b) => a.year - b.year || a.month - b.month);
         };
         if (path === '/statistics/sales/monthly') {
-            data = grouped(database.sales, 'sale_date').map(item => ({year: item.year, month: item.month, total_sales: item.amount, total_quantity: item.quantity, total_profit: database.sales.filter(sale => String(sale.sale_date).startsWith(`${item.year}-${String(item.month).padStart(2, '0')}`)).reduce((sum, sale) => sum + Number(sale.profit || 0), 0)}));
+            data = grouped(database.sales, 'sale_date').map(item => ({
+                year: item.year, month: item.month, total_sales: item.amount, total_quantity: item.quantity,
+                total_profit: database.sales.filter(sale => String(sale.sale_date).startsWith(`${item.year}-${String(item.month).padStart(2, '0')}`)).reduce((sum, sale) => sum + Number(sale.profit || 0), 0)
+            }));
         } else if (path === '/statistics/purchases/monthly') {
-            data = grouped(database.purchases.filter(item => item.type === 'Product'), 'date').map(item => ({year: item.year, month: item.month, total_spent: item.amount, total_quantity: item.quantity, avg_price: item.quantity ? item.amount / item.quantity : 0}));
-        } else if (path.endsWith('/top-products')) data = database.products.slice(0, 5).map(product => ({product_id: product.id, name: product.name, total_sold: product.sold_quantity, total_sales: product.selling_total_price}));
-        else if (path.endsWith('/stock')) data = database.products.map(product => ({id: product.id, name: product.name, available_quantity: product.available_quantity, total_quantity: product.total_quantity}));
-        else if (path.endsWith('/profit-expense')) {
+            data = grouped(database.purchases.filter(item => item.type === 'Product'), 'date').map(item => ({
+                year: item.year, month: item.month, total_spent: item.amount, total_quantity: item.quantity,
+                avg_price: item.quantity ? item.amount / item.quantity : 0
+            }));
+        } else if (path.endsWith('/top-products')) {
+            data = database.products.slice(0, 5).map(product => ({
+                product_id: product.id, name: product.name, total_sold: product.sold_quantity, total_sales: product.selling_total_price
+            }));
+        } else if (path.endsWith('/stock')) {
+            data = database.products.map(product => ({
+                id: product.id, name: product.name, available_quantity: product.available_quantity, total_quantity: product.total_quantity
+            }));
+        } else if (path.endsWith('/profit-expense')) {
             const sales = grouped(database.sales, 'sale_date');
             const purchases = grouped(database.purchases.filter(item => item.type === 'Product'), 'date');
             const keys = new Set([...sales, ...purchases].map(item => `${item.year}-${item.month}`));
@@ -327,10 +480,17 @@ const adapter: AxiosAdapter = async config => {
                 const [year, month] = key.split('-').map(Number);
                 const sale = sales.find(item => item.year === year && item.month === month);
                 const purchase = purchases.find(item => item.year === year && item.month === month);
-                return {year, month, sales: sale?.amount || 0, profit: database.sales.filter(item => String(item.sale_date).startsWith(key)).reduce((sum, item) => sum + Number(item.profit || 0), 0), expenses: (purchase?.amount || 0) + database.investments.filter(item => String(item.date).startsWith(key)).reduce((sum, item) => sum + Number(item.cost || 0), 0)};
+                return {
+                    year, month, sales: sale?.amount || 0,
+                    profit: database.sales.filter(item => String(item.sale_date).startsWith(key)).reduce((sum, item) => sum + Number(item.profit || 0), 0),
+                    expenses: (purchase?.amount || 0) + database.investments.filter(item => String(item.date).startsWith(key)).reduce((sum, item) => sum + Number(item.cost || 0), 0)
+                };
             });
         } else if (path === '/statistics/customer-activity') {
-            data = Array.from({length: 7}, (_, index) => ({day: new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10), active_customers: new Set(database.sales.filter(sale => sale.sale_date === new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10)).map(sale => sale.customer_id)).size}));
+            data = Array.from({length: 7}, (_, index) => ({
+                day: new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10),
+                active_customers: new Set(database.sales.filter(sale => sale.sale_date === new Date(Date.now() - (6 - index) * 86400000).toISOString().slice(0, 10)).map(sale => sale.customer_id)).size
+            }));
         } else {
             data = {error: 'Невідомий endpoint статистики'};
             status = 404;

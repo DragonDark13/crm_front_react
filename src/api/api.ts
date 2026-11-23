@@ -104,7 +104,8 @@ export const API_ENDPOINTS = {
     DASHBOARD_TOP_PRODUCTS: '/statistics/top-products',
     DASHBOARD_STOCK: '/statistics/stock',
     DASHBOARD_PROFIT_EXPENSE: '/statistics/profit-expense',
-    DASHBOARD_CUSTOMER_ACTIVITY: '/statistics/customer-activity'
+    DASHBOARD_CUSTOMER_ACTIVITY: '/statistics/customer-activity',
+    ANALYTICS_OVERVIEW: '/statistics/overview'
 };
 
 const MAX_GET_RETRIES = 2;
