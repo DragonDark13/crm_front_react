@@ -109,6 +109,17 @@ describe('ProductInventoryModal', () => {
         expect((submitButton() as HTMLButtonElement).disabled).toBe(false);
     });
 
+    it('submits the description when the reason is "Інше"', () => {
+        const onSubmit = renderModal();
+        chooseReason('Інше');
+        fireEvent.change(screen.getByRole('textbox', {name: 'Опиши, що сталося'}), {
+            target: {value: 'Пошкоджено'}
+        });
+        fireEvent.click(submitButton());
+
+        expect(onSubmit).toHaveBeenCalledWith(12, 'Інше: Пошкоджено');
+    });
+
     it('sends the selected reason together with the additional note', () => {
         const onSubmit = renderModal();
         fireEvent.change(screen.getByRole('textbox', {name: 'Додаткова примітка'}), {
