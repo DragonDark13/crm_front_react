@@ -11,16 +11,19 @@ import {
     AttachMoney,
     Business,
     AssignmentReturn,
-    CloudUpload
+    CloudUpload,
+    SettingsBackupRestore
 } from '@mui/icons-material';
 import {Link, useLocation} from 'react-router-dom';
 import AddButtonWithMenu from "../MainMenu/AddButtonWithMenu";
 import { CardGiftcard } from "@mui/icons-material";
+import {useAuth} from "../context/AuthContext";
 
 
 
 export const Sidebar: React.FC = () => {
     const location = useLocation(); // Отримуємо поточний шлях
+    const {roles} = useAuth();
     const isActive = (path: string) => location.pathname === path;
 
     const iconFontSize = 'small'
@@ -38,7 +41,8 @@ export const Sidebar: React.FC = () => {
         {title: "Аналітика та звіти", path: "/crm_front_react/analytics", icon: <BarChart fontSize={iconFontSize} />},
         {title: "Пакування", path: "/crm_front_react/packaging", icon: <Luggage fontSize={iconFontSize} />},
         {title: "Інші витрати", path: "/crm_front_react/other-investments", icon: <AttachMoney fontSize={iconFontSize} />},
-        {title: "Управління постачальниками", path: "/crm_front_react/suppliers", icon: <Business fontSize={iconFontSize} />}
+        {title: "Управління постачальниками", path: "/crm_front_react/suppliers", icon: <Business fontSize={iconFontSize} />},
+        ...(roles.includes('manager') ? [{title: "Скидання бази даних", path: "/crm_front_react/database-settings", icon: <SettingsBackupRestore fontSize={iconFontSize} />}] : [])
     ];
 
     return (
