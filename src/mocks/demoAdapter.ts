@@ -193,8 +193,6 @@ const adapter: AxiosAdapter = async config => {
     } else if (method === 'post' && path === '/packaging_materials/purchase') {
         const material = {id: nextId(database.packagingMaterials), name: body.name, available_quantity: Number(body.quantity_purchased), total_quantity: Number(body.quantity_purchased), reorder_level: 5, packaging_material_supplier_id: Number(body.supplier_id), purchase_price_per_unit: Number(body.purchase_price_per_unit), total_purchase_cost: Number(body.total_purchase_cost), available_stock_cost: Number(body.total_purchase_cost), created_date: new Date().toISOString().slice(0, 10), supplier: database.packagingSuppliers[0]};
         database.packagingMaterials.push(material); persist();
-    } else if (method === 'post' && path === '/create_new_investments') {
-        database.investments.push({...body, id: nextId(database.investments)}); persist();
     } else if (method === 'post' && path.startsWith('/sales/') && path.endsWith('/returns')) {
         const returned = {id: nextId(database.returns), sale_id: id, product_id: null, product_name: '', customer_id: null, customer_name: '', quantity_returned: Number(body.quantity), return_amount: 0, return_reason: body.reason, return_date: new Date().toISOString().slice(0, 10), returned_by_username: 'demo.manager'};
         database.returns.push(returned); persist(); data = {message: 'Повернення створено', return: returned, available_quantity: 0, remaining_return_quantity: 0};
