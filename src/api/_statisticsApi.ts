@@ -57,3 +57,13 @@ export const fetchDashboardStatistics = (signal?: AbortSignal): Promise<Dashboar
         customerActivity
     }));
 };
+
+
+export const fetchAnalyticsOverview = (
+    startDate: string,
+    endDate: string,
+    signal?: AbortSignal
+) => fetchResource<import("./contracts").AnalyticsOverviewResponse>(
+    API_ENDPOINTS.ANALYTICS_OVERVIEW,
+    {params: {start_date: startDate, end_date: endDate}, ...(signal ? {signal} : {})}
+);
