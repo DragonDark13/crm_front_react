@@ -36,7 +36,7 @@ const DatabaseSettingsPage: React.FC = () => {
 
         setIsResetting(true);
         try {
-            await postResource(API_ENDPOINTS.RESET_DATABASE, {});
+            await postResource(API_ENDPOINTS.RESET_DATABASE, {confirmation: CONFIRMATION_PHRASE});
             showSnackbarMessage('Базу даних повністю очищено. Потрібно увійти знову.', 'success');
             await logout().catch(() => undefined);
             navigate('/crm_front_react/login', {replace: true});
