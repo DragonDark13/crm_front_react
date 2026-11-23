@@ -68,7 +68,7 @@ const OrdersPage: React.FC = () => {
         }
     };
 
-    const renderStatusSelect = (order: OrderRecord) => (
+    const renderStatusSelect = (order: OrderRecord, view: "desktop" | "mobile") => (
         <FormControl size="small" fullWidth>
             <InputLabel id={\`order-status-\${order.id}\`}>Статус замовлення</InputLabel>
             <Select
@@ -132,7 +132,7 @@ const OrdersPage: React.FC = () => {
                                                 {order.created_at ? new Date(order.created_at).toLocaleString("uk-UA") : "—"}
                                             </TableCell>
                                             <TableCell align="right">{formatCurrency(order.total_amount)}</TableCell>
-                                            <TableCell>{renderStatusSelect(order)}</TableCell>
+                                            <TableCell>{renderStatusSelect(order, "desktop")}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -218,7 +218,7 @@ const OrdersPage: React.FC = () => {
                                                 <Typography variant="subtitle2" fontWeight={700} sx={{mb: 0.75}}>
                                                     Змінити статус
                                                 </Typography>
-                                                {renderStatusSelect(order)}
+                                                {renderStatusSelect(order, "mobile")}
                                             </Box>
                                         </Stack>
                                     </CardContent>
