@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {
-    Card, CardContent, Typography, Grid, Box, TextField, IconButton, Tooltip, TablePagination, TableCell
+    Card, CardContent, Typography, Grid, Box, TextField, IconButton, Tooltip, TablePagination, TableCell,
+    Button, Chip, Stack
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -58,134 +59,131 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                 sortProducts(filteredAndSearchedProducts, getComparator(order, orderBy))
                     .slice(currentPage * itemsPerPage, currentPage * itemsPerPage + itemsPerPage)
                     .map((product: IProduct, index) => {
-                        const lowQuantity = product.available_quantity < 5; // умова для низької кількості
+                        const lowQuantity = product.available_quantity < 5;
+                        const outOfStock = product.available_quantity <= 0;
+                        const stockLabel = outOfStock
+                            ? 'Немає в наявності'
+                            : lowQuantity
+                                ? 'Малий залишок'
+                                : 'В наявності';
+                        const stockColor = outOfStock || lowQuantity ? 'warning' : 'success';
                         return (
                             <Grid item xs={12} sm={6} md={4}
                                   key={`${product.id}${index}${product.purchase_total_price}`}>
-                                <Card>
-                                    <CardContent>
-                                        {/* Заголовок товару */}
-                                        <Typography variant="h5" gutterBottom fontWeight="bold">
-                                            {product.name}
-                                        </Typography>
-
-                                        {/* Інформація про товар */}
-                                        <Typography style={{display: "none"}}
-                                                    variant="subtitle1" color="textSecondary" gutterBottom>
-                                            ID: <Typography component="span" variant="body1"
-                                                            color="textPrimary">{product.id}</Typography>
-                                        </Typography>
-                                        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                            Постачальник: <Typography component="span" variant="body1"
-                                                                      color="textPrimary">{product.supplier?.name || 'N/A'}</Typography>
-                                        </Typography>
-                                        <Typography variant="subtitle1" color={"textSecondary"} gutterBottom>
-                                            Кількість: <Typography className={clsx(
-                                            {'low-quantity': lowQuantity},
-                                        )} component="span" variant="body1"
-                                                                   color={!lowQuantity ? "textSecondary" : 'error'}>{product.available_quantity}</Typography>
-                                        </Typography>
-                                        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                            К-ть Продано: <Typography component="span" variant="body1"
-                                                                      color="primary">{product.selling_quantity}</Typography>
-                                        </Typography>
-
-                                        {/* Якщо користувач не авторизований, сховати ці поля */}
-                                        {isAuthenticated ? (
-                                            <>
-                                                <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                                    Ціна за 1 шт (Закупівля):
-                                                    <Typography component="span" variant="body1"
-                                                                color={"secondary"}>
-                                                        {product.purchase_price_per_item.toFixed(2)}
-                                                    </Typography>
-                                                </Typography>
-                                            </>
-                                        ) : null}
-                                        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                            Ціна за 1 шт (Продаж):
-                                            <Typography component="span"
-                                                        variant="body1"
-                                                        color={"primary"}>
-                                                {product.selling_price_per_item.toFixed(2)}
+                                <Card sx={{height: '100%'}}>
+                                    <CardContent sx={{display: 'flex', flexDirection: 'column', gap: 1.5, p: 2}}>
+                                        <Box>
+                                            <Typography variant="h6" component="h2" fontWeight="bold">
+                                                {product.name}
                                             </Typography>
-                                        </Typography>
-                                        {isAuthenticated ? (
-                                            <>
-                                                <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                                    Сума Закупівля :
-                                                    <Typography component="span" variant="body1"
-                                                                color={"secondary"}>{product.purchase_total_price.toFixed(2)}</Typography>
+                                            {product.article && (
+                                                <Typography variant="caption" color="text.secondary">
+                                                    Артикул: {product.article}
                                                 </Typography>
-                                            </>
-                                        ) : null}
-                                        <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                                            Прогнозована Сума Продажу:
-                                            <Typography component="span" variant="body1"
-                                                        color={"primary"}>{product.selling_total_price.toFixed(2)}</Typography>
+                                            )}
+                                        </Box>
+
+                                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+                                            <Box>
+                                                <Typography variant="caption" color="text.secondary" display="block">
+                                                    Доступний залишок
+                                                </Typography>
+                                                <Typography variant="h5" component="p" fontWeight="bold"
+                                                            color={outOfStock ? 'error.main' : lowQuantity ? 'warning.dark' : 'success.dark'}>
+                                                    {product.available_quantity} шт.
+                                                </Typography>
+                                            </Box>
+                                            <Chip size="small" color={stockColor} label={stockLabel}/>
+                                        </Stack>
+
+                                        <Box>
+                                            <Typography variant="body2" color="text.secondary">
+                                                Ціна продажу
+                                            </Typography>
+                                            <Typography variant="h6" color="primary.main" fontWeight="bold">
+                                                {product.selling_price_per_item.toFixed(2)} грн / шт.
+                                            </Typography>
+                                        </Box>
+
+                                        <Typography variant="body2" color="text.secondary">
+                                            Постачальник: {product.supplier?.name || 'Не вказано'}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary">
+                                            Продано: {product.selling_quantity} шт.
                                         </Typography>
 
+                                        {isAuthenticated && (
+                                            <Box sx={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0.5}}>
+                                                <Typography variant="caption" color="text.secondary">
+                                                    Закупівля: {product.purchase_price_per_item.toFixed(2)} грн/шт.
+                                                </Typography>
+                                                <Typography variant="caption" color="text.secondary">
+                                                    Прогноз виручки: {product.selling_total_price.toFixed(2)} грн
+                                                </Typography>
+                                            </Box>
+                                        )}
 
-                                        {/* Блок з кнопками */}
-                                        <Box mt={2} display="flex" justifyContent="space-between">
-                                            {isAuthenticated ? (
-                                                <Tooltip title="Редагувати">
-                                                    <IconButton color="primary" onClick={() => handleOpenEdit(product)}>
+                                        <Stack direction="row" spacing={1} sx={{mt: 'auto'}}>
+                                            <Button
+                                                fullWidth
+                                                size="medium"
+                                                variant="contained"
+                                                color="warning"
+                                                startIcon={<SellIcon/>}
+                                                disabled={!isAuthenticated || outOfStock}
+                                                onClick={() => handleOpenSale(product)}
+                                            >
+                                                Продати
+                                            </Button>
+                                            <Button
+                                                fullWidth
+                                                size="medium"
+                                                variant="outlined"
+                                                color="success"
+                                                startIcon={<ShoppingCartIcon/>}
+                                                disabled={!isAuthenticated}
+                                                onClick={() => handlePurchase(product)}
+                                            >
+                                                Закупити
+                                            </Button>
+                                        </Stack>
+
+                                        <Stack direction="row" alignItems="center" justifyContent="space-around"
+                                               sx={{borderTop: 1, borderColor: 'divider', pt: 1}}>
+                                            <Tooltip title="Редагувати">
+                                                <span>
+                                                    <IconButton aria-label={`Редагувати ${product.name}`} color="primary"
+                                                                disabled={!isAuthenticated}
+                                                                onClick={() => handleOpenEdit(product)}>
                                                         <EditIcon fontSize="small"/>
                                                     </IconButton>
-                                                </Tooltip>
-                                            ) : (
-                                                <Tooltip title="Редагування заблоковано">
-                                                    <span>
-                                                        <IconButton color="primary" disabled>
-                                                            <EditIcon fontSize="small"/>
-                                                        </IconButton>
-                                                    </span>
-                                                </Tooltip>
-                                            )}
-
+                                                </span>
+                                            </Tooltip>
                                             <Tooltip title="Видалити">
-                                            <span>
-                                            <IconButton disabled={!isAuthenticated} color="error"
-                                                        onClick={() => handleDelete(product.id)}>
-                                                <DeleteIcon fontSize="small"/>
-                                            </IconButton>
-                                            </span>
+                                                <span>
+                                                    <IconButton aria-label={`Видалити ${product.name}`} color="error"
+                                                                disabled={!isAuthenticated}
+                                                                onClick={() => handleDelete(product.id)}>
+                                                        <DeleteIcon fontSize="small"/>
+                                                    </IconButton>
+                                                </span>
                                             </Tooltip>
-
-                                            <Tooltip title="Купівля">
-                                            <span>
-                                            <IconButton color="success" onClick={() => handlePurchase(product)}
-                                                        disabled={!isAuthenticated}>
-                                                <ShoppingCartIcon fontSize="small"/>
-                                            </IconButton>
-                                            </span>
-                                            </Tooltip>
-
-                                            <Tooltip title="Продаж">
-                                            <span>
-                                            <IconButton color="warning" onClick={() => handleOpenSale(product)}
-                                                        disabled={!isAuthenticated}>
-                                                <SellIcon fontSize="small"/>
-                                            </IconButton>
-                                            </span>
-                                            </Tooltip>
-
                                             <Tooltip title="Історія">
-                                                <IconButton color="info"
+                                                <IconButton aria-label={`Історія ${product.name}`} color="info"
                                                             onClick={() => handleOpenHistoryModal(product.id)}>
                                                     <HistoryIcon fontSize="small"/>
                                                 </IconButton>
                                             </Tooltip>
-
                                             <Tooltip title="Інвентаризація">
-                                                <IconButton color="primary"
-                                                            disabled={!isAuthenticated}
-                                                            onClick={() => handleOpenInventory(product)}>
-                                                    <InventoryIcon fontSize="small"/>
-                                                </IconButton>
+                                                <span>
+                                                    <IconButton aria-label={`Інвентаризація ${product.name}`} color="primary"
+                                                                disabled={!isAuthenticated}
+                                                                onClick={() => handleOpenInventory(product)}>
+                                                        <InventoryIcon fontSize="small"/>
+                                                    </IconButton>
+                                                </span>
                                             </Tooltip>
-                                        </Box>
+                                        </Stack>
                                     </CardContent>
                                 </Card>
                             </Grid>
