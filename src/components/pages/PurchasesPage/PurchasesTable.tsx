@@ -20,7 +20,7 @@ import {
     TablePagination,
     TableFooter,
     Button,
-    Grid, Slider, Collapse, Tooltip
+    Grid, Slider, Collapse, Tooltip, Card, CardContent, Stack, Divider
 } from '@mui/material';
 import clsx from "clsx";
 import {ICategory} from "../../../utils/types";
@@ -299,6 +299,33 @@ const PurchasesTable: React.FC = () => {
             </Grid>
 
             <Typography>Знайдено <b>{filteredData.length}</b> записів про закупку</Typography>
+
+            <div className="mobile-card-list">
+                {paginatedData.length ? paginatedData.map((row, index) => (
+                    <Card key={index + row.name} variant="outlined">
+                        <CardContent>
+                            <Stack spacing={1}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" gap={1}>
+                                    <Box sx={{minWidth: 0}}>
+                                        <Stack direction="row" spacing={1} alignItems="center">
+                                            <PurchasesTableTypeProductCell type={row.type}/>
+                                            <Typography variant="subtitle1" fontWeight={700}>{row.name}</Typography>
+                                        </Stack>
+                                        <Typography variant="body2" color={!row.supplier_is_active ? 'text.disabled' : 'text.secondary'}>{row.supplier_name}</Typography>
+                                    </Box>
+                                    <Typography fontWeight={700} whiteSpace="nowrap">{row.total_price.toFixed(2)} грн</Typography>
+                                </Stack>
+                                <Divider />
+                                <Typography variant="body2">Кількість: {row.quantity ? row.quantity : "Загалом"}</Typography>
+                                <Typography variant="body2">Ціна за одиницю: {row.price_per_item ? row.price_per_item.toFixed(2) : "Загалом"} грн</Typography>
+                                <Typography variant="caption" color="text.secondary">{row.date}</Typography>
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                )) : <Typography color="text.secondary">Закупівель не знайдено</Typography>}
+                <Typography fontWeight={700} textAlign="right">Загальна сума закупівель: {totalPrice.toFixed(2)} грн</Typography>
+            </div>
+            <div className="desktop-data-table">
             <TableContainer component={Paper}>
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
@@ -386,6 +413,7 @@ const PurchasesTable: React.FC = () => {
                     </TableFooter>
                 </Table>
             </TableContainer>
+            </div>
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"

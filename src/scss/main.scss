@@ -493,3 +493,29 @@ body {
     display: block;
   }
 }
+
+
+/* Mobile history and inventory cards replace wide data tables on narrow screens. */
+.mobile-card-list {
+  display: none;
+}
+
+.mobile-card-list > .MuiCard-root {
+  width: 100%;
+  min-width: 0;
+}
+
+.mobile-card-list .MuiCardContent-root {
+  padding: 14px;
+}
+
+@media (max-width: 700px) {
+  .mobile-card-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .desktop-data-table {
+    display: none;
+  }
+}

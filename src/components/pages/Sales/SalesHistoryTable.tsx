@@ -21,7 +21,7 @@ import {
     Box,
     Modal,
     Paper,
-    Typography, DialogContent, DialogActions,
+    Typography, DialogContent, DialogActions, Card, CardContent, Stack, Divider,
 } from '@mui/material';
 import {fetchSalesHistory} from "../../../api/_salesApi";
 import {ShoppingBag, Inventory, CardGiftcard, Info, ExpandMore, Luggage} from "@mui/icons-material";
@@ -245,6 +245,31 @@ const SalesHistoryTable: React.FC = () => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
 
+
+            <div className="mobile-card-list">
+                {paginatedSalesData.length ? paginatedSalesData.map((sale) => (
+                    <Card key={sale.sale_history_id} variant="outlined">
+                        <CardContent>
+                            <Stack spacing={1}>
+                                <Stack direction="row" justifyContent="space-between" alignItems="flex-start" gap={1}>
+                                    <Stack direction="row" spacing={1} alignItems="center" sx={{minWidth: 0}}>
+                                        {getSaleIcon(sale.type)}
+                                        <Typography fontWeight={700}>{sale.product_name || sale.gift_set_name}</Typography>
+                                    </Stack>
+                                    <Typography fontWeight={700} whiteSpace="nowrap">{sale.total_price} грн</Typography>
+                                </Stack>
+                                <Divider />
+                                <Typography variant="body2">Покупець: {sale.customer?.name || sale.customer_name || 'Невідомо'}</Typography>
+                                <Typography variant="body2">Собівартість: {sale.cost_price} грн</Typography>
+                                <Typography variant="body2" color="success.main">Вигода: {sale.profit} грн</Typography>
+                                <Typography variant="caption" color="text.secondary">{sale.sale_date}</Typography>
+                                <Button size="small" startIcon={<Info />} onClick={() => handleModalInfoOpen(sale)}>Деталі продажу</Button>
+                            </Stack>
+                        </CardContent>
+                    </Card>
+                )) : <Typography color="text.secondary">Відсутня історія продажів</Typography>}
+            </div>
+            <div className="desktop-data-table">
             <TableContainer component={Paper} style={{marginTop: '20px'}}>
                 <Table>
                     <TableHead>
@@ -319,6 +344,7 @@ const SalesHistoryTable: React.FC = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            </div>
             <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
