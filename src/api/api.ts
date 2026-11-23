@@ -1,6 +1,7 @@
 import axios, {AxiosHeaders, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {IonDeleteHistoryRecord} from "../utils/types";
 import {ApiErrorResponse} from "./contracts";
+import demoAdapter from '../mocks/demoAdapter';
 
 // Встановлення базового URL залежно від середовища
 const getBaseURL = (): string => {
@@ -15,6 +16,7 @@ export const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    adapter: import.meta.env.VITE_DEMO_MODE === 'true' ? demoAdapter : undefined,
 });
 
 // Інтерсептор для автоматичного додавання JWT до запитів

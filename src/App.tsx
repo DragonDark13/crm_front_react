@@ -4,7 +4,7 @@ import {
     Box,
     Drawer,
     Grid,
-    IconButton, Badge, CssBaseline
+    IconButton, Badge, CssBaseline, Alert
 } from '@mui/material';
 
 
@@ -315,6 +315,11 @@ function App() {
                 <Sidebar/>
 
                 <Box className="crm-app-content" sx={{flex: 1, marginLeft: 'calc(80px)', padding: 3, paddingBottom: 6}}>
+                    {import.meta.env.VITE_DEMO_MODE === 'true' && (
+                        <Alert severity="info" sx={{mb: 2}}>
+                            Демонстраційний режим — усі дані тестові та зберігаються лише у цьому браузері.
+                        </Alert>
+                    )}
 
                     <div style={{
                         position: "absolute",
