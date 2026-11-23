@@ -1,6 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
     Button,
+    DialogActions,
+    DialogContent,
     Table,
     TableBody,
     TableCell,
