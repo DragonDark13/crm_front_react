@@ -82,6 +82,22 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                             )}
                                         </Box>
 
+                                        {product.product_description?.trim() && (
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                                sx={{
+                                                    display: '-webkit-box',
+                                                    WebkitBoxOrient: 'vertical',
+                                                    WebkitLineClamp: 3,
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'pre-line'
+                                                }}
+                                            >
+                                                {product.product_description}
+                                            </Typography>
+                                        )}
+
                                         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
                                             <Box>
                                                 <Typography variant="caption" color="text.secondary" display="block">
