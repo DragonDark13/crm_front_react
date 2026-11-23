@@ -55,7 +55,8 @@ export const createInitialDemoDatabase = (): DemoDatabase => {
         ],
         giftSets: [
             {id: 1, is_sold: false, name: 'Затишний вечір', description: 'Свічка та листівки у подарунковому пакуванні', total_price: 95, gift_selling_price: 290, products: [{product_id: 1, name: products[0].name, quantity: 1, price: 60}], packagings: [{packaging_id: 1, name: 'Коробка мала', quantity: 1, price: 18}]},
-            {id: 2, is_sold: false, name: 'Лісова історія', description: 'Чашка та блокнот', total_price: 220, gift_selling_price: 420, products: [{product_id: 3, name: products[2].name, quantity: 1, price: 150}, {product_id: 4, name: products[3].name, quantity: 1, price: 70}], packagings: []}
+            {id: 2, is_sold: false, name: 'Лісова історія', description: 'Чашка та блокнот', total_price: 220, gift_selling_price: 420, products: [{product_id: 3, name: products[2].name, quantity: 1, price: 150}, {product_id: 4, name: products[3].name, quantity: 1, price: 70}], packagings: []},
+            {id: 3, is_sold: true, name: 'Святковий набір', description: 'Демонстраційний проданий набір', total_price: 150, gift_selling_price: 290, products: [{product_id: 2, name: products[1].name, quantity: 1, price: 50}], packagings: []}
         ],
         purchases: [
             {id: 1, product_id: 1, name: products[0].name, type: 'Product', date: '2026-10-02', categories: [2,3], quantity: 30, price_per_item: 60, total_price: 1800, supplier_id: 1, supplier_name: 'ТОВ «Світ подарунків»', supplier_is_active: true},
@@ -71,7 +72,7 @@ export const createInitialDemoDatabase = (): DemoDatabase => {
             {id: 1, sale_id: 2, product_id: 2, product_name: products[1].name, customer_id: 2, customer_name: 'Максим Петренко', quantity_returned: 1, return_amount: 120, return_reason: 'Не підійшов дизайн', return_date: '2026-11-12', returned_by_username: 'demo.manager'}
         ],
         giftSetSales: [
-            {id: 1, gift_set_id: 1, sold_at: '2026-11-20T12:00:00', sold_price: 290, quantity: 1, customer_id: 1, customer_name: 'Анна Коваленко'}
+            {id: 1, gift_set_id: 3, sold_at: '2026-11-20T12:00:00', sold_price: 290, quantity: 1, customer_id: 1, customer_name: 'Анна Коваленко'}
         ],
         productStockHistory: [],
         productAuditHistory: [],
