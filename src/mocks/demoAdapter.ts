@@ -89,7 +89,8 @@ const adapter: AxiosAdapter = async config => {
             ...database.purchases.map(item => ({id: `product-purchase-${item.id}`, source_id: item.id, date: item.date, direction: 'expense', type: item.type === 'Packaging' ? 'Закупівля пакування' : 'Закупівля товару', description: item.name, counterparty: item.supplier_name || '', amount: Number(item.total_price || 0)})),
             ...database.investments.map(item => ({id: `other-expense-${item.id}`, source_id: item.id, date: item.date, direction: 'expense', type: 'Інші витрати', description: item.type_name, counterparty: item.supplier || '', amount: Number(item.cost || 0)})),
             ...database.sales.map(item => ({id: `product-sale-${item.id}`, source_id: item.id, date: item.sale_date, direction: 'income', type: 'Продаж товару', description: item.product_name, counterparty: item.customer_name || '', amount: Number(item.selling_total_price || 0)})),
-            ...database.returns.map(item => ({id: `customer-return-${item.id}`, source_id: item.id, date: item.return_date, direction: 'expense', type: 'Повернення клієнту', description: item.product_name, counterparty: item.customer_name || '', amount: Number(item.return_amount || 0)}))
+            ...database.returns.map(item => ({id: `customer-return-${item.id}`, source_id: item.id, date: item.return_date, direction: 'expense', type: 'Повернення клієнту', description: item.product_name, counterparty: item.customer_name || '', amount: Number(item.return_amount || 0)})),
+            ...(database.giftSetSales || []).map(item => ({id: `gift-set-sale-${item.id}`, source_id: item.id, date: item.sold_at, direction: 'income', type: 'Продаж гіфтбоксу', description: database.giftSets.find(gift => gift.id === item.gift_set_id)?.name || 'Гіфтбокс', counterparty: item.customer_name || '', amount: Number(item.sold_price || 0)}))
         ].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     } else if (method === 'get' && path.startsWith('/statistics/')) {
         const grouped = (records: Record<string, unknown>[], dateField: string) => {
@@ -169,10 +170,16 @@ const adapter: AxiosAdapter = async config => {
     } else if (method === 'post' && path === '/add_new_category') {
         const category = {id: nextId(database.categories), name: String(body.name || '')}; database.categories.push(category); persist(); data = {message: 'Категорію додано', category};
     } else if (method === 'get' && path.startsWith('/materials/') && path.endsWith('/history')) {
-        data = {packaging_material_id: id, purchase_history: [], sales_history: [], stock_history: []};
+        const material = database.packagingMaterials.find(item => item.id === id);
+        data = {
+            packaging_material_id: id,
+            purchase_history: database.purchases.filter(item => item.type === 'Packaging' && item.name === material?.name).map(item => ({id: item.id, material_id: id, supplier_id: item.supplier_id, quantity_purchased: item.quantity, purchase_price_per_unit: item.price_per_item, purchase_total_price: item.total_price, purchase_date: item.date})),
+            sales_history: [],
+            stock_history: []
+        };
     } else if (method === 'get' && path.startsWith('/packaging-supplier/') && path.endsWith('/purchase-history')) {
         const supplier = database.packagingSuppliers.find(item => item.id === id);
-        data = {supplier, purchase_history: [], materials: database.packagingMaterials.filter(item => item.packaging_material_supplier_id === id).map(item => ({id: item.id, name: item.name}))};
+        data = {supplier, purchase_history: database.purchases.filter(item => item.type === 'Packaging' && item.supplier_id === id).map(item => ({material: item.name, quantity_purchased: item.quantity, purchase_date: item.date, purchase_price_per_unit: item.price_per_item, purchase_total_price: item.total_price})), materials: database.packagingMaterials.filter(item => item.packaging_material_supplier_id === id).map(item => ({id: item.id, name: item.name}))};
     } else if (method === 'post' && path === '/add_new_packaging_suppliers') {
         const supplier = {...body, id: nextId(database.packagingSuppliers), is_active: true};
         database.packagingSuppliers.push(supplier); database.suppliers.push({...supplier, type: 'packaging'}); persist(); data = supplier;
@@ -320,8 +327,27 @@ const adapter: AxiosAdapter = async config => {
             persist(); data = {message: 'Gift set sold successfully', sales_record: sale};
         } else data = {error: 'Gift set or customer not found'};
     } else if (method === 'post' && path.startsWith('/sales/') && path.endsWith('/returns')) {
-        const returned = {id: nextId(database.returns), sale_id: id, product_id: null, product_name: '', customer_id: null, customer_name: '', quantity_returned: Number(body.quantity), return_amount: 0, return_reason: body.reason, return_date: new Date().toISOString().slice(0, 10), returned_by_username: 'demo.manager'};
-        database.returns.push(returned); persist(); data = {message: 'Повернення створено', return: returned, available_quantity: 0, remaining_return_quantity: 0};
+        const sale = database.sales.find(item => item.id === id);
+        const product = sale ? database.products.find(item => item.id === sale.product_id) : undefined;
+        const quantity = Number(body.quantity);
+        const previousReturns = database.returns.filter(item => item.sale_id === id);
+        const alreadyReturned = previousReturns.reduce((sum, item) => sum + Number(item.quantity_returned || 0), 0);
+        const remaining = Number(sale?.quantity_sold || 0) - alreadyReturned;
+        if (!sale || !product) data = {error: 'Продаж або товар не знайдено'};
+        else if (!Number.isInteger(quantity) || quantity <= 0) data = {error: 'Кількість повернення має бути додатним цілим числом'};
+        else if (quantity > remaining) data = {error: `Перевищено залишок для повернення (${remaining})`};
+        else {
+            const refunded = previousReturns.reduce((sum, item) => sum + Number(item.return_amount || 0), 0);
+            const remainingAmount = Number(sale.selling_total_price || 0) - refunded;
+            const returnAmount = Number((quantity === remaining ? remainingAmount : remainingAmount * quantity / remaining).toFixed(2));
+            const returned = {id: nextId(database.returns), sale_id: id, product_id: product.id, product_name: product.name, customer_id: sale.customer_id, customer_name: sale.customer_name, quantity_returned: quantity, return_amount: returnAmount, return_reason: String(body.reason || '').trim() || null, return_date: new Date().toISOString(), returned_by_username: 'demo.manager'};
+            product.available_quantity = Number(product.available_quantity || 0) + quantity;
+            product.sold_quantity = Math.max(0, Number(product.sold_quantity || 0) - quantity);
+            product.selling_quantity = Math.max(0, Number(product.selling_quantity || 0) - quantity);
+            product.selling_total_price = Math.max(0, Number(product.selling_total_price || 0) - returnAmount);
+            database.returns.push(returned); persist();
+            data = {message: 'Customer return recorded successfully', return: returned, available_quantity: product.available_quantity, remaining_return_quantity: remaining - quantity};
+        }
     }
 
     return response(config, data);
