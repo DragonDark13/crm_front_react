@@ -70,9 +70,9 @@ const OrdersPage: React.FC = () => {
 
     const renderStatusSelect = (order: OrderRecord, view: "desktop" | "mobile") => (
         <FormControl size="small" fullWidth>
-            <InputLabel id={\`order-status-\${order.id}\`}>Статус замовлення</InputLabel>
+            <InputLabel id={`order-status-${view}-${order.id}`}>Статус замовлення</InputLabel>
             <Select
-                labelId={\`order-status-\${order.id}\`}
+                labelId={`order-status-${view}-${order.id}`}
                 label="Статус замовлення"
                 value={order.status}
                 disabled={updatingId === order.id || order.available_transitions.length === 0}
@@ -119,7 +119,7 @@ const OrdersPage: React.FC = () => {
                                             <TableCell>
                                                 <Typography fontWeight={600}>№{order.id}</Typography>
                                                 <Typography variant="caption" color="text.secondary">
-                                                    {order.items.map(item => \`\${item.product_name} × \${item.quantity}\`).join(", ")}
+                                                    {order.items.map(item => `${item.product_name} × ${item.quantity}`).join(", ")}
                                                 </Typography>
                                             </TableCell>
                                             <TableCell>
@@ -185,7 +185,7 @@ const OrdersPage: React.FC = () => {
                                                                     {item.product_name}
                                                                 </Typography>
                                                                 <Typography variant="caption" color="text.secondary">
-                                                                    {item.article ? \`Артикул: \${item.article} · \` : ""}{item.quantity} шт. × {formatCurrency(item.unit_price)}
+                                                                    {item.article ? `Артикул: ${item.article} · ` : ""}{item.quantity} шт. × {formatCurrency(item.unit_price)}
                                                                 </Typography>
                                                             </Box>
                                                             <Typography variant="body2" fontWeight={600} sx={{whiteSpace: "nowrap"}}>
