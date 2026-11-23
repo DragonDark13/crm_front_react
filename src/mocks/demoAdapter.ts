@@ -129,6 +129,45 @@ const adapter: AxiosAdapter = async config => {
         database.customers = database.customers.filter(item => item.id !== id); persist();
     } else if (method === 'post' && path === '/add_new_category') {
         const category = {id: nextId(database.categories), name: String(body.name || '')}; database.categories.push(category); persist(); data = {message: 'Категорію додано', category};
+    } else if (method === 'get' && path.startsWith('/materials/') && path.endsWith('/history')) {
+        data = {packaging_material_id: id, purchase_history: [], sales_history: [], stock_history: []};
+    } else if (method === 'get' && path.startsWith('/packaging-supplier/') && path.endsWith('/purchase-history')) {
+        const supplier = database.packagingSuppliers.find(item => item.id === id);
+        data = {supplier, purchase_history: [], materials: database.packagingMaterials.filter(item => item.packaging_material_supplier_id === id).map(item => ({id: item.id, name: item.name}))};
+    } else if (method === 'post' && path === '/add_new_packaging_suppliers') {
+        const supplier = {...body, id: nextId(database.packagingSuppliers), is_active: true};
+        database.packagingSuppliers.push(supplier); database.suppliers.push({...supplier, type: 'packaging'}); persist(); data = supplier;
+    } else if (method === 'put' && path.startsWith('/packaging_supplier_edit/')) {
+        database.packagingSuppliers = database.packagingSuppliers.map(item => item.id === id ? {...item, ...body} : item);
+        database.suppliers = database.suppliers.map(item => item.id === id && item.type === 'packaging' ? {...item, ...body} : item); persist();
+    } else if (method === 'delete' && path.startsWith('/delete_packaging_supplier/')) {
+        database.packagingSuppliers = database.packagingSuppliers.filter(item => item.id !== id);
+        database.suppliers = database.suppliers.filter(item => !(item.id === id && item.type === 'packaging')); persist();
+    } else if (method === 'delete' && path === '/delete_all_materials') {
+        database.packagingMaterials = []; persist();
+    } else if (method === 'delete' && path === '/delete_all_products') {
+        database.products = []; persist();
+    } else if (method === 'post' && path === '/update_packaging_status') {
+        const material = database.packagingMaterials.find(item => item.id === Number(body.material_id));
+        if (material) material.available_quantity = Math.max(0, Number(material.available_quantity) - Number(body.quantity_used || 0));
+        persist(); data = {message: 'Залишок пакування оновлено', material};
+    } else if (method === 'post' && path === '/purchase_current_packaging') {
+        const material = database.packagingMaterials.find(item => item.id === Number(body.material_id));
+        if (material) {
+            material.available_quantity = Number(material.available_quantity) + Number(body.quantity || 0);
+            material.total_quantity = Number(material.total_quantity) + Number(body.quantity || 0);
+            material.total_purchase_cost = Number(material.total_purchase_cost) + Number(body.total_purchase_cost || 0);
+        }
+        persist(); data = {message: 'Пакування закуплено', material};
+    } else if (method === 'post' && path.startsWith('/product/') && path.endsWith('/inventory')) {
+        const product = database.products.find(item => item.id === id);
+        const before = Number(product?.available_quantity || 0);
+        if (product) { product.available_quantity = Number(body.actual_quantity || 0); product.total_quantity = Number(product.total_quantity || 0) + Number(body.actual_quantity || 0) - before; }
+        persist(); data = {message: 'Інвентаризацію виконано', product_id: id, quantity_before: before, quantity_after: Number(body.actual_quantity || 0), change_amount: Number(body.actual_quantity || 0) - before, deleted_gift_sets: [], available_quantity: Number(body.actual_quantity || 0), reserved_quantity: 0, stock_history: {}};
+    } else if (method === 'delete' && path.startsWith('/delete-history/')) {
+        data = {message: 'Демо-запис історії видалено'};
+    } else if (method === 'post' && path === '/reset-database') {
+        database = createInitialDemoDatabase(); persist(); data = {message: 'Демо-дані відновлено'};
     } else if (method === 'post' && path === '/create_new_investments') {
         const investment = {...body, id: nextId(database.investments)}; database.investments.push(investment); persist();
     } else if (method === 'delete' && path.startsWith('/delete_investments/')) {
