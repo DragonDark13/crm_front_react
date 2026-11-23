@@ -46,6 +46,26 @@ describe('ProductInventoryModal', () => {
         expect(inventoryDateInput().value).toBe(expectedDate);
     });
 
+    it('disables inventory submission when the physical quantity is unchanged', () => {
+        const onSubmit = renderModal();
+
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
+        fireEvent.click(submitButton());
+        expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('disables inventory submission when the quantity is changed and then restored', () => {
+        const onSubmit = renderModal();
+        fireEvent.change(quantityInput(), {target: {value: '13'}});
+
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(false);
+
+        fireEvent.change(quantityInput(), {target: {value: '12'}});
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
+        fireEvent.click(submitButton());
+        expect(onSubmit).not.toHaveBeenCalled();
+    });
+
     it('submits the selected reconciliation date', () => {
         const onSubmit = renderModal();
         fireEvent.change(inventoryDateInput(), {target: {value: '2026-11-20'}});
