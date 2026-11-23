@@ -5,7 +5,7 @@ import {
     DialogActions,
     Grid,
     Typography,
-    Collapse, Paper, Divider, Autocomplete, Accordion, AccordionSummary, AccordionDetails
+    Box, Collapse, Paper, Autocomplete, Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import {useEffect, useState} from "react";
@@ -36,8 +36,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddButton from "../../../Buttons/AddButton";
 import DateFieldCustom from "../../../FormComponents/DateFieldCustom";
 import PackagingSelector from "./PackagingSelector";
-import {useTheme} from "@mui/material/styles";
-import {Box} from "@mui/material";
 import CancelButton from "../../../Buttons/CancelButton";
 //TODO check create customer
 //TODO choise added customer create interface
@@ -58,7 +56,6 @@ const SaleProductModal = ({
     const {packagingMaterials, fetchPackagingOptions} = usePackaging();
     const [expanded, setExpanded] = useState(false);
     const {showSnackbarMessage} = useSnackbarMessage()
-    const theme = useTheme();
 
 
 // Функція для перемикання стану розгортання
