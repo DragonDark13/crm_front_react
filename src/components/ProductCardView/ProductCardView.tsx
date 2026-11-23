@@ -10,7 +10,6 @@ import SellIcon from '@mui/icons-material/Sell';
 import HistoryIcon from '@mui/icons-material/History';
 import InventoryIcon from '@mui/icons-material/Inventory2';
 import {IProduct} from "../../utils/types";
-import clsx from "clsx";
 
 interface IProductTableProps {
     filteredProducts: IProduct[];
@@ -66,7 +65,7 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                             : lowQuantity
                                 ? 'Малий залишок'
                                 : 'В наявності';
-                        const stockColor = outOfStock || lowQuantity ? 'warning' : 'success';
+                        const stockColor = outOfStock ? 'error' : lowQuantity ? 'warning' : 'success';
                         return (
                             <Grid item xs={12} sm={6} md={4}
                                   key={`${product.id}${index}${product.purchase_total_price}`}>
@@ -189,6 +188,15 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                             </Grid>
                         )
                     })}
+                {filteredAndSearchedProducts.length === 0 && (
+                    <Grid item xs={12}>
+                        <Box sx={{py: 5, textAlign: 'center'}}>
+                            <Typography color="text.secondary">
+                                Товарів не знайдено. Зміни пошуковий запит або фільтри.
+                            </Typography>
+                        </Box>
+                    </Grid>
+                )}
             </Grid>
         </React.Fragment>
     );
