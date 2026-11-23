@@ -1,9 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
     Button,
     Table,
     TableBody,
@@ -47,6 +43,7 @@ import RenderHeaderCell from "../../_elements/RenderHeaderCell";
 import PurchasesTableTypeProductCell from "../PurchasesPage/PurchasesTableTypeProductCell";
 import SupplierPurchaseHistoryTable from "./SupplierPurchaseHistoryTable";
 import {canDeleteSupplier} from "./canDeleteSupplier";
+import CustomDialog from "../../dialogs/CustomDialog/CustomDialog";
 
 type ICurrentSupplier = Omit<ISupplierFull, 'id'> & {id: number};
 
@@ -498,8 +495,7 @@ const SupplierPage: React.FC = () => {
                 supplier={currentSupplier}
             />}
 
-            <Dialog open={confirmDialogOpen} onClose={() => setConfirmDialogOpen(false)}>
-                <DialogTitle>Підтвердження видалення</DialogTitle>
+            <CustomDialog title="Підтвердження видалення" open={confirmDialogOpen} handleClose={() => setConfirmDialogOpen(false)} maxWidth="xs">
                 <DialogContent>
                     <Typography>
                         Ви дійсно хочете видалити постачальника?
@@ -515,7 +511,7 @@ const SupplierPage: React.FC = () => {
                         Видалити
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </CustomDialog>
         </div>
     );
 };
