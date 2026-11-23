@@ -112,12 +112,11 @@ const SaleProductModal = ({
 
     const validateFields = () => {
         const newErrors = {
-            customer: saleData.customer === '' ? 'Customer name is required' : '',
-            sale_date: saleData.sale_date === '' ? 'Sale date is required' : '',
-            price_per_item: saleData.selling_price_per_item <= 0 ? 'Price per item must be greater than 0' : '',
-            quantity: saleData.quantity <= 0 || saleData.quantity > quantityOnStock ? 'Quantity must be greater than 0' : '',
-            packaging: saleData.packaging_id !== '' && saleData.packaging_quantity < 1 ? 'Quantity must be greater' +
-                ' than 0' : '',
+            customer: saleData.customer === '' ? 'Обери покупця' : '',
+            sale_date: saleData.sale_date === '' ? 'Вкажи дату продажу' : '',
+            price_per_item: saleData.selling_price_per_item <= 0 ? 'Ціна продажу має бути більшою за нуль' : '',
+            quantity: saleData.quantity <= 0 || saleData.quantity > quantityOnStock ? `Кількість має бути від 1 до ${quantityOnStock} шт.` : '',
+            packaging: saleData.packaging_id !== '' && saleData.packaging_quantity < 1 ? 'Вкажи кількість пакування більше нуля' : '',
         };
 
         setErrors(newErrors);
@@ -246,12 +245,15 @@ const SaleProductModal = ({
                     <DialogContent>
                         <Grid container>
                             <Grid item xs={12}>
-                                <Typography>Назва товару:
+                                <Typography>Товар:
                                     <Typography fontWeight={"bold"} variant={"subtitle1"} component={'span'}>
                                         {nameProduct}
                                     </Typography>
                                     {quantityOnStock < 1 &&
                                     <Typography color={"error"}> Товару немає в наявнсті на складі</Typography>}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{mt: 0.5, mb: 1.5}}>
+                                    Доступно для продажу: {quantityOnStock} шт.
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -351,14 +353,14 @@ const SaleProductModal = ({
                             <Grid item xs={12} sm={6}>
                                 <Paper sx={{padding: 2, backgroundColor: '#dfdfdf'}}>
                                     <Typography variant="h6" sx={{color: 'green'}}>
-                                        Чиста Вигода з продажу:
+                                        Орієнтовний прибуток:
                                         <span style={{fontWeight: 'bold', color: 'green'}}>{cleanProfit} грн.</span>
                                     </Typography>
                                     <Typography component={"div"} variant="body2" color="textSecondary">
                                         Розрахунок:
                                         <Collapse in={expanded}>
                                             <ul>
-                                                <li>Загальна сума продажу: <strong>{totalSalePrice} грн.</strong></li>
+                                                <li>Сума продажу: <strong>{totalSalePrice} грн.</strong></li>
                                                 <li>Ціна товару за
                                                     1шт: <strong>{roundToDecimalPlaces(totalSalePrice / saleData.quantity, 2)} грн.</strong>
                                                 </li>
@@ -423,7 +425,7 @@ const SaleProductModal = ({
                             // перевірку для активності
                             // кнопки
                         >
-                            Підтвердити продаж
+                            Зберегти продаж
                         </Button>
                     </DialogActions>
                 </React.Fragment>
