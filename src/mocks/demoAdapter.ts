@@ -381,7 +381,7 @@ const adapter: AxiosAdapter = async config => {
         const purchase = {
             id: nextId(database.purchases),
             product_id: product.id,
-            name: product.name,
+            name: String(product.name || ''),
             type: 'Product',
             date: String(body.created_date || new Date().toISOString().slice(0, 10)),
             categories: Array.isArray(body.category_ids) ? body.category_ids : [],
@@ -548,7 +548,7 @@ const adapter: AxiosAdapter = async config => {
             price_per_item: Number(body.purchase_price_per_unit || 0),
             total_price: totalCost,
             supplier_id: body.supplier_id ?? material.packaging_material_supplier_id ?? null,
-            supplier_name: supplier?.name || material.supplier?.name || '',
+            supplier_name: supplier?.name || (material.supplier as Record<string, unknown> | null)?.name || '',
             supplier_is_active: supplier?.is_active !== false
         };
         database.purchases.push(purchase);
@@ -759,7 +759,7 @@ const adapter: AxiosAdapter = async config => {
         database.purchases.push({
             id: nextId(database.purchases),
             product_id: id,
-            name: product.name,
+            name: String(product.name || ''),
             type: 'Product',
             date: String(body.purchase_date || new Date().toISOString().slice(0, 10)),
             categories: product.category_ids || [],
@@ -770,7 +770,7 @@ const adapter: AxiosAdapter = async config => {
             supplier_name: supplier?.name || '',
             supplier_is_active: supplier?.is_active !== false
         });
-        addProductStockHistory(id, 'purchase', quantity, before, product.available_quantity);
+        addProductStockHistory(id, 'purchase', quantity, before, Number(product.available_quantity));
         addProductAuditHistory(id, 'purchase', 'available_quantity', before, product.available_quantity);
         addProductAuditHistory(id, 'purchase', 'purchase_price_per_item', null, pricePerItem);
         persist();
@@ -829,7 +829,7 @@ const adapter: AxiosAdapter = async config => {
                 sale_date: sale.sale_date
             });
         }
-        addProductStockHistory(id, 'sale', -quantity, before, product.available_quantity);
+        addProductStockHistory(id, 'sale', -quantity, before, Number(product.available_quantity));
         addProductAuditHistory(id, 'sale', 'available_quantity', before, product.available_quantity);
         addProductAuditHistory(id, 'sale', 'sold_quantity', Number(product.sold_quantity) - quantity, product.sold_quantity);
         persist();
@@ -897,7 +897,7 @@ const adapter: AxiosAdapter = async config => {
             product.selling_quantity = Math.max(0, Number(product.selling_quantity || 0) - quantity);
             product.selling_total_price = Math.max(0, Number(product.selling_total_price || 0) - returnAmount);
             database.returns.push(returned);
-            addProductStockHistory(Number(product.id), 'return', quantity, before, product.available_quantity, returned.return_reason);
+            addProductStockHistory(Number(product.id), 'return', quantity, before, Number(product.available_quantity), returned.return_reason);
             addProductAuditHistory(Number(product.id), 'return', 'available_quantity', before, product.available_quantity, returned.return_reason);
             persist();
             data = {message: 'Customer return recorded successfully', return: returned, available_quantity: product.available_quantity, remaining_return_quantity: remaining - quantity};
