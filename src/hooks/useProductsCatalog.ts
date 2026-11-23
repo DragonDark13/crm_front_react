@@ -18,6 +18,7 @@ import {addNewCategory} from "../api/_categories";
 import {exportToExcel} from "../api/api";
 import {useNewProduct} from "./useNewProduct";
 import {runCrudAction} from "../utils/runCrudAction";
+import {matchesProductSearch} from "../utils/productSearch";
 
 interface IUseProductsCatalogParams {
     products: IProduct[];
@@ -503,9 +504,8 @@ export const useProductsCatalog = ({
     // }
 
     useEffect(() => {
-        const normalizedSearchTerm = searchTerm.toLowerCase();
         const searchedProducts = filteredProducts.filter(product =>
-            (product.name ?? '').toLowerCase().includes(normalizedSearchTerm)
+            matchesProductSearch(product, searchTerm)
         );
 
         setFilteredAndSearchedProducts(searchedProducts);
