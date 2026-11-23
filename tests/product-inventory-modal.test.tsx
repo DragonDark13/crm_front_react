@@ -29,6 +29,10 @@ const quantityInput = () => screen.getByRole('textbox', {
 }) as HTMLInputElement;
 
 const submitButton = () => screen.getByRole('button', {name: 'Провести інвентаризацію'});
+const chooseReason = (reason: string) => {
+    fireEvent.mouseDown(screen.getByRole('combobox', {name: 'Що сталося з товаром?'}));
+    fireEvent.click(screen.getByRole('option', {name: reason}));
+};
 
 afterEach(() => cleanup());
 
@@ -48,7 +52,7 @@ describe('ProductInventoryModal', () => {
         fireEvent.change(quantityInput(), {target: {value: '0'}});
 
         expect(quantityInput().value).toBe('0');
-        expect(screen.getAllByRole('button')[1]).toBeDisabled();
+        expect((screen.getAllByRole('button')[1] as HTMLButtonElement).disabled).toBe(true);
     });
 
     it('accepts manually entered whole numbers', () => {
@@ -66,7 +70,7 @@ describe('ProductInventoryModal', () => {
             fireEvent.change(quantityInput(), {target: {value}});
 
             expect(quantityInput().value).toBe(value);
-            expect(submitButton()).toBeDisabled();
+            expect((submitButton() as HTMLButtonElement).disabled).toBe(true);
             expect(onSubmit).not.toHaveBeenCalled();
         }
     );
@@ -84,9 +88,7 @@ describe('ProductInventoryModal', () => {
         'submits the selected reason: %s',
         (reason) => {
             const onSubmit = renderModal();
-            fireEvent.change(screen.getByRole('combobox', {name: 'Що сталося з товаром?'}), {
-                target: {value: reason}
-            });
+            chooseReason(reason);
             fireEvent.click(submitButton());
 
             expect(onSubmit).toHaveBeenCalledWith(12, reason);
@@ -95,9 +97,7 @@ describe('ProductInventoryModal', () => {
 
     it('requires a description when the reason is "Інше"', () => {
         const onSubmit = renderModal();
-        fireEvent.change(screen.getByRole('combobox', {name: 'Що сталося з товаром?'}), {
-            target: {value: 'Інше'}
-        });
+        chooseReason('Інше');
 
         expect(screen.getByRole('textbox', {name: 'Опиши, що сталося'})).toBeTruthy();
         expect(submitButton()).toBeDisabled();
@@ -106,7 +106,7 @@ describe('ProductInventoryModal', () => {
         fireEvent.change(screen.getByRole('textbox', {name: 'Опиши, що сталося'}), {
             target: {value: 'Пошкоджено'}
         });
-        expect(submitButton()).toBeEnabled();
+        expect((submitButton() as HTMLButtonElement).disabled).toBe(false);
     });
 
     it('sends the selected reason together with the additional note', () => {
