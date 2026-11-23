@@ -9,6 +9,7 @@ export interface DemoDatabase {
     giftSets: Record<string, unknown>[];
     purchases: Record<string, unknown>[];
     sales: Record<string, unknown>[];
+    orders: Record<string, unknown>[];
     returns: Record<string, unknown>[];
     giftSetSales: Record<string, unknown>[];
     productStockHistory: Record<string, unknown>[];
@@ -68,6 +69,7 @@ export const createInitialDemoDatabase = (): DemoDatabase => {
             {id: 2, product_id: 2, product_name: products[1].name, customer_id: 2, customer_name: 'Максим Петренко', quantity_sold: 3, selling_price_per_item: 120, selling_total_price: 360, sale_date: '2026-11-10', profit: 210},
             {id: 3, product_id: 3, product_name: products[2].name, packaging_material_id: 1, packaging_quantity: 1, total_packaging_cost: 18, customer_id: 3, customer_name: 'Ірина Мельник', quantity_sold: 1, selling_price_per_item: 250, selling_total_price: 250, sale_date: '2026-11-16', profit: 100}
         ],
+        orders: [{id: 1, customer_id: 2, customer_name: 'Максим Петренко', customer_phone: '+380671010102', customer_email: 'max@example.test', delivery_address: 'Полтава, Україна', status: 'new', status_label: 'Нове', total_amount: 240, notes: 'Демонстраційне замовлення', created_at: '2026-11-22T10:30:00', items: [{id: 1, product_id: 2, product_name: products[1].name, article: products[1].article, quantity: 2, unit_price: 120, line_total: 240}], status_history: [{id: 1, from_status: null, to_status: 'new', changed_at: '2026-11-22T10:30:00', changed_by_username: null, note: 'Демонстраційне замовлення'}], available_transitions: ['confirmed', 'cancelled']}],
         returns: [
             {id: 1, sale_id: 2, product_id: 2, product_name: products[1].name, customer_id: 2, customer_name: 'Максим Петренко', quantity_returned: 1, return_amount: 120, return_reason: 'Не підійшов дизайн', return_date: '2026-11-12', returned_by_username: 'demo.manager'}
         ],
