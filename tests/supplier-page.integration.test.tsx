@@ -70,6 +70,11 @@ const getSupplierRow = (name: string) => {
     return supplierName!.closest('tr') as HTMLElement;
 };
 
+const expectSupplierHistory = async (text: string) => {
+    const histories = await screen.findAllByTestId('supplier-purchase-history');
+    expect(histories.some(history => history.textContent?.includes(text))).toBe(true);
+};
+
 const renderSupplierPage = (isAuthenticated = true, supplierList = [supplier]) => {
     vi.mocked(useSuppliers).mockReturnValue({
         suppliers: supplierList,
@@ -243,7 +248,7 @@ describe('SupplierPage integration', () => {
         fireEvent.click(within(supplierRow).getAllByRole('button')[1]);
 
         await waitFor(() => expect(mocks.fetchGetSupplierPurchaseHistory).toHaveBeenCalledWith(12));
-        expect((await screen.findByTestId('supplier-purchase-history')).textContent).toContain('product:12:Test product');
+        await expectSupplierHistory('product:12:Test product');
     });
 
     it('delegates supplier activation to the provider with the selected supplier type', () => {
@@ -260,11 +265,11 @@ describe('SupplierPage integration', () => {
 
         const productRow = getSupplierRow(supplier.name);
         fireEvent.click(within(productRow).getAllByRole('button')[1]);
-        expect(await screen.findByText('product:12:Test product')).toBeTruthy();
+        await expectSupplierHistory('product:12:Test product');
 
         const packagingRow = getSupplierRow(packagingSupplier.name);
         fireEvent.click(within(packagingRow).getAllByRole('button')[1]);
-        expect(await screen.findByText('packaging:12:Packaging history')).toBeTruthy();
+        await expectSupplierHistory('packaging:12:Packaging history');
         expect(mocks.fetchGetPackagingSupplierPurchaseHistory).toHaveBeenCalledWith(12);
     });
 
@@ -289,10 +294,13 @@ describe('SupplierPage integration', () => {
         fireEvent.click(within(secondRow).getAllByRole('button')[1]);
 
         resolveNewer({purchase_history: [{product: 'Newest history'}], products: []});
-        expect(await screen.findByText('product:14:Newest history')).toBeTruthy();
+        await expectSupplierHistory('product:14:Newest history');
         resolveOlder({purchase_history: [{product: 'Stale history'}], products: []});
 
-        await waitFor(() => expect(screen.getByText('product:14:Newest history')).toBeTruthy());
+        await waitFor(async () => {
+            const histories = screen.getAllByTestId('supplier-purchase-history');
+            expect(histories.some(history => history.textContent?.includes('product:14:Newest history'))).toBe(true);
+        });
         expect(screen.queryByText(/Stale history/)).toBeNull();
     });
 
@@ -306,10 +314,10 @@ describe('SupplierPage integration', () => {
 
         const supplierRow = getSupplierRow(supplier.name);
         fireEvent.click(within(supplierRow).getAllByRole('button')[1]);
-        expect(screen.getByText('Завантаження історії постачальника...')).toBeTruthy();
+        expect(screen.getAllByText('Завантаження історії постачальника...').length).toBeGreaterThan(0);
 
         rejectRequest(new Error('History request failed'));
-        expect(await screen.findByText('Не вдалося завантажити історію постачальника.')).toBeTruthy();
+        expect((await screen.findAllByText('Не вдалося завантажити історію постачальника.')).length).toBeGreaterThan(0);
         expect(mocks.showSnackbarMessage).toHaveBeenCalledWith(
             'Не вдалося завантажити історію постачальника.',
             'error'
