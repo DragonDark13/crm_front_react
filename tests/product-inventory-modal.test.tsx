@@ -68,10 +68,11 @@ describe('ProductInventoryModal', () => {
 
     it('submits the selected reconciliation date', () => {
         const onSubmit = renderModal();
+        fireEvent.change(quantityInput(), {target: {value: '13'}});
         fireEvent.change(inventoryDateInput(), {target: {value: '2026-11-20'}});
         fireEvent.click(submitButton());
 
-        expect(onSubmit).toHaveBeenCalledWith(12, 'Невідомо', '2026-11-20');
+        expect(onSubmit).toHaveBeenCalledWith(13, 'Невідомо', '2026-11-20');
     });
 
     it('requires a reconciliation date', () => {
@@ -133,15 +134,17 @@ describe('ProductInventoryModal', () => {
         'submits the selected reason: %s',
         (reason) => {
             const onSubmit = renderModal();
+            fireEvent.change(quantityInput(), {target: {value: '13'}});
             chooseReason(reason);
             fireEvent.click(submitButton());
 
-            expect(onSubmit).toHaveBeenCalledWith(12, reason, expect.any(String));
+            expect(onSubmit).toHaveBeenCalledWith(13, reason, expect.any(String));
         }
     );
 
     it('requires a description when the reason is "Інше"', () => {
         const onSubmit = renderModal();
+        fireEvent.change(quantityInput(), {target: {value: '13'}});
         chooseReason('Інше');
 
         expect(screen.getByRole('textbox', {name: 'Опиши, що сталося'})).toBeTruthy();
@@ -156,23 +159,25 @@ describe('ProductInventoryModal', () => {
 
     it('submits the description when the reason is "Інше"', () => {
         const onSubmit = renderModal();
+        fireEvent.change(quantityInput(), {target: {value: '13'}});
         chooseReason('Інше');
         fireEvent.change(screen.getByRole('textbox', {name: 'Опиши, що сталося'}), {
             target: {value: 'Пошкоджено'}
         });
         fireEvent.click(submitButton());
 
-        expect(onSubmit).toHaveBeenCalledWith(12, 'Інше: Пошкоджено', expect.any(String));
+        expect(onSubmit).toHaveBeenCalledWith(13, 'Інше: Пошкоджено', expect.any(String));
     });
 
     it('sends the selected reason together with the additional note', () => {
         const onSubmit = renderModal();
+        fireEvent.change(quantityInput(), {target: {value: '13'}});
         fireEvent.change(screen.getByRole('textbox', {name: 'Додаткова примітка'}), {
             target: {value: 'Перевірено під час перерахунку'}
         });
         fireEvent.click(submitButton());
 
-        expect(onSubmit).toHaveBeenCalledWith(12, 'Невідомо — Перевірено під час перерахунку', expect.any(String));
+        expect(onSubmit).toHaveBeenCalledWith(13, 'Невідомо — Перевірено під час перерахунку', expect.any(String));
     });
 
     it('prevents repeated submissions while the first request is pending', async () => {
@@ -181,6 +186,7 @@ describe('ProductInventoryModal', () => {
             resolveSubmit = resolve;
         }));
         renderModal(onSubmit);
+        fireEvent.change(quantityInput(), {target: {value: '13'}});
 
         fireEvent.click(submitButton());
         fireEvent.click(submitButton());
