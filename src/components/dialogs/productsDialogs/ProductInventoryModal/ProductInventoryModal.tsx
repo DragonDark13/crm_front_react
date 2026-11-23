@@ -52,7 +52,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     };
 
     const incrementQuantity = () => {
-        if (Number(actualQuantity) < 1000) {
+        if (Number(actualQuantity) < Number.MAX_SAFE_INTEGER) {
             setActualQuantity(String(Number(actualQuantity) + 1));
         }
     };
@@ -111,6 +111,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                     onIncrement={incrementQuantity}
                     onDecrement={decrementQuantity}
                     min={0}
+                    max={Number.MAX_SAFE_INTEGER}
                     sx={{mt: 2}}
                 />
                 <Typography sx={{mt: 1}}>
