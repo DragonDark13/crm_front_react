@@ -18,7 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import './scss/main.scss';
 
-const Dashboard = lazy(() => import("./components/Dachboard/Dashboard"));
+const ReportsAnalytics = lazy(() => import("./components/pages/ReportsAnalytics"));
 const HomePage = lazy(() => import("./components/pages/HomePage"));
 const ProductsCatalog = lazy(() => import("./components/pages/ProductsCatalog"));
 const ClientsManagement = lazy(() => import("./components/pages/ClientsManagement"));
@@ -398,7 +398,7 @@ function App() {
                             <Route path="/crm_front_react/financial-journal" element={<ProtectedRoute allowedRoles={['manager']} element={<FinancialJournalPage/>}/>}/>
                             <Route path="/crm_front_react/import-purchases" element={<ProtectedRoute allowedRoles={['manager']} element={<ProductPurchaseImportPage/>}/>}/>
                             <Route path="/crm_front_react/returns" element={<ProtectedRoute allowedRoles={['manager']} element={<CustomerReturnsPage/>}/>}/>
-                            <Route path="/crm_front_react/analytics" element={<ProtectedRoute allowedRoles={['manager']} element={<Dashboard/>}/>}/>
+                            <Route path="/crm_front_react/analytics" element={<ProtectedRoute allowedRoles={['manager']} element={<ReportsAnalytics/>}/>}/>
                             <Route path="/crm_front_react/packaging" element={<ProtectedRoute allowedRoles={['manager']} element={<PackagingMaterialList/>}/>}/>
                             <Route path="/crm_front_react/other-investments" element={<ProtectedRoute allowedRoles={['manager']} element={<InvestmentsPage/>}/>}/>
                             <Route path="/crm_front_react/suppliers" element={<ProtectedRoute allowedRoles={['manager']} element={<SupplierPage/>}/>}/>
