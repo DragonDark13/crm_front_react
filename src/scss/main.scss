@@ -278,7 +278,7 @@ body {
 @media (max-width: 700px) {
   .crm-app-content {
     margin-left: 0 !important;
-    padding: 72px 16px 90px !important;
+    padding: 72px 16px calc(90px + env(safe-area-inset-bottom)) !important;
   }
 
   .crm-sidebar {
@@ -288,7 +288,7 @@ body {
     right: 0 !important;
     transform: none !important;
     width: 100% !important;
-    height: 68px !important;
+    height: calc(68px + env(safe-area-inset-bottom)) !important;
     box-sizing: border-box;
     padding: 5px 8px max(5px, env(safe-area-inset-bottom)) !important;
     display: flex;
