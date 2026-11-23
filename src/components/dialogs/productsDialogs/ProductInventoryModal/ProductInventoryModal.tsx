@@ -3,6 +3,10 @@ import {
     Button,
     DialogActions,
     DialogContent,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
     TextField,
     Typography
 } from "@mui/material";
@@ -16,6 +20,8 @@ interface ProductInventoryModalProps {
     onSubmit: (actualQuantity: number, reason: string) => Promise<void>;
 }
 
+const inventoryReasonOptions = ["Продано", "Докуплено", "Втрачено", "Невідомо", "Інше"];
+
 const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     product,
     open,
@@ -25,12 +31,16 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     const reservedQuantity = product.reserved_quantity ?? 0;
     const physicalQuantity = product.available_quantity + reservedQuantity;
     const [actualQuantity, setActualQuantity] = useState(String(physicalQuantity));
+    const [reasonType, setReasonType] = useState("Невідомо");
+    const [otherReason, setOtherReason] = useState("");
     const [reason, setReason] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (open) {
             setActualQuantity(String(physicalQuantity));
+            setReasonType("Невідомо");
+            setOtherReason("");
             setReason("");
         }
     }, [open, physicalQuantity]);
@@ -38,10 +48,16 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     const handleSubmit = async () => {
         const quantity = Number(actualQuantity);
         if (!Number.isInteger(quantity) || quantity < 0) return;
+        if (reasonType === "Інше" && !otherReason.trim()) return;
+
+        const inventoryReason = [
+            reasonType === "Інше" ? `Інше: ${otherReason.trim()}` : reasonType,
+            reason.trim()
+        ].filter(Boolean).join(" — ");
 
         setIsSubmitting(true);
         try {
-            await onSubmit(quantity, reason);
+            await onSubmit(quantity, inventoryReason);
         } finally {
             setIsSubmitting(false);
         }
@@ -50,6 +66,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     const isValidQuantity = actualQuantity.trim() !== ""
         && Number.isInteger(Number(actualQuantity))
         && Number(actualQuantity) >= 0;
+    const isValidReason = reasonType !== "Інше" || otherReason.trim() !== "";
 
     return (
         <CustomDialog title="Інвентаризація товару" open={open} handleClose={isSubmitting ? () => undefined : onClose} fullWidth maxWidth="sm">
@@ -84,11 +101,37 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                         {isValidQuantity ? Number(actualQuantity) - physicalQuantity : "—"}
                     </strong>
                 </Typography>
+                <FormControl fullWidth sx={{mt: 2}}>
+                    <InputLabel id="inventory-reason-label">Що сталося з товаром?</InputLabel>
+                    <Select
+                        labelId="inventory-reason-label"
+                        value={reasonType}
+                        label="Що сталося з товаром?"
+                        onChange={(event) => {
+                            setReasonType(event.target.value);
+                            setOtherReason("");
+                        }}
+                    >
+                        {inventoryReasonOptions.map((option) => (
+                            <MenuItem key={option} value={option}>{option}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                {reasonType === "Інше" && (
+                    <TextField
+                        fullWidth
+                        required
+                        label="Опиши, що сталося"
+                        value={otherReason}
+                        onChange={(event) => setOtherReason(event.target.value)}
+                        sx={{mt: 2}}
+                    />
+                )}
                 <TextField
                     fullWidth
                     multiline
                     minRows={2}
-                    label="Причина / примітка"
+                    label="Додаткова примітка"
                     value={reason}
                     onChange={(event) => setReason(event.target.value)}
                     sx={{mt: 2}}
@@ -103,7 +146,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                 <Button
                     variant="contained"
                     onClick={handleSubmit}
-                    disabled={!isValidQuantity || isSubmitting}
+                    disabled={!isValidQuantity || !isValidReason || isSubmitting}
                 >
                     Провести інвентаризацію
                 </Button>
