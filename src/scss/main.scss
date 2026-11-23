@@ -519,3 +519,74 @@ body {
     display: none;
   }
 }
+
+
+/* Mobile dialog and form behavior shared by CustomDialog and remaining MUI dialogs. */
+@media (max-width: 700px) {
+  .MuiDialog-paper {
+    display: flex;
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+    max-height: calc(100dvh - 16px);
+    margin: 8px;
+  }
+
+  .MuiDialog-paperFullScreen {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    border-radius: 0 !important;
+  }
+
+  .MuiDialogTitle-root {
+    flex: 0 0 auto;
+    padding: 16px 56px 12px 16px;
+    font-size: 1.1rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .MuiDialogContent-root {
+    min-height: 0;
+    padding: 12px 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .MuiDialogContent-root .MuiGrid-item {
+    min-width: 0;
+  }
+
+  .MuiDialogContent-root .MuiFormControl-root,
+  .MuiDialogContent-root .MuiTextField-root,
+  .MuiDialogContent-root .MuiAutocomplete-root {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .MuiDialogContent-root .MuiInputBase-input {
+    font-size: 16px;
+  }
+
+  .MuiDialogActions-root {
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--crm-border);
+    background: var(--crm-surface);
+  }
+
+  .MuiDialogActions-root > .MuiButton-root {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 44px;
+    margin: 0;
+  }
+
+  .MuiDialogContent-root .MuiButton-root {
+    min-height: 44px;
+  }
+}
