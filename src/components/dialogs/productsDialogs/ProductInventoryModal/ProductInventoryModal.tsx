@@ -18,10 +18,18 @@ interface ProductInventoryModalProps {
     product: IProduct;
     open: boolean;
     onClose: () => void;
-    onSubmit: (actualQuantity: number, reason: string) => Promise<void>;
+    onSubmit: (actualQuantity: number, reason: string, inventoryDate: string) => Promise<void>;
 }
 
 const inventoryReasonOptions = ["Продано", "Докуплено", "Втрачено", "Невідомо", "Інше"];
+
+const getLocalDate = () => {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+};
 
 const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     product,
@@ -32,6 +40,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     const reservedQuantity = product.reserved_quantity ?? 0;
     const physicalQuantity = product.available_quantity + reservedQuantity;
     const [actualQuantity, setActualQuantity] = useState(String(physicalQuantity));
+    const [inventoryDate, setInventoryDate] = useState(getLocalDate());
     const [reasonType, setReasonType] = useState("Невідомо");
     const [otherReason, setOtherReason] = useState("");
     const [reason, setReason] = useState("");
@@ -41,6 +50,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
     useEffect(() => {
         if (open) {
             setActualQuantity(String(physicalQuantity));
+            setInventoryDate(getLocalDate());
             setReasonType("Невідомо");
             setOtherReason("");
             setReason("");
@@ -69,9 +79,10 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
         && Number.isSafeInteger(Number(actualQuantity))
         && Number(actualQuantity) >= 0;
     const isValidReason = reasonType !== "Інше" || otherReason.trim() !== "";
+    const isValidInventoryDate = /^\\d{4}-\\d{2}-\\d{2}$/.test(inventoryDate);
 
     const handleSubmit = async () => {
-        if (!isValidQuantity || !isValidReason || isSubmittingRef.current) return;
+        if (!isValidQuantity || !isValidReason || !isValidInventoryDate || isSubmittingRef.current) return;
 
         const quantity = Number(actualQuantity);
         const inventoryReason = [
@@ -82,7 +93,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
         isSubmittingRef.current = true;
         setIsSubmitting(true);
         try {
-            await onSubmit(quantity, inventoryReason);
+            await onSubmit(quantity, inventoryReason, inventoryDate);
         } catch {
             // API errors are reported by the parent action handler; keep the form available for retry.
         } finally {
@@ -124,6 +135,16 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                         {isValidQuantity ? Number(actualQuantity) - physicalQuantity : "—"}
                     </strong>
                 </Typography>
+                <TextField
+                    fullWidth
+                    required
+                    type="date"
+                    label="Дата звірки"
+                    value={inventoryDate}
+                    onChange={(event) => setInventoryDate(event.target.value)}
+                    slotProps={{inputLabel: {shrink: true}}}
+                    sx={{mt: 2}}
+                />
                 <FormControl fullWidth sx={{mt: 2}}>
                     <InputLabel id="inventory-reason-label">Що сталося з товаром?</InputLabel>
                     <Select
@@ -169,7 +190,7 @@ const ProductInventoryModal: React.FC<ProductInventoryModalProps> = ({
                 <Button
                     variant="contained"
                     onClick={handleSubmit}
-                    disabled={!isValidQuantity || !isValidReason || isSubmitting}
+                    disabled={!isValidQuantity || !isValidReason || !isValidInventoryDate || isSubmitting}
                 >
                     Провести інвентаризацію
                 </Button>
