@@ -2,11 +2,11 @@ import {
     TextField,
     Button,
     DialogActions,
-    DialogContent, Grid, Typography,
+    DialogContent, Grid, Typography, Accordion, AccordionSummary, AccordionDetails,
 } from '@mui/material';
 import CustomDialog from "../../CustomDialog/CustomDialog";
 import React, {useCallback, useState, useEffect} from "react";
-import SupplierSelect from "../../../FormComponents/SupplierSelect";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import QuantityField from "../../../FormComponents/QuantityField";
 import {roundToDecimalPlaces} from "../../../../utils/function";
 import TotalPriceField from "../../../FormComponents/TotalPriceField";
@@ -126,21 +126,22 @@ const PurchaseProductModal = ({
                     </Grid>
                 </Grid>
 
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={8}>
-                        <SupplierSelect disabled={true}
-                                        suppliers={suppliers}
-                                        value={purchaseDetails.supplier_id}
-                                        onChange={(e) => setPurchaseDetails({
-                                            ...purchaseDetails,
-                                            supplier_id: Number(e.target.value)
-                                        })}/>
-
-
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
+                <Typography variant="body2" color="text.secondary" sx={{mb: 1}}>
+                    Постачальник: <strong>{currentSupplier?.name ?? 'Не вказано'}</strong>
+                </Typography>
+                <Accordion
+                    disableGutters
+                    elevation={0}
+                    sx={{mb: 2, border: 1, borderColor: 'divider', '&:before': {display: 'none'}}}
+                >
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                        <Typography fontWeight="medium">
+                            Додаткові параметри · дата закупівлі: {purchaseDetails.purchase_date}
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
                         <TextField
-                            size={"small"}
+                            size="small"
                             label="Дата закупівлі"
                             type="date"
                             value={purchaseDetails.purchase_date}
@@ -150,10 +151,8 @@ const PurchaseProductModal = ({
                             error={!!errors.purchase_date}
                             helperText={errors.purchase_date}
                         />
-
-
-                    </Grid>
-                </Grid>
+                    </AccordionDetails>
+                </Accordion>
                 <Typography variant="caption" color="text.secondary" sx={{display: 'block', mt: 1}}>
                     Загальна сума автоматично розраховується як кількість × ціна за одиницю.
                 </Typography>
