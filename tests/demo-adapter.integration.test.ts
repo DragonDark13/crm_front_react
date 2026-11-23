@@ -71,6 +71,22 @@ describe('Demo API history and export', () => {
         ]));
     });
 
+    it('sells a seeded gift set using its existing product and packaging reservations', async () => {
+        const sale = await axiosInstance.post('/sell_gift_set/1', {
+            customer_id: 1,
+            selling_price: 290
+        }, demoConfig);
+
+        const product = await axiosInstance.get('/product/1', demoConfig);
+        const packaging = await axiosInstance.get('/packaging/get_all_packaging_materials', demoConfig);
+
+        expect(sale.data.sales_record.gift_set_id).toBe(1);
+        expect(product.data.reserved_quantity).toBe(1);
+        expect(product.data.sold_quantity).toBe(5);
+        expect(packaging.data[0].reserved_quantity).toBe(0);
+        expect(packaging.data[0].sold_quantity).toBe(1);
+    });
+
     it('does not partially reserve stock when gift set creation fails', async () => {
         await expect(axiosInstance.post('/create_gift_set', {
             name: 'Invalid demo set',
