@@ -586,15 +586,67 @@ const adapter: AxiosAdapter = async config => {
         if (!product) return response(config, {error: 'Product not found'}, 404);
         const actualQuantity = Number(body.actual_quantity);
         if (!Number.isInteger(actualQuantity) || actualQuantity < 0) return response(config, {error: 'actual_quantity must be a non-negative integer'}, 400);
-        const before = Number(product.available_quantity || 0);
+        if (body.reason !== undefined && typeof body.reason !== 'string') return response(config, {error: 'reason must be a string'}, 400);
+
+        const giftSetsToDelete = database.giftSets.filter(giftSet =>
+            giftSet.is_sold !== true
+            && (giftSet.products as Record<string, unknown>[] || []).some(item => Number(item.product_id) === id)
+        );
+        const giftSetIds = giftSetsToDelete.map(giftSet => Number(giftSet.id));
+        if (database.giftSetSales.some(sale => giftSetIds.includes(Number(sale.gift_set_id)))) {
+            return response(config, {error: 'An unsold gift set has sales history and cannot be safely removed'}, 409);
+        }
+
+        const productRequirements = new Map<number, number>();
+        const packagingRequirements = new Map<number, number>();
+        giftSetsToDelete.forEach(giftSet => {
+            (giftSet.products as Record<string, unknown>[] || []).forEach(item => {
+                const itemId = Number(item.product_id);
+                productRequirements.set(itemId, (productRequirements.get(itemId) || 0) + Number(item.quantity || 0));
+            });
+            (giftSet.packagings as Record<string, unknown>[] || []).forEach(item => {
+                const itemId = Number(item.packaging_id);
+                packagingRequirements.set(itemId, (packagingRequirements.get(itemId) || 0) + Number(item.quantity || 0));
+            });
+        });
+
+        for (const [productId, quantity] of productRequirements) {
+            const relatedProduct = database.products.find(item => Number(item.id) === productId);
+            if (!relatedProduct || quantity <= 0 || Number(relatedProduct.reserved_quantity || 0) < quantity) {
+                return response(config, {error: `Reserved quantity is inconsistent for product ${productId}`}, 409);
+            }
+        }
+        for (const [materialId, quantity] of packagingRequirements) {
+            const material = database.packagingMaterials.find(item => Number(item.id) === materialId);
+            if (!material || quantity <= 0 || Number(material.reserved_quantity || 0) < quantity) {
+                return response(config, {error: `Reserved quantity is inconsistent for packaging ${materialId}`}, 409);
+            }
+        }
+
+        const quantityBefore = Number(product.available_quantity || 0) + Number(product.reserved_quantity || 0);
+        for (const giftSet of giftSetsToDelete) {
+            (giftSet.products as Record<string, unknown>[] || []).forEach(item => {
+                const relatedProduct = database.products.find(value => Number(value.id) === Number(item.product_id))!;
+                relatedProduct.available_quantity = Number(relatedProduct.available_quantity || 0) + Number(item.quantity || 0);
+                relatedProduct.reserved_quantity = Number(relatedProduct.reserved_quantity || 0) - Number(item.quantity || 0);
+            });
+            (giftSet.packagings as Record<string, unknown>[] || []).forEach(item => {
+                const material = database.packagingMaterials.find(value => Number(value.id) === Number(item.packaging_id))!;
+                material.available_quantity = Number(material.available_quantity || 0) + Number(item.quantity || 0);
+                material.reserved_quantity = Number(material.reserved_quantity || 0) - Number(item.quantity || 0);
+            });
+        }
+
         product.available_quantity = actualQuantity;
-        product.total_quantity = Number(product.total_quantity || 0) + actualQuantity - before;
-        const changeAmount = actualQuantity - before;
-        addProductStockHistory(id, 'inventory', changeAmount, before, actualQuantity, String(body.reason || '') || null);
-        addProductAuditHistory(id, 'inventory', 'available_quantity', before, actualQuantity, String(body.reason || '') || null);
+        product.reserved_quantity = 0;
+        database.giftSets = database.giftSets.filter(giftSet => !giftSetIds.includes(Number(giftSet.id)));
+        const changeAmount = actualQuantity - quantityBefore;
+        const reason = String(body.reason || '').trim() || null;
+        addProductStockHistory(id, 'inventory', changeAmount, quantityBefore, actualQuantity, reason);
+        addProductAuditHistory(id, 'inventory', 'available_quantity', quantityBefore, actualQuantity, reason);
         const stockHistory = database.productStockHistory[database.productStockHistory.length - 1];
         persist();
-        data = {message: 'Інвентаризацію виконано', product_id: id, quantity_before: before, quantity_after: actualQuantity, change_amount: changeAmount, deleted_gift_sets: [], available_quantity: actualQuantity, reserved_quantity: Number(product.reserved_quantity || 0), stock_history: stockHistory};
+        data = {message: 'Інвентаризацію виконано', product_id: id, quantity_before: quantityBefore, quantity_after: actualQuantity, change_amount: changeAmount, deleted_gift_sets: giftSetIds, available_quantity: actualQuantity, reserved_quantity: 0, stock_history: stockHistory};
     } else if (method === 'delete' && path.startsWith('/delete-history/')) {
         return response(config, {
             error: 'Видалення історичних записів у демо-режимі вимкнено, щоб зберегти цілісність історії'
