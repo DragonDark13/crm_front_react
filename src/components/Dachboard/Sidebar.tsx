@@ -111,11 +111,26 @@ export const Sidebar: React.FC = () => {
     };
 
     const selectedGroup = menuGroups.find(group => group.title === openGroup);
+    const managerOnlyPaths = [
+        "/crm_front_react/clients",
+        "/crm_front_react/orders",
+        "/crm_front_react/sales",
+        "/crm_front_react/returns",
+        "/crm_front_react/gift_sets",
+        "/crm_front_react/packaging",
+        "/crm_front_react/purchases",
+        "/crm_front_react/import-purchases",
+        "/crm_front_react/suppliers",
+        "/crm_front_react/financial-journal",
+        "/crm_front_react/other-investments",
+        "/crm_front_react/analytics",
+        "/crm_front_react/database-settings"
+    ];
     const mobileSecondaryItems = menuGroups.flatMap(group => group.items)
-        .filter(item => ![
-            "/crm_front_react/orders",
-            "/crm_front_react/products"
-        ].includes(item.path));
+        .filter(item => item.path !== "/crm_front_react/products"
+            && item.path !== "/crm_front_react/orders"
+            && (roles.includes('manager') || !managerOnlyPaths.includes(item.path)));
+    const isMoreActive = mobileSecondaryItems.some(item => isActive(item.path));
 
     const mobileNavItem = (title: string, path: string, icon: React.ReactNode) => (
         <ButtonBase
@@ -211,7 +226,7 @@ export const Sidebar: React.FC = () => {
                 {roles.includes('manager') && mobileNavItem("Замовлення", "/crm_front_react/orders", <Receipt/>)}
                 {roles.includes('manager') && mobileNavItem("Продажі", "/crm_front_react/sales", <ShoppingCart/>)}
                 <ButtonBase
-                    className={`crm-mobile-nav-item${mobileMoreAnchor ? ' is-active' : ''}`}
+                    className={`crm-mobile-nav-item${mobileMoreAnchor || isMoreActive ? ' is-active' : ''}`}
                     onClick={(event) => setMobileMoreAnchor(event.currentTarget)}
                     aria-label="Ще розділи"
                     aria-haspopup="menu"
@@ -231,8 +246,9 @@ export const Sidebar: React.FC = () => {
                     <Typography variant="subtitle2" sx={{px: 1, py: 1, fontWeight: 700}}>
                         Додаткові розділи
                     </Typography>
-                    <Box sx={{px: 1, pb: 1}}>
+                    <Box sx={{px: 1, pb: 1, display: 'flex', alignItems: 'center', gap: 1}}>
                         <AddButtonWithMenu/>
+                        <Typography variant="body2">Додати елемент</Typography>
                     </Box>
                     <Divider/>
                     {mobileSecondaryItems.map(item => (
