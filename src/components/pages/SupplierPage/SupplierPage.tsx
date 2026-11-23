@@ -260,9 +260,9 @@ const SupplierPage: React.FC = () => {
 
     return (
         <div>
-            <Typography marginBlockEnd={1} variant={"h4"}>Постачальники</Typography>
+            <Typography className="crm-page-title" component="h1" marginBlockEnd={1} variant={"h4"}>Постачальники</Typography>
             <Grid container spacing={2} justifyContent={"space-between"} marginBottom={4}>
-                <Grid item> <Typography>Перегляд і керування постачальниками</Typography></Grid>
+                <Grid item> <Typography className="crm-page-description">Перегляд і керування постачальниками</Typography></Grid>
                 <Grid item>
                     <AddButton text={' Додати постачальника'} onClick={() => setOpenAddModal(true)}/>
                 </Grid>
