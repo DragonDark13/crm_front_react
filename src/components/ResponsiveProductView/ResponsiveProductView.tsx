@@ -14,6 +14,7 @@ import AddProductModal from "../dialogs/productsDialogs/AddProductModal/AddProdu
 // TODO Внизу загальну сумму і кількість
 
 interface IResponsiveProductViewProps {
+    products: IProduct[];
     filteredProducts: IProduct[];
     order: 'asc' | 'desc';
     orderBy: keyof IProduct;
@@ -39,6 +40,7 @@ interface IResponsiveProductViewProps {
 }
 
 const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = ({
+                                                                                     products,
                                                                                      filteredProducts,
                                                                                      order,
                                                                                      orderBy,
@@ -197,6 +199,7 @@ const ResponsiveProductView: React.FC<IResponsiveProductViewProps> = ({
                 handleCategoryChange={handleCategoryChange}
                 handleRemoveCategory={handleRemoveCategory}
                 handleAdd={() => handleAddProduct(() => setOpenAddProductModal(false))}
+                products={products}
             />
 
         </React.Fragment>
