@@ -116,7 +116,7 @@ const AddButtonWithMenu = () => {
 
     // const resetStatesMap = {};
 
-    const {fetchProductsFunc} = useProducts();
+    const {fetchProductsFunc, products} = useProducts();
     const {fetchCategoriesFunc} = useCategories()
     const {fetchSuppliersFunc} = useSuppliers()
 
@@ -323,7 +323,8 @@ const AddButtonWithMenu = () => {
                     handleRemoveCategory={handleRemoveCategory}
                     handleCategoryChange={handleCategoryChange}
                     handleCloseAdd={() => handleModalClose("openAdd")}
-                    selectedCategories={selectedCategories}/>
+                    selectedCategories={selectedCategories}
+                    products={products}/>
             }
             {
                 modalState.openCategoryCreate &&
