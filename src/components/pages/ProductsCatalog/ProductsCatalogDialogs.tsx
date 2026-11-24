@@ -96,7 +96,8 @@ const ProductsCatalogDialogs: React.FC<IProductsCatalogDialogsProps> = ({
                     handleAdd={handleAddProduct}
                     handleCategoryChange={handleCategoryChange}
                     handleCloseAdd={() => handleModalClose("openAdd")}
-                    selectedCategories={selectedCategories}/>
+                    selectedCategories={selectedCategories}
+                    products={products}/>
             }
 
             {(modalState.productInfoModal && infoProduct && !isLoading) &&
@@ -121,7 +122,7 @@ const ProductsCatalogDialogs: React.FC<IProductsCatalogDialogsProps> = ({
                     openEdit={modalState.openEdit}
                     handleCloseEdit={() => handleModalClose("openEdit")}
                     editProduct={editProduct}
-                    setEditProduct={setEditProduct} handleEditSave={handleEditSave}/>}
+                    setEditProduct={setEditProduct} handleEditSave={handleEditSave} products={products}/>}
 
 
             {(modalState.openHistory && productId && products !== undefined) && (

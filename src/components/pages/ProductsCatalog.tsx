@@ -209,6 +209,7 @@ const ProductsCatalog: React.FC<IProductsCatalogProps> = ({
                     </Drawer>
 
                     <ResponsiveProductView
+                        products={products}
                         selectedLowProductId={selectedLowProductId}
                         filteredAndSearchedProducts={filteredAndSearchedProducts}
                         onRowRef={onRowRef}

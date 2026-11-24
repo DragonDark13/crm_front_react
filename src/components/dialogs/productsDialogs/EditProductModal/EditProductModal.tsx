@@ -13,7 +13,8 @@ import QuantityField from "../../../FormComponents/QuantityField";
 import CategoriesSelect from "../../../FormComponents/CategoriesSelect";
 import {formatDate, formatDateToBack, roundToDecimalPlaces} from "../../../../utils/function";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
-import {IEditProduct, INewSupplier, modalNames,} from "../../../../utils/types";
+import {IEditProduct, IProduct, INewSupplier, modalNames,} from "../../../../utils/types";
+import {findDuplicateProductName} from "../../../../utils/productNameValidation";
 import {useCategories} from "../../../Provider/CategoryContext";
 import {useSuppliers} from "../../../Provider/SupplierContext";
 import {parseDecimalInput} from "../../../../utils/_validation";
@@ -32,7 +33,8 @@ interface IEditProductModalProps {
     editProduct: IEditProduct;
     setEditProduct: React.Dispatch<React.SetStateAction<IEditProduct | null>>;
     handleEditSave: () => void;
-    isAuthenticated: boolean
+    isAuthenticated: boolean;
+    products: IProduct[];
 }
 
 const EditProductModal: React.FC<IEditProductModalProps> = ({
@@ -41,7 +43,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                                                 editProduct,
                                                                 setEditProduct,
                                                                 handleEditSave,
-                                                                isAuthenticated
+                                                                isAuthenticated,
+                                                                products
                                                             }) => {
 
 
@@ -56,6 +59,8 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
     const {suppliers} = useSuppliers()
 
     const [diffWithPrice, setDiffWithPrice] = useState(0)
+    const hasDuplicateName = findDuplicateProductName(editProduct.name, products, editProduct.id);
+    const duplicateNameError = hasDuplicateName ? 'Товар із такою назвою вже існує' : '';
     console.log("editProduct", editProduct);
 
     // Обчислення загальної ціни
@@ -93,6 +98,9 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
 
         if (!editProduct.name.trim()) {
             tempErrors.name = 'Name is required';
+            isValid = false;
+        } else if (hasDuplicateName) {
+            tempErrors.name = duplicateNameError;
             isValid = false;
         } else if (editProduct.name.trim().length < 10) {
             tempErrors.name = 'Name must be at least 10 characters long'
@@ -280,7 +288,7 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                                 label={''}
                                 value={editProduct.name}
                                 onChange={(e) => handleFieldChange('name', e.target.value)}
-                                error={errors.name}
+                                error={errors.name || duplicateNameError}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
