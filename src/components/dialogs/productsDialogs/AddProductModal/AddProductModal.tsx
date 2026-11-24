@@ -12,7 +12,8 @@ import QuantityField from "../../../FormComponents/QuantityField";
 import CategoriesSelect from "../../../FormComponents/CategoriesSelect";
 import {roundToDecimalPlaces} from "../../../../utils/function";
 import SupplierSelect from "../../../FormComponents/SupplierSelect";
-import { INewProduct, modalNames} from "../../../../utils/types";
+import { INewProduct, IProduct, modalNames} from "../../../../utils/types";
+import {findDuplicateProductName} from "../../../../utils/productNameValidation";
 import {useCategories} from "../../../Provider/CategoryContext";
 import {useSuppliers} from "../../../Provider/SupplierContext";
 import AddSupplierModal from "../../AddSupplierModal/AddSupplierModal";
@@ -38,6 +39,7 @@ interface IAddProductModal {
     handleAdd: () => void
     isAuthenticated: boolean
     handleRemoveCategory: (idToRemove: number) => void;
+    products: IProduct[];
 
 }
 
@@ -50,7 +52,8 @@ const AddProductModal = ({
                              handleCategoryChange,
                              handleAdd,
                              isAuthenticated,
-                             handleRemoveCategory
+                             handleRemoveCategory,
+                             products
                          }: IAddProductModal) => {
     const [errors, setErrors] = useState({
         name: '',
@@ -65,10 +68,12 @@ const AddProductModal = ({
 
 
     const [diffWithPrice, setDiffWithPrice] = useState(0)
+    const hasDuplicateName = findDuplicateProductName(newProduct.name, products);
+    const duplicateNameError = hasDuplicateName ? 'Товар із такою назвою вже існує' : '';
 
     const validateFields = () => {
         const newErrors = {
-            name: newProduct.name.trim().length < 10 ? 'Name must be at least 10 characters long' : '',
+            name: duplicateNameError || (newProduct.name.trim().length < 10 ? 'Name must be at least 10 characters long' : ''),
             supplier: newProduct.supplier_id === '' ? 'Supplier is required' : '',
             available_quantity: newProduct.available_quantity <= 0 ? 'Quantity must be greater than 0' : '',
             price_per_item: newProduct.purchase_price_per_item < 0 ? 'Price per item must be greater than or equal to 0' : ''
@@ -110,7 +115,7 @@ const AddProductModal = ({
         setNewProduct({...newProduct, purchase_total_price: roundToDecimalPlaces(totalPrice, 2)});
     }, [newProduct.available_quantity, newProduct.purchase_price_per_item, setNewProduct]);
 
-    const isAddButtonDisabled = newProduct.name.trim().length < 10 ||
+    const isAddButtonDisabled = newProduct.name.trim().length < 10 || hasDuplicateName ||
         !newProduct.supplier_id || newProduct.available_quantity <= 0;
 
     useEffect(() => {
@@ -150,7 +155,7 @@ const AddProductModal = ({
                                 onChange={(e) => {
                                     setNewProduct({...newProduct, name: e.target.value})
                                 }}
-                                error={errors.name}
+                                error={errors.name || duplicateNameError}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
