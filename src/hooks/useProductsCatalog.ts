@@ -19,6 +19,7 @@ import {exportToExcel} from "../api/api";
 import {useNewProduct} from "./useNewProduct";
 import {runCrudAction} from "../utils/runCrudAction";
 import {matchesProductSearch} from "../utils/productSearch";
+import {isDuplicateProductNameError} from "../utils/productNameValidation";
 
 interface IUseProductsCatalogParams {
     products: IProduct[];
@@ -223,7 +224,12 @@ export const useProductsCatalog = ({
                 },
                 onError: (error) => {
                     console.error('There was an error adding the product!', error);
-                    showSnackbarMessage('Failed to add the product!', 'error');
+                    showSnackbarMessage(
+                        isDuplicateProductNameError(error)
+                            ? 'Товар із такою назвою вже існує. Вкажи іншу назву.'
+                            : 'Failed to add the product!',
+                        'error'
+                    );
                 },
                 onRefreshError: () => showSnackbarMessage('Product was added, but the product list could not be refreshed.', 'warning')
             }
@@ -242,7 +248,12 @@ export const useProductsCatalog = ({
                 },
                 onError: (error) => {
                     console.error('There was an error updating the product!', error);
-                    showSnackbarMessage('Failed to update the product!', 'error');
+                    showSnackbarMessage(
+                        isDuplicateProductNameError(error)
+                            ? 'Товар із такою назвою вже існує. Вкажи іншу назву.'
+                            : 'Failed to update the product!',
+                        'error'
+                    );
                 },
                 onRefreshError: () => showSnackbarMessage('Product was updated, but the product list could not be refreshed.', 'warning')
             }
