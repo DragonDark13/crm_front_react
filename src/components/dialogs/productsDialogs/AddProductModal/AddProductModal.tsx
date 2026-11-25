@@ -25,6 +25,7 @@ import {useSupplierModal} from "../../../../hooks/useSupplierModal";
 import CreateNewCategoryModal from "../../CreateNewCategoryModal/CreateNewCategoryModal";
 import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
 import CustomTextArea from "../../../FormComponents/CustomTextArea.tsx";
+import ProductImagesField from "../../../ProductImage/ProductImagesField";
 
 // TODO додавання нової категорі
 
@@ -36,7 +37,7 @@ interface IAddProductModal {
     setNewProduct: (product: INewProduct) => void,
     selectedCategories: number[],
     handleCategoryChange: (categoryID: number[]) => void,
-    handleAdd: () => void
+    handleAdd: (files: File[]) => void
     isAuthenticated: boolean
     handleRemoveCategory: (idToRemove: number) => void;
     products: IProduct[];
@@ -55,6 +56,7 @@ const AddProductModal = ({
                              handleRemoveCategory,
                              products
                          }: IAddProductModal) => {
+    const [selectedImages, setSelectedImages] = useState<File[]>([]);
     const [errors, setErrors] = useState({
         name: '',
         supplier: '',
@@ -62,6 +64,10 @@ const AddProductModal = ({
         price_per_item: ''
     });
 
+
+    useEffect(() => {
+        if (!openAdd) setSelectedImages([]);
+    }, [openAdd]);
 
     const {categories} = useCategories();
     const {suppliers} = useSuppliers()
@@ -86,7 +92,7 @@ const AddProductModal = ({
 
     const handleAddClick = () => {
         if (validateFields()) {
-            handleAdd();
+            handleAdd(selectedImages);
         }
     };
 
@@ -288,6 +294,17 @@ const AddProductModal = ({
                             <AddButton fullWidth
                                        onClick={() => categoryModal.handleCategoryModalOpen("openCategoryCreate")}
                                        text={'Додати категорію'}/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid mt={2} container spacing={2}>
+                        <Grid item xs={12}>
+                            <ProductImagesField
+                                images={[]}
+                                selectedFiles={selectedImages}
+                                onSelectedFilesChange={setSelectedImages}
+                                disabled={!isAuthenticated}
+                            />
                         </Grid>
                     </Grid>
 
