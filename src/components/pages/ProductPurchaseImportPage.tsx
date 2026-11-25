@@ -31,6 +31,7 @@ interface IProductPurchaseImportPreview {
     existing_product_rows: number;
     new_product_rows: number;
     existing_products_count: number;
+    existing_product_names: string[];
     new_products_count: number;
     new_product_names: string[];
 }
@@ -196,6 +197,9 @@ const ProductPurchaseImportPage = () => {
                                 Точну копію вже імпортованого файлу повторно завантажити не можна.
                             </Alert>
                             <Alert severity="info">
+                                Якщо вартість закупівлі невідома, залиш обидва поля вартості порожніми — система збереже загальну вартість і вартість одиниці як 0.
+                            </Alert>
+                            <Alert severity="info">
                                 Система звіряє кожен рядок із раніше збереженою історією закупівель.
                                 Уже імпортовані рядки будуть пропущені, а нові — додані.
                                 Якщо однакові за всіма реквізитами закупівлі справді відбувалися кілька разів,
@@ -214,6 +218,17 @@ const ProductPurchaseImportPage = () => {
                                     <br/>
                                     Рядків для наявних товарів: <strong>{preview.existing_product_rows}</strong>
                                     {" "}({preview.existing_products_count} товарів)
+                                    {preview.existing_product_names.length > 0 && (
+                                        <>
+                                            <br/>
+                                            До наявних товарів буде додано закупівлі:
+                                            <ul>
+                                                {preview.existing_product_names.map((name) => (
+                                                    <li key={name}>{name}</li>
+                                                ))}
+                                            </ul>
+                                        </>
+                                    )}
                                     <br/>
                                     Рядків для нових товарів: <strong>{preview.new_product_rows}</strong>
                                     {" "}({preview.new_products_count} нових товарів)
