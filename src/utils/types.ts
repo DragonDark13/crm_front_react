@@ -16,8 +16,19 @@ export interface IBaseProduct {
     product_description: string;
 }
 
+export interface IProductImage {
+    id: number;
+    product_id: number;
+    file_name: string;
+    mime_type: string;
+    file_size: number;
+    url: string;
+    created_at: string | null;
+}
+
 export interface IProduct extends IBaseProduct {
     id: number;
+    images: IProductImage[];
     category_ids: number[]
     supplier: ISupplierFull | null
     created_date: string
@@ -34,6 +45,7 @@ export interface INewProduct extends IBaseProduct, ISupplierID {
 
 export interface IEditProduct extends IBaseProduct, ISupplierID {
     id: number;
+    images: IProductImage[];
     category_ids: number[]
     created_date: string
 
