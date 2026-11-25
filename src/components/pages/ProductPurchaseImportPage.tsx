@@ -19,12 +19,15 @@ interface IProductPurchaseImportResult {
     status: "imported";
     file_name: string;
     rows_imported: number;
+    duplicate_rows_skipped: number;
 }
 
 interface IProductPurchaseImportPreview {
     status: "preview";
     file_name: string;
     rows_total: number;
+    rows_to_import: number;
+    duplicate_rows: number;
     existing_product_rows: number;
     new_product_rows: number;
     existing_products_count: number;
@@ -192,17 +195,22 @@ const ProductPurchaseImportPage = () => {
                                 Для кожного імпортованого рядка створюються записи історії закупівель та руху складу.
                                 Точну копію вже імпортованого файлу повторно завантажити не можна.
                             </Alert>
-                            <Alert severity="warning">
-                                Захист від повторного імпорту наразі перевіряє SHA-256 усього файлу.
-                                Якщо змінити назву або вміст файлу, система не гарантує виявлення тих самих закупівельних рядків.
-                                Не завантажуй повторно вже імпортовані закупівлі в іншому файлі.
+                            <Alert severity="info">
+                                Система звіряє кожен рядок із раніше збереженою історією закупівель.
+                                Уже імпортовані рядки будуть пропущені, а нові — додані.
+                                Якщо однакові за всіма реквізитами закупівлі справді відбувалися кілька разів,
+                                система врахує кількість таких рядків і дозволить імпортувати нові додаткові екземпляри.
                             </Alert>
 
                             {preview && (
                                 <Alert severity="info">
                                     <strong>Результат перевірки файлу</strong>
                                     <br/>
-                                    Рядків закупівель: <strong>{preview.rows_total}</strong>
+                                    Рядків у файлі: <strong>{preview.rows_total}</strong>
+                                    <br/>
+                                    Буде імпортовано: <strong>{preview.rows_to_import}</strong>
+                                    <br/>
+                                    Буде пропущено як уже імпортовані: <strong>{preview.duplicate_rows}</strong>
                                     <br/>
                                     Рядків для наявних товарів: <strong>{preview.existing_product_rows}</strong>
                                     {" "}({preview.existing_products_count} товарів)
@@ -224,8 +232,10 @@ const ProductPurchaseImportPage = () => {
 
                             {result && (
                                 <Alert severity="success">
-                                    Імпорт завершено. Оброблено рядків закупівель:{" "}
+                                    Імпорт завершено. Додано нових рядків закупівель:{" "}
                                     <strong>{result.rows_imported}</strong>.
+                                    <br/>
+                                    Пропущено повторних рядків: <strong>{result.duplicate_rows_skipped}</strong>.
                                     <br/>
                                     Файл: {result.file_name}
                                 </Alert>
