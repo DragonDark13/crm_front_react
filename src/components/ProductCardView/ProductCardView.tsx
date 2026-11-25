@@ -74,6 +74,7 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                     <CardContent sx={{display: 'flex', flexDirection: 'column', gap: 1.5, p: 2}}>
                                         <ProductImage
                                             imageUrl={product.images?.[0]?.url}
+                                            fallbackImageUrl={import.meta.env.VITE_DEMO_MODE === 'true' ? `/crm_front_react/demo-products/${product.id}.svg` : undefined}
                                             alt={product.name}
                                             height={180}
                                         />
