@@ -21,8 +21,13 @@ export const updateProduct = (productId: number, editProduct: IEditProduct): Pro
     return putResource<ProductMutationResponse>(API_ENDPOINTS.PRODUCT(productId), editProduct);
 };
 
-export const deleteProduct = (productId: number): Promise<ApiMessageResponse> => {
-    return deleteResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT(productId));
+export const deleteProduct = (
+    productId: number,
+    mode: 'product_only' | 'all_related' = 'product_only'
+): Promise<ApiMessageResponse> => {
+    return deleteResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT(productId), {
+        params: {mode}
+    });
 };
 
 export const addPurchase = (productId: number, purchaseData: IPurchaseData): Promise<ApiMessageResponse> => {

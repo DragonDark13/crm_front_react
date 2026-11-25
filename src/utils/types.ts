@@ -122,11 +122,13 @@ export interface INotificationPanel {
     handleListItemClick: (arg: number) => void
 }
 
+export type ProductDeleteMode = 'product_only' | 'all_related';
+
 export interface IConfirmDeleteModal {
     openConfirmDeleteModal: boolean;
     handleCloseDeleteModal: () => void;
     selectedDeleteModalProductId: number;
-    handleDelete: (productId: number) => void;
+    handleDelete: (productId: number, mode: ProductDeleteMode) => void;
 }
 
 export interface IStateFilters {

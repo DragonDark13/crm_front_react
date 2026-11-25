@@ -195,9 +195,9 @@ export const useProductsCatalog = ({
     };
 
 
-    const handleDelete = async (productId: number) => {
+    const handleDelete = async (productId: number, mode: 'product_only' | 'all_related') => {
         await runCrudAction(
-            () => deleteProduct(productId),
+            () => deleteProduct(productId, mode),
             fetchProductsFunc,
             {
                 onSuccess: () => {
