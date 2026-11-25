@@ -21,11 +21,24 @@ interface IProductPurchaseImportResult {
     rows_imported: number;
 }
 
+interface IProductPurchaseImportPreview {
+    status: "preview";
+    file_name: string;
+    rows_total: number;
+    existing_product_rows: number;
+    new_product_rows: number;
+    existing_products_count: number;
+    new_products_count: number;
+    new_product_names: string[];
+}
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const ProductPurchaseImportPage = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [isImporting, setIsImporting] = useState(false);
+    const [isPreviewing, setIsPreviewing] = useState(false);
+    const [preview, setPreview] = useState<IProductPurchaseImportPreview | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [result, setResult] = useState<IProductPurchaseImportResult | null>(null);
 
@@ -37,6 +50,7 @@ const ProductPurchaseImportPage = () => {
         const file = event.target.files?.[0] || null;
         setErrorMessage("");
         setResult(null);
+        setPreview(null);
 
         if (!file) {
             setSelectedFile(null);
@@ -67,8 +81,33 @@ const ProductPurchaseImportPage = () => {
         setSelectedFile(file);
     };
 
+    const handlePreview = async () => {
+        if (!selectedFile || isPreviewing || isImporting) return;
+
+        setIsPreviewing(true);
+        setErrorMessage("");
+        setPreview(null);
+        setResult(null);
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        try {
+            const response = await axiosInstance.post<IProductPurchaseImportPreview>(
+                "/imports/products/purchases/preview",
+                formData,
+                {headers: {"Content-Type": "multipart/form-data"}}
+            );
+            setPreview(response.data);
+        } catch (error) {
+            setErrorMessage(getApiErrorMessage(error, "Не вдалося перевірити файл."));
+        } finally {
+            setIsPreviewing(false);
+        }
+    };
+
     const handleImport = async () => {
-        if (!selectedFile || isImporting) return;
+        if (!selectedFile || !preview || isImporting || isPreviewing) return;
 
         setIsImporting(true);
         setErrorMessage("");
@@ -86,6 +125,7 @@ const ProductPurchaseImportPage = () => {
 
             setResult(response.data);
             setSelectedFile(null);
+            setPreview(null);
             await Promise.all([
                 fetchProductsFunc(),
                 fetchCategoriesFunc(),
@@ -117,8 +157,9 @@ const ProductPurchaseImportPage = () => {
                                 Оберіть файл із закупівлями
                             </Typography>
                             <Typography color="text.secondary">
-                                Використовуйте файл zakupivli_vsi.csv з усією історією закупівель.
-                                Файл повинен містити заголовки та колонки затвердженого шаблону.
+                                Виберіть CSV-файл з історією закупівель. Назва файлу може бути довільною —
+                                важливі формат CSV та правильні заголовки затвердженого шаблону.
+                                Для додавання нових товарів достатньо вказати їхні найменування у файлі.
                             </Typography>
 
                             <Box>
@@ -147,9 +188,30 @@ const ProductPurchaseImportPage = () => {
 
                             <Alert severity="warning">
                                 Імпорт додає закупівлі до наявних товарів і збільшує складські залишки.
-                                Для кожного рядка створюються записи історії закупівель та руху складу.
-                                Незмінений файл повторно імпортувати не можна.
+                                Якщо товару з таким найменуванням ще немає, він буде створений автоматично.
+                                Для кожного імпортованого рядка створюються записи історії закупівель та руху складу.
+                                Точну копію вже імпортованого файлу повторно завантажити не можна.
                             </Alert>
+
+                            {preview && (
+                                <Alert severity="info">
+                                    **Результат перевірки файлу**
+                                    <br/>
+                                    Рядків закупівель: <strong>{preview.rows_total}</strong>
+                                    <br/>
+                                    Рядків для наявних товарів: <strong>{preview.existing_product_rows}</strong>
+                                    {" "}({preview.existing_products_count} товарів)
+                                    <br/>
+                                    Рядків для нових товарів: <strong>{preview.new_product_rows}</strong>
+                                    {" "}({preview.new_products_count} нових товарів)
+                                    {preview.new_product_names.length > 0 && (
+                                        <>
+                                            <br/>
+                                            Нові товари: {preview.new_product_names.join(", ")}
+                                        </>
+                                    )}
+                                </Alert>
+                            )}
 
                             {errorMessage && (
                                 <Alert severity="error">{errorMessage}</Alert>
@@ -164,17 +226,24 @@ const ProductPurchaseImportPage = () => {
                                 </Alert>
                             )}
 
-                            {isImporting && <LinearProgress/>}
+                            {(isImporting || isPreviewing) && <LinearProgress/>}
 
-                            <Box>
+                            <Stack direction="row" spacing={2}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={handlePreview}
+                                    disabled={!selectedFile || isImporting || isPreviewing}
+                                >
+                                    {isPreviewing ? "Перевірка..." : "Перевірити файл"}
+                                </Button>
                                 <Button
                                     variant="contained"
                                     onClick={handleImport}
-                                    disabled={!selectedFile || isImporting}
+                                    disabled={!selectedFile || !preview || isImporting || isPreviewing}
                                 >
-                                    {isImporting ? "Імпорт триває..." : "Імпортувати закупівлі"}
+                                    {isImporting ? "Імпорт триває..." : "Підтвердити імпорт"}
                                 </Button>
-                            </Box>
+                            </Stack>
                         </Stack>
                     </CardContent>
                 </Card>
