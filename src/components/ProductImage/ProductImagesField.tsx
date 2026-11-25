@@ -82,11 +82,17 @@ const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
                     const batch = files.slice(index, index + MAX_UPLOAD_COUNT);
                     const response = await uploadProductImages(productId, batch);
                     uploadedImages.push(...response.images);
+                    onImagesChange?.([...images, ...uploadedImages]);
                 }
-                onImagesChange?.([...images, ...uploadedImages]);
                 await fetchProductsFunc();
             } catch {
-                setError("Не вдалося завантажити зображення.");
+                if (uploadedImages.length) {
+                    onImagesChange?.([...images, ...uploadedImages]);
+                    await fetchProductsFunc();
+                    setError(`Завантажено лише частину зображень (${uploadedImages.length}). Решту можна додати повторно.`);
+                } else {
+                    setError("Не вдалося завантажити зображення.");
+                }
             } finally {
                 setIsUploading(false);
             }
