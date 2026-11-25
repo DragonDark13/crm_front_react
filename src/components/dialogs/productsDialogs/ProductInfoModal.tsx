@@ -5,6 +5,7 @@ import CustomDialog from "../CustomDialog/CustomDialog";
 import {IEditProduct, IProduct} from "../../../utils/types";
 import CancelButton from "../../Buttons/CancelButton";
 import {useCategories} from "../../Provider/CategoryContext";
+import ProductImage from "../../ProductImage/ProductImage";
 
 interface ProductInfoModalProps {
     open: boolean;
@@ -24,6 +25,16 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({open, onClose, produ
 
             <DialogContent dividers>
                 <Grid container spacing={2}>
+                    {/* Зображення товару */}
+                    <Grid item xs={12}>
+                        <ProductImage
+                            imageUrl={product.images?.[0]?.url}
+                            alt={product.name}
+                            width="100%"
+                            height={220}
+                        />
+                    </Grid>
+
                     {/* Назва */}
                     <Grid item xs={12}>
                         <Typography variant="overline" color="text.secondary">
