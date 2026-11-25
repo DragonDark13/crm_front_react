@@ -45,7 +45,7 @@ export interface INewProduct extends IBaseProduct, ISupplierID {
 
 export interface IEditProduct extends IBaseProduct, ISupplierID {
     id: number;
-    images: IProductImage[];
+    images?: IProductImage[];
     category_ids: number[]
     created_date: string
 
