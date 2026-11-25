@@ -195,7 +195,7 @@ const ProductPurchaseImportPage = () => {
 
                             {preview && (
                                 <Alert severity="info">
-                                    **Результат перевірки файлу**
+                                    <strong>Результат перевірки файлу</strong>
                                     <br/>
                                     Рядків закупівель: <strong>{preview.rows_total}</strong>
                                     <br/>
