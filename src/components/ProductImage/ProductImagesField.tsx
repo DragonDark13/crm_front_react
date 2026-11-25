@@ -77,7 +77,7 @@ const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
 
             setIsUploading(true);
             try {
-                const uploadedImages = [];
+                const uploadedImages: IProductImage[] = [];
                 for (let index = 0; index < files.length; index += MAX_UPLOAD_COUNT) {
                     const batch = files.slice(index, index + MAX_UPLOAD_COUNT);
                     const response = await uploadProductImages(productId, batch);
