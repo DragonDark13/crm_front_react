@@ -26,6 +26,7 @@ import {addNewCategory} from "../../../../api/_categories";
 import {useCreateCategoryModal} from "../../../../hooks/useCreateCategoryModal";
 import {Add} from "@mui/icons-material";
 import CustomTextArea from "../../../FormComponents/CustomTextArea.tsx";
+import ProductImagesField from "../../../ProductImage/ProductImagesField";
 
 interface IEditProductModalProps {
     openEdit: boolean;
@@ -409,6 +410,17 @@ const EditProductModal: React.FC<IEditProductModalProps> = ({
                             <AddButton fullWidth
                                        onClick={() => categoryModal.handleCategoryModalOpen("openCategoryCreate")}
                                        text={'Додати категорію'}/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid mt={2} container spacing={2}>
+                        <Grid item xs={12}>
+                            <ProductImagesField
+                                productId={editProduct.id}
+                                images={editProduct.images || []}
+                                onImagesChange={(images) => setEditProduct(prev => prev ? {...prev, images} : prev)}
+                                disabled={!isAuthenticated}
+                            />
                         </Grid>
                     </Grid>
 
