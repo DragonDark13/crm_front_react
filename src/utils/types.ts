@@ -28,7 +28,7 @@ export interface IProductImage {
 
 export interface IProduct extends IBaseProduct {
     id: number;
-    images: IProductImage[];
+    images?: IProductImage[];
     category_ids: number[]
     supplier: ISupplierFull | null
     created_date: string
