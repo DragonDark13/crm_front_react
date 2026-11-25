@@ -39,7 +39,7 @@ export interface ProductMutationResponse {
     created_date: string | null;
     article: string;
     product_description: string;
-    images: import("../utils/types").IProductImage[];
+    images?: import("../utils/types").IProductImage[];
 }
 
 export interface ProductHistoryResponse {
