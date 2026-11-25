@@ -26,14 +26,26 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({open, onClose, produ
             <DialogContent dividers>
                 <Grid container spacing={2}>
                     {/* Зображення товару */}
-                    <Grid item xs={12}>
-                        <ProductImage
-                            imageUrl={product.images?.[0]?.url}
-                            alt={product.name}
-                            width="100%"
-                            height={220}
-                        />
-                    </Grid>
+                    {product.images?.length ? (
+                        product.images.map((image, index) => (
+                            <Grid item xs={6} sm={4} key={image.id}>
+                                <ProductImage
+                                    imageUrl={image.url}
+                                    alt={`${product.name} — фото ${index + 1}`}
+                                    width="100%"
+                                    height={180}
+                                />
+                            </Grid>
+                        ))
+                    ) : (
+                        <Grid item xs={12}>
+                            <ProductImage
+                                alt={product.name}
+                                width="100%"
+                                height={220}
+                            />
+                        </Grid>
+                    )}
 
                     {/* Назва */}
                     <Grid item xs={12}>
