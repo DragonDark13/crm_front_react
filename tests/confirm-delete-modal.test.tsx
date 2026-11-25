@@ -37,6 +37,6 @@ describe('ConfirmDeleteModal', () => {
         fireEvent.click(screen.getByRole('button', {name: 'Видалити все'}));
 
         expect(handleDelete).toHaveBeenCalledWith(110, 'all_related');
-        expect(screen.getByText(/Безповоротно видаляться історія закупівель/)).toBeInTheDocument();
+        expect(screen.queryByText(/Безповоротно видаляться історія закупівель/)).not.toBeNull();
     });
 });
