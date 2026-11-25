@@ -67,11 +67,6 @@ const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
             return;
         }
 
-        if (files.length > MAX_UPLOAD_COUNT) {
-            setError("За один раз можна вибрати не більше 5 зображень.");
-            return;
-        }
-
         setError("");
 
         if (productId) {
@@ -82,8 +77,13 @@ const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
 
             setIsUploading(true);
             try {
-                const response = await uploadProductImages(productId, files);
-                onImagesChange?.([...images, ...response.images]);
+                const uploadedImages = [];
+                for (let index = 0; index < files.length; index += MAX_UPLOAD_COUNT) {
+                    const batch = files.slice(index, index + MAX_UPLOAD_COUNT);
+                    const response = await uploadProductImages(productId, batch);
+                    uploadedImages.push(...response.images);
+                }
+                onImagesChange?.([...images, ...uploadedImages]);
                 await fetchProductsFunc();
             } catch {
                 setError("Не вдалося завантажити зображення.");
@@ -93,8 +93,8 @@ const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
             return;
         }
 
-        if (selectedFiles.length + files.length > MAX_UPLOAD_COUNT) {
-            setError("Для нового товару можна вибрати не більше 5 зображень за раз.");
+        if (selectedFiles.length + files.length > MAX_PRODUCT_IMAGES) {
+            setError("Для нового товару можна вибрати не більше 10 зображень.");
             return;
         }
 
