@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import {IconButton, Tooltip} from '@mui/material';
 import {IProduct} from "../../utils/types";
+import ProductImage from "../ProductImage/ProductImage";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 
@@ -123,6 +124,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{display: "none"}}>ID</TableCell>
+                            <TableCell size={"small"}>Фото</TableCell>
                             <TableCell size={"small"}>
                                 <TableSortLabel
                                     active={orderBy === 'name'}
@@ -226,6 +228,9 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                   className={clsx({'low-quantity-row': lowQuantity}, {'selected-row': selectedLowProductId === product.id})}>
                                             <TableCell size={"small"} sx={{display: "none"}}>
                                                 {product.id}
+                                            </TableCell>
+                                            <TableCell size={"small"}>
+                                                <ProductImage imageUrl={product.images?.[0]?.url} alt={product.name} width={56} height={56}/>
                                             </TableCell>
                                             <TableCell size={"small"}>
                                                 <Typography variant={"subtitle2"}>
