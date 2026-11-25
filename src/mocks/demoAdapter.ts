@@ -9,7 +9,14 @@ const readDatabase = (): DemoDatabase => {
 
         const parsed = JSON.parse(stored) as Partial<DemoDatabase>;
         const defaults = createInitialDemoDatabase();
-        const products = Array.isArray(parsed.products) ? parsed.products : defaults.products;
+        const products = Array.isArray(parsed.products)
+            ? parsed.products.map(product => {
+                const defaultProduct = defaults.products.find(item => Number(item.id) === Number(product.id));
+                return defaultProduct
+                    ? {...defaultProduct, ...product, images: product.images ?? defaultProduct.images ?? []}
+                    : product;
+            })
+            : defaults.products;
         const packagingMaterials = Array.isArray(parsed.packagingMaterials) ? parsed.packagingMaterials : defaults.packagingMaterials;
         const purchases = (Array.isArray(parsed.purchases) ? parsed.purchases : defaults.purchases).map(item => {
             if (item.product_id === undefined && item.type === 'Product') {
@@ -245,7 +252,8 @@ const makeProductResponse = (product: Record<string, unknown>) => ({
     selling_price_per_item: product.selling_price_per_item,
     created_date: product.created_date,
     article: product.article,
-    product_description: product.product_description
+    product_description: product.product_description,
+    images: product.images ?? []
 });
 
 const demoOrderTransitions: Record<string, string[]> = {
@@ -268,7 +276,13 @@ const adapter: AxiosAdapter = async config => {
     let data: unknown;
     let status = 200;
 
-    if (method === 'get' && path === '/me') {
+    if (method === 'get' && path.startsWith('/demo-images/')) {
+        const imageUrl = `${window.location.origin}${import.meta.env.BASE_URL}${path.slice(1)}`;
+        const imageResponse = await fetch(imageUrl);
+        if (!imageResponse.ok) return response(config, {error: 'Demo image not found'}, 404);
+        const imageBlob = await imageResponse.blob();
+        return response(config, imageBlob, 200, imageResponse.headers.get('content-type') || 'image/svg+xml');
+    } else if (method === 'get' && path === '/me') {
         data = {roles: ['manager'], username: 'demo.manager'};
     } else if (method === 'post' && path === '/login') {
         data = {token: 'github-pages-demo-token', message: 'Демо-вхід успішний'};
