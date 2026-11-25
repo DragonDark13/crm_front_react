@@ -1,6 +1,6 @@
 // Операції з продуктами
 import {AxiosResponse} from "axios";
-import {API_ENDPOINTS, deleteResource, fetchResource, fetchResponse, postResource, putResource} from "./api";
+import {API_ENDPOINTS, axiosInstance, deleteResource, fetchResource, fetchResponse, postResource, putResource} from "./api";
 import {ApiMessageResponse, ProductHistoryResponse, ProductInventoryResponse, ProductMutationResponse} from "./contracts";
 import {IEditProduct, INewProduct, IProduct, IPurchaseData, ISaleData} from "../utils/types";
 
@@ -50,4 +50,30 @@ export interface IProductInventoryData {
 
 export const runProductInventory = (productId: number, data: IProductInventoryData): Promise<ProductInventoryResponse> => {
     return postResource<ProductInventoryResponse>(API_ENDPOINTS.PRODUCT_INVENTORY(productId), data);
+};
+
+
+export interface ProductImagesResponse {
+    message: string;
+    images: import("../utils/types").IProductImage[];
+}
+
+export const uploadProductImages = (
+    productId: number,
+    files: File[]
+): Promise<ProductImagesResponse> => {
+    const formData = new FormData();
+    files.forEach(file => formData.append("images", file));
+    return axiosInstance.post<ProductImagesResponse>(
+        API_ENDPOINTS.PRODUCT_IMAGES(productId),
+        formData,
+        {headers: {"Content-Type": "multipart/form-data"}}
+    ).then(response => response.data);
+};
+
+export const deleteProductImage = (
+    productId: number,
+    imageId: number
+): Promise<ApiMessageResponse> => {
+    return deleteResource<ApiMessageResponse>(API_ENDPOINTS.PRODUCT_IMAGE(productId, imageId));
 };
