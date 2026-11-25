@@ -214,37 +214,41 @@ export const useProductsCatalog = ({
     };
 
     const handleAddProduct = async (images: File[] = []) => {
-        try {
-            const createdProduct = await addProduct(newProduct);
-            if (images.length) {
-                try {
+        let productCreated = false;
+        await runCrudAction(
+            async () => {
+                const createdProduct = await addProduct(newProduct);
+                productCreated = true;
+                if (images.length) {
                     await uploadProductImages(createdProduct.id, images);
-                } catch (imageError) {
-                    console.error('Product was created, but image upload failed.', imageError);
-                    await fetchProductsFunc();
-                    handleModalClose('openAdd');
-                    showSnackbarMessage('Товар створено, але зображення не завантажено. Їх можна додати через редагування товару.', 'warning');
-                    return;
                 }
+                return createdProduct;
+            },
+            fetchProductsFunc,
+            {
+                onSuccess: () => {
+                    handleModalClose('openAdd');
+                    showSnackbarMessage('Product added successfully!', 'success');
+                },
+                onError: (error) => {
+                    console.error('There was an error adding the product!', error);
+                    if (productCreated) {
+                        void fetchProductsFunc();
+                        handleModalClose('openAdd');
+                        showSnackbarMessage('Товар створено, але зображення не завантажено. Їх можна додати через редагування товару.', 'warning');
+                        return;
+                    }
+                    showSnackbarMessage(
+                        isDuplicateProductNameError(error)
+                            ? 'Товар із такою назвою вже існує. Вкажи іншу назву.'
+                            : 'Failed to add the product!',
+                        'error'
+                    );
+                },
+                onRefreshError: () => showSnackbarMessage('Product was added, but the product list could not be refreshed.', 'warning')
             }
-
-            const refreshed = await fetchProductsFunc();
-            handleModalClose('openAdd');
-            showSnackbarMessage(
-                refreshed ? 'Товар успішно додано.' : 'Товар додано, але список товарів не вдалося оновити.',
-                refreshed ? 'success' : 'warning'
-            );
-        } catch (error) {
-            console.error('There was an error adding the product!', error);
-            showSnackbarMessage(
-                isDuplicateProductNameError(error)
-                    ? 'Товар із такою назвою вже існує. Вкажи іншу назву.'
-                    : 'Не вдалося додати товар.',
-                'error'
-            );
-        }
+        );
     };
-
     const handleEditSave = async () => {
         if (!editProduct) return;
         await runCrudAction(
