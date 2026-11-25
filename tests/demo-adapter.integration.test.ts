@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, it} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {axiosInstance} from '../src/api/api';
 import demoAdapter from '../src/mocks/demoAdapter';
 import {DEMO_STORAGE_KEY} from '../src/mocks/demoData';
@@ -9,6 +9,36 @@ describe('Demo API history and export', () => {
     beforeEach(async () => {
         localStorage.removeItem(DEMO_STORAGE_KEY);
         await axiosInstance.post('/reset-database', {}, demoConfig);
+    });
+
+    it('serves seeded product images for the GitHub Pages demo catalog', async () => {
+        const products = await axiosInstance.get('/get_all_products/', demoConfig);
+        expect(products.data[0].images).toEqual(expect.arrayContaining([
+            expect.objectContaining({
+                file_name: 'candle.svg',
+                url: '/demo-images/candle.svg'
+            })
+        ]));
+
+        const fetchMock = vi.fn().mockResolvedValue({
+            ok: true,
+            blob: async () => new Blob(['<svg/>'], {type: 'image/svg+xml'}),
+            headers: new Headers({'content-type': 'image/svg+xml'})
+        });
+        vi.stubGlobal('fetch', fetchMock);
+
+        try {
+            const image = await axiosInstance.get(products.data[0].images[0].url, {
+                ...demoConfig,
+                responseType: 'blob'
+            });
+
+            expect(image.data).toBeInstanceOf(Blob);
+            expect(image.data.type).toBe('image/svg+xml');
+            expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('/demo-images/candle.svg'));
+        } finally {
+            vi.unstubAllGlobals();
+        }
     });
 
     it('returns seeded product stock, purchase and audit history', async () => {
