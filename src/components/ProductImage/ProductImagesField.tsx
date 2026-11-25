@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Alert,
     Box,
@@ -13,6 +13,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import {IProductImage} from "../../utils/types";
 import {deleteProductImage, uploadProductImages} from "../../api/_product";
 import ProductImage from "./ProductImage";
+import {useProducts} from "../Provider/ProductContext";
 
 interface ProductImagesFieldProps {
     productId?: number;
@@ -26,26 +27,27 @@ interface ProductImagesFieldProps {
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const MAX_UPLOAD_COUNT = 5;
 const MAX_PRODUCT_IMAGES = 10;
+const EMPTY_FILES: File[] = [];
 
 const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
     productId,
     images,
     onImagesChange,
-    selectedFiles = [],
+    selectedFiles: selectedFilesProp,
     onSelectedFilesChange,
     disabled = false
 }) => {
+    const selectedFiles = selectedFilesProp ?? EMPTY_FILES;
+    const {fetchProductsFunc} = useProducts();
     const [error, setError] = useState("");
     const [isUploading, setIsUploading] = useState(false);
+    const [previews, setPreviews] = useState<Array<{file: File; url: string}>>([]);
 
-    const previews = useMemo(
-        () => selectedFiles.map(file => ({file, url: URL.createObjectURL(file)})),
-        [selectedFiles]
-    );
-
-    useEffect(() => () => {
-        previews.forEach(preview => URL.revokeObjectURL(preview.url));
-    }, [previews]);
+    useEffect(() => {
+        const nextPreviews = selectedFiles.map(file => ({file, url: URL.createObjectURL(file)}));
+        setPreviews(nextPreviews);
+        return () => nextPreviews.forEach(preview => URL.revokeObjectURL(preview.url));
+    }, [selectedFiles]);
 
     const handleFilesSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(event.target.files ?? []);
@@ -82,6 +84,7 @@ const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
             try {
                 const response = await uploadProductImages(productId, files);
                 onImagesChange?.([...images, ...response.images]);
+                await fetchProductsFunc();
             } catch {
                 setError("Не вдалося завантажити зображення.");
             } finally {
@@ -105,6 +108,7 @@ const ProductImagesField: React.FC<ProductImagesFieldProps> = ({
         try {
             await deleteProductImage(productId, image.id);
             onImagesChange?.(images.filter(item => item.id !== image.id));
+            await fetchProductsFunc();
         } catch {
             setError("Не вдалося видалити зображення.");
         } finally {
