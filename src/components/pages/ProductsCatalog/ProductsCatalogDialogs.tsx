@@ -4,6 +4,7 @@ import {
     INewProduct,
     INewSupplier,
     IProduct,
+    ProductDeleteMode,
     IPurchaseData,
     ISaleData,
     ModalNames
@@ -48,7 +49,7 @@ interface IProductsCatalogDialogsProps {
     createNewCategory: (categoryName: string) => Promise<void>;
     selectedDeleteModalProductId: number | null;
     handleCloseDeleteModal: () => void;
-    handleDelete: (productId: number) => Promise<void>;
+    handleDelete: (productId: number, mode: ProductDeleteMode) => Promise<void>;
     handleAddSupplier: (newSupplier: INewSupplier) => Promise<void>;
 }
 
