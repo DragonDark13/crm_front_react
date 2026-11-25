@@ -10,6 +10,7 @@ import SellIcon from '@mui/icons-material/Sell';
 import HistoryIcon from '@mui/icons-material/History';
 import InventoryIcon from '@mui/icons-material/Inventory2';
 import {IProduct} from "../../utils/types";
+import ProductImage from "../ProductImage/ProductImage";
 
 interface IProductTableProps {
     filteredProducts: IProduct[];
@@ -71,6 +72,11 @@ const ProductCardView: React.FC<IProductTableProps> = ({
                                   key={`${product.id}${index}${product.purchase_total_price}`}>
                                 <Card sx={{height: '100%'}}>
                                     <CardContent sx={{display: 'flex', flexDirection: 'column', gap: 1.5, p: 2}}>
+                                        <ProductImage
+                                            imageUrl={product.images?.[0]?.url}
+                                            alt={product.name}
+                                            height={180}
+                                        />
                                         <Box>
                                             <Typography variant="h6" component="h2" fontWeight="bold">
                                                 {product.name}

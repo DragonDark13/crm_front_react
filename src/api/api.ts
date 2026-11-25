@@ -78,6 +78,8 @@ export const API_ENDPOINTS = {
     PRODUCT_SALE: (id: number) => `/product/${id}/sale`,
     PRODUCT_INVENTORY: (id: number) => `/product/${id}/inventory`,
     PRODUCT: (id: number) => `/product/${id}`,
+    PRODUCT_IMAGES: (id: number) => `/product/${id}/images`,
+    PRODUCT_IMAGE: (productId: number, imageId: number) => `/product/${productId}/images/${imageId}`,
     GET_ALL_PACKAGING_MATERIALS: '/packaging/get_all_packaging_materials',
     CURRENT_PACKAGING_HISTORY: (materialId: number) => `/materials/${materialId}/history`,
     CURRENT_PACKAGING_SUPPLIER_PURCHASE_HISTORY: (id: number) => `/packaging-supplier/${id}/purchase-history`,

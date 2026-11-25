@@ -13,7 +13,7 @@ import {
 } from "../utils/types";
 import {createEmptyProduct, formatDate} from "../utils/function";
 import {addSupplier} from "../api/_supplier";
-import {addProduct, addPurchase, addSale, deleteProduct, updateProduct, runProductInventory} from "../api/_product";
+import {addProduct, addPurchase, addSale, deleteProduct, updateProduct, runProductInventory, uploadProductImages} from "../api/_product";
 import {addNewCategory} from "../api/_categories";
 import {exportToExcel} from "../api/api";
 import {useNewProduct} from "./useNewProduct";
@@ -213,9 +213,17 @@ export const useProductsCatalog = ({
         );
     };
 
-    const handleAddProduct = async () => {
+    const handleAddProduct = async (images: File[] = []) => {
+        let productCreated = false;
         await runCrudAction(
-            () => addProduct(newProduct),
+            async () => {
+                const createdProduct = await addProduct(newProduct);
+                productCreated = true;
+                if (images.length) {
+                    await uploadProductImages(createdProduct.id, images);
+                }
+                return createdProduct;
+            },
             fetchProductsFunc,
             {
                 onSuccess: () => {
@@ -224,6 +232,12 @@ export const useProductsCatalog = ({
                 },
                 onError: (error) => {
                     console.error('There was an error adding the product!', error);
+                    if (productCreated) {
+                        void fetchProductsFunc();
+                        handleModalClose('openAdd');
+                        showSnackbarMessage('Товар створено, але зображення не завантажено. Їх можна додати через редагування товару.', 'warning');
+                        return;
+                    }
                     showSnackbarMessage(
                         isDuplicateProductNameError(error)
                             ? 'Товар із такою назвою вже існує. Вкажи іншу назву.'
@@ -235,7 +249,6 @@ export const useProductsCatalog = ({
             }
         );
     };
-
     const handleEditSave = async () => {
         if (!editProduct) return;
         await runCrudAction(
@@ -359,7 +372,8 @@ export const useProductsCatalog = ({
         selling_total_price: product.selling_total_price,
         selling_quantity: product.selling_quantity,
         article: product.article,
-        product_description:product.product_description
+        product_description:product.product_description,
+        images: product.images || []
     });
 
 

@@ -24,7 +24,7 @@ interface IProductsCatalogDialogsProps {
     isAuthenticated: boolean;
     modalState: Record<ModalNames, boolean>;
     handleModalClose: (modal: ModalNames) => void;
-    handleAddProduct: () => void;
+    handleAddProduct: (files: File[]) => void;
     handleCategoryChange: (categoryId: number[]) => void;
     handleRemoveCategory: (categoryId: number) => void;
     newProduct: INewProduct;
