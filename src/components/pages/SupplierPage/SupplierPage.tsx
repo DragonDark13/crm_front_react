@@ -21,7 +21,7 @@ import {Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
 import BlockIcon from '@mui/icons-material/Block';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HistoryIcon from '@mui/icons-material/History';
-import {ISupplierFull, INewSupplier, ISupplierType, ISupplierPurchaseHistoryRecord} from "../../../utils/types";
+import type {ISupplierFull, INewSupplier, ISupplierType, ISupplierPurchaseHistoryRecord} from "../../../utils/types";
 import {useSuppliers} from "../../Provider/SupplierContext";
 import clsx from "clsx";
 import AddSupplierModal from "../../dialogs/AddSupplierModal/AddSupplierModal";
@@ -245,9 +245,11 @@ const SupplierPage: React.FC = () => {
         setPage(0);
     };
 
+    const lastPage = Math.max(0, Math.ceil(suppliers.length / rowsPerPage) - 1);
+    const safePage = Math.min(page, lastPage);
     const paginatedSuppliers = suppliers.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+        safePage * rowsPerPage,
+        safePage * rowsPerPage + rowsPerPage
     );
 
     const textColorDis = (is_active: boolean) => {
@@ -270,7 +272,7 @@ const SupplierPage: React.FC = () => {
             <TablePagination
                 component="div"
                 count={suppliers.length}
-                page={page}
+                page={safePage}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
