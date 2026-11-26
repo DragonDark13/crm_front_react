@@ -5,6 +5,7 @@ import {axiosInstance} from "../../api/api";
 
 interface ProductImageProps {
     imageUrl?: string | null;
+    fallbackImageUrl?: string | null;
     alt: string;
     width?: number | string;
     height?: number | string;
@@ -12,18 +13,19 @@ interface ProductImageProps {
 
 const ProductImage: React.FC<ProductImageProps> = ({
     imageUrl,
+    fallbackImageUrl,
     alt,
     width = "100%",
     height = 160
 }) => {
-    const [source, setSource] = useState<string | null>(null);
+    const [source, setSource] = useState<string | null>(fallbackImageUrl || null);
     const [failed, setFailed] = useState(false);
 
     useEffect(() => {
         let isActive = true;
         let objectUrl: string | null = null;
 
-        setSource(null);
+        setSource(fallbackImageUrl || null);
         setFailed(false);
 
         if (!imageUrl) {
@@ -42,14 +44,17 @@ const ProductImage: React.FC<ProductImageProps> = ({
                 }
             })
             .catch(() => {
-                if (isActive) setFailed(true);
+                if (isActive) {
+                    setSource(fallbackImageUrl || null);
+                    setFailed(!fallbackImageUrl);
+                }
             });
 
         return () => {
             isActive = false;
             if (objectUrl) URL.revokeObjectURL(objectUrl);
         };
-    }, [imageUrl]);
+    }, [imageUrl, fallbackImageUrl]);
 
     if (!source || failed) {
         return (

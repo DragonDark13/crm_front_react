@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" role="img">
+<rect width="480" height="360" rx="28" fill="#F5F1E8"/>
+<circle cx="240" cy="170" r="116" fill="#6E8B74" opacity=".12"/>
+<ellipse cx="240" cy="286" rx="90" ry="13" fill="#5A5148" opacity=".12"/>
+<rect x="163" y="112" width="154" height="164" rx="24" fill="#D8C6A6" stroke="#8D765B" stroke-width="5"/>
+<rect x="174" y="88" width="132" height="34" rx="8" fill="#8A6F54"/>
+<rect x="184" y="154" width="112" height="82" rx="10" fill="#F5EBDD"/>
+<path d="M240 140 C208 111 231 92 240 77 C251 96 270 114 240 140Z" fill="#D99B48"/>
+<path d="M240 129 C228 114 241 105 242 99 C252 114 251 121 240 129Z" fill="#FFF0B8"/>
+<text x="240" y="210" font-size="18" text-anchor="middle" fill="#65513E" font-family="Arial">LAVENDER</text>
+</svg>

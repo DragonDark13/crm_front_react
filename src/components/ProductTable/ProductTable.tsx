@@ -230,7 +230,13 @@ const ProductTable: React.FC<IProductTableProps> = ({
                                                 {product.id}
                                             </TableCell>
                                             <TableCell size={"small"}>
-                                                <ProductImage imageUrl={product.images?.[0]?.url} alt={product.name} width={56} height={56}/>
+                                                <ProductImage
+                                                    imageUrl={product.images?.[0]?.url}
+                                                    fallbackImageUrl={import.meta.env.VITE_DEMO_MODE === 'true' ? `/crm_front_react/demo-products/${product.id}.svg` : undefined}
+                                                    alt={product.name}
+                                                    width={56}
+                                                    height={56}
+                                                />
                                             </TableCell>
                                             <TableCell size={"small"}>
                                                 <Typography variant={"subtitle2"}>
