@@ -158,36 +158,45 @@ const SalesHistoryTable: React.FC = () => {
     };
 
 
-    const filteredSalesData = useMemo(() => salesData
-        .filter((sale) => {
-            // Перевіряємо назву продукту або набору
-            const productOrGiftSetName = sale.product_name || sale.gift_set_name || '';
+    const filteredSalesData = useMemo(() => {
+        const normalizedSearchProduct = searchProduct.toLowerCase();
+        const selectedCategories = new Set(categoryFilters);
+        const hasDateRange = Boolean(startDate && endDate);
+        const startTimestamp = hasDateRange ? new Date(startDate).getTime() : 0;
+        const endTimestamp = hasDateRange ? new Date(endDate).getTime() : 0;
+        const sortDirection = sortOrder === 'asc' ? 1 : -1;
 
-            return (
-                productOrGiftSetName.toLowerCase().includes(searchProduct.toLowerCase()) && // Фільтрація за продуктом або набором
-                sale.sale_date.includes(searchDate) &&
-                (categoryFilters.length > 0
-                    ? (sale.categories || []).some(category => categoryFilters.includes(category.name))
-                    : true) &&
-                (startDate && endDate
-                    ? new Date(sale.sale_date) >= new Date(startDate) && new Date(sale.sale_date) <= new Date(endDate)
-                    : true)
-            );
-        })
-        .sort((a, b) => {
-            if (orderBy === 'product_name') {
-                const nameA = a.product_name || a.gift_set_name;
-                const nameB = b.product_name || b.gift_set_name;
-                return (nameA < nameB ? -1 : 1) * (sortOrder === 'asc' ? 1 : -1);
-            }
-            if (orderBy === 'total_price') {
-                return (parseFloat(a.total_price) < parseFloat(b.total_price) ? -1 : 1) * (sortOrder === 'asc' ? 1 : -1);
-            }
-            if (orderBy === 'quantity_sold') {
-                return (a.quantity_sold < b.quantity_sold ? -1 : 1) * (sortOrder === 'asc' ? 1 : -1);
-            }
-            return 0;
-        }), [salesData, searchProduct, searchDate, categoryFilters, startDate, endDate, orderBy, sortOrder]);
+        return salesData
+            .filter((sale) => {
+                // Перевіряємо назву продукту або набору
+                const productOrGiftSetName = sale.product_name || sale.gift_set_name || '';
+                const saleTimestamp = hasDateRange ? new Date(sale.sale_date).getTime() : 0;
+
+                return (
+                    productOrGiftSetName.toLowerCase().includes(normalizedSearchProduct) &&
+                    sale.sale_date.includes(searchDate) &&
+                    (selectedCategories.size === 0 ||
+                        (sale.categories || []).some(category => selectedCategories.has(category.name))) &&
+                    (!hasDateRange || (saleTimestamp >= startTimestamp && saleTimestamp <= endTimestamp))
+                );
+            })
+            .sort((a, b) => {
+                if (orderBy === 'product_name') {
+                    const nameA = a.product_name || a.gift_set_name;
+                    const nameB = b.product_name || b.gift_set_name;
+                    return (nameA < nameB ? -1 : nameA > nameB ? 1 : 0) * sortDirection;
+                }
+                if (orderBy === 'total_price') {
+                    const priceA = parseFloat(a.total_price);
+                    const priceB = parseFloat(b.total_price);
+                    return (priceA - priceB) * sortDirection;
+                }
+                if (orderBy === 'quantity_sold') {
+                    return (a.quantity_sold - b.quantity_sold) * sortDirection;
+                }
+                return 0;
+            });
+    }, [salesData, searchProduct, searchDate, categoryFilters, startDate, endDate, orderBy, sortOrder]);
 
     const paginatedSalesData = useMemo(
         () => filteredSalesData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),

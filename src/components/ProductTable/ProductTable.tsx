@@ -71,14 +71,12 @@ const ProductTable: React.FC<IProductTableProps> = ({
         totalSumPurchase,
         totalQuantitySelling,
         totalSumSelling,
-        totalCalculatedSellingSum
     } = useMemo(() => filteredAndSearchedProducts.reduce((totals, product) => {
         totals.totalQuantityPurchaseAllTime += product.total_quantity;
         totals.totalQuantityPurchase += product.available_quantity;
         totals.totalSumPurchase += product.total_quantity * product.purchase_price_per_item;
         totals.totalQuantitySelling += product.sold_quantity;
         totals.totalSumSelling += product.sold_quantity * product.selling_price_per_item;
-        totals.totalCalculatedSellingSum += product.available_quantity * product.selling_price_per_item;
 
         return totals;
     }, {
@@ -87,7 +85,6 @@ const ProductTable: React.FC<IProductTableProps> = ({
         totalSumPurchase: 0,
         totalQuantitySelling: 0,
         totalSumSelling: 0,
-        totalCalculatedSellingSum: 0
     }), [filteredAndSearchedProducts]);
 
     const visibleProducts = useMemo(() => (
@@ -220,7 +217,7 @@ const ProductTable: React.FC<IProductTableProps> = ({
                         {visibleProducts.map((product: IProduct, index) => {
                                     const lowQuantity = product.total_quantity < 5; // умова для низької кількості
                                     return (
-                                        <TableRow key={`${product.id}${index}${product.purchase_total_price}`}
+                                        <TableRow key={product.id}
                                                   ref={(el) => {
                                                       onRowRef?.(el, product.id);
                                                   }}
